@@ -101,14 +101,14 @@ export default function EmployersPage() {
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="employers-page">
         {/* Hero */}
-        <div className="bg-navy-900 text-white py-16 mb-12">
+        <div className="bg-gradient-to-r from-navy-900 to-navy-800 text-white py-16 mb-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <span className="text-navy-300 font-medium text-sm uppercase tracking-wider">
+              <span className="text-coral font-semibold text-sm tracking-wider">
                 Pentru Angajatori
               </span>
-              <h1 className="font-heading text-4xl md:text-5xl font-black uppercase mt-2 mb-4">
-                SOLICITAȚI FORȚĂ DE MUNCĂ
+              <h1 className="font-heading text-3xl md:text-4xl font-bold mt-2 mb-4">
+                Solicitați Forță de Muncă
               </h1>
               <p className="text-navy-200 text-lg">
                 Completați formularul de mai jos și un consultant dedicat vă va contacta 
@@ -122,9 +122,9 @@ export default function EmployersPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Form */}
             <div className="lg:col-span-2">
-              <Card className="shadow-sm">
+              <Card className="shadow-sm rounded-xl">
                 <CardHeader>
-                  <CardTitle className="font-heading text-2xl text-navy-900 uppercase">
+                  <CardTitle className="font-heading text-2xl text-navy-900">
                     Formular de Solicitare
                   </CardTitle>
                 </CardHeader>
