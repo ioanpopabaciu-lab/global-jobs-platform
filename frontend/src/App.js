@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 
 // Pages
 import HomePage from "@/pages/HomePage";
@@ -16,7 +17,7 @@ import ContactPage from "@/pages/ContactPage";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-function App() {
+function AppContent() {
   useEffect(() => {
     // Initialize blog posts on first load
     const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -42,6 +43,14 @@ function App() {
         <Toaster position="top-right" richColors />
       </BrowserRouter>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }
 
