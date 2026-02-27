@@ -8,8 +8,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                heading: ['Barlow Condensed', 'sans-serif'],
-                body: ['Inter', 'sans-serif'],
+                heading: ['Montserrat', 'sans-serif'],
+                body: ['Montserrat', 'sans-serif'],
             },
             colors: {
                 navy: {
@@ -24,6 +24,8 @@ module.exports = {
                     800: '#243b53',
                     900: '#003366',
                 },
+                coral: '#E74C3C',
+                gold: '#D4A853',
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 card: {
