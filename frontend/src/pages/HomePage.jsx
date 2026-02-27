@@ -65,13 +65,16 @@ export default function HomePage() {
                 <span className="text-coral font-semibold text-sm tracking-wider">
                   Despre Noi
                 </span>
-                <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-6">
-                  Partenerul Dumneavoastră în Recrutare Internațională
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
+                  Conectăm Talente Globale cu Oportunități Locale
                 </h2>
+                <p className="text-xl text-gold font-medium mb-6">
+                  Soluții Globale pentru Deficitul de Forță de Muncă
+                </p>
                 <p className="text-gray-600 mb-6 leading-relaxed">
                   Global Jobs Consulting este o agenție de recrutare All-Inclusive specializată 
                   în plasarea forței de muncă din Asia și Africa în piețele europene. Cu o rețea 
-                  de peste 30 de agenții partenere în 18 țări, oferim soluții complete de staffing 
+                  de 11 agenții partenere, oferim soluții complete de staffing 
                   pentru angajatorii din România, Austria și Serbia.
                 </p>
                 <p className="text-gray-600 mb-8 leading-relaxed">
