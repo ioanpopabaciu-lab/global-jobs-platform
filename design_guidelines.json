@@ -1,0 +1,128 @@
+{
+  "brand_identity": {
+    "name": "Global Jobs Consulting",
+    "tone": "Corporate, Authoritative, Global, Efficient, Human-Centric",
+    "archetype": "Swiss & High-Contrast (Authority) mixed with Industrial Reliability",
+    "primary_color": "#003366",
+    "secondary_color": "#4B5563",
+    "accent_color": "#FFFFFF"
+  },
+  "design_system": {
+    "colors": {
+      "primary": {
+        "DEFAULT": "#003366",
+        "foreground": "#FFFFFF",
+        "50": "#f0f4f8",
+        "100": "#d9e2ec",
+        "200": "#bcccdc",
+        "300": "#9fb3c8",
+        "400": "#829ab1",
+        "500": "#627d98",
+        "600": "#486581",
+        "700": "#334e68",
+        "800": "#243b53",
+        "900": "#003366"
+      },
+      "secondary": {
+        "DEFAULT": "#4B5563",
+        "foreground": "#FFFFFF"
+      },
+      "accent": {
+        "DEFAULT": "#F3F4F6",
+        "foreground": "#003366"
+      },
+      "background": "#FFFFFF",
+      "foreground": "#0F172A"
+    },
+    "typography": {
+      "font_family": {
+        "heading": ["Barlow Condensed", "sans-serif"],
+        "body": ["Inter", "sans-serif"]
+      },
+      "google_fonts_url": "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap",
+      "rules": {
+        "headings": "Uppercase, tracking-tight, bold or black weight. Use for H1, H2, H3.",
+        "body": "Clean, legible, relaxed line-height. Use for paragraphs and UI text."
+      }
+    },
+    "spacing": {
+      "container_padding": "p-6 md:p-12 lg:p-24",
+      "section_gap": "gap-12 md:gap-24",
+      "element_gap": "gap-4 md:gap-8"
+    },
+    "radius": "0.25rem",
+    "shadows": {
+      "card": "0 4px 6px -1px rgba(0, 51, 102, 0.1), 0 2px 4px -1px rgba(0, 51, 102, 0.06)",
+      "hover": "0 10px 15px -3px rgba(0, 51, 102, 0.1), 0 4px 6px -2px rgba(0, 51, 102, 0.05)"
+    }
+  },
+  "assets": {
+    "images": {
+      "hero_slider": [
+        {
+          "url": "https://images.unsplash.com/photo-1760009436767-d154e930e55c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwyfHxjb25zdHJ1Y3Rpb24lMjB3b3JrZXIlMjBidWlsZGluZyUyMHNpdGUlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzcyMjE4NTk4fDA&ixlib=rb-4.1.0&q=85",
+          "alt": "Construction workers planning",
+          "category": "Construction"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1765735049473-7cb6466e5b3f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHxjaGVmJTIwY29va2luZyUyMHJlc3RhdXJhbnQlMjBraXRjaGVuJTIwcHJvZmVzc2lvbmFsfGVufDB8fHx8MTc3MjIxODYzOXww&ixlib=rb-4.1.0&q=85",
+          "alt": "Chef cooking in professional kitchen",
+          "category": "HoReCa"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1622385161916-27f0c8746f4e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxmYWN0b3J5JTIwd29ya2VyJTIwcHJvZHVjdGlvbiUyMGxpbmUlMjBpbmR1c3RyaWFsfGVufDB8fHx8MTc3MjIxODY0Nnww&ixlib=rb-4.1.0&q=85",
+          "alt": "Farmer on tractor",
+          "category": "Agriculture"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1764114908655-9a26d32750a0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwyfHxmYWN0b3J5JTIwd29ya2VyJTIwcHJvZHVjdGlvbiUyMGxpbmUlMjBpbmR1c3RyaWFsfGVufDB8fHx8MTc3MjIxODYyNnww&ixlib=rb-4.1.0&q=85",
+          "alt": "Factory workers with machinery",
+          "category": "Production"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1672552226669-f6c3041972ea?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjB3b3JrZXIlMjBsb2dpc3RpY3MlMjBwYWNrYWdlJTIwc2Nhbm5pbmd8ZW58MHx8fHwxNzcyMjE4NjEyfDA&ixlib=rb-4.1.0&q=85",
+          "alt": "Warehouse logistics",
+          "category": "Logistics"
+        }
+      ],
+      "about_section": {
+        "url": "https://images.unsplash.com/photo-1758873269317-51888e824b28?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHw0fHxkaXZlcnNlJTIwYnVzaW5lc3MlMjB0ZWFtJTIwbWVldGluZyUyMG9mZmljZXxlbnwwfHx8fDE3NzIyMTg2NTJ8MA&ixlib=rb-4.1.0&q=85",
+        "alt": "Diverse business team meeting"
+      },
+      "services_bg": {
+        "url": "https://images.unsplash.com/photo-1627660080110-20045fd3875d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjB3b3JrZXIlMjBidWlsZGluZyUyMHNpdGUlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzcyMjE4NTk4fDA&ixlib=rb-4.1.0&q=85",
+        "alt": "Building construction background"
+      }
+    }
+  },
+  "layout_strategies": {
+    "hero_section": {
+      "type": "Full-screen Slider",
+      "instructions": "Use a full-screen carousel with a dark overlay (bg-black/40) to ensure text readability. The text should be bold, uppercase, and centered or left-aligned with a strong 'Apply Now' CTA. Use the 'Barlow Condensed' font for the main headline."
+    },
+    "services_grid": {
+      "type": "Bento Grid (Mode A)",
+      "instructions": "Do not use equal squares. Use a mix of col-span-1, col-span-2, and row-span-2 to create visual interest. Each service card should have a subtle hover effect (lift + shadow)."
+    },
+    "forms": {
+      "type": "Multi-step Wizard",
+      "instructions": "Break down the Employer and Candidate forms into steps (e.g., Personal Info -> Experience -> Uploads). Use Shadcn 'Form' components. Ensure the 'Upload CV' area is prominent."
+    },
+    "navigation": {
+      "type": "Sticky Glassmorphism",
+      "instructions": "The navbar should be sticky at the top with a backdrop-blur-md and a semi-transparent white background (bg-white/90). Use the Navy Blue logo."
+    }
+  },
+  "component_rules": {
+    "buttons": "Use sharp or slightly rounded corners (rounded-sm). Primary buttons should be Navy Blue (#003366) with White text. Secondary buttons should be Outline or Ghost.",
+    "cards": "Clean white cards with a subtle border (border-gray-200) and a soft shadow. No heavy drop shadows.",
+    "inputs": "Standard Shadcn inputs with a focus ring of the primary color."
+  },
+  "universal_guidelines": [
+    "Do not use gradients for the main background; keep it clean white or very light grey (#F9FAFB).",
+    "Ensure high contrast for all text. Navy Blue on White is excellent.",
+    "Use 'Barlow Condensed' for all headings to give that 'Industrial/Corporate' feel.",
+    "Add 'data-testid' to all interactive elements.",
+    "Mobile responsiveness is critical; ensure the hero slider works well on touch devices."
+  ]
+}
