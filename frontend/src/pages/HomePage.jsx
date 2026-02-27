@@ -10,7 +10,7 @@ const advantages = [
   {
     icon: Globe,
     title: "Rețea Globală",
-    description: "Acces la candidați din 18 țări de pe 2 continente prin intermediul celor peste 30 de agenții partenere."
+    description: "Acces la candidați din Asia și Africa prin intermediul celor 11 agenții partenere."
   },
   {
     icon: Shield,
