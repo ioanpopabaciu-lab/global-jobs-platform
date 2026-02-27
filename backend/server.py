@@ -423,8 +423,9 @@ async def get_statistics():
         "employers": employer_count,
         "candidates": candidate_count,
         "contacts": contact_count,
-        "partner_countries": 18,
-        "partner_agencies": 30,
+        "partner_countries": 11,
+        "partner_agencies": 11,
+        "experience_years": 4,
         "continents": 2
     }
 
