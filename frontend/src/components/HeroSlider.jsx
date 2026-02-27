@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 const slides = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1770822662868-4a612845fcdd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwzfHxhc2lhbiUyMGNvbnN0cnVjdGlvbiUyMHdvcmtlcnMlMjBidWlsZGluZyUyMHNpdGUlMjB0ZWFtd29ya3xlbnwwfHx8fDE3NzIyMjA5NzF8MA&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1628146023674-ede6049609b1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHwyfHxjb25zdHJ1Y3Rpb24lMjB3b3JrZXJzJTIwdGVhbSUyMHNhZmV0eSUyMGhlbG1ldCUyMGhhcHB5fGVufDB8fHx8MTc3MjIyMzM4Mnww&ixlib=rb-4.1.0&q=85",
     category: "Construcții",
     title: "Forță de Muncă Calificată",
     subtitle: "Pentru Proiecte de Succes",
@@ -14,7 +14,7 @@ const slides = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1709202967828-e1a7823ccdf6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxhZnJpY2FuJTIwaG90ZWwlMjBob3NwaXRhbGl0eSUyMHNlcnZpY2UlMjB3b3JrZXIlMjBzbWlsaW5nfGVufDB8fHx8MTc3MjIyMTAwMXww&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1689351300479-8601124d4cba?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxjaGVmJTIwY29va2luZyUyMGtpdGNoZW4lMjBzbWlsaW5nJTIwcHJvZmVzc2lvbmFsJTIwYXNpYW58ZW58MHx8fHwxNzcyMjIzNDExfDA&ixlib=rb-4.1.0&q=85",
     category: "HoReCa",
     title: "Personal Hotelier",
     subtitle: "Dedicat și Profesionist",
@@ -22,7 +22,7 @@ const slides = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1758390285803-a077fe0c4086?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzl8MHwxfHNlYXJjaHwxfHxhc2lhbiUyMGZhcm0lMjB3b3JrZXJzJTIwYWdyaWN1bHR1cmUlMjBoYXJ2ZXN0fGVufDB8fHx8MTc3MjIyMDk4MHww&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1769412447940-0932db51a5bf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxmYXJtJTIwYWdyaWN1bHR1cmUlMjB3b3JrZXJzJTIwaGFydmVzdCUyMHNtaWxpbmclMjBhc2lhfGVufDB8fHx8MTc3MjIyMzQxNXww&ixlib=rb-4.1.0&q=85",
     category: "Agricultură",
     title: "Lucrători Agricoli",
     subtitle: "Experimentați și Rezistenți",
@@ -30,14 +30,22 @@ const slides = [
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1764114908655-9a26d32750a0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwyfHxmYWN0b3J5JTIwcHJvZHVjdGlvbiUyMGxpbmUlMjB3b3JrZXJzJTIwbWFudWZhY3R1cmluZ3xlbnwwfHx8fDE3NzIyMjA5ODZ8MA&ixlib=rb-4.1.0&q=85",
-    category: "Producție",
-    title: "Operatori Producție",
-    subtitle: "Precizie și Eficiență",
-    description: "Muncitori pentru linii de producție, asamblare și control calitate în fabrici din Europa Centrală."
+    image: "https://images.unsplash.com/photo-1587728409203-97f284c580fe?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwxfHxjcnVpc2UlMjBzaGlwJTIwY3JldyUyMHN0YWZmJTIwc21pbGluZyUyMHVuaWZvcm0lMjBob3NwaXRhbGl0eXxlbnwwfHx8fDE3NzIyMjMzNjR8MA&ixlib=rb-4.1.0&q=85",
+    category: "Nave de Croazieră",
+    title: "Personal Înalt Calificat",
+    subtitle: "Pentru Industria Maritimă",
+    description: "Bucătari, ospătari, tehnicieni și personal hotelier pentru nave de croazieră internaționale."
   },
   {
     id: 5,
+    image: "https://images.unsplash.com/photo-1687422810663-c316494f725a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHxhZnJpY2FuJTIwd29ya2VyJTIwc21pbGluZyUyMHByb2Zlc3Npb25hbCUyMHBvc2l0aXZlfGVufDB8fHx8MTc3MjIyMzM3M3ww&ixlib=rb-4.1.0&q=85",
+    category: "Producție",
+    title: "Meșteșugari & Operatori",
+    subtitle: "Precizie și Dedicare",
+    description: "Muncitori calificați pentru linii de producție, ateliere și fabrici din Europa Centrală."
+  },
+  {
+    id: 6,
     image: "https://images.unsplash.com/photo-1768796373360-95d80c5830fb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjB3b3JrZXJzJTIwbG9naXN0aWNzJTIwZGl2ZXJzZSUyMHRlYW18ZW58MHx8fHwxNzcyMjIwOTgzfDA&ixlib=rb-4.1.0&q=85",
     category: "Logistică",
     title: "Personal Depozite",
@@ -106,6 +114,16 @@ export default function HeroSlider() {
               {slide.category}
             </span>
           </div>
+
+          {/* Main Headline */}
+          <p 
+            className={`text-gold font-medium text-lg mb-2 transition-all duration-500 ${
+              isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
+            }`}
+            style={{ transitionDelay: "150ms" }}
+          >
+            Soluții Globale pentru Deficitul de Forță de Muncă
+          </p>
 
           {/* Title */}
           <h1 
@@ -214,17 +232,17 @@ export default function HeroSlider() {
         ))}
       </div>
 
-      {/* Stats Bar */}
+      {/* Stats Bar - Updated to 4 years and 11 agencies */}
       <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm py-5 z-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div data-testid="stat-partners">
-              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">30+</div>
-              <div className="text-sm text-gray-600 font-medium">Parteneri Globali</div>
+              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">11</div>
+              <div className="text-sm text-gray-600 font-medium">Parteneri în Asia & Africa</div>
             </div>
             <div data-testid="stat-countries">
-              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">18</div>
-              <div className="text-sm text-gray-600 font-medium">Țări Sursă</div>
+              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">4</div>
+              <div className="text-sm text-gray-600 font-medium">Ani de Experiență</div>
             </div>
             <div data-testid="stat-continents">
               <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">2</div>
