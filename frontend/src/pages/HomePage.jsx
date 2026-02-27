@@ -50,23 +50,23 @@ export default function HomePage() {
               {/* Image */}
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1758873269317-51888e824b28?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHw0fHxkaXZlcnNlJTIwYnVzaW5lc3MlMjB0ZWFtJTIwbWVldGluZyUyMG9mZmljZXxlbnwwfHx8fDE3NzIyMTg2NTJ8MA&ixlib=rb-4.1.0&q=85"
+                  src="https://images.unsplash.com/photo-1725618878496-233974f2fd59?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAxODF8MHwxfHNlYXJjaHwxfHxkaXZlcnNlJTIwdGVhbSUyMGJ1c2luZXNzJTIwbWVldGluZyUyMGludGVybmF0aW9uYWx8ZW58MHx8fHwxNzcyMjIxMDA2fDA&ixlib=rb-4.1.0&q=85"
                   alt="Echipa Global Jobs Consulting"
-                  className="rounded-lg shadow-lg w-full"
+                  className="rounded-2xl shadow-lg w-full"
                 />
-                <div className="absolute -bottom-6 -right-6 bg-navy-900 text-white p-6 rounded-lg shadow-xl hidden md:block">
-                  <div className="font-heading text-4xl font-black">10+</div>
-                  <div className="text-navy-200 text-sm">Ani de Experiență</div>
+                <div className="absolute -bottom-6 -right-6 bg-coral text-white p-6 rounded-2xl shadow-xl hidden md:block">
+                  <div className="font-heading text-4xl font-bold">10+</div>
+                  <div className="text-white/80 text-sm">Ani de Experiență</div>
                 </div>
               </div>
 
               {/* Content */}
               <div>
-                <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+                <span className="text-coral font-semibold text-sm tracking-wider">
                   Despre Noi
                 </span>
-                <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-6">
-                  PARTENERUL DUMNEAVOASTRĂ ÎN RECRUTARE INTERNAȚIONALĂ
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-6">
+                  Partenerul Dumneavoastră în Recrutare Internațională
                 </h2>
                 <p className="text-gray-600 mb-6 leading-relaxed">
                   Global Jobs Consulting este o agenție de recrutare All-Inclusive specializată 
