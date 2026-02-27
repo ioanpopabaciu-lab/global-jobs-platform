@@ -138,39 +138,39 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 flex items-center justify-center">
                   <span className="text-3xl">🇷🇴</span>
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-navy-900 uppercase mb-2">România</h3>
+                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">România</h3>
                 <p className="text-gray-600 mb-4">
                   Soluții complete de recrutare pentru angajatorii români din toate sectoarele industriale.
                 </p>
-                <Link to="/angajatori" className="text-navy-600 font-semibold text-sm hover:underline">
+                <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
                   Detalii pentru RO →
                 </Link>
               </div>
 
               {/* Austria */}
-              <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow" data-testid="market-austria">
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center hover:shadow-md hover:border-coral/30 transition-all" data-testid="market-austria">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
                   <span className="text-3xl">🇦🇹</span>
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-navy-900 uppercase mb-2">Austria</h3>
+                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">Austria</h3>
                 <p className="text-gray-600 mb-4">
                   Forță de muncă calificată pentru piața austriacă, cu suport complet în procesul de imigrare.
                 </p>
-                <Link to="/angajatori" className="text-navy-600 font-semibold text-sm hover:underline">
+                <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
                   Detalii pentru AT →
                 </Link>
               </div>
 
               {/* Serbia */}
-              <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow" data-testid="market-serbia">
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center hover:shadow-md hover:border-coral/30 transition-all" data-testid="market-serbia">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 flex items-center justify-center">
                   <span className="text-3xl">🇷🇸</span>
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-navy-900 uppercase mb-2">Serbia</h3>
+                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">Serbia</h3>
                 <p className="text-gray-600 mb-4">
                   Plasare de personal pentru companiile din Serbia care caută muncitori dedicați.
                 </p>
-                <Link to="/angajatori" className="text-navy-600 font-semibold text-sm hover:underline">
+                <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
                   Detalii pentru RS →
                 </Link>
               </div>
@@ -179,12 +179,12 @@ export default function HomePage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 bg-navy-900 relative overflow-hidden" data-testid="final-cta-section">
+        <section className="py-20 bg-gradient-to-r from-navy-900 to-navy-800 relative overflow-hidden" data-testid="final-cta-section">
           <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-white/10 to-transparent"></div>
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-3xl mx-auto text-center text-white">
-              <h2 className="font-heading text-4xl md:text-5xl font-black uppercase mb-6">
-                ÎNCEPEȚI RECRUTAREA ASTĂZI
+              <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6">
+                Începeți Recrutarea Astăzi
               </h2>
               <p className="text-navy-200 text-lg mb-8">
                 Indiferent dacă sunteți angajator în căutare de personal sau candidat 
@@ -193,7 +193,7 @@ export default function HomePage() {
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   to="/angajatori"
-                  className="inline-flex items-center gap-2 bg-white text-navy-900 px-8 py-4 rounded-sm font-bold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg"
                   data-testid="final-cta-employer"
                 >
                   Sunt Angajator
@@ -201,7 +201,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   to="/candidati"
-                  className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-sm font-bold hover:bg-white/10 transition-colors"
+                  className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors"
                   data-testid="final-cta-candidate"
                 >
                   Caut un Job
