@@ -12,6 +12,7 @@ import {
   Tractor,
   Warehouse,
   Factory,
+  Anchor,
   Shield,
   Clock,
   Globe,
