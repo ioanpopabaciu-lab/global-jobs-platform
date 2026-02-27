@@ -1,23 +1,29 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Phone } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Menu, Phone, Globe } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navLinks = [
-  { href: "/", label: "Acasă" },
-  { href: "/angajatori", label: "Angajatori" },
-  { href: "/servicii", label: "Servicii" },
-  { href: "/candidati", label: "Portal Candidați" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", label: "Acasă", labelDE: "Startseite", labelSR: "Početna" },
+  { href: "/angajatori", label: "Angajatori", labelDE: "Arbeitgeber", labelSR: "Poslodavci" },
+  { href: "/servicii", label: "Servicii", labelDE: "Dienstleistungen", labelSR: "Usluge" },
+  { href: "/candidati", label: "Portal Candidați", labelDE: "Bewerberportal", labelSR: "Portal kandidata" },
+  { href: "/blog", label: "Blog", labelDE: "Blog", labelSR: "Blog" },
+  { href: "/contact", label: "Contact", labelDE: "Kontakt", labelSR: "Kontakt" },
 ];
 
 // Logo URLs from assets
 const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
 const LOGO_TRANSPARENT = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/ekuvpyca_logo%20transparent.png";
 
-export default function Navbar() {
+export default function Navbar({ language = "ro", onLanguageChange }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -35,13 +41,31 @@ export default function Navbar() {
     return location.pathname.startsWith(href);
   };
 
+  const getLabel = (link) => {
+    if (language === "de") return link.labelDE;
+    if (language === "sr") return link.labelSR;
+    return link.label;
+  };
+
+  const getCtaText = () => {
+    if (language === "de") return "Angebot anfordern";
+    if (language === "sr") return "Zatražite ponudu";
+    return "Solicită Ofertă";
+  };
+
+  const languageLabels = {
+    ro: "RO",
+    de: "DE",
+    sr: "SR"
+  };
+
   return (
     <header
       data-testid="navbar"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/95 glass-nav shadow-md"
-          : "bg-transparent"
+          ? "bg-white shadow-lg"
+          : "bg-navy-900/80 backdrop-blur-sm"
       }`}
     >
       {/* Top Bar */}
@@ -54,7 +78,27 @@ export default function Navbar() {
             </span>
             <span className="hidden sm:block">office@gjc.ro</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            {/* Language Selector */}
+            {onLanguageChange && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 hover:text-coral transition-colors">
+                  <Globe className="h-3 w-3" />
+                  {languageLabels[language]}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => onLanguageChange("ro")}>
+                    🇷🇴 Română
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onLanguageChange("de")}>
+                    🇦🇹 Deutsch
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onLanguageChange("sr")}>
+                    🇷🇸 Srpski
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             <span className="font-medium">RO | AT | RS</span>
           </div>
         </div>
@@ -63,12 +107,12 @@ export default function Navbar() {
       {/* Main Nav */}
       <nav className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - Made bigger */}
           <Link to="/" className="flex items-center" data-testid="logo-link">
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_TRANSPARENT} 
               alt="Global Jobs Consulting" 
-              className="h-14 md:h-16 w-auto transition-all duration-300"
+              className="h-16 md:h-20 w-auto transition-all duration-300"
             />
           </Link>
 
@@ -82,10 +126,10 @@ export default function Navbar() {
                 className={`font-medium text-sm transition-colors hover:text-coral ${
                   isActive(link.href)
                     ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
-                    : isScrolled ? "text-gray-600" : "text-white/90"
+                    : isScrolled ? "text-gray-700" : "text-white/90"
                 }`}
               >
-                {link.label}
+                {getLabel(link)}
               </Link>
             ))}
             <Button
@@ -93,7 +137,7 @@ export default function Navbar() {
               data-testid="nav-cta-button"
               className="bg-coral hover:bg-red-600 text-white rounded-full px-6"
             >
-              <Link to="/angajatori">Solicită Ofertă</Link>
+              <Link to="/angajatori">{getCtaText()}</Link>
             </Button>
           </div>
 
@@ -105,8 +149,10 @@ export default function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px]" data-testid="mobile-menu">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <SheetDescription className="sr-only">Site navigation links</SheetDescription>
               <div className="flex flex-col gap-4 mt-8">
-                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-12 w-auto mb-4" />
+                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-14 w-auto mb-4" />
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -117,7 +163,7 @@ export default function Navbar() {
                       isActive(link.href) ? "text-navy-900" : "text-gray-600"
                     }`}
                   >
-                    {link.label}
+                    {getLabel(link)}
                   </Link>
                 ))}
                 <Button
@@ -126,7 +172,7 @@ export default function Navbar() {
                   data-testid="mobile-cta-button"
                 >
                   <Link to="/angajatori" onClick={() => setIsOpen(false)}>
-                    Solicită Ofertă
+                    {getCtaText()}
                   </Link>
                 </Button>
               </div>
