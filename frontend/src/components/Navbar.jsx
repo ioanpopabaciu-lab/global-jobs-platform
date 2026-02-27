@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Globe, Phone } from "lucide-react";
+import { Menu, Phone } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Acasă" },
@@ -12,6 +12,10 @@ const navLinks = [
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
+
+// Logo URLs from assets
+const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
+const LOGO_TRANSPARENT = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/ekuvpyca_logo%20transparent.png";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,21 +55,21 @@ export default function Navbar() {
             <span className="hidden sm:block">office@gjc.ro</span>
           </div>
           <div className="flex items-center gap-2">
-            <Globe className="h-3 w-3" />
-            <span>RO | AT | RS</span>
+            <span className="font-medium">RO | AT | RS</span>
           </div>
         </div>
       </div>
 
       {/* Main Nav */}
-      <nav className="container mx-auto px-4 py-3">
+      <nav className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2" data-testid="logo-link">
-            <div className={`font-heading font-black text-2xl tracking-tight ${isScrolled ? 'text-navy-900' : 'text-white'}`}>
-              <span className="text-navy-900 bg-white px-2 py-1 rounded">GJC</span>
-              <span className={`ml-2 ${isScrolled ? 'text-navy-900' : 'text-white'}`}>Global Jobs</span>
-            </div>
+          <Link to="/" className="flex items-center" data-testid="logo-link">
+            <img 
+              src={isScrolled ? LOGO_COLORED : LOGO_TRANSPARENT} 
+              alt="Global Jobs Consulting" 
+              className="h-14 md:h-16 w-auto transition-all duration-300"
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -75,10 +79,10 @@ export default function Navbar() {
                 key={link.href}
                 to={link.href}
                 data-testid={`nav-link-${link.label.toLowerCase().replace(/\s/g, '-')}`}
-                className={`font-medium text-sm transition-colors hover:text-navy-600 ${
+                className={`font-medium text-sm transition-colors hover:text-coral ${
                   isActive(link.href)
                     ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
-                    : isScrolled ? "text-gray-600" : "text-white/80"
+                    : isScrolled ? "text-gray-600" : "text-white/90"
                 }`}
               >
                 {link.label}
@@ -87,7 +91,7 @@ export default function Navbar() {
             <Button
               asChild
               data-testid="nav-cta-button"
-              className="bg-navy-900 hover:bg-navy-800 text-white rounded-sm"
+              className="bg-coral hover:bg-red-600 text-white rounded-full px-6"
             >
               <Link to="/angajatori">Solicită Ofertă</Link>
             </Button>
@@ -102,6 +106,7 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px]" data-testid="mobile-menu">
               <div className="flex flex-col gap-4 mt-8">
+                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-12 w-auto mb-4" />
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -117,7 +122,7 @@ export default function Navbar() {
                 ))}
                 <Button
                   asChild
-                  className="mt-4 bg-navy-900 hover:bg-navy-800 text-white rounded-sm"
+                  className="mt-4 bg-coral hover:bg-red-600 text-white rounded-full"
                   data-testid="mobile-cta-button"
                 >
                   <Link to="/angajatori" onClick={() => setIsOpen(false)}>
