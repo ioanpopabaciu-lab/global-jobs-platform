@@ -31,7 +31,7 @@ const processSteps = [
     icon: Users,
     step: "02",
     title: "Selecție Candidați",
-    description: "Folosim rețeaua noastră de 30+ agenții partenere pentru a identifica și intervieva candidații potriviți din 18 țări."
+    description: "Folosim rețeaua noastră de 11 agenții partenere din Asia și Africa pentru a identifica și intervieva candidații potriviți."
   },
   {
     icon: FileCheck,
