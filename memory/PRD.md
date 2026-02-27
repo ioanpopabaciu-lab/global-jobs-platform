@@ -7,12 +7,20 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Frontend**: React 19 + Tailwind CSS + Shadcn/UI
 - **Backend**: FastAPI + Motor (MongoDB async)
 - **Database**: MongoDB
-- **Styling**: Navy Blue (#003366) theme, Barlow Condensed + Inter fonts
+- **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
+
+## Design Update (27 Feb 2026)
+- Logo oficial Global Jobs Consulting integrat
+- Font Montserrat (cald și prietenos)
+- Butoane rotunjite cu culoare coral
+- Imagini autentice cu muncitori asiatici și africani
+- Eliminat stilul uppercase rigid
+- Design mai cald și primitor
 
 ## Funcționalități Implementate
 
 ### ✅ Pagini și Secțiuni
-- **Home Page**: Hero slider cu 5 imagini/categorii, statistici globale, servicii grid, proces de recrutare
+- **Home Page**: Hero slider cu 5 imagini autentice, statistici, servicii grid, proces de recrutare
 - **Angajatori**: Formular complet de solicitare personal (companie, cerințe, logistică)
 - **Portal Candidați**: Formular aplicare cu upload CV și Video-CV link
 - **Servicii All-Inclusive**: Descriere proces 6 pași, industrii acoperite, avantaje
@@ -65,5 +73,6 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - Integrare cu platforme de job-uri
 
 ## Data Implementare
-- **Început**: 27 Februarie 2026
-- **Status**: MVP Complet
+- **MVP**: 27 Februarie 2026
+- **Design Update**: 27 Februarie 2026
+- **Status**: Complet, gata de deploy
