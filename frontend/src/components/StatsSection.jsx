@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Globe, Users, Building, MapPin } from "lucide-react";
+import { Globe, Users, Building, Calendar } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const defaultStats = {
-  partner_agencies: 30,
-  partner_countries: 18,
+  partner_agencies: 11,
+  experience_years: 4,
   continents: 2,
   target_markets: 3
 };
@@ -18,8 +18,8 @@ export default function StatsSection() {
       .then(res => res.json())
       .then(data => {
         setStats({
-          partner_agencies: data.partner_agencies || 30,
-          partner_countries: data.partner_countries || 18,
+          partner_agencies: 11,
+          experience_years: 4,
           continents: data.continents || 2,
           target_markets: 3
         });
@@ -30,18 +30,18 @@ export default function StatsSection() {
   const statItems = [
     {
       icon: Building,
-      value: `${stats.partner_agencies}+`,
+      value: stats.partner_agencies,
       label: "Agenții Partenere",
-      description: "Rețea globală de recrutare"
+      description: "În Asia și Africa"
+    },
+    {
+      icon: Calendar,
+      value: stats.experience_years,
+      label: "Ani de Experiență",
+      description: "În recrutare internațională"
     },
     {
       icon: Globe,
-      value: stats.partner_countries,
-      label: "Țări Sursă",
-      description: "Din Asia și Africa"
-    },
-    {
-      icon: MapPin,
       value: stats.continents,
       label: "Continente",
       description: "Acoperire globală"
