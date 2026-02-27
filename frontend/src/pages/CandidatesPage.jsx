@@ -65,7 +65,7 @@ export default function CandidatesPage() {
     try {
       const formData = new FormData();
       Object.keys(data).forEach(key => {
-        if (data[key] !== undefined && data[key] !== null) {
+        if (data[key] !== undefined && data[key] !== null && data[key] !== '') {
           formData.append(key, data[key]);
         }
       });
@@ -79,14 +79,19 @@ export default function CandidatesPage() {
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Eroare la trimitere");
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.detail || "Eroare la trimitere");
+      }
 
       toast.success("Aplicația a fost trimisă cu succes!");
       setSubmitted(true);
       reset();
       setCvFile(null);
     } catch (error) {
-      toast.error("A apărut o eroare. Vă rugăm încercați din nou.");
+      console.error("Form submission error:", error);
+      toast.error(error.message || "A apărut o eroare. Vă rugăm încercați din nou.");
     } finally {
       setIsSubmitting(false);
     }
