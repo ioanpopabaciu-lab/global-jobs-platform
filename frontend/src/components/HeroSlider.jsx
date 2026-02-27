@@ -6,41 +6,41 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 const slides = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1760009436767-d154e930e55c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwyfHxjb25zdHJ1Y3Rpb24lMjB3b3JrZXIlMjBidWlsZGluZyUyMHNpdGUlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzcyMjE4NTk4fDA&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1770822662868-4a612845fcdd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwzfHxhc2lhbiUyMGNvbnN0cnVjdGlvbiUyMHdvcmtlcnMlMjBidWlsZGluZyUyMHNpdGUlMjB0ZWFtd29ya3xlbnwwfHx8fDE3NzIyMjA5NzF8MA&ixlib=rb-4.1.0&q=85",
     category: "Construcții",
-    title: "FORȚĂ DE MUNCĂ CALIFICATĂ",
+    title: "Forță de Muncă Calificată",
     subtitle: "Pentru Proiecte de Succes",
     description: "Recrutăm muncitori experimentați din Asia și Africa pentru sectorul construcțiilor din România, Austria și Serbia."
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1765735049473-7cb6466e5b3f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHxjaGVmJTIwY29va2luZyUyMHJlc3RhdXJhbnQlMjBraXRjaGVuJTIwcHJvZmVzc2lvbmFsfGVufDB8fHx8MTc3MjIxODYzOXww&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1709202967828-e1a7823ccdf6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxhZnJpY2FuJTIwaG90ZWwlMjBob3NwaXRhbGl0eSUyMHNlcnZpY2UlMjB3b3JrZXIlMjBzbWlsaW5nfGVufDB8fHx8MTc3MjIyMTAwMXww&ixlib=rb-4.1.0&q=85",
     category: "HoReCa",
-    title: "PERSONAL HOTELIER",
+    title: "Personal Hotelier",
     subtitle: "Dedicat și Profesionist",
     description: "Bucătari, ospătari și personal de curățenie pentru hoteluri și restaurante din întreaga regiune."
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1622385161916-27f0c8746f4e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxmYWN0b3J5JTIwd29ya2VyJTIwcHJvZHVjdGlvbiUyMGxpbmUlMjBpbmR1c3RyaWFsfGVufDB8fHx8MTc3MjIxODY0Nnww&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1758390285803-a077fe0c4086?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzl8MHwxfHNlYXJjaHwxfHxhc2lhbiUyMGZhcm0lMjB3b3JrZXJzJTIwYWdyaWN1bHR1cmUlMjBoYXJ2ZXN0fGVufDB8fHx8MTc3MjIyMDk4MHww&ixlib=rb-4.1.0&q=85",
     category: "Agricultură",
-    title: "LUCRĂTORI AGRICOLI",
+    title: "Lucrători Agricoli",
     subtitle: "Experimentați și Rezistenți",
     description: "Personal pentru ferme, plantații și procesare agricolă, disponibil sezonier sau permanent."
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1764114908655-9a26d32750a0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwyfHxmYWN0b3J5JTIwd29ya2VyJTIwcHJvZHVjdGlvbiUyMGxpbmUlMjBpbmR1c3RyaWFsfGVufDB8fHx8MTc3MjIxODYyNnww&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1764114908655-9a26d32750a0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwyfHxmYWN0b3J5JTIwcHJvZHVjdGlvbiUyMGxpbmUlMjB3b3JrZXJzJTIwbWFudWZhY3R1cmluZ3xlbnwwfHx8fDE3NzIyMjA5ODZ8MA&ixlib=rb-4.1.0&q=85",
     category: "Producție",
-    title: "OPERATORI PRODUCȚIE",
+    title: "Operatori Producție",
     subtitle: "Precizie și Eficiență",
     description: "Muncitori pentru linii de producție, asamblare și control calitate în fabrici din Europa Centrală."
   },
   {
     id: 5,
-    image: "https://images.unsplash.com/photo-1672552226669-f6c3041972ea?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjB3b3JrZXIlMjBsb2dpc3RpY3MlMjBwYWNrYWdlJTIwc2Nhbm5pbmd8ZW58MHx8fHwxNzcyMjE4NjEyfDA&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1768796373360-95d80c5830fb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjB3b3JrZXJzJTIwbG9naXN0aWNzJTIwZGl2ZXJzZSUyMHRlYW18ZW58MHx8fHwxNzcyMjIwOTgzfDA&ixlib=rb-4.1.0&q=85",
     category: "Logistică",
-    title: "PERSONAL DEPOZITE",
+    title: "Personal Depozite",
     subtitle: "Organizare și Rapiditate",
     description: "Muncitori pentru depozite, sortare, ambalare și operațiuni logistice."
   }
@@ -89,8 +89,8 @@ export default function HeroSlider() {
         </div>
       ))}
 
-      {/* Overlay */}
-      <div className="absolute inset-0 hero-overlay" />
+      {/* Warm Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-navy-900/90 via-navy-900/60 to-navy-900/30" />
 
       {/* Content */}
       <div className="relative z-10 h-full container mx-auto px-4 flex items-center">
@@ -102,17 +102,17 @@ export default function HeroSlider() {
             }`}
             style={{ transitionDelay: "100ms" }}
           >
-            <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 text-sm font-medium rounded-sm uppercase tracking-wider">
+            <span className="bg-coral text-white px-4 py-2 text-sm font-semibold rounded-full">
               {slide.category}
             </span>
           </div>
 
           {/* Title */}
           <h1 
-            className={`font-heading text-5xl md:text-6xl lg:text-7xl font-black text-white mb-2 text-shadow-hero transition-all duration-500 ${
+            className={`font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2 transition-all duration-500 ${
               isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
             }`}
-            style={{ transitionDelay: "200ms" }}
+            style={{ transitionDelay: "200ms", textShadow: "0 2px 20px rgba(0,0,0,0.3)" }}
             data-testid="hero-title"
           >
             {slide.title}
@@ -120,7 +120,7 @@ export default function HeroSlider() {
 
           {/* Subtitle */}
           <h2 
-            className={`font-heading text-2xl md:text-3xl lg:text-4xl font-semibold text-navy-200 mb-6 transition-all duration-500 ${
+            className={`font-heading text-xl md:text-2xl lg:text-3xl font-medium text-gold mb-6 transition-all duration-500 ${
               isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
             }`}
             style={{ transitionDelay: "300ms" }}
@@ -130,7 +130,7 @@ export default function HeroSlider() {
 
           {/* Description */}
           <p 
-            className={`text-white/90 text-lg md:text-xl max-w-xl mb-8 transition-all duration-500 ${
+            className={`text-white/90 text-lg md:text-xl max-w-xl mb-8 leading-relaxed transition-all duration-500 ${
               isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
             }`}
             style={{ transitionDelay: "400ms" }}
@@ -148,7 +148,7 @@ export default function HeroSlider() {
             <Button 
               asChild 
               size="lg" 
-              className="bg-white text-navy-900 hover:bg-gray-100 rounded-sm font-semibold text-base px-8"
+              className="bg-coral hover:bg-red-600 text-white rounded-full font-semibold text-base px-8 shadow-lg"
               data-testid="hero-cta-employer"
             >
               <Link to="/angajatori">
@@ -160,7 +160,7 @@ export default function HeroSlider() {
               asChild 
               size="lg" 
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/10 rounded-sm font-semibold text-base px-8"
+              className="border-2 border-white text-white hover:bg-white/10 rounded-full font-semibold text-base px-8"
               data-testid="hero-cta-candidate"
             >
               <Link to="/candidati">
@@ -175,7 +175,7 @@ export default function HeroSlider() {
       <div className="absolute bottom-1/2 translate-y-1/2 left-4 z-20">
         <button
           onClick={prevSlide}
-          className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-sm transition"
+          className="p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full transition"
           data-testid="hero-prev-button"
           aria-label="Previous slide"
         >
@@ -185,7 +185,7 @@ export default function HeroSlider() {
       <div className="absolute bottom-1/2 translate-y-1/2 right-4 z-20">
         <button
           onClick={nextSlide}
-          className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-sm transition"
+          className="p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full transition"
           data-testid="hero-next-button"
           aria-label="Next slide"
         >
@@ -194,7 +194,7 @@ export default function HeroSlider() {
       </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -206,7 +206,7 @@ export default function HeroSlider() {
               }
             }}
             className={`h-2 rounded-full transition-all ${
-              index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/70"
+              index === currentSlide ? "w-8 bg-coral" : "w-2 bg-white/50 hover:bg-white/70"
             }`}
             data-testid={`hero-indicator-${index}`}
             aria-label={`Go to slide ${index + 1}`}
@@ -215,24 +215,24 @@ export default function HeroSlider() {
       </div>
 
       {/* Stats Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-navy-900/80 backdrop-blur-sm py-4 z-20">
+      <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm py-5 z-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-white">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div data-testid="stat-partners">
-              <div className="font-heading text-3xl md:text-4xl font-black">30+</div>
-              <div className="text-sm text-white/70">Parteneri Globali</div>
+              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">30+</div>
+              <div className="text-sm text-gray-600 font-medium">Parteneri Globali</div>
             </div>
             <div data-testid="stat-countries">
-              <div className="font-heading text-3xl md:text-4xl font-black">18</div>
-              <div className="text-sm text-white/70">Țări Sursă</div>
+              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">18</div>
+              <div className="text-sm text-gray-600 font-medium">Țări Sursă</div>
             </div>
             <div data-testid="stat-continents">
-              <div className="font-heading text-3xl md:text-4xl font-black">2</div>
-              <div className="text-sm text-white/70">Continente</div>
+              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">2</div>
+              <div className="text-sm text-gray-600 font-medium">Continente</div>
             </div>
             <div data-testid="stat-markets">
-              <div className="font-heading text-3xl md:text-4xl font-black">3</div>
-              <div className="text-sm text-white/70">Piețe Europene</div>
+              <div className="font-heading text-3xl md:text-4xl font-bold text-navy-900">3</div>
+              <div className="text-sm text-gray-600 font-medium">Piețe Europene</div>
             </div>
           </div>
         </div>
