@@ -327,7 +327,7 @@ export default function EmployersPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-navy-900 hover:bg-navy-800 text-white h-12 font-semibold"
+                      className="w-full bg-coral hover:bg-red-600 text-white h-12 font-semibold rounded-full"
                       data-testid="submit-employer-form"
                     >
                       {isSubmitting ? (
@@ -346,47 +346,47 @@ export default function EmployersPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <Card className="shadow-sm bg-navy-900 text-white">
+              <Card className="shadow-sm bg-gradient-to-br from-navy-900 to-navy-800 text-white rounded-xl">
                 <CardContent className="pt-6">
-                  <h3 className="font-heading text-xl font-bold uppercase mb-4">
+                  <h3 className="font-heading text-xl font-bold mb-4">
                     De ce să ne alegeți?
                   </h3>
                   <ul className="space-y-3 text-sm text-navy-200">
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-5 w-5 text-coral flex-shrink-0 mt-0.5" />
                       <span>Proces complet de recrutare și documentație</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-5 w-5 text-coral flex-shrink-0 mt-0.5" />
                       <span>Selecție riguroasă din 18 țări sursă</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-5 w-5 text-coral flex-shrink-0 mt-0.5" />
                       <span>Suport în obținerea vizelor și permiselor</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-5 w-5 text-coral flex-shrink-0 mt-0.5" />
                       <span>Integrare și monitorizare post-angajare</span>
                     </li>
                   </ul>
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm">
+              <Card className="shadow-sm rounded-xl">
                 <CardContent className="pt-6">
-                  <h3 className="font-heading text-xl font-bold text-navy-900 uppercase mb-4">
+                  <h3 className="font-heading text-xl font-bold text-navy-900 mb-4">
                     Contact Direct
                   </h3>
                   <div className="space-y-3 text-sm text-gray-600">
                     <p>
                       <strong>Telefon:</strong><br />
-                      <a href="tel:+40732403464" className="text-navy-600 hover:underline">
+                      <a href="tel:+40732403464" className="text-coral hover:underline">
                         +40 732 403 464
                       </a>
                     </p>
                     <p>
                       <strong>Email:</strong><br />
-                      <a href="mailto:office@gjc.ro" className="text-navy-600 hover:underline">
+                      <a href="mailto:office@gjc.ro" className="text-coral hover:underline">
                         office@gjc.ro
                       </a>
                     </p>
