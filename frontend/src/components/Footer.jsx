@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Globe, Facebook, Linkedin, Instagram } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 // Logo URL from assets
 const LOGO_TRANSPARENT = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/ekuvpyca_logo%20transparent.png";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-navy-900 text-white" data-testid="footer">
@@ -20,8 +22,7 @@ export default function Footer() {
               className="h-16 w-auto mb-4"
             />
             <p className="text-gray-300 text-sm leading-relaxed mb-4">
-              Agenție de recrutare All-Inclusive în România, Austria și Serbia. 
-              Peste 30 de parteneri în 18 țări din Asia și Africa.
+              {t('footer.description')}
             </p>
             <div className="flex gap-3">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
@@ -44,31 +45,31 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">Link-uri Rapide</h4>
+            <h4 className="font-heading text-lg font-semibold mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/angajatori" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-angajatori">
-                  Pentru Angajatori
+                  {t('nav.employers')}
                 </Link>
               </li>
               <li>
                 <Link to="/candidati" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-candidati">
-                  Portal Candidați
+                  {t('nav.candidates')}
                 </Link>
               </li>
               <li>
                 <Link to="/servicii" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-servicii">
-                  Servicii All-Inclusive
+                  {t('nav.services')}
                 </Link>
               </li>
               <li>
                 <Link to="/blog" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-blog">
-                  Blog & Noutăți
+                  {t('nav.blog')}
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-contact">
-                  Contact
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
@@ -76,20 +77,20 @@ export default function Footer() {
 
           {/* Industries */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">Domenii</h4>
+            <h4 className="font-heading text-lg font-semibold mb-4">{t('footer.industries')}</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li>HoReCa</li>
-              <li>Construcții</li>
-              <li>Agricultură</li>
-              <li>Depozite & Logistică</li>
-              <li>Producție</li>
-              <li>Servicii</li>
+              <li>{t('industries.horeca')}</li>
+              <li>{t('industries.construction')}</li>
+              <li>{t('industries.cruise')}</li>
+              <li>{t('industries.agriculture')}</li>
+              <li>{t('industries.warehouse')}</li>
+              <li>{t('industries.production')}</li>
             </ul>
           </div>
 
           {/* Contact Info - SEO Local */}
           <div itemScope itemType="http://schema.org/Organization">
-            <h4 className="font-heading text-lg font-semibold mb-4">Contact</h4>
+            <h4 className="font-heading text-lg font-semibold mb-4">{t('footer.contactInfo')}</h4>
             <address className="not-italic space-y-3 text-sm">
               <p className="flex items-start gap-2 text-gray-300" itemProp="address" itemScope itemType="http://schema.org/PostalAddress">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-coral" />
@@ -126,7 +127,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <p>© {currentYear} Global Jobs Consulting. Toate drepturile rezervate.</p>
+            <p>© {currentYear} Global Jobs Consulting. {t('footer.rights')}</p>
             <div className="flex gap-4">
               <span>România</span>
               <span>|</span>
