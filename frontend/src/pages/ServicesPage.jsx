@@ -137,22 +137,22 @@ export default function ServicesPage() {
 
       <div className="min-h-screen pt-32 pb-20" data-testid="services-page">
         {/* Hero */}
-        <div className="bg-navy-900 text-white py-20 mb-16">
+        <div className="bg-gradient-to-r from-navy-900 to-navy-800 text-white py-20 mb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <span className="text-navy-300 font-medium text-sm  tracking-wider">
+              <span className="text-coral font-semibold text-sm tracking-wider">
                 Servicii All-Inclusive
               </span>
-              <h1 className="font-heading text-3xl md:text-4xl lg:text-6xl font-bold  mt-2 mb-6">
-                SOLUȚII COMPLETE DE RECRUTARE
+              <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mt-2 mb-6">
+                Servicii Complete de Recrutare Internațională
               </h1>
               <p className="text-navy-200 text-lg mb-8">
-                De la identificarea candidatului perfect până la integrarea cu succes în 
-                echipa dumneavoastră - ne ocupăm de fiecare detaliu pentru ca dumneavoastră 
-                să vă concentrați pe afacere.
+                De la identificarea candidaților potriviți până la integrarea lor completă în 
+                echipa dumneavoastră, oferim o gamă completă de servicii pentru a vă ajuta să găsiți 
+                forța de muncă de care aveți nevoie.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button asChild size="lg" className="bg-white text-navy-900 hover:bg-gray-100 rounded-full font-semibold">
+                <Button asChild size="lg" className="bg-coral hover:bg-red-600 text-white rounded-full font-semibold">
                   <Link to="/angajatori" data-testid="services-cta-employer">
                     Solicită Personal
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -172,11 +172,11 @@ export default function ServicesPage() {
           {/* Process Steps */}
           <section className="mb-20" data-testid="process-steps">
             <div className="text-center mb-12">
-              <span className="text-navy-600 font-medium text-sm  tracking-wider">
+              <span className="text-coral font-semibold text-sm tracking-wider">
                 Procesul Nostru
               </span>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
-                CUM FUNCȚIONEAZĂ
+                Cum Funcționează
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Un proces structurat în 6 pași care asigură transparența și succesul 
