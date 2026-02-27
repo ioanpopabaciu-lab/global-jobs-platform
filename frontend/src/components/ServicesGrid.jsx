@@ -54,11 +54,11 @@ export default function ServicesGrid() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+          <span className="text-coral font-semibold text-sm tracking-wider">
             Domenii de Activitate
           </span>
-          <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-4">
-            INDUSTRII ACOPERITE
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
+            Industrii Acoperite
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Recrutăm forță de muncă calificată și necalificată pentru multiple 
@@ -73,16 +73,16 @@ export default function ServicesGrid() {
             return (
               <Card 
                 key={index}
-                className={`${service.span} group bg-white border-gray-200 hover:border-navy-300 transition-all duration-300 service-card cursor-pointer`}
+                className={`${service.span} group bg-white border-gray-200 hover:border-coral/50 transition-all duration-300 service-card cursor-pointer rounded-xl`}
                 data-testid={`service-card-${service.title.toLowerCase()}`}
               >
                 <CardContent className="p-6 h-full flex flex-col">
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="p-3 bg-navy-900 rounded-lg text-white group-hover:bg-navy-700 transition-colors">
+                    <div className="p-3 bg-coral rounded-xl text-white group-hover:bg-navy-900 transition-colors">
                       <Icon className="h-6 w-6" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-heading text-xl font-bold text-navy-900 uppercase">
+                      <h3 className="font-heading text-xl font-bold text-navy-900">
                         {service.title}
                       </h3>
                     </div>
@@ -94,7 +94,7 @@ export default function ServicesGrid() {
                     {service.features.map((feature, idx) => (
                       <span 
                         key={idx}
-                        className="text-xs bg-navy-50 text-navy-700 px-2 py-1 rounded"
+                        className="text-xs bg-navy-50 text-navy-700 px-2 py-1 rounded-full"
                       >
                         {feature}
                       </span>
@@ -102,7 +102,7 @@ export default function ServicesGrid() {
                   </div>
                   <Link 
                     to="/servicii"
-                    className="inline-flex items-center text-navy-600 font-medium text-sm hover:text-navy-900 transition-colors"
+                    className="inline-flex items-center text-coral font-medium text-sm hover:text-navy-900 transition-colors"
                   >
                     Află mai multe
                     <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -117,7 +117,7 @@ export default function ServicesGrid() {
         <div className="text-center mt-12">
           <Link
             to="/angajatori"
-            className="inline-flex items-center gap-2 bg-navy-900 text-white px-8 py-4 rounded-sm font-semibold hover:bg-navy-800 transition-colors"
+            className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-semibold hover:bg-red-600 transition-colors shadow-lg"
             data-testid="services-cta"
           >
             Solicită Personal Acum
