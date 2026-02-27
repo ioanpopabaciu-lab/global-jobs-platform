@@ -74,6 +74,13 @@ const industries = [
     roles: ["Bucătari", "Ajutori Bucătar", "Ospătari", "Barmani", "Cameriste", "Recepționeri"]
   },
   {
+    icon: Anchor,
+    title: "Nave de Croazieră",
+    description: "Personal înalt calificat pentru industria maritimă și nave de croazieră internaționale.",
+    roles: ["Bucătari Șef", "Ospătari", "Tehnicieni", "Personal Spa", "Barmani", "Recepționeri"],
+    highlighted: true
+  },
+  {
     icon: Tractor,
     title: "Agricultură",
     description: "Lucrători sezonieri sau permanenți pentru ferme, plantații și procesare agricolă.",
@@ -97,7 +104,7 @@ const advantages = [
   {
     icon: Globe,
     title: "Acoperire Globală",
-    stat: "18 Țări",
+    stat: "11 Parteneri",
     description: "Accesăm candidați din cele mai mari rezerve de forță de muncă din Asia și Africa."
   },
   {
