@@ -85,9 +85,9 @@ export default function HomePage() {
                   {advantages.map((adv, index) => {
                     const Icon = adv.icon;
                     return (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="p-2 bg-navy-100 rounded">
-                          <Icon className="h-5 w-5 text-navy-700" />
+                      <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="p-2 bg-coral/10 rounded-lg">
+                          <Icon className="h-5 w-5 text-coral" />
                         </div>
                         <div>
                           <h4 className="font-semibold text-navy-900 text-sm">{adv.title}</h4>
@@ -100,7 +100,7 @@ export default function HomePage() {
 
                 <Link
                   to="/servicii"
-                  className="inline-flex items-center gap-2 bg-navy-900 text-white px-6 py-3 rounded-sm font-semibold hover:bg-navy-800 transition-colors"
+                  className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-full font-semibold hover:bg-red-600 transition-colors shadow-lg"
                   data-testid="about-cta"
                 >
                   Descoperă Serviciile Noastre
@@ -124,17 +124,17 @@ export default function HomePage() {
         <section className="py-20 bg-gray-50" data-testid="markets-section">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+              <span className="text-coral font-semibold text-sm tracking-wider">
                 Piețe Acoperite
               </span>
-              <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-4">
-                ANGAJATORI DIN 3 ȚĂRI
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
+                Angajatori din 3 Țări
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Romania */}
-              <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow" data-testid="market-romania">
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center hover:shadow-md hover:border-coral/30 transition-all" data-testid="market-romania">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 flex items-center justify-center">
                   <span className="text-3xl">🇷🇴</span>
                 </div>
