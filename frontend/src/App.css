@@ -1,34 +1,131 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Global App Styles */
+.App {
+    min-height: 100vh;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
+/* Hero Section Styles */
+.hero-slide {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 51, 102, 0.9) 0%, rgba(0, 51, 102, 0.5) 60%, rgba(0, 51, 102, 0.3) 100%);
+}
+
+/* Navigation Active State */
+.nav-link.active {
+    color: #003366;
+    font-weight: 600;
+}
+
+/* Card Hover Effects */
+.service-card {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 51, 102, 0.1), 0 4px 6px -2px rgba(0, 51, 102, 0.05);
+}
+
+/* Form Styles */
+.form-input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #003366;
+}
+
+/* Button Pulse Animation */
+.btn-pulse {
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0, 51, 102, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(0, 51, 102, 0);
     }
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
+/* Stats Counter Animation */
+.stat-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    color: #003366;
+}
+
+/* Bento Grid Layout */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Partner Logo Scroll */
+.partner-scroll {
+    animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Industry Icons */
+.industry-icon {
+    width: 64px;
+    height: 64px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
+    background: linear-gradient(135deg, #003366 0%, #486581 100%);
+    border-radius: 12px;
     color: white;
 }
 
-.App-link {
-    color: #61dafb;
+/* Mobile Menu Animation */
+.mobile-menu-enter {
+    animation: slideDown 0.3s ease-out;
 }
 
-@keyframes App-logo-spin {
+@keyframes slideDown {
     from {
-        transform: rotate(0deg);
+        opacity: 0;
+        transform: translateY(-10px);
     }
     to {
-        transform: rotate(360deg);
+        opacity: 1;
+        transform: translateY(0);
     }
 }
