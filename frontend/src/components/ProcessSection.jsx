@@ -45,11 +45,11 @@ export default function ProcessSection() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+          <span className="text-coral font-semibold text-sm tracking-wider">
             Servicii All-Inclusive
           </span>
-          <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-4">
-            PROCESUL NOSTRU
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
+            Procesul Nostru
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             De la identificarea candidatului până la integrarea în echipa dumneavoastră, 
@@ -70,23 +70,23 @@ export default function ProcessSection() {
                 {/* Connector Line */}
                 {index < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-16 left-[60%] w-full h-0.5 bg-navy-100 z-0">
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-navy-300 rounded-full" />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-coral rounded-full" />
                   </div>
                 )}
 
-                <div className="relative z-10 bg-white p-6 rounded-lg border border-gray-100 hover:border-navy-200 hover:shadow-lg transition-all duration-300">
+                <div className="relative z-10 bg-white p-6 rounded-xl border border-gray-100 hover:border-coral/30 hover:shadow-lg transition-all duration-300">
                   {/* Step Number */}
-                  <div className="absolute -top-4 left-6 bg-navy-900 text-white font-heading font-black text-lg px-3 py-1 rounded-sm">
+                  <div className="absolute -top-4 left-6 bg-coral text-white font-heading font-bold text-lg px-3 py-1 rounded-full">
                     {step.step}
                   </div>
 
                   {/* Icon */}
-                  <div className="mt-4 mb-4 p-3 bg-navy-50 rounded-lg inline-block group-hover:bg-navy-100 transition-colors">
+                  <div className="mt-4 mb-4 p-3 bg-navy-50 rounded-xl inline-block group-hover:bg-coral/10 transition-colors">
                     <Icon className="h-8 w-8 text-navy-700" />
                   </div>
 
                   {/* Content */}
-                  <h3 className="font-heading text-xl font-bold text-navy-900 uppercase mb-3">
+                  <h3 className="font-heading text-xl font-bold text-navy-900 mb-3">
                     {step.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4">
@@ -109,8 +109,8 @@ export default function ProcessSection() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 bg-navy-900 rounded-lg p-8 md:p-12 text-center text-white">
-          <h3 className="font-heading text-2xl md:text-3xl font-bold uppercase mb-4">
+        <div className="mt-16 bg-gradient-to-r from-navy-900 to-navy-800 rounded-2xl p-8 md:p-12 text-center text-white">
+          <h3 className="font-heading text-2xl md:text-3xl font-bold mb-4">
             Soluții Complete de Recrutare
           </h3>
           <p className="text-navy-200 max-w-2xl mx-auto mb-8">
@@ -120,7 +120,7 @@ export default function ProcessSection() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               to="/servicii"
-              className="inline-flex items-center gap-2 bg-white text-navy-900 px-6 py-3 rounded-sm font-semibold hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-full font-semibold hover:bg-red-600 transition-colors"
               data-testid="process-cta-services"
             >
               Vezi Toate Serviciile
@@ -128,7 +128,7 @@ export default function ProcessSection() {
             </Link>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-sm font-semibold hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
               data-testid="process-cta-contact"
             >
               Contactează-ne
