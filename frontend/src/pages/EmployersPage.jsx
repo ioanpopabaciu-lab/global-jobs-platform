@@ -71,7 +71,7 @@ export default function EmployersPage() {
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="h-10 w-10 text-green-600" />
               </div>
-              <h1 className="font-heading text-3xl font-bold text-navy-900 uppercase mb-4">
+              <h1 className="font-heading text-3xl font-bold text-navy-900 mb-4">
                 Mulțumim pentru Solicitare!
               </h1>
               <p className="text-gray-600 mb-8">
@@ -80,7 +80,7 @@ export default function EmployersPage() {
               </p>
               <Button
                 onClick={() => setSubmitted(false)}
-                className="bg-navy-900 hover:bg-navy-800"
+                className="bg-coral hover:bg-red-600"
                 data-testid="submit-another-btn"
               >
                 Trimite o altă solicitare
