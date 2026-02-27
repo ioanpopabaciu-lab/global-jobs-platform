@@ -9,24 +9,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const navLinks = [
-  { href: "/", label: "Acasă", labelDE: "Startseite", labelSR: "Početna" },
-  { href: "/angajatori", label: "Angajatori", labelDE: "Arbeitgeber", labelSR: "Poslodavci" },
-  { href: "/servicii", label: "Servicii", labelDE: "Dienstleistungen", labelSR: "Usluge" },
-  { href: "/candidati", label: "Portal Candidați", labelDE: "Bewerberportal", labelSR: "Portal kandidata" },
-  { href: "/blog", label: "Blog", labelDE: "Blog", labelSR: "Blog" },
-  { href: "/contact", label: "Contact", labelDE: "Kontakt", labelSR: "Kontakt" },
+  { href: "/", key: "nav.home" },
+  { href: "/angajatori", key: "nav.employers" },
+  { href: "/servicii", key: "nav.services" },
+  { href: "/candidati", key: "nav.candidates" },
+  { href: "/blog", key: "nav.blog" },
+  { href: "/contact", key: "nav.contact" },
 ];
 
 // Logo URLs from assets
 const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
 const LOGO_TRANSPARENT = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/ekuvpyca_logo%20transparent.png";
 
-export default function Navbar({ language = "ro", onLanguageChange }) {
+export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,22 +43,10 @@ export default function Navbar({ language = "ro", onLanguageChange }) {
     return location.pathname.startsWith(href);
   };
 
-  const getLabel = (link) => {
-    if (language === "de") return link.labelDE;
-    if (language === "sr") return link.labelSR;
-    return link.label;
-  };
-
-  const getCtaText = () => {
-    if (language === "de") return "Angebot anfordern";
-    if (language === "sr") return "Zatražite ponudu";
-    return "Solicită Ofertă";
-  };
-
   const languageLabels = {
-    ro: "RO",
-    de: "DE",
-    sr: "SR"
+    ro: "🇷🇴 RO",
+    de: "🇦🇹 DE",
+    sr: "🇷🇸 SR"
   };
 
   return (
@@ -80,25 +70,23 @@ export default function Navbar({ language = "ro", onLanguageChange }) {
           </div>
           <div className="flex items-center gap-4">
             {/* Language Selector */}
-            {onLanguageChange && (
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 hover:text-coral transition-colors">
-                  <Globe className="h-3 w-3" />
-                  {languageLabels[language]}
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => onLanguageChange("ro")}>
-                    🇷🇴 Română
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onLanguageChange("de")}>
-                    🇦🇹 Deutsch
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onLanguageChange("sr")}>
-                    🇷🇸 Srpski
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 hover:text-coral transition-colors cursor-pointer">
+                <Globe className="h-3 w-3" />
+                {languageLabels[language]}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => setLanguage("ro")} className="cursor-pointer">
+                  🇷🇴 Română
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage("de")} className="cursor-pointer">
+                  🇦🇹 Deutsch
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage("sr")} className="cursor-pointer">
+                  🇷🇸 Srpski
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <span className="font-medium">RO | AT | RS</span>
           </div>
         </div>
@@ -122,22 +110,44 @@ export default function Navbar({ language = "ro", onLanguageChange }) {
               <Link
                 key={link.href}
                 to={link.href}
-                data-testid={`nav-link-${link.label.toLowerCase().replace(/\s/g, '-')}`}
+                data-testid={`nav-link-${link.href.replace('/', '') || 'home'}`}
                 className={`font-medium text-sm transition-colors hover:text-coral ${
                   isActive(link.href)
                     ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
                     : isScrolled ? "text-gray-700" : "text-white/90"
                 }`}
               >
-                {getLabel(link)}
+                {t(link.key)}
               </Link>
             ))}
+            
+            {/* Language Selector Desktop (when scrolled) */}
+            {isScrolled && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-coral transition-colors cursor-pointer">
+                  <Globe className="h-4 w-4" />
+                  {language.toUpperCase()}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => setLanguage("ro")} className="cursor-pointer">
+                    🇷🇴 Română
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLanguage("de")} className="cursor-pointer">
+                    🇦🇹 Deutsch
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLanguage("sr")} className="cursor-pointer">
+                    🇷🇸 Srpski
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            
             <Button
               asChild
               data-testid="nav-cta-button"
               className="bg-coral hover:bg-red-600 text-white rounded-full px-6"
             >
-              <Link to="/angajatori">{getCtaText()}</Link>
+              <Link to="/angajatori">{t('nav.cta')}</Link>
             </Button>
           </div>
 
@@ -153,17 +163,40 @@ export default function Navbar({ language = "ro", onLanguageChange }) {
               <SheetDescription className="sr-only">Site navigation links</SheetDescription>
               <div className="flex flex-col gap-4 mt-8">
                 <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-14 w-auto mb-4" />
+                
+                {/* Mobile Language Selector */}
+                <div className="flex gap-2 mb-4 pb-4 border-b border-gray-100">
+                  <button 
+                    onClick={() => setLanguage("ro")}
+                    className={`px-3 py-1 rounded-full text-sm ${language === 'ro' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
+                  >
+                    🇷🇴 RO
+                  </button>
+                  <button 
+                    onClick={() => setLanguage("de")}
+                    className={`px-3 py-1 rounded-full text-sm ${language === 'de' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
+                  >
+                    🇦🇹 DE
+                  </button>
+                  <button 
+                    onClick={() => setLanguage("sr")}
+                    className={`px-3 py-1 rounded-full text-sm ${language === 'sr' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
+                  >
+                    🇷🇸 SR
+                  </button>
+                </div>
+                
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     to={link.href}
                     onClick={() => setIsOpen(false)}
-                    data-testid={`mobile-nav-link-${link.label.toLowerCase().replace(/\s/g, '-')}`}
+                    data-testid={`mobile-nav-link-${link.href.replace('/', '') || 'home'}`}
                     className={`text-lg font-medium py-2 border-b border-gray-100 ${
                       isActive(link.href) ? "text-navy-900" : "text-gray-600"
                     }`}
                   >
-                    {getLabel(link)}
+                    {t(link.key)}
                   </Link>
                 ))}
                 <Button
@@ -172,7 +205,7 @@ export default function Navbar({ language = "ro", onLanguageChange }) {
                   data-testid="mobile-cta-button"
                 >
                   <Link to="/angajatori" onClick={() => setIsOpen(false)}>
-                    {getCtaText()}
+                    {t('nav.cta')}
                   </Link>
                 </Button>
               </div>
