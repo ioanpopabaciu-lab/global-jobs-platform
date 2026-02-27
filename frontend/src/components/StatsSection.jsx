@@ -55,7 +55,7 @@ export default function StatsSection() {
   ];
 
   return (
-    <section className="py-16 bg-navy-900" data-testid="stats-section">
+    <section className="py-16 bg-gradient-to-r from-navy-900 to-navy-800" data-testid="stats-section">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {statItems.map((item, index) => {
@@ -66,10 +66,10 @@ export default function StatsSection() {
                 className="text-center group"
                 data-testid={`stat-item-${index}`}
               >
-                <div className="inline-flex items-center justify-center p-3 bg-white/10 rounded-lg mb-4 group-hover:bg-white/20 transition-colors">
-                  <Icon className="h-6 w-6 text-navy-200" />
+                <div className="inline-flex items-center justify-center p-3 bg-coral/20 rounded-full mb-4 group-hover:bg-coral/30 transition-colors">
+                  <Icon className="h-6 w-6 text-coral" />
                 </div>
-                <div className="font-heading text-4xl md:text-5xl font-black text-white mb-1">
+                <div className="font-heading text-4xl md:text-5xl font-bold text-white mb-1">
                   {item.value}
                 </div>
                 <div className="text-white font-semibold mb-1">{item.label}</div>
