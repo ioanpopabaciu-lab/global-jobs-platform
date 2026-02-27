@@ -50,12 +50,12 @@ export default function HomePage() {
               {/* Image */}
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1725618878496-233974f2fd59?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAxODF8MHwxfHNlYXJjaHwxfHxkaXZlcnNlJTIwdGVhbSUyMGJ1c2luZXNzJTIwbWVldGluZyUyMGludGVybmF0aW9uYWx8ZW58MHx8fHwxNzcyMjIxMDA2fDA&ixlib=rb-4.1.0&q=85"
+                  src="https://images.unsplash.com/photo-1740477138822-906f6b845579?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwzfHxmYXJtJTIwYWdyaWN1bHR1cmUlMjB3b3JrZXJzJTIwaGFydmVzdCUyMHNtaWxpbmclMjBhc2lhfGVufDB8fHx8MTc3MjIyMzQxNXww&ixlib=rb-4.1.0&q=85"
                   alt="Echipa Global Jobs Consulting"
                   className="rounded-2xl shadow-lg w-full"
                 />
                 <div className="absolute -bottom-6 -right-6 bg-coral text-white p-6 rounded-2xl shadow-xl hidden md:block">
-                  <div className="font-heading text-4xl font-bold">10+</div>
+                  <div className="font-heading text-4xl font-bold">4</div>
                   <div className="text-white/80 text-sm">Ani de Experiență</div>
                 </div>
               </div>
