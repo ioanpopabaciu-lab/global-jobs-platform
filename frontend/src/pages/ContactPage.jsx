@@ -49,15 +49,15 @@ export default function ContactPage() {
         <div className="bg-navy-900 text-white py-16 mb-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <span className="text-navy-300 font-medium text-sm  tracking-wider">
+              <span className="text-coral font-semibold text-sm tracking-wider">
                 Contact
               </span>
-              <h1 className="font-heading text-3xl md:text-4xl font-bold  mt-2 mb-4">
-                CONTACTAȚI-NE
+              <h1 className="font-heading text-3xl md:text-4xl font-bold text-white mt-2 mb-4">
+                Hai să Discutăm
               </h1>
               <p className="text-navy-200 text-lg">
-                Suntem aici să vă ajutăm cu toate întrebările despre recrutare 
-                internațională. Trimiteți-ne un mesaj sau sunați-ne direct.
+                Fie că ești angajator în căutarea de personal sau candidat în căutarea unei 
+                oportunități, suntem aici să te ajutăm. Completează formularul sau contactează-ne direct.
               </p>
             </div>
           </div>
