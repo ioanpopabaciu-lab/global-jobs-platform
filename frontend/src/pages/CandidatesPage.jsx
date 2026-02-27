@@ -117,7 +117,7 @@ export default function CandidatesPage() {
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="h-10 w-10 text-green-600" />
               </div>
-              <h1 className="font-heading text-3xl font-bold text-navy-900 uppercase mb-4">
+              <h1 className="font-heading text-3xl font-bold text-navy-900  mb-4">
                 Aplicația a fost Trimisă!
               </h1>
               <p className="text-gray-600 mb-8">
@@ -126,7 +126,7 @@ export default function CandidatesPage() {
               </p>
               <Button
                 onClick={() => setSubmitted(false)}
-                className="bg-navy-900 hover:bg-navy-800"
+                className="bg-coral hover:bg-red-600"
                 data-testid="submit-another-btn"
               >
                 Trimite o altă aplicație
@@ -150,10 +150,10 @@ export default function CandidatesPage() {
         <div className="bg-navy-900 text-white py-16 mb-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <span className="text-navy-300 font-medium text-sm uppercase tracking-wider">
+              <span className="text-navy-300 font-medium text-sm  tracking-wider">
                 Portal Candidați
               </span>
-              <h1 className="font-heading text-4xl md:text-5xl font-black uppercase mt-2 mb-4">
+              <h1 className="font-heading text-3xl md:text-4xl font-bold  mt-2 mb-4">
                 APLICĂ PENTRU UN JOB ÎN EUROPA
               </h1>
               <p className="text-navy-200 text-lg">
@@ -170,7 +170,7 @@ export default function CandidatesPage() {
             <div className="lg:col-span-2">
               <Card className="shadow-sm">
                 <CardHeader>
-                  <CardTitle className="font-heading text-2xl text-navy-900 uppercase">
+                  <CardTitle className="font-heading text-2xl text-navy-900 ">
                     Formular de Aplicare
                   </CardTitle>
                 </CardHeader>
@@ -385,7 +385,7 @@ export default function CandidatesPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-navy-900 hover:bg-navy-800 text-white h-12 font-semibold"
+                      className="w-full bg-coral hover:bg-red-600 text-white h-12 font-semibold"
                       data-testid="submit-candidate-form"
                     >
                       {isSubmitting ? (
@@ -406,7 +406,7 @@ export default function CandidatesPage() {
             <div className="space-y-6">
               <Card className="shadow-sm bg-navy-900 text-white">
                 <CardContent className="pt-6">
-                  <h3 className="font-heading text-xl font-bold uppercase mb-4">
+                  <h3 className="font-heading text-xl font-bold  mb-4">
                     Țări de Destinație
                   </h3>
                   <div className="space-y-3">
@@ -437,7 +437,7 @@ export default function CandidatesPage() {
 
               <Card className="shadow-sm">
                 <CardContent className="pt-6">
-                  <h3 className="font-heading text-xl font-bold text-navy-900 uppercase mb-4">
+                  <h3 className="font-heading text-xl font-bold text-navy-900  mb-4">
                     Ce urmează?
                   </h3>
                   <ol className="space-y-3 text-sm text-gray-600">

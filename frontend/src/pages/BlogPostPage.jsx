@@ -91,10 +91,10 @@ export default function BlogPostPage() {
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Înapoi la Blog
               </Link>
-              <span className="block text-navy-200 text-sm uppercase tracking-wider mb-2">
+              <span className="block text-navy-200 text-sm  tracking-wider mb-2">
                 {post.category}
               </span>
-              <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase max-w-4xl">
+              <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-white  max-w-4xl">
                 {post.title}
               </h1>
             </div>
@@ -133,7 +133,7 @@ export default function BlogPostPage() {
 
             {/* CTA */}
             <div className="mt-12 bg-navy-900 rounded-lg p-8 text-center text-white">
-              <h3 className="font-heading text-2xl font-bold uppercase mb-4">
+              <h3 className="font-heading text-2xl font-bold  mb-4">
                 Aveți Nevoie de Personal?
               </h3>
               <p className="text-navy-200 mb-6">
@@ -141,7 +141,7 @@ export default function BlogPostPage() {
               </p>
               <Link 
                 to="/angajatori"
-                className="inline-flex items-center bg-white text-navy-900 px-6 py-3 rounded-sm font-semibold hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center bg-white text-navy-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
                 data-testid="blog-cta"
               >
                 Solicită Ofertă

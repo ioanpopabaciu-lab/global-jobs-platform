@@ -49,10 +49,10 @@ export default function ContactPage() {
         <div className="bg-navy-900 text-white py-16 mb-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <span className="text-navy-300 font-medium text-sm uppercase tracking-wider">
+              <span className="text-navy-300 font-medium text-sm  tracking-wider">
                 Contact
               </span>
-              <h1 className="font-heading text-4xl md:text-5xl font-black uppercase mt-2 mb-4">
+              <h1 className="font-heading text-3xl md:text-4xl font-bold  mt-2 mb-4">
                 CONTACTAȚI-NE
               </h1>
               <p className="text-navy-200 text-lg">
@@ -69,7 +69,7 @@ export default function ContactPage() {
             <div className="space-y-6">
               <Card className="shadow-sm">
                 <CardContent className="p-6">
-                  <h3 className="font-heading text-xl font-bold text-navy-900 uppercase mb-6">
+                  <h3 className="font-heading text-xl font-bold text-navy-900  mb-6">
                     Informații Contact
                   </h3>
                   
@@ -151,7 +151,7 @@ export default function ContactPage() {
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircle2 className="h-10 w-10 text-green-600" />
                     </div>
-                    <h2 className="font-heading text-2xl font-bold text-navy-900 uppercase mb-4">
+                    <h2 className="font-heading text-2xl font-bold text-navy-900  mb-4">
                       Mesaj Trimis cu Succes!
                     </h2>
                     <p className="text-gray-600 mb-8">
@@ -159,7 +159,7 @@ export default function ContactPage() {
                     </p>
                     <Button
                       onClick={() => setSubmitted(false)}
-                      className="bg-navy-900 hover:bg-navy-800"
+                      className="bg-coral hover:bg-red-600"
                       data-testid="send-another-btn"
                     >
                       Trimite alt mesaj
@@ -169,7 +169,7 @@ export default function ContactPage() {
               ) : (
                 <Card className="shadow-sm">
                   <CardContent className="p-8">
-                    <h2 className="font-heading text-2xl font-bold text-navy-900 uppercase mb-6">
+                    <h2 className="font-heading text-2xl font-bold text-navy-900  mb-6">
                       Trimite-ne un Mesaj
                     </h2>
                     
@@ -248,7 +248,7 @@ export default function ContactPage() {
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-navy-900 hover:bg-navy-800 text-white h-12 font-semibold"
+                        className="w-full bg-coral hover:bg-red-600 text-white h-12 font-semibold"
                         data-testid="submit-contact-form"
                       >
                         {isSubmitting ? (

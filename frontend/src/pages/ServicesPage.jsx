@@ -132,10 +132,10 @@ export default function ServicesPage() {
         <div className="bg-navy-900 text-white py-20 mb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <span className="text-navy-300 font-medium text-sm uppercase tracking-wider">
+              <span className="text-navy-300 font-medium text-sm  tracking-wider">
                 Servicii All-Inclusive
               </span>
-              <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase mt-2 mb-6">
+              <h1 className="font-heading text-3xl md:text-4xl lg:text-6xl font-bold  mt-2 mb-6">
                 SOLUȚII COMPLETE DE RECRUTARE
               </h1>
               <p className="text-navy-200 text-lg mb-8">
@@ -144,13 +144,13 @@ export default function ServicesPage() {
                 să vă concentrați pe afacere.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button asChild size="lg" className="bg-white text-navy-900 hover:bg-gray-100 rounded-sm font-semibold">
+                <Button asChild size="lg" className="bg-white text-navy-900 hover:bg-gray-100 rounded-full font-semibold">
                   <Link to="/angajatori" data-testid="services-cta-employer">
                     Solicită Personal
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-sm font-semibold">
+                <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-full font-semibold">
                   <Link to="/contact" data-testid="services-cta-contact">
                     Contactează-ne
                   </Link>
@@ -164,10 +164,10 @@ export default function ServicesPage() {
           {/* Process Steps */}
           <section className="mb-20" data-testid="process-steps">
             <div className="text-center mb-12">
-              <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+              <span className="text-navy-600 font-medium text-sm  tracking-wider">
                 Procesul Nostru
               </span>
-              <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-4">
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
                 CUM FUNCȚIONEAZĂ
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
@@ -183,14 +183,14 @@ export default function ServicesPage() {
                   <Card key={index} className="border-gray-200 hover:border-navy-300 transition-colors" data-testid={`process-step-${index}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4 mb-4">
-                        <div className="bg-navy-900 text-white font-heading font-black text-lg px-3 py-1 rounded-sm">
+                        <div className="bg-navy-900 text-white font-heading font-bold text-lg px-3 py-1 rounded-full">
                           {step.step}
                         </div>
                         <div className="p-2 bg-navy-50 rounded-lg">
                           <Icon className="h-6 w-6 text-navy-700" />
                         </div>
                       </div>
-                      <h3 className="font-heading text-xl font-bold text-navy-900 uppercase mb-2">
+                      <h3 className="font-heading text-xl font-bold text-navy-900  mb-2">
                         {step.title}
                       </h3>
                       <p className="text-gray-600 text-sm">
@@ -207,10 +207,10 @@ export default function ServicesPage() {
           <section className="mb-20 bg-gray-50 -mx-4 px-4 py-16" data-testid="industries-section">
             <div className="container mx-auto">
               <div className="text-center mb-12">
-                <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+                <span className="text-navy-600 font-medium text-sm  tracking-wider">
                   Domenii de Activitate
                 </span>
-                <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-4">
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
                   INDUSTRII ACOPERITE
                 </h2>
               </div>
@@ -224,7 +224,7 @@ export default function ServicesPage() {
                         <div className="p-3 bg-navy-900 rounded-lg text-white inline-block mb-4">
                           <Icon className="h-8 w-8" />
                         </div>
-                        <h3 className="font-heading text-xl font-bold text-navy-900 uppercase mb-2">
+                        <h3 className="font-heading text-xl font-bold text-navy-900  mb-2">
                           {industry.title}
                         </h3>
                         <p className="text-gray-600 text-sm mb-4">
@@ -253,10 +253,10 @@ export default function ServicesPage() {
           {/* Advantages */}
           <section className="mb-20" data-testid="advantages-section">
             <div className="text-center mb-12">
-              <span className="text-navy-600 font-medium text-sm uppercase tracking-wider">
+              <span className="text-navy-600 font-medium text-sm  tracking-wider">
                 De Ce Noi
               </span>
-              <h2 className="font-heading text-4xl md:text-5xl font-black text-navy-900 mt-2 mb-4">
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
                 AVANTAJE CHEIE
               </h2>
             </div>
@@ -269,7 +269,7 @@ export default function ServicesPage() {
                     <div className="w-16 h-16 bg-navy-50 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Icon className="h-8 w-8 text-navy-700" />
                     </div>
-                    <div className="font-heading text-3xl font-black text-navy-900 mb-1">
+                    <div className="font-heading text-3xl font-bold text-navy-900 mb-1">
                       {adv.stat}
                     </div>
                     <h3 className="font-semibold text-navy-800 mb-2">{adv.title}</h3>
@@ -282,7 +282,7 @@ export default function ServicesPage() {
 
           {/* CTA */}
           <section className="bg-navy-900 rounded-lg p-8 md:p-12 text-center text-white" data-testid="services-final-cta">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold uppercase mb-4">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold  mb-4">
               Gata să Începeți?
             </h2>
             <p className="text-navy-200 max-w-2xl mx-auto mb-8">
@@ -290,13 +290,13 @@ export default function ServicesPage() {
               ajuta să găsiți forța de muncă de care aveți nevoie.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg" className="bg-white text-navy-900 hover:bg-gray-100 rounded-sm font-semibold">
+              <Button asChild size="lg" className="bg-white text-navy-900 hover:bg-gray-100 rounded-full font-semibold">
                 <Link to="/angajatori">
                   Solicită Ofertă
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-sm font-semibold">
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-full font-semibold">
                 <Link to="/contact">
                   Contactează-ne
                 </Link>
