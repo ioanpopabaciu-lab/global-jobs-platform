@@ -119,6 +119,11 @@ export default function Footer() {
                 </a>
               </p>
             </address>
+            {/* Date Fiscale */}
+            <div className="mt-4 pt-4 border-t border-white/10 text-xs text-gray-400">
+              <p>CUI: 48270947</p>
+              <p>J05/1458/2023</p>
+            </div>
           </div>
         </div>
       </div>
