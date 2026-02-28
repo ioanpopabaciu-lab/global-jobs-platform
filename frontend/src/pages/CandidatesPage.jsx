@@ -366,13 +366,26 @@ export default function CandidatesPage() {
     );
   }
 
+  // Safe title for Helmet
+  const pageTitle = (() => {
+    if (t && t.meta && t.meta.title) {
+      return String(t.meta.title);
+    }
+    return 'Portal Candidați | Global Jobs Consulting';
+  })();
+  
+  const pageDesc = (() => {
+    if (t && t.meta && t.meta.description) {
+      return String(t.meta.description);
+    }
+    return '';
+  })();
+
   return (
     <>
       <Helmet>
-        <title>
-          {(t && t.meta && typeof t.meta.title === 'string') ? t.meta.title : 'Portal Candidați | Global Jobs Consulting'}
-        </title>
-        <meta name="description" content={(t && t.meta && t.meta.description) ? t.meta.description : ''} />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDesc} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">
