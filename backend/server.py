@@ -617,6 +617,24 @@ async def paula_chat(chat_msg: ChatMessage):
         lang = chat_msg.language if chat_msg.language in error_messages else "ro"
         return {"response": error_messages[lang], "session_id": chat_msg.session_id}
 
+# Include the router - must be after all routes are defined
+app.include_router(api_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
