@@ -368,8 +368,8 @@ export default function CandidatesPage() {
   return (
     <>
       <Helmet>
-        <title>Portal Candidați | Global Jobs Consulting</title>
-        <meta name="description" content="Înscrie-te în baza noastră de candidați și găsește oportunități de muncă în România, Austria sau Serbia." />
+        <title>{t.meta?.title || 'Global Jobs Consulting'}</title>
+        <meta name="description" content={t.meta?.description} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">
@@ -378,14 +378,13 @@ export default function CandidatesPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
               <span className="text-navy-300 font-medium text-sm  tracking-wider">
-                Portal Candidați
+                {t.hero.label}
               </span>
               <h1 className="font-heading text-3xl md:text-4xl font-bold  mt-2 mb-4">
-                APLICĂ PENTRU UN JOB ÎN EUROPA
+                {t.hero.title}
               </h1>
               <p className="text-navy-200 text-lg">
-                Completați formularul și încărcați CV-ul pentru a fi inclus în baza noastră 
-                de candidați. Vă vom contacta când apare o oportunitate potrivită.
+                {t.hero.description}
               </p>
             </div>
           </div>
@@ -398,7 +397,7 @@ export default function CandidatesPage() {
               <Card className="shadow-sm">
                 <CardHeader>
                   <CardTitle className="font-heading text-2xl text-navy-900 ">
-                    Formular de Aplicare
+                    {t.form.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -407,15 +406,15 @@ export default function CandidatesPage() {
                     <div className="space-y-4">
                       <h3 className="font-semibold text-navy-800 flex items-center gap-2">
                         <User className="h-5 w-5" />
-                        Informații Personale
+                        {t.form.personalInfo}
                       </h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="full_name">Nume Complet *</Label>
+                          <Label htmlFor="full_name">{t.form.fullName} *</Label>
                           <Input
                             id="full_name"
-                            {...register("full_name", { required: "Câmp obligatoriu" })}
+                            {...register("full_name", { required: t.form.required })}
                             data-testid="input-full-name"
                           />
                           {errors.full_name && (
@@ -423,13 +422,13 @@ export default function CandidatesPage() {
                           )}
                         </div>
                         <div>
-                          <Label htmlFor="citizenship">Cetățenie *</Label>
+                          <Label htmlFor="citizenship">{t.form.citizenship} *</Label>
                           <Select onValueChange={(value) => setValue("citizenship", value)}>
                             <SelectTrigger data-testid="select-citizenship">
-                              <SelectValue placeholder="Selectați țara" />
+                              <SelectValue placeholder={t.form.selectCountry} />
                             </SelectTrigger>
                             <SelectContent>
-                              {citizenships.map((c) => (
+                              {t.citizenships.map((c) => (
                                 <SelectItem key={c.value} value={c.value}>
                                   {c.label}
                                 </SelectItem>
@@ -442,13 +441,13 @@ export default function CandidatesPage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="email">Email *</Label>
+                          <Label htmlFor="email">{t.form.email} *</Label>
                           <Input
                             id="email"
                             type="email"
                             {...register("email", { 
-                              required: "Câmp obligatoriu",
-                              pattern: { value: /^\S+@\S+$/i, message: "Email invalid" }
+                              required: t.form.required,
+                              pattern: { value: /^\S+@\S+$/i, message: t.form.invalidEmail }
                             })}
                             data-testid="input-email"
                           />
@@ -457,10 +456,10 @@ export default function CandidatesPage() {
                           )}
                         </div>
                         <div>
-                          <Label htmlFor="phone">Telefon *</Label>
+                          <Label htmlFor="phone">{t.form.phone} *</Label>
                           <Input
                             id="phone"
-                            {...register("phone", { required: "Câmp obligatoriu" })}
+                            {...register("phone", { required: t.form.required })}
                             placeholder="+XX XXX XXX XXX"
                             data-testid="input-phone"
                           />
@@ -471,10 +470,10 @@ export default function CandidatesPage() {
                       </div>
 
                       <div>
-                        <Label htmlFor="whatsapp">WhatsApp *</Label>
+                        <Label htmlFor="whatsapp">{t.form.whatsapp} *</Label>
                         <Input
                           id="whatsapp"
-                          {...register("whatsapp", { required: "Câmp obligatoriu" })}
+                          {...register("whatsapp", { required: t.form.required })}
                           placeholder="+XX XXX XXX XXX"
                           data-testid="input-whatsapp"
                         />
@@ -488,20 +487,20 @@ export default function CandidatesPage() {
                     <div className="space-y-4 pt-4 border-t">
                       <h3 className="font-semibold text-navy-800 flex items-center gap-2">
                         <Briefcase className="h-5 w-5" />
-                        Experiență Profesională
+                        {t.form.experience}
                       </h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="experience_years">Ani de Experiență *</Label>
+                          <Label htmlFor="experience_years">{t.form.experienceYears} *</Label>
                           <Input
                             id="experience_years"
                             type="number"
                             min="0"
                             {...register("experience_years", { 
-                              required: "Câmp obligatoriu",
+                              required: t.form.required,
                               valueAsNumber: true,
-                              min: { value: 0, message: "Valoare invalidă" }
+                              min: { value: 0, message: t.form.invalidValue }
                             })}
                             data-testid="input-experience"
                           />
@@ -510,13 +509,13 @@ export default function CandidatesPage() {
                           )}
                         </div>
                         <div>
-                          <Label htmlFor="english_level">Nivel Limba Engleză *</Label>
+                          <Label htmlFor="english_level">{t.form.englishLevel} *</Label>
                           <Select onValueChange={(value) => setValue("english_level", value)}>
                             <SelectTrigger data-testid="select-english-level">
-                              <SelectValue placeholder="Selectați nivelul" />
+                              <SelectValue placeholder={t.form.selectLevel} />
                             </SelectTrigger>
                             <SelectContent>
-                              {englishLevels.map((level) => (
+                              {t.englishLevels.map((level) => (
                                 <SelectItem key={level.value} value={level.value}>
                                   {level.label}
                                 </SelectItem>
@@ -528,13 +527,13 @@ export default function CandidatesPage() {
                       </div>
 
                       <div>
-                        <Label htmlFor="industry_preference">Domeniu Preferat *</Label>
+                        <Label htmlFor="industry_preference">{t.form.industryPreference} *</Label>
                         <Select onValueChange={(value) => setValue("industry_preference", value)}>
                           <SelectTrigger data-testid="select-industry">
-                            <SelectValue placeholder="Selectați domeniul" />
+                            <SelectValue placeholder={t.form.selectIndustry} />
                           </SelectTrigger>
                           <SelectContent>
-                            {industries.map((ind) => (
+                            {t.industries.map((ind) => (
                               <SelectItem key={ind.value} value={ind.value}>
                                 {ind.label}
                               </SelectItem>
@@ -549,11 +548,11 @@ export default function CandidatesPage() {
                     <div className="space-y-4 pt-4 border-t">
                       <h3 className="font-semibold text-navy-800 flex items-center gap-2">
                         <Upload className="h-5 w-5" />
-                        Documente
+                        {t.form.documents}
                       </h3>
 
                       <div>
-                        <Label>Upload CV (PDF, DOC, DOCX - max 10MB)</Label>
+                        <Label>{t.form.uploadCv}</Label>
                         <div 
                           className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-navy-400 transition-colors cursor-pointer"
                           onClick={() => fileInputRef.current?.click()}
@@ -574,8 +573,8 @@ export default function CandidatesPage() {
                           ) : (
                             <div className="text-gray-500">
                               <Upload className="h-8 w-8 mx-auto mb-2" />
-                              <p>Click pentru a încărca CV-ul</p>
-                              <p className="text-sm text-gray-400">sau drag & drop</p>
+                              <p>{t.form.clickUpload}</p>
+                              <p className="text-sm text-gray-400">{t.form.dragDrop}</p>
                             </div>
                           )}
                         </div>
@@ -584,7 +583,7 @@ export default function CandidatesPage() {
                       <div>
                         <Label htmlFor="video_cv_url" className="flex items-center gap-2">
                           <Video className="h-4 w-4" />
-                          Link Video CV (opțional)
+                          {t.form.videoCv}
                         </Label>
                         <Input
                           id="video_cv_url"
@@ -593,16 +592,16 @@ export default function CandidatesPage() {
                           data-testid="input-video-cv"
                         />
                         <p className="text-xs text-gray-500 mt-1">
-                          Adăugați un link către un video scurt de prezentare (YouTube, Vimeo, etc.)
+                          {t.form.videoCvHint}
                         </p>
                       </div>
 
                       <div>
-                        <Label htmlFor="message">Mesaj Adițional</Label>
+                        <Label htmlFor="message">{t.form.message}</Label>
                         <Textarea
                           id="message"
                           rows={4}
-                          placeholder="Descrieți experiența și motivația dumneavoastră..."
+                          placeholder={t.form.messagePlaceholder}
                           {...register("message")}
                           data-testid="textarea-message"
                         />
@@ -614,20 +613,20 @@ export default function CandidatesPage() {
                           type="checkbox"
                           id="privacy_consent"
                           {...register("privacy_consent", { 
-                            required: "Trebuie să acceptați Politica de Confidențialitate" 
+                            required: t.form.privacyRequired 
                           })}
                           className="mt-1 h-4 w-4 rounded border-gray-300 text-coral focus:ring-coral"
                           data-testid="checkbox-privacy-candidate"
                         />
                         <div>
                           <Label htmlFor="privacy_consent" className="text-sm text-gray-600 cursor-pointer">
-                            Sunt de acord cu{" "}
+                            {t.form.privacy}{" "}
                             <Link 
                               to="/politica-confidentialitate" 
                               target="_blank"
                               className="text-coral hover:underline font-medium"
                             >
-                              Politica de Confidențialitate
+                              {t.form.privacyLink}
                             </Link>
                             {" "}*
                           </Label>
@@ -647,10 +646,10 @@ export default function CandidatesPage() {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Se trimite...
+                          {t.form.submitting}
                         </>
                       ) : (
-                        "Trimite Aplicația"
+                        t.form.submit
                       )}
                     </Button>
                   </form>
@@ -663,28 +662,28 @@ export default function CandidatesPage() {
               <Card className="shadow-sm bg-navy-900 text-white">
                 <CardContent className="pt-6">
                   <h3 className="font-heading text-xl font-bold  mb-4">
-                    Țări de Destinație
+                    {t.sidebar.destinations}
                   </h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 bg-white/10 rounded">
                       <span className="text-2xl">🇷🇴</span>
                       <div>
-                        <div className="font-semibold">România</div>
-                        <div className="text-sm text-navy-200">Oportunități în toate domeniile</div>
+                        <div className="font-semibold">{t.sidebar.romania}</div>
+                        <div className="text-sm text-navy-200">{t.sidebar.romaniaDesc}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-white/10 rounded">
                       <span className="text-2xl">🇦🇹</span>
                       <div>
-                        <div className="font-semibold">Austria</div>
-                        <div className="text-sm text-navy-200">Salarii competitive în EUR</div>
+                        <div className="font-semibold">{t.sidebar.austria}</div>
+                        <div className="text-sm text-navy-200">{t.sidebar.austriaDesc}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-white/10 rounded">
                       <span className="text-2xl">🇷🇸</span>
                       <div>
-                        <div className="font-semibold">Serbia</div>
-                        <div className="text-sm text-navy-200">Piață în creștere</div>
+                        <div className="font-semibold">{t.sidebar.serbia}</div>
+                        <div className="text-sm text-navy-200">{t.sidebar.serbiaDesc}</div>
                       </div>
                     </div>
                   </div>
@@ -694,24 +693,24 @@ export default function CandidatesPage() {
               <Card className="shadow-sm">
                 <CardContent className="pt-6">
                   <h3 className="font-heading text-xl font-bold text-navy-900  mb-4">
-                    Ce urmează?
+                    {t.sidebar.nextSteps}
                   </h3>
                   <ol className="space-y-3 text-sm text-gray-600">
                     <li className="flex items-start gap-3">
                       <span className="bg-navy-100 text-navy-700 font-bold w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">1</span>
-                      <span>Primim și analizăm aplicația ta</span>
+                      <span>{t.sidebar.step1}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="bg-navy-100 text-navy-700 font-bold w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">2</span>
-                      <span>Te contactăm pentru un interviu video</span>
+                      <span>{t.sidebar.step2}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="bg-navy-100 text-navy-700 font-bold w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">3</span>
-                      <span>Te prezentăm angajatorilor potriviți</span>
+                      <span>{t.sidebar.step3}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="bg-navy-100 text-navy-700 font-bold w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">4</span>
-                      <span>Te ajutăm cu documentele de imigrare</span>
+                      <span>{t.sidebar.step4}</span>
                     </li>
                   </ol>
                 </CardContent>
