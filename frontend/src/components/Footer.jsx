@@ -147,7 +147,7 @@ export default function Footer() {
                 className="hover:text-coral transition"
                 data-testid="footer-privacy-link"
               >
-                Politică de Confidențialitate
+                {privacyLinks[language] || privacyLinks.ro}
               </Link>
             </div>
             <div className="flex gap-4">
