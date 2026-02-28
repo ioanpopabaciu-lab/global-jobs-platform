@@ -281,7 +281,7 @@ const content = {
 
 export default function CandidatesPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro;
+  const t = content[language] || content.ro || content['ro'];
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [cvFile, setCvFile] = useState(null);
