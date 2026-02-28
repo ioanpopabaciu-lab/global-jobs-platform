@@ -12,9 +12,10 @@
 - **Program:** Luni-Vineri 9:00AM - 7:00PM
 - **WhatsApp:** Disponibil
 
-### Date Instituționale (DE VERIFICAT CU CLIENTUL)
-> NOTĂ: Site-ul vechi NU conține CUI, număr J sau alte date fiscale vizibile.
-> Acestea trebuie solicitate direct de la client pentru a fi adăugate în footer/pagina contact.
+### Date Instituționale
+- **CUI:** 48270947
+- **Nr. Registrul Comerțului:** J05/1458/2023
+- **Sediu:** Str. Parcul Traian nr.1, ap.10, Oradea, România
 
 ---
 
