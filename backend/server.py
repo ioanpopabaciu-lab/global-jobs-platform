@@ -569,8 +569,8 @@ Odgovaraj SAMO na srpskom. Budi koncizna i korisna. Ako ne znaš odgovor, usmeri
 }
 
 @api_router.post("/chat/paula")
-async def paula_chat(chat_msg: ChatMessage):
-    """AI Chat endpoint for Paula recruitment assistant"""
+async def elisabeth_chat(chat_msg: ChatMessage):
+    """AI Chat endpoint for Elisabeth recruitment assistant"""
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage
         
@@ -580,13 +580,13 @@ async def paula_chat(chat_msg: ChatMessage):
         
         # Get or create chat session
         session_id = chat_msg.session_id
-        language = chat_msg.language if chat_msg.language in PAULA_SYSTEM_PROMPTS else "ro"
+        language = chat_msg.language if chat_msg.language in ELISABETH_SYSTEM_PROMPTS else "ro"
         
         if session_id not in chat_sessions:
             chat_sessions[session_id] = LlmChat(
                 api_key=api_key,
                 session_id=session_id,
-                system_message=PAULA_SYSTEM_PROMPTS[language]
+                system_message=ELISABETH_SYSTEM_PROMPTS[language]
             ).with_model("openai", "gpt-4o-mini")
         
         chat = chat_sessions[session_id]
