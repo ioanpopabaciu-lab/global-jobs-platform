@@ -231,13 +231,13 @@ export default function ElisabethChat() {
                 placeholder={t.placeholder}
                 disabled={isLoading}
                 className="flex-1 rounded-full"
-                data-testid="paula-chat-input"
+                data-testid="elisabeth-chat-input"
               />
               <Button
                 onClick={sendMessage}
                 disabled={!input.trim() || isLoading}
                 className="rounded-full w-10 h-10 p-0 bg-coral hover:bg-red-600"
-                data-testid="paula-chat-send"
+                data-testid="elisabeth-chat-send"
               >
                 <Send className="w-4 h-4" />
               </Button>
