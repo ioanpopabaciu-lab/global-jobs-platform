@@ -20,7 +20,7 @@ from pathlib import Path
 
 # Server Configuration
 FTP_HOST = "194.102.218.32"
-FTP_USER = "caiden"
+FTP_USER = "caiden@gjc.ro"  # Format: user@domain required by Datahost
 FTP_TARGET_DIR = "/public_html"
 SFTP_PORT = 22
 
