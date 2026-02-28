@@ -254,7 +254,7 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) || 'Politica de Confidențialitate | Global Jobs Consulting'}</title>
+        <title>Politica de Confidențialitate | Global Jobs Consulting</title>
         <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
       </Helmet>
 

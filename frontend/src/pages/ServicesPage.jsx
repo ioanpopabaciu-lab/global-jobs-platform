@@ -187,7 +187,7 @@ export default function ServicesPage() {
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) || 'Servicii | Global Jobs Consulting'}</title>
+        <title>Servicii | Global Jobs Consulting</title>
         <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
       </Helmet>
 

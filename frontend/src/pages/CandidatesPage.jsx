@@ -373,8 +373,8 @@ export default function CandidatesPage() {
   return (
     <>
       <Helmet>
-        <title>{String(titleText)}</title>
-        <meta name="description" content={String(descText)} />
+        <title>Portal Candidați | Global Jobs Consulting</title>
+        <meta name="description" content="" />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">

@@ -190,7 +190,7 @@ export default function ContactPage() {
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) || 'Contact | Global Jobs Consulting'}</title>
+        <title>Contact | Global Jobs Consulting</title>
         <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
       </Helmet>
 

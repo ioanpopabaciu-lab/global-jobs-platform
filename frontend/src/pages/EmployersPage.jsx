@@ -296,7 +296,7 @@ export default function EmployersPage() {
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) || 'Angajatori | Global Jobs Consulting'}</title>
+        <title>Angajatori | Global Jobs Consulting</title>
         <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
       </Helmet>
 

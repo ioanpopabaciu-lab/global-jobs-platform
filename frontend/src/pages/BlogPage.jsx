@@ -74,7 +74,7 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) || 'Blog | Global Jobs Consulting'}</title>
+        <title>Blog | Global Jobs Consulting</title>
         <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
       </Helmet>
 
