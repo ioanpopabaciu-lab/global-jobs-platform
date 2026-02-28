@@ -80,6 +80,88 @@ export const translations = {
       required: "Câmp obligatoriu"
     }
   },
+
+  en: {
+    // Navigation
+    nav: {
+      home: "Home",
+      employers: "Employers",
+      services: "Services",
+      candidates: "Candidates Portal",
+      blog: "Blog",
+      contact: "Contact",
+      cta: "Request Quote"
+    },
+    // Hero
+    hero: {
+      mainHeadline: "Global Solutions for Workforce Shortage",
+      ctaEmployer: "I'm an Employer",
+      ctaCandidate: "Looking for a Job"
+    },
+    // Stats
+    stats: {
+      partners: "Partners in Asia & Africa",
+      experience: "Years of Experience",
+      continents: "Continents",
+      markets: "European Markets"
+    },
+    // About
+    about: {
+      label: "About Us",
+      title: "Connecting Global Talent with Local Opportunities",
+      subtitle: "Global Solutions for Workforce Shortage",
+      text1: "Global Jobs Consulting is an All-Inclusive recruitment agency specialized in placing workforce from Asia and Africa in European markets. With a network of 11 partner agencies, we offer complete staffing solutions for employers in Romania, Austria, and Serbia.",
+      text2: "We handle the entire process: from rigorous candidate selection, immigration documentation (visas and work permits), to community integration and long-term monitoring.",
+      cta: "Discover Our Services"
+    },
+    // Services
+    services: {
+      label: "Industries",
+      title: "Complete International Recruitment Services",
+      description: "From identifying suitable candidates to their complete integration into your team, we offer a full range of services to help you find the workforce you need.",
+      cta: "Request Staff Now",
+      learnMore: "Learn more"
+    },
+    // Industries
+    industries: {
+      construction: "Construction",
+      horeca: "HoReCa",
+      cruise: "Cruise Ships",
+      agriculture: "Agriculture",
+      warehouse: "Warehousing & Logistics",
+      production: "Manufacturing"
+    },
+    // Contact
+    contact: {
+      label: "Contact",
+      title: "Let's Talk",
+      description: "Whether you're an employer looking for staff or a candidate looking for an opportunity, we're here to help. Fill out the form or contact us directly.",
+      formTitle: "Send Us a Message",
+      name: "Full Name",
+      email: "Email",
+      phone: "Phone",
+      subject: "Subject",
+      message: "Message",
+      send: "Send Message",
+      sending: "Sending...",
+      success: "Message Sent Successfully!",
+      successText: "Thank you for your message! We will get back to you as soon as possible."
+    },
+    // Footer
+    footer: {
+      description: "All-Inclusive recruitment agency in Romania, Austria, and Serbia. 11 partners in Asia and Africa.",
+      quickLinks: "Quick Links",
+      industries: "Industries",
+      contactInfo: "Contact",
+      rights: "All rights reserved."
+    },
+    // Common
+    common: {
+      years: "Years of Experience",
+      new: "NEW",
+      required: "Required field"
+    }
+  },
   
   de: {
     // Navigation
