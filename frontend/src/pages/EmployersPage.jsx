@@ -323,6 +323,35 @@ export default function EmployersPage() {
                           data-testid="textarea-message"
                         />
                       </div>
+
+                      {/* Privacy Policy Consent */}
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          id="privacy_consent"
+                          {...register("privacy_consent", { 
+                            required: "Trebuie să acceptați Politica de Confidențialitate" 
+                          })}
+                          className="mt-1 h-4 w-4 rounded border-gray-300 text-coral focus:ring-coral"
+                          data-testid="checkbox-privacy-employer"
+                        />
+                        <div>
+                          <Label htmlFor="privacy_consent" className="text-sm text-gray-600 cursor-pointer">
+                            Sunt de acord cu{" "}
+                            <Link 
+                              to="/politica-confidentialitate" 
+                              target="_blank"
+                              className="text-coral hover:underline font-medium"
+                            >
+                              Politica de Confidențialitate
+                            </Link>
+                            {" "}*
+                          </Label>
+                          {errors.privacy_consent && (
+                            <p className="text-red-500 text-sm mt-1">{errors.privacy_consent.message}</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
                     <Button
