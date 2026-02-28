@@ -179,21 +179,27 @@ export default function Navbar() {
                 <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-14 w-auto mb-4" />
                 
                 {/* Mobile Language Selector */}
-                <div className="flex gap-2 mb-4 pb-4 border-b border-gray-100">
+                <div className="flex gap-2 mb-4 pb-4 border-b border-gray-100" role="group" aria-label="Language selection">
                   <button 
                     onClick={() => setLanguage("ro")}
+                    aria-label="Switch to Romanian"
+                    aria-pressed={language === 'ro'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'ro' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
                   >
                     🇷🇴 RO
                   </button>
                   <button 
                     onClick={() => setLanguage("de")}
+                    aria-label="Switch to German"
+                    aria-pressed={language === 'de'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'de' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
                   >
                     🇦🇹 DE
                   </button>
                   <button 
                     onClick={() => setLanguage("sr")}
+                    aria-label="Switch to Serbian"
+                    aria-pressed={language === 'sr'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'sr' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
                   >
                     🇷🇸 SR
