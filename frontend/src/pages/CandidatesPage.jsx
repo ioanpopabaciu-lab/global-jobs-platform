@@ -281,11 +281,7 @@ const content = {
 
 export default function CandidatesPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro || content['ro'];
-  
-  // Fallback values for Helmet to prevent "expects a string" error
-  const pageTitle = (t && t.meta && t.meta.title) ? String(t.meta.title) : 'Portal Candidați | Global Jobs Consulting';
-  const pageDescription = (t && t.meta && t.meta.description) ? String(t.meta.description) : '';
+  const t = content[language] || content.ro;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
