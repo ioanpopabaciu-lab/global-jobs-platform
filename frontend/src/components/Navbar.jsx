@@ -154,7 +154,14 @@ export default function Navbar() {
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="lg:hidden">
-              <Button variant="ghost" size="icon" data-testid="mobile-menu-button">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                data-testid="mobile-menu-button"
+                aria-label="Open navigation menu"
+                aria-expanded={isOpen}
+                aria-controls="mobile-nav-menu"
+              >
                 <Menu className={`h-6 w-6 ${isScrolled ? 'text-navy-900' : 'text-white'}`} />
               </Button>
             </SheetTrigger>
