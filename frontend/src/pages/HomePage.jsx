@@ -151,15 +151,11 @@ export default function HomePage() {
   const t = pageContent[language] || pageContent.ro;
   const icons = [Globe, Shield, Clock, Users];
 
-  // Safety check for meta
-  const pageTitle = t?.meta?.title || "Global Jobs Consulting";
-  const pageDescription = t?.meta?.description || "International recruitment agency";
-
   return (
     <>
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
+        <title>Global Jobs Consulting | International Recruitment</title>
+        <meta name="description" content="All-inclusive recruitment agency in Romania, Austria and Serbia. 11 partners in Asia and Africa." />
         <meta name="keywords" content="recrutare, forța de muncă, Asia, Africa, România, Austria, Serbia, HoReCa, construcții, agricultură" />
         <link rel="canonical" href="https://www.gjc.ro" />
       </Helmet>
