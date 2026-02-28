@@ -2,15 +2,51 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Cookie, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/i18n/LanguageContext";
+
+const content = {
+  ro: {
+    title: "Utilizăm cookie-uri",
+    text: "Acest website utilizează cookie-uri esențiale pentru funcționarea corectă a site-ului și pentru a vă oferi o experiență optimă de navigare.",
+    learnMore: "Aflați mai multe",
+    essential: "Doar esențiale",
+    acceptAll: "Accept toate",
+    close: "Închide"
+  },
+  en: {
+    title: "We use cookies",
+    text: "This website uses essential cookies for the proper functioning of the site and to provide you with an optimal browsing experience.",
+    learnMore: "Learn more",
+    essential: "Essential only",
+    acceptAll: "Accept all",
+    close: "Close"
+  },
+  de: {
+    title: "Wir verwenden Cookies",
+    text: "Diese Website verwendet essentielle Cookies für die ordnungsgemäße Funktion der Website und um Ihnen ein optimales Surferlebnis zu bieten.",
+    learnMore: "Mehr erfahren",
+    essential: "Nur essenzielle",
+    acceptAll: "Alle akzeptieren",
+    close: "Schließen"
+  },
+  sr: {
+    title: "Koristimo kolačiće",
+    text: "Ova web stranica koristi esencijalne kolačiće za pravilno funkcionisanje sajta i kako bi vam pružila optimalno iskustvo pregledanja.",
+    learnMore: "Saznaj više",
+    essential: "Samo esencijalni",
+    acceptAll: "Prihvati sve",
+    close: "Zatvori"
+  }
+};
 
 export default function CookieBanner() {
+  const { language } = useLanguage();
+  const t = content[language] || content.ro;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if user has already accepted cookies
     const cookiesAccepted = localStorage.getItem("gjc_cookies_accepted");
     if (!cookiesAccepted) {
-      // Show banner after a small delay
       const timer = setTimeout(() => setIsVisible(true), 1000);
       return () => clearTimeout(timer);
     }
@@ -41,16 +77,15 @@ export default function CookieBanner() {
             <Cookie className="h-6 w-6 text-coral flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-navy-900 mb-1">
-                Utilizăm cookie-uri
+                {t.title}
               </h3>
               <p className="text-sm text-gray-600">
-                Acest website utilizează cookie-uri esențiale pentru funcționarea corectă a site-ului și 
-                pentru a vă oferi o experiență optimă de navigare.{" "}
+                {t.text}{" "}
                 <Link 
                   to="/politica-confidentialitate" 
                   className="text-coral hover:underline"
                 >
-                  Aflați mai multe
+                  {t.learnMore}
                 </Link>
               </p>
             </div>
@@ -64,7 +99,7 @@ export default function CookieBanner() {
               className="text-gray-600 border-gray-300 hover:bg-gray-100"
               data-testid="cookie-decline-btn"
             >
-              Doar esențiale
+              {t.essential}
             </Button>
             <Button
               size="sm"
@@ -72,12 +107,12 @@ export default function CookieBanner() {
               className="bg-coral hover:bg-red-600 text-white"
               data-testid="cookie-accept-btn"
             >
-              Accept toate
+              {t.acceptAll}
             </Button>
             <button
               onClick={handleDecline}
               className="p-1 text-gray-400 hover:text-gray-600 md:hidden"
-              aria-label="Închide"
+              aria-label={t.close}
             >
               <X className="h-5 w-5" />
             </button>
