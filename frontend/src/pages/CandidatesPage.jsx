@@ -366,11 +366,15 @@ export default function CandidatesPage() {
     );
   }
 
+  // Explicit safe title extraction
+  const titleText = (t && t.meta && t.meta.title) ? t.meta.title : 'Portal Candidați | Global Jobs Consulting';
+  const descText = (t && t.meta && t.meta.description) ? t.meta.description : '';
+
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) || 'Portal Candidați | Global Jobs Consulting'}</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
+        <title>{titleText}</title>
+        <meta name="description" content={descText} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">
