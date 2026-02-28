@@ -282,12 +282,6 @@ const content = {
 export default function CandidatesPage() {
   const { language } = useLanguage();
   const t = content[language] || content.ro || {};
-  
-  // Early return if translations are not loaded
-  if (!t.meta || !t.form) {
-    return <div className="min-h-screen pt-32 pb-20 bg-gray-50">Loading...</div>;
-  }
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [cvFile, setCvFile] = useState(null);
