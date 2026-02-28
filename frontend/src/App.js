@@ -19,7 +19,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import PaulaChat from "@/components/PaulaChat";
+import ElisabethChat from "@/components/ElisabethChat";
 
 function AppContent() {
   useEffect(() => {
