@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-FTP Upload Script for Global Jobs Consulting Website
+FTP/SFTP Upload Script for Global Jobs Consulting Website
 Server: 194.102.218.32
-User: gjcro
+User: caiden
 Target: /public_html
 
 Usage:
-    python3 upload_to_server.py --password YOUR_FTP_PASSWORD
-
-Requirements:
-    pip install ftplib
+    python3 upload_to_server.py --password YOUR_PASSWORD
 
 This script uploads the built React application to the Apache server.
+It tries FTP first, then falls back to SFTP if FTP fails.
 """
 
 import os
@@ -22,25 +20,57 @@ from pathlib import Path
 
 # Server Configuration
 FTP_HOST = "194.102.218.32"
-FTP_USER = "gjcro"
+FTP_USER = "caiden"
 FTP_TARGET_DIR = "/public_html"
+SFTP_PORT = 22
 
 def connect_ftp(host, user, password):
     """Establish FTP connection"""
     try:
-        ftp = ftplib.FTP(host)
+        print(f"[FTP] Attempting connection to {host} as {user}...")
+        ftp = ftplib.FTP(host, timeout=30)
         ftp.login(user, password)
-        print(f"✓ Connected to {host} as {user}")
-        return ftp
+        print(f"✓ [FTP] Connected to {host} as {user}")
+        return ftp, "ftp"
     except ftplib.error_perm as e:
-        print(f"✗ Login failed: {e}")
-        sys.exit(1)
+        print(f"✗ [FTP] Login failed: {e}")
+        return None, None
     except Exception as e:
-        print(f"✗ Connection failed: {e}")
-        sys.exit(1)
+        print(f"✗ [FTP] Connection failed: {e}")
+        return None, None
 
-def upload_file(ftp, local_path, remote_path):
-    """Upload a single file"""
+def connect_sftp(host, user, password, port=22):
+    """Establish SFTP connection using paramiko"""
+    try:
+        import paramiko
+        print(f"[SFTP] Attempting connection to {host}:{port} as {user}...")
+        
+        transport = paramiko.Transport((host, port))
+        transport.connect(username=user, password=password)
+        sftp = paramiko.SFTPClient.from_transport(transport)
+        
+        print(f"✓ [SFTP] Connected to {host}:{port} as {user}")
+        return sftp, transport, "sftp"
+    except ImportError:
+        print("✗ [SFTP] paramiko library not installed. Installing now...")
+        os.system("pip install paramiko")
+        # Retry after install
+        try:
+            import paramiko
+            transport = paramiko.Transport((host, port))
+            transport.connect(username=user, password=password)
+            sftp = paramiko.SFTPClient.from_transport(transport)
+            print(f"✓ [SFTP] Connected to {host}:{port} as {user}")
+            return sftp, transport, "sftp"
+        except Exception as e:
+            print(f"✗ [SFTP] Connection failed after install: {e}")
+            return None, None, None
+    except Exception as e:
+        print(f"✗ [SFTP] Connection failed: {e}")
+        return None, None, None
+
+def upload_file_ftp(ftp, local_path, remote_path):
+    """Upload a single file via FTP"""
     try:
         with open(local_path, 'rb') as f:
             ftp.storbinary(f'STOR {remote_path}', f)
@@ -50,15 +80,35 @@ def upload_file(ftp, local_path, remote_path):
         print(f"  ✗ Failed to upload {local_path}: {e}")
         return False
 
-def ensure_remote_dir(ftp, path):
-    """Create remote directory if it doesn't exist"""
+def upload_file_sftp(sftp, local_path, remote_path):
+    """Upload a single file via SFTP"""
+    try:
+        sftp.put(str(local_path), remote_path)
+        print(f"  ↑ {local_path} -> {remote_path}")
+        return True
+    except Exception as e:
+        print(f"  ✗ Failed to upload {local_path}: {e}")
+        return False
+
+def ensure_remote_dir_ftp(ftp, path):
+    """Create remote directory via FTP if it doesn't exist"""
     try:
         ftp.mkd(path)
     except ftplib.error_perm:
         pass  # Directory exists
 
-def upload_directory(ftp, local_dir, remote_dir):
-    """Recursively upload a directory"""
+def ensure_remote_dir_sftp(sftp, path):
+    """Create remote directory via SFTP if it doesn't exist"""
+    try:
+        sftp.stat(path)
+    except FileNotFoundError:
+        try:
+            sftp.mkdir(path)
+        except Exception:
+            pass
+
+def upload_directory_ftp(ftp, local_dir, remote_dir):
+    """Recursively upload a directory via FTP"""
     local_path = Path(local_dir)
     
     for item in local_path.iterdir():
@@ -66,10 +116,24 @@ def upload_directory(ftp, local_dir, remote_dir):
         remote_item = f"{remote_dir}/{item.name}"
         
         if item.is_dir():
-            ensure_remote_dir(ftp, remote_item)
-            upload_directory(ftp, local_item, remote_item)
+            ensure_remote_dir_ftp(ftp, remote_item)
+            upload_directory_ftp(ftp, local_item, remote_item)
         else:
-            upload_file(ftp, local_item, remote_item)
+            upload_file_ftp(ftp, local_item, remote_item)
+
+def upload_directory_sftp(sftp, local_dir, remote_dir):
+    """Recursively upload a directory via SFTP"""
+    local_path = Path(local_dir)
+    
+    for item in local_path.iterdir():
+        local_item = str(item)
+        remote_item = f"{remote_dir}/{item.name}"
+        
+        if item.is_dir():
+            ensure_remote_dir_sftp(sftp, remote_item)
+            upload_directory_sftp(sftp, local_item, remote_item)
+        else:
+            upload_file_sftp(sftp, local_item, remote_item)
 
 def create_htaccess():
     """Create .htaccess for Apache with HTTPS redirect and SPA routing"""
@@ -119,10 +183,11 @@ RewriteRule . /index.html [L]
     return htaccess_content
 
 def main():
-    parser = argparse.ArgumentParser(description='Upload GJC website to FTP server')
-    parser.add_argument('--password', '-p', required=True, help='FTP password')
+    parser = argparse.ArgumentParser(description='Upload GJC website to FTP/SFTP server')
+    parser.add_argument('--password', '-p', required=True, help='Password')
     parser.add_argument('--build-dir', '-b', default='./build', help='Build directory path')
     parser.add_argument('--dry-run', '-d', action='store_true', help='Show what would be uploaded')
+    parser.add_argument('--sftp-only', action='store_true', help='Skip FTP, use SFTP directly')
     args = parser.parse_args()
     
     build_dir = Path(args.build_dir)
@@ -145,25 +210,61 @@ def main():
                 print(f"  {item}")
         return
     
-    # Connect and upload
-    print(f"\nConnecting to {FTP_HOST}...")
-    ftp = connect_ftp(FTP_HOST, FTP_USER, args.password)
+    connection = None
+    connection_type = None
+    transport = None
+    
+    # Try FTP first (unless --sftp-only is specified)
+    if not args.sftp_only:
+        connection, connection_type = connect_ftp(FTP_HOST, FTP_USER, args.password)
+    
+    # If FTP failed, try SFTP
+    if connection is None:
+        print("\n[INFO] FTP failed or skipped. Trying SFTP on port 22...")
+        connection, transport, connection_type = connect_sftp(FTP_HOST, FTP_USER, args.password, SFTP_PORT)
+    
+    if connection is None:
+        print("\n✗ Could not establish connection via FTP or SFTP")
+        print("  Please verify:")
+        print("  1. Username and password are correct")
+        print("  2. Server allows FTP/SFTP connections")
+        print("  3. No IP whitelist is blocking the connection")
+        sys.exit(1)
     
     try:
-        # Change to target directory
-        ftp.cwd(FTP_TARGET_DIR)
-        print(f"✓ Changed to {FTP_TARGET_DIR}")
-        
-        # Upload all files
-        print(f"\nUploading files from {build_dir}...")
-        upload_directory(ftp, build_dir, FTP_TARGET_DIR)
+        if connection_type == "ftp":
+            # FTP workflow
+            connection.cwd(FTP_TARGET_DIR)
+            print(f"✓ Changed to {FTP_TARGET_DIR}")
+            
+            print(f"\nUploading files from {build_dir}...")
+            upload_directory_ftp(connection, build_dir, FTP_TARGET_DIR)
+            
+            connection.quit()
+        else:
+            # SFTP workflow
+            try:
+                connection.chdir(FTP_TARGET_DIR)
+            except Exception:
+                # Create directory if it doesn't exist
+                ensure_remote_dir_sftp(connection, FTP_TARGET_DIR)
+                connection.chdir(FTP_TARGET_DIR)
+            print(f"✓ Changed to {FTP_TARGET_DIR}")
+            
+            print(f"\nUploading files from {build_dir}...")
+            upload_directory_sftp(connection, build_dir, FTP_TARGET_DIR)
+            
+            connection.close()
+            if transport:
+                transport.close()
         
         print(f"\n✓ Upload complete!")
         print(f"  Website should be available at https://www.gjc.ro")
+        print("✓ Disconnected from server")
         
-    finally:
-        ftp.quit()
-        print("✓ Disconnected from FTP server")
+    except Exception as e:
+        print(f"\n✗ Upload failed: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
