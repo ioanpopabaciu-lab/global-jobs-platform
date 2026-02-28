@@ -2,12 +2,19 @@ import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Globe, Facebook, Linkedin, Instagram } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-// Logo URL from assets
-const LOGO_TRANSPARENT = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/ekuvpyca_logo%20transparent.png";
+// Logo URL - transparent white logo
+const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
+
+const privacyLinks = {
+  ro: "Politică de Confidențialitate",
+  en: "Privacy Policy",
+  de: "Datenschutzrichtlinie",
+  sr: "Politika privatnosti"
+};
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <footer className="bg-navy-900 text-white" data-testid="footer">
