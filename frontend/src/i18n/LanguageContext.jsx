@@ -7,11 +7,12 @@ export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
     // Check localStorage first
     const saved = localStorage.getItem('gjc-language');
-    if (saved && ['ro', 'de', 'sr'].includes(saved)) {
+    if (saved && ['ro', 'en', 'de', 'sr'].includes(saved)) {
       return saved;
     }
     // Check browser language
     const browserLang = navigator.language.split('-')[0];
+    if (browserLang === 'en') return 'en';
     if (browserLang === 'de') return 'de';
     if (browserLang === 'sr') return 'sr';
     return 'ro';
