@@ -174,7 +174,7 @@ export default function ElisabethChat() {
       {isOpen && (
         <div 
           className="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-48px)] bg-white rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-5 duration-300"
-          data-testid="paula-chat-window"
+          data-testid="elisabeth-chat-window"
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-navy-900 to-navy-800 text-white p-4">
