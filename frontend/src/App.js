@@ -47,7 +47,7 @@ function AppContent() {
         <Footer />
         <CookieBanner />
         <WhatsAppButton />
-        <PaulaChat />
+        <ElisabethChat />
         <Toaster position="top-right" richColors />
       </BrowserRouter>
     </div>
