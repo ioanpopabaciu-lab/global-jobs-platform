@@ -43,7 +43,7 @@ const translations = {
   }
 };
 
-export default function PaulaChat() {
+export default function ElisabethChat() {
   const { language } = useLanguage();
   const t = translations[language] || translations.ro;
   
@@ -51,7 +51,7 @@ export default function PaulaChat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId] = useState(() => `paula_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+  const [sessionId] = useState(() => `elisabeth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
