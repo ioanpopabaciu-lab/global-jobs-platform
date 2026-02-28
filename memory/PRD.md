@@ -110,21 +110,30 @@ Model: gpt-4o-mini
 - `POST /api/chat/paula` - AI Chat Assistant
 
 ## Teste
-- **Test Report**: /app/test_reports/iteration_4.json
-- **Success Rate**: 100% backend, 100% frontend
-- **Toate testele trec**
+- **Test Report**: /app/test_reports/iteration_5.json
+- **Success Rate**: 100% frontend (multilanguage verification)
+- **Toate testele trec** - Verificate toate paginile în 4 limbi
 
 ## Backlog
 
+### P0 (În progres - Faza 2)
+- **AI Chatbot Paula Avansat**: Implementarea scriptului de cunoștințe structurat (primit de la client)
+- **Pagini SEO**: Crearea paginilor dedicate pentru industrii (Construcții, Manufacturing, HoReCa, Maritime)
+
 ### P1 (Important)
-- Dashboard admin pentru vizualizare aplicații
-- Notificări email către candidați
 - reCAPTCHA pe formulare
+- Buton CTA sticky pentru mobil
+- Secțiune testimoniale
+- Activarea structurii blog cu articole inițiale
+- Schema.org structurat data (Organization)
+- Meta tags unice per pagină/limbă
 
 ### P2 (Nice to have)
+- Dashboard admin pentru vizualizare aplicații
+- Notificări email către candidați
 - CMS pentru blog
 - Tracking status aplicație
-- Analytics dashboard
+- Analytics dashboard (Google Analytics, GSC, Facebook Pixel)
 
 ## Date Companie
 - **Denumire**: Global Jobs Consulting SRL
