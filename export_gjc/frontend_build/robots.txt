@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.gjc.ro/sitemap.xml
+
+# Global Jobs Consulting - www.gjc.ro
+# Recrutare și Plasare Forță de Muncă din Asia și Africa
+# România | Austria | Serbia
