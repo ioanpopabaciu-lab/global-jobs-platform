@@ -10,6 +10,12 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, Germană, Sârbă
 
+## Updates (28 Feb 2026 - v3)
+- ✅ Deploy FTP reușit pe Datahost (194.102.218.32)
+- ✅ Credențiale FTP corecte: `caiden@gjc.ro` (format user@domain necesar)
+- ✅ Fix accesibilitate meniu mobil (aria-labels)
+- ✅ SMTP configurat pentru office@gjc.ro
+
 ## Updates (27 Feb 2026 - v2)
 - ✅ Experiență actualizată la 4 ani
 - ✅ 11 agenții partenere în Asia și Africa
@@ -48,16 +54,29 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - sitemap.xml și robots.txt
 - Adresă SEO local: Str. Parcul Traian nr. 1, ap. 10, Oradea
 
-### ✅ Script Deploy
-- `/app/scripts/upload_to_server.py` - Script FTP pentru 194.102.218.32
+### ✅ Deploy FTP
+- Script: `/app/scripts/upload_to_server.py`
+- Host: `194.102.218.32`
+- User: `caiden@gjc.ro` (IMPORTANT: format user@domain necesar pentru Datahost)
+- Target: `/public_html`
+- Status: **DEPLOYED** - fișierele au fost încărcate cu succes
 
-## Configurații Necesare Pentru Producție
-```bash
-# Backend .env
-SMTP_HOST=smtp.yourprovider.com
-SMTP_PORT=587
+## Configurații Producție
+
+### FTP (Funcțional)
+```
+Host: 194.102.218.32
+User: caiden@gjc.ro
+Password: (rFChsqk-?yTnWlm
+Target: /public_html
+```
+
+### SMTP (Configurat în backend/.env)
+```
+SMTP_HOST=mail.gjc.ro
+SMTP_PORT=465
 SMTP_USER=office@gjc.ro
-SMTP_PASS=your_password
+SMTP_PASS=it+oN_yE5JPt+c2L
 ADMIN_EMAIL=office@gjc.ro
 ```
 
@@ -67,8 +86,8 @@ ADMIN_EMAIL=office@gjc.ro
 
 ## Backlog
 
-### P0 (Critice)
-- [NECONFIGURAT] Credențiale SMTP pentru trimitere email
+### P0 (Rezolvate)
+- ✅ Deploy FTP - REZOLVAT
 
 ### P1 (Important)
 - Dashboard admin pentru vizualizare aplicații
@@ -77,6 +96,7 @@ ADMIN_EMAIL=office@gjc.ro
 ### P2 (Nice to have)
 - Chat live cu potențiali clienți
 - Tracking status aplicație
+- CMS pentru blog
 
 ## Statistici Site
 - 11 Agenții Partenere (Asia & Africa)
@@ -85,4 +105,7 @@ ADMIN_EMAIL=office@gjc.ro
 - 3 Piețe Europene (RO, AT, RS)
 - 6 Industrii (Construcții, HoReCa, Nave de Croazieră, Agricultură, Logistică, Producție)
 
-## Status: Complet, gata de deploy
+## NOTĂ IMPORTANTĂ
+Serverul Datahost are activată protecție anti-bot (BotGuard). Aceasta poate afișa un mesaj "Please wait while your request is being verified..." pentru accesări automate. Site-ul funcționează normal pentru utilizatori reali din browser.
+
+## Status: ✅ DEPLOYED pe www.gjc.ro
