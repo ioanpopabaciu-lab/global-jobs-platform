@@ -11,6 +11,11 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski
 
+## Updates (28 Feb 2026 - v5)
+- ✅ **FIX CRITIC Helmet**: Rezolvată eroarea "Helmet expects a string as child of <title>" care făcea paginile să nu se încarce
+- ✅ **Traduceri Complete**: Toate paginile (Candidați, Servicii, Blog, Contact, Angajatori, Privacy) au traduceri în 4 limbi
+- ✅ **Testing 100%**: Toate testele de multilingv trec (iteration_5.json)
+
 ## Updates (28 Feb 2026 - v4)
 - ✅ **Multilingv complet**: 4 limbi (RO/EN/DE/SR) cu selector în navbar
 - ✅ **Paula AI Chat**: Asistent de recrutare cu OpenAI GPT
