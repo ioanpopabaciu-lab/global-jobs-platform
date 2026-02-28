@@ -372,12 +372,10 @@ export default function CandidatesPage() {
 
   return (
     <>
-      {/* Helmet temporarily disabled for debugging 
       <Helmet>
-        <title>{titleText}</title>
-        <meta name="description" content={descText} />
+        <title>{String(titleText)}</title>
+        <meta name="description" content={String(descText)} />
       </Helmet>
-      */}
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">
         {/* Hero */}
