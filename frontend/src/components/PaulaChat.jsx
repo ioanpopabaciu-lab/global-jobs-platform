@@ -212,7 +212,7 @@ export default function ElisabethChat() {
                 <div className="bg-white rounded-2xl px-4 py-3 shadow-sm rounded-bl-sm">
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-coral" />
-                    <span className="text-sm text-gray-500">Paula scrie...</span>
+                    <span className="text-sm text-gray-500">{t.typing}</span>
                   </div>
                 </div>
               </div>
