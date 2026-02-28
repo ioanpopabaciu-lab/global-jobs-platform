@@ -16,45 +16,272 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Briefcase, Upload, CheckCircle2, Loader2, FileText, Video } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-const citizenships = [
-  { value: "bangladesh", label: "Bangladesh" },
-  { value: "nepal", label: "Nepal" },
-  { value: "india", label: "India" },
-  { value: "pakistan", label: "Pakistan" },
-  { value: "sri_lanka", label: "Sri Lanka" },
-  { value: "philippines", label: "Filipine" },
-  { value: "vietnam", label: "Vietnam" },
-  { value: "indonesia", label: "Indonezia" },
-  { value: "kenya", label: "Kenya" },
-  { value: "ethiopia", label: "Etiopia" },
-  { value: "nigeria", label: "Nigeria" },
-  { value: "ghana", label: "Ghana" },
-  { value: "morocco", label: "Maroc" },
-  { value: "egypt", label: "Egipt" },
-  { value: "tunisia", label: "Tunisia" },
-  { value: "altele", label: "Altă țară" },
-];
-
-const englishLevels = [
-  { value: "incepator", label: "Începător" },
-  { value: "mediu", label: "Mediu" },
-  { value: "avansat", label: "Avansat" },
-];
-
-const industries = [
-  { value: "horeca", label: "HoReCa" },
-  { value: "constructii", label: "Construcții" },
-  { value: "agricultura", label: "Agricultură" },
-  { value: "depozite", label: "Depozite & Logistică" },
-  { value: "productie", label: "Producție" },
-  { value: "servicii", label: "Servicii" },
-  { value: "oricare", label: "Orice domeniu" },
-];
+const content = {
+  ro: {
+    meta: { title: "Portal Candidați | Global Jobs Consulting", description: "Înscrie-te în baza noastră de candidați și găsește oportunități de muncă în România, Austria sau Serbia." },
+    hero: { label: "Portal Candidați", title: "APLICĂ PENTRU UN JOB ÎN EUROPA", description: "Completați formularul și încărcați CV-ul pentru a fi inclus în baza noastră de candidați. Vă vom contacta când apare o oportunitate potrivită." },
+    citizenships: [
+      { value: "bangladesh", label: "Bangladesh" }, { value: "nepal", label: "Nepal" }, { value: "india", label: "India" },
+      { value: "pakistan", label: "Pakistan" }, { value: "sri_lanka", label: "Sri Lanka" }, { value: "philippines", label: "Filipine" },
+      { value: "vietnam", label: "Vietnam" }, { value: "indonesia", label: "Indonezia" }, { value: "kenya", label: "Kenya" },
+      { value: "ethiopia", label: "Etiopia" }, { value: "nigeria", label: "Nigeria" }, { value: "ghana", label: "Ghana" },
+      { value: "morocco", label: "Maroc" }, { value: "egypt", label: "Egipt" }, { value: "tunisia", label: "Tunisia" },
+      { value: "altele", label: "Altă țară" }
+    ],
+    englishLevels: [{ value: "incepator", label: "Începător" }, { value: "mediu", label: "Mediu" }, { value: "avansat", label: "Avansat" }],
+    industries: [
+      { value: "horeca", label: "HoReCa" }, { value: "constructii", label: "Construcții" }, { value: "agricultura", label: "Agricultură" },
+      { value: "depozite", label: "Depozite & Logistică" }, { value: "productie", label: "Producție" }, { value: "servicii", label: "Servicii" },
+      { value: "oricare", label: "Orice domeniu" }
+    ],
+    form: {
+      title: "Formular de Aplicare",
+      personalInfo: "Informații Personale",
+      fullName: "Nume Complet",
+      citizenship: "Cetățenie",
+      selectCountry: "Selectați țara",
+      email: "Email",
+      phone: "Telefon",
+      whatsapp: "WhatsApp",
+      experience: "Experiență Profesională",
+      experienceYears: "Ani de Experiență",
+      englishLevel: "Nivel Limba Engleză",
+      selectLevel: "Selectați nivelul",
+      industryPreference: "Domeniu Preferat",
+      selectIndustry: "Selectați domeniul",
+      documents: "Documente",
+      uploadCv: "Upload CV (PDF, DOC, DOCX - max 10MB)",
+      clickUpload: "Click pentru a încărca CV-ul",
+      dragDrop: "sau drag & drop",
+      videoCv: "Link Video CV (opțional)",
+      videoCvHint: "Adăugați un link către un video scurt de prezentare (YouTube, Vimeo, etc.)",
+      message: "Mesaj Adițional",
+      messagePlaceholder: "Descrieți experiența și motivația dumneavoastră...",
+      privacy: "Sunt de acord cu",
+      privacyLink: "Politica de Confidențialitate",
+      submit: "Trimite Aplicația",
+      submitting: "Se trimite...",
+      required: "Câmp obligatoriu",
+      invalidEmail: "Email invalid",
+      invalidValue: "Valoare invalidă",
+      fileTooLarge: "Fișierul este prea mare. Dimensiunea maximă este 10MB.",
+      privacyRequired: "Trebuie să acceptați Politica de Confidențialitate"
+    },
+    sidebar: {
+      destinations: "Țări de Destinație",
+      romania: "România", romaniaDesc: "Oportunități în toate domeniile",
+      austria: "Austria", austriaDesc: "Salarii competitive în EUR",
+      serbia: "Serbia", serbiaDesc: "Piață în creștere",
+      nextSteps: "Ce urmează?",
+      step1: "Primim și analizăm aplicația ta",
+      step2: "Te contactăm pentru un interviu video",
+      step3: "Te prezentăm angajatorilor potriviți",
+      step4: "Te ajutăm cu documentele de imigrare"
+    },
+    success: { title: "Aplicația a fost Trimisă!", text: "Am primit CV-ul și informațiile dumneavoastră. Veți fi contactat în cazul în care profilul corespunde oportunităților disponibile.", newApplication: "Trimite o altă aplicație" },
+    toast: { success: "Aplicația a fost trimisă cu succes!", error: "A apărut o eroare. Vă rugăm încercați din nou." }
+  },
+  en: {
+    meta: { title: "Candidates Portal | Global Jobs Consulting", description: "Join our candidate database and find job opportunities in Romania, Austria or Serbia." },
+    hero: { label: "Candidates Portal", title: "APPLY FOR A JOB IN EUROPE", description: "Fill out the form and upload your CV to be included in our candidate database. We will contact you when a suitable opportunity arises." },
+    citizenships: [
+      { value: "bangladesh", label: "Bangladesh" }, { value: "nepal", label: "Nepal" }, { value: "india", label: "India" },
+      { value: "pakistan", label: "Pakistan" }, { value: "sri_lanka", label: "Sri Lanka" }, { value: "philippines", label: "Philippines" },
+      { value: "vietnam", label: "Vietnam" }, { value: "indonesia", label: "Indonesia" }, { value: "kenya", label: "Kenya" },
+      { value: "ethiopia", label: "Ethiopia" }, { value: "nigeria", label: "Nigeria" }, { value: "ghana", label: "Ghana" },
+      { value: "morocco", label: "Morocco" }, { value: "egypt", label: "Egypt" }, { value: "tunisia", label: "Tunisia" },
+      { value: "altele", label: "Other country" }
+    ],
+    englishLevels: [{ value: "incepator", label: "Beginner" }, { value: "mediu", label: "Intermediate" }, { value: "avansat", label: "Advanced" }],
+    industries: [
+      { value: "horeca", label: "HoReCa" }, { value: "constructii", label: "Construction" }, { value: "agricultura", label: "Agriculture" },
+      { value: "depozite", label: "Warehousing & Logistics" }, { value: "productie", label: "Manufacturing" }, { value: "servicii", label: "Services" },
+      { value: "oricare", label: "Any field" }
+    ],
+    form: {
+      title: "Application Form",
+      personalInfo: "Personal Information",
+      fullName: "Full Name",
+      citizenship: "Citizenship",
+      selectCountry: "Select country",
+      email: "Email",
+      phone: "Phone",
+      whatsapp: "WhatsApp",
+      experience: "Professional Experience",
+      experienceYears: "Years of Experience",
+      englishLevel: "English Level",
+      selectLevel: "Select level",
+      industryPreference: "Preferred Industry",
+      selectIndustry: "Select industry",
+      documents: "Documents",
+      uploadCv: "Upload CV (PDF, DOC, DOCX - max 10MB)",
+      clickUpload: "Click to upload CV",
+      dragDrop: "or drag & drop",
+      videoCv: "Video CV Link (optional)",
+      videoCvHint: "Add a link to a short presentation video (YouTube, Vimeo, etc.)",
+      message: "Additional Message",
+      messagePlaceholder: "Describe your experience and motivation...",
+      privacy: "I agree to the",
+      privacyLink: "Privacy Policy",
+      submit: "Submit Application",
+      submitting: "Submitting...",
+      required: "Required field",
+      invalidEmail: "Invalid email",
+      invalidValue: "Invalid value",
+      fileTooLarge: "File is too large. Maximum size is 10MB.",
+      privacyRequired: "You must accept the Privacy Policy"
+    },
+    sidebar: {
+      destinations: "Destination Countries",
+      romania: "Romania", romaniaDesc: "Opportunities in all fields",
+      austria: "Austria", austriaDesc: "Competitive salaries in EUR",
+      serbia: "Serbia", serbiaDesc: "Growing market",
+      nextSteps: "What's Next?",
+      step1: "We receive and analyze your application",
+      step2: "We contact you for a video interview",
+      step3: "We present you to suitable employers",
+      step4: "We help you with immigration documents"
+    },
+    success: { title: "Application Submitted!", text: "We have received your CV and information. You will be contacted if your profile matches available opportunities.", newApplication: "Submit another application" },
+    toast: { success: "Application submitted successfully!", error: "An error occurred. Please try again." }
+  },
+  de: {
+    meta: { title: "Bewerberportal | Global Jobs Consulting", description: "Registrieren Sie sich in unserer Kandidatendatenbank und finden Sie Jobmöglichkeiten in Rumänien, Österreich oder Serbien." },
+    hero: { label: "Bewerberportal", title: "BEWERBEN SIE SICH FÜR EINEN JOB IN EUROPA", description: "Füllen Sie das Formular aus und laden Sie Ihren Lebenslauf hoch, um in unsere Kandidatendatenbank aufgenommen zu werden. Wir kontaktieren Sie, wenn eine passende Gelegenheit entsteht." },
+    citizenships: [
+      { value: "bangladesh", label: "Bangladesch" }, { value: "nepal", label: "Nepal" }, { value: "india", label: "Indien" },
+      { value: "pakistan", label: "Pakistan" }, { value: "sri_lanka", label: "Sri Lanka" }, { value: "philippines", label: "Philippinen" },
+      { value: "vietnam", label: "Vietnam" }, { value: "indonesia", label: "Indonesien" }, { value: "kenya", label: "Kenia" },
+      { value: "ethiopia", label: "Äthiopien" }, { value: "nigeria", label: "Nigeria" }, { value: "ghana", label: "Ghana" },
+      { value: "morocco", label: "Marokko" }, { value: "egypt", label: "Ägypten" }, { value: "tunisia", label: "Tunesien" },
+      { value: "altele", label: "Anderes Land" }
+    ],
+    englishLevels: [{ value: "incepator", label: "Anfänger" }, { value: "mediu", label: "Mittelstufe" }, { value: "avansat", label: "Fortgeschritten" }],
+    industries: [
+      { value: "horeca", label: "HoReCa" }, { value: "constructii", label: "Bauwesen" }, { value: "agricultura", label: "Landwirtschaft" },
+      { value: "depozite", label: "Lager & Logistik" }, { value: "productie", label: "Produktion" }, { value: "servicii", label: "Dienstleistungen" },
+      { value: "oricare", label: "Jeder Bereich" }
+    ],
+    form: {
+      title: "Bewerbungsformular",
+      personalInfo: "Persönliche Informationen",
+      fullName: "Vollständiger Name",
+      citizenship: "Staatsangehörigkeit",
+      selectCountry: "Land wählen",
+      email: "E-Mail",
+      phone: "Telefon",
+      whatsapp: "WhatsApp",
+      experience: "Berufserfahrung",
+      experienceYears: "Jahre Erfahrung",
+      englishLevel: "Englischniveau",
+      selectLevel: "Niveau wählen",
+      industryPreference: "Bevorzugte Branche",
+      selectIndustry: "Branche wählen",
+      documents: "Dokumente",
+      uploadCv: "Lebenslauf hochladen (PDF, DOC, DOCX - max 10MB)",
+      clickUpload: "Klicken zum Hochladen",
+      dragDrop: "oder per Drag & Drop",
+      videoCv: "Video-Lebenslauf Link (optional)",
+      videoCvHint: "Fügen Sie einen Link zu einem kurzen Präsentationsvideo hinzu (YouTube, Vimeo, etc.)",
+      message: "Zusätzliche Nachricht",
+      messagePlaceholder: "Beschreiben Sie Ihre Erfahrung und Motivation...",
+      privacy: "Ich stimme der",
+      privacyLink: "Datenschutzrichtlinie zu",
+      submit: "Bewerbung absenden",
+      submitting: "Wird gesendet...",
+      required: "Pflichtfeld",
+      invalidEmail: "Ungültige E-Mail",
+      invalidValue: "Ungültiger Wert",
+      fileTooLarge: "Datei ist zu groß. Maximale Größe ist 10MB.",
+      privacyRequired: "Sie müssen die Datenschutzrichtlinie akzeptieren"
+    },
+    sidebar: {
+      destinations: "Zielländer",
+      romania: "Rumänien", romaniaDesc: "Möglichkeiten in allen Bereichen",
+      austria: "Österreich", austriaDesc: "Wettbewerbsfähige Gehälter in EUR",
+      serbia: "Serbien", serbiaDesc: "Wachsender Markt",
+      nextSteps: "Was kommt als Nächstes?",
+      step1: "Wir erhalten und analysieren Ihre Bewerbung",
+      step2: "Wir kontaktieren Sie für ein Videointerview",
+      step3: "Wir stellen Sie passenden Arbeitgebern vor",
+      step4: "Wir helfen Ihnen mit den Einwanderungsdokumenten"
+    },
+    success: { title: "Bewerbung eingereicht!", text: "Wir haben Ihren Lebenslauf und Ihre Informationen erhalten. Sie werden kontaktiert, wenn Ihr Profil zu verfügbaren Möglichkeiten passt.", newApplication: "Weitere Bewerbung einreichen" },
+    toast: { success: "Bewerbung erfolgreich eingereicht!", error: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut." }
+  },
+  sr: {
+    meta: { title: "Portal kandidata | Global Jobs Consulting", description: "Prijavite se u našu bazu kandidata i pronađite posao u Rumuniji, Austriji ili Srbiji." },
+    hero: { label: "Portal kandidata", title: "PRIJAVITE SE ZA POSAO U EVROPI", description: "Popunite formular i otpremite svoj CV da biste bili uključeni u našu bazu kandidata. Kontaktiraćemo vas kada se pojavi odgovarajuća prilika." },
+    citizenships: [
+      { value: "bangladesh", label: "Bangladeš" }, { value: "nepal", label: "Nepal" }, { value: "india", label: "Indija" },
+      { value: "pakistan", label: "Pakistan" }, { value: "sri_lanka", label: "Šri Lanka" }, { value: "philippines", label: "Filipini" },
+      { value: "vietnam", label: "Vijetnam" }, { value: "indonesia", label: "Indonezija" }, { value: "kenya", label: "Kenija" },
+      { value: "ethiopia", label: "Etiopija" }, { value: "nigeria", label: "Nigerija" }, { value: "ghana", label: "Gana" },
+      { value: "morocco", label: "Maroko" }, { value: "egypt", label: "Egipat" }, { value: "tunisia", label: "Tunis" },
+      { value: "altele", label: "Druga zemlja" }
+    ],
+    englishLevels: [{ value: "incepator", label: "Početnik" }, { value: "mediu", label: "Srednji" }, { value: "avansat", label: "Napredni" }],
+    industries: [
+      { value: "horeca", label: "HoReCa" }, { value: "constructii", label: "Građevinarstvo" }, { value: "agricultura", label: "Poljoprivreda" },
+      { value: "depozite", label: "Skladištenje i logistika" }, { value: "productie", label: "Proizvodnja" }, { value: "servicii", label: "Usluge" },
+      { value: "oricare", label: "Bilo koja oblast" }
+    ],
+    form: {
+      title: "Formular za prijavu",
+      personalInfo: "Lične informacije",
+      fullName: "Puno ime",
+      citizenship: "Državljanstvo",
+      selectCountry: "Izaberite zemlju",
+      email: "Email",
+      phone: "Telefon",
+      whatsapp: "WhatsApp",
+      experience: "Profesionalno iskustvo",
+      experienceYears: "Godina iskustva",
+      englishLevel: "Nivo engleskog",
+      selectLevel: "Izaberite nivo",
+      industryPreference: "Preferirana industrija",
+      selectIndustry: "Izaberite industriju",
+      documents: "Dokumenti",
+      uploadCv: "Otpremi CV (PDF, DOC, DOCX - max 10MB)",
+      clickUpload: "Kliknite za otpremanje CV-a",
+      dragDrop: "ili prevucite i otpustite",
+      videoCv: "Link video CV-a (opciono)",
+      videoCvHint: "Dodajte link ka kratkom prezentacionom videu (YouTube, Vimeo, itd.)",
+      message: "Dodatna poruka",
+      messagePlaceholder: "Opišite svoje iskustvo i motivaciju...",
+      privacy: "Slažem se sa",
+      privacyLink: "Politikom privatnosti",
+      submit: "Pošalji prijavu",
+      submitting: "Slanje...",
+      required: "Obavezno polje",
+      invalidEmail: "Nevažeći email",
+      invalidValue: "Nevažeća vrednost",
+      fileTooLarge: "Fajl je prevelik. Maksimalna veličina je 10MB.",
+      privacyRequired: "Morate prihvatiti Politiku privatnosti"
+    },
+    sidebar: {
+      destinations: "Odredišne zemlje",
+      romania: "Rumunija", romaniaDesc: "Mogućnosti u svim oblastima",
+      austria: "Austrija", austriaDesc: "Konkurentne plate u EUR",
+      serbia: "Srbija", serbiaDesc: "Tržište u rastu",
+      nextSteps: "Šta sledi?",
+      step1: "Primamo i analiziramo vašu prijavu",
+      step2: "Kontaktiramo vas za video intervju",
+      step3: "Predstavljamo vas odgovarajućim poslodavcima",
+      step4: "Pomažemo vam sa imigracionim dokumentima"
+    },
+    success: { title: "Prijava poslata!", text: "Primili smo vaš CV i informacije. Bićete kontaktirani ako vaš profil odgovara dostupnim mogućnostima.", newApplication: "Pošalji novu prijavu" },
+    toast: { success: "Prijava uspešno poslata!", error: "Došlo je do greške. Molimo pokušajte ponovo." }
+  }
+};
 
 export default function CandidatesPage() {
+  const { language } = useLanguage();
+  const t = content[language] || content.ro;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [cvFile, setCvFile] = useState(null);
