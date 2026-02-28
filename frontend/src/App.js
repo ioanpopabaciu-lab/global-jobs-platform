@@ -12,10 +12,12 @@ import CandidatesPage from "@/pages/CandidatesPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
 import ContactPage from "@/pages/ContactPage";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 
 // Components
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CookieBanner from "@/components/CookieBanner";
 
 function AppContent() {
   useEffect(() => {
@@ -37,9 +39,11 @@ function AppContent() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
           </Routes>
         </main>
         <Footer />
+        <CookieBanner />
         <Toaster position="top-right" richColors />
       </BrowserRouter>
     </div>
