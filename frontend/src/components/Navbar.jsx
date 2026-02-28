@@ -20,9 +20,9 @@ const navLinks = [
   { href: "/contact", key: "nav.contact" },
 ];
 
-// Logo URLs from assets
+// Logo URLs - Updated with new transparent logo
+const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
 const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
-const LOGO_TRANSPARENT = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/ekuvpyca_logo%20transparent.png";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
