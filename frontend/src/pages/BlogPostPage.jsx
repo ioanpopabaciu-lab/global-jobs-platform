@@ -42,7 +42,7 @@ const dateLocales = {
 
 export default function BlogPostPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro;
+  const t = content[language] || content.ro || content['ro'];
   
   const { slug } = useParams();
   const [post, setPost] = useState(null);

@@ -182,13 +182,13 @@ const advantageIcons = [Globe, Shield, Clock, Award];
 
 export default function ServicesPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro;
+  const t = content[language] || content.ro || content['ro'];
 
   return (
     <>
       <Helmet>
-        <title>{t.meta?.title || 'Global Jobs Consulting'}</title>
-        <meta name="description" content={t.meta?.description} />
+        <title>{(t && t.meta && t.meta.title) ? t.meta.title : 'Global Jobs Consulting'}</title>
+        <meta name="description" content={(t && t.meta && t.meta.description) ? t.meta.description : ''} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20" data-testid="services-page">

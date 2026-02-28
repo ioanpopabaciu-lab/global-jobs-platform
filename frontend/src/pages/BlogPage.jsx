@@ -47,7 +47,7 @@ const dateLocales = {
 
 export default function BlogPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro;
+  const t = content[language] || content.ro || content['ro'];
   
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,8 +74,8 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title>{t.meta?.title || 'Global Jobs Consulting'}</title>
-        <meta name="description" content={t.meta?.description} />
+        <title>{(t && t.meta && t.meta.title) ? t.meta.title : 'Global Jobs Consulting'}</title>
+        <meta name="description" content={(t && t.meta && t.meta.description) ? t.meta.description : ''} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="blog-page">
