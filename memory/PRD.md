@@ -15,6 +15,8 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - ✅ Credențiale FTP corecte: `caiden@gjc.ro` (format user@domain necesar)
 - ✅ Fix accesibilitate meniu mobil (aria-labels)
 - ✅ SMTP configurat pentru office@gjc.ro
+- ✅ Date fiscale adăugate: CUI 48270947, J05/1458/2023
+- ✅ Backup conținut site vechi salvat în `/app/vechi_assets/`
 
 ## Updates (27 Feb 2026 - v2)
 - ✅ Experiență actualizată la 4 ani
