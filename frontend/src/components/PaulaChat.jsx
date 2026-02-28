@@ -6,32 +6,40 @@ import { useLanguage } from "@/i18n/LanguageContext";
 
 const translations = {
   ro: {
-    title: "Paula - Asistent Recrutare",
+    title: "Elisabeth - Asistent Recrutare",
     subtitle: "Sunt aici să vă ajut!",
     placeholder: "Scrieți un mesaj...",
-    greeting: "Bună ziua! Sunt Paula, asistentul dumneavoastră pentru recrutare. Cum vă pot ajuta astăzi? Pot răspunde la întrebări despre:\n\n• Cum să aplicați pentru un loc de muncă\n• Documente necesare\n• Sectoarele în care recrutăm\n• Colaborarea cu angajatorii\n• Informații de contact",
-    error: "Ne pare rău, a apărut o eroare. Vă rugăm încercați din nou."
+    greeting: "Bună ziua! Sunt Elisabeth, asistentul dumneavoastră pentru recrutare. Cum vă pot ajuta astăzi? Pot răspunde la întrebări despre:\n\n• Cum să aplicați pentru un loc de muncă\n• Documente necesare\n• Sectoarele în care recrutăm\n• Colaborarea cu angajatorii\n• Informații de contact",
+    error: "Ne pare rău, a apărut o eroare. Vă rugăm încercați din nou.",
+    typing: "Elisabeth scrie...",
+    chatPrompt: "Hai să vorbim?"
   },
   en: {
-    title: "Paula - Recruitment Assistant",
+    title: "Elisabeth - Recruitment Assistant",
     subtitle: "I'm here to help!",
     placeholder: "Type a message...",
-    greeting: "Hello! I'm Paula, your recruitment assistant. How can I help you today? I can answer questions about:\n\n• How to apply for a job\n• Required documents\n• Work sectors we recruit for\n• Employer collaboration\n• Contact information",
-    error: "Sorry, an error occurred. Please try again."
+    greeting: "Hello! I'm Elisabeth, your recruitment assistant. How can I help you today? I can answer questions about:\n\n• How to apply for a job\n• Required documents\n• Work sectors we recruit for\n• Employer collaboration\n• Contact information",
+    error: "Sorry, an error occurred. Please try again.",
+    typing: "Elisabeth is typing...",
+    chatPrompt: "Let's talk?"
   },
   de: {
-    title: "Paula - Rekrutierungsassistent",
+    title: "Elisabeth - Rekrutierungsassistent",
     subtitle: "Ich bin hier um zu helfen!",
     placeholder: "Nachricht schreiben...",
-    greeting: "Guten Tag! Ich bin Paula, Ihre Rekrutierungsassistentin. Wie kann ich Ihnen heute helfen? Ich kann Fragen beantworten zu:\n\n• Wie Sie sich bewerben können\n• Erforderliche Dokumente\n• Arbeitssektoren\n• Zusammenarbeit mit Arbeitgebern\n• Kontaktinformationen",
-    error: "Entschuldigung, ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    greeting: "Guten Tag! Ich bin Elisabeth, Ihre Rekrutierungsassistentin. Wie kann ich Ihnen heute helfen? Ich kann Fragen beantworten zu:\n\n• Wie Sie sich bewerben können\n• Erforderliche Dokumente\n• Arbeitssektoren\n• Zusammenarbeit mit Arbeitgebern\n• Kontaktinformationen",
+    error: "Entschuldigung, ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    typing: "Elisabeth schreibt...",
+    chatPrompt: "Lass uns reden?"
   },
   sr: {
-    title: "Paula - Asistent za Regrutaciju",
+    title: "Elisabeth - Asistent za Regrutaciju",
     subtitle: "Ovde sam da pomognem!",
     placeholder: "Napišite poruku...",
-    greeting: "Zdravo! Ja sam Paula, vaš asistent za regrutaciju. Kako vam mogu pomoći danas? Mogu odgovoriti na pitanja o:\n\n• Kako se prijaviti za posao\n• Potrebna dokumenta\n• Sektori u kojima regrutujemo\n• Saradnja sa poslodavcima\n• Kontakt informacije",
-    error: "Žao nam je, došlo je do greške. Molimo pokušajte ponovo."
+    greeting: "Zdravo! Ja sam Elisabeth, vaš asistent za regrutaciju. Kako vam mogu pomoći danas? Mogu odgovoriti na pitanja o:\n\n• Kako se prijaviti za posao\n• Potrebna dokumenta\n• Sektori u kojima regrutujemo\n• Saradnja sa poslodavcima\n• Kontakt informacije",
+    error: "Žao nam je, došlo je do greške. Molimo pokušajte ponovo.",
+    typing: "Elisabeth piše...",
+    chatPrompt: "Hajde da pričamo?"
   }
 };
 
