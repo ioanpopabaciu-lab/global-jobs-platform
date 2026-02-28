@@ -124,6 +124,15 @@ export default function ContactPage() {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Date Fiscale */}
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <h4 className="font-semibold text-navy-800 mb-2">Date Fiscale</h4>
+                    <p className="text-gray-600 text-sm">
+                      CUI: 48270947<br />
+                      J05/1458/2023
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
 
