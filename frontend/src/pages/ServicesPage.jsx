@@ -187,8 +187,8 @@ export default function ServicesPage() {
   return (
     <>
       <Helmet>
-        <title>{t.meta.title}</title>
-        <meta name="description" content={t.meta.description} />
+        <title>{(t && t.meta && t.meta.title) || 'Servicii | Global Jobs Consulting'}</title>
+        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20" data-testid="services-page">
