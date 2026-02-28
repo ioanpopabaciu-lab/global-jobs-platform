@@ -137,23 +137,38 @@ export default function ElisabethChat() {
 
   return (
     <>
-      {/* Chat Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
-          isOpen 
-            ? "bg-gray-600 hover:bg-gray-700" 
-            : "bg-coral hover:bg-red-600 animate-pulse hover:animate-none"
-        }`}
-        data-testid="paula-chat-button"
-        aria-label="Chat with Paula"
-      >
-        {isOpen ? (
-          <X className="w-6 h-6 text-white" />
-        ) : (
-          <MessageCircle className="w-6 h-6 text-white" />
+      {/* Chat Button with Label */}
+      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        {/* "Hai să vorbim?" label - only show when chat is closed */}
+        {!isOpen && (
+          <div 
+            className="bg-white px-4 py-2 rounded-full shadow-lg animate-bounce cursor-pointer"
+            onClick={() => setIsOpen(true)}
+          >
+            <span className="text-navy-900 font-medium text-sm whitespace-nowrap">
+              {t.chatPrompt}
+            </span>
+          </div>
         )}
-      </button>
+        
+        {/* Chat Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
+            isOpen 
+              ? "bg-gray-600 hover:bg-gray-700" 
+              : "bg-coral hover:bg-red-600"
+          }`}
+          data-testid="elisabeth-chat-button"
+          aria-label="Chat with Elisabeth"
+        >
+          {isOpen ? (
+            <X className="w-6 h-6 text-white" />
+          ) : (
+            <MessageCircle className="w-6 h-6 text-white" />
+          )}
+        </button>
+      </div>
 
       {/* Chat Window */}
       {isOpen && (
