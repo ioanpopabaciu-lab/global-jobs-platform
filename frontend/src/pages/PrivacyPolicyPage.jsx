@@ -249,17 +249,13 @@ const content = {
 
 export default function PrivacyPolicyPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro || content['ro'];
-  
-  // Fallback values for Helmet
-  const pageTitle = (t && t.meta && t.meta.title) ? String(t.meta.title) : 'Politică de Confidențialitate | Global Jobs Consulting';
-  const pageDescription = (t && t.meta && t.meta.description) ? String(t.meta.description) : '';
+  const t = content[language] || content.ro;
 
   return (
     <>
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
+        <title>{t.meta.title}</title>
+        <meta name="description" content={t.meta.description} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="privacy-policy-page">
