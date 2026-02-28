@@ -18,6 +18,8 @@ import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import PaulaChat from "@/components/PaulaChat";
 
 function AppContent() {
   useEffect(() => {
@@ -44,6 +46,8 @@ function AppContent() {
         </main>
         <Footer />
         <CookieBanner />
+        <WhatsAppButton />
+        <PaulaChat />
         <Toaster position="top-right" richColors />
       </BrowserRouter>
     </div>
