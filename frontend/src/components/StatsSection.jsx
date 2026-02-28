@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Globe, Users, Building, Calendar } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -10,7 +11,46 @@ const defaultStats = {
   target_markets: 3
 };
 
+const content = {
+  ro: {
+    items: [
+      { label: "Agenții Partenere", description: "În Asia și Africa" },
+      { label: "Ani de Experiență", description: "În recrutare internațională" },
+      { label: "Continente", description: "Acoperire globală" },
+      { label: "Piețe Europene", description: "RO | AT | RS" }
+    ]
+  },
+  en: {
+    items: [
+      { label: "Partner Agencies", description: "In Asia and Africa" },
+      { label: "Years of Experience", description: "In international recruitment" },
+      { label: "Continents", description: "Global coverage" },
+      { label: "European Markets", description: "RO | AT | RS" }
+    ]
+  },
+  de: {
+    items: [
+      { label: "Partneragenturen", description: "In Asien und Afrika" },
+      { label: "Jahre Erfahrung", description: "Im internationalen Recruiting" },
+      { label: "Kontinente", description: "Globale Abdeckung" },
+      { label: "Europäische Märkte", description: "RO | AT | RS" }
+    ]
+  },
+  sr: {
+    items: [
+      { label: "Partnerske agencije", description: "U Aziji i Africi" },
+      { label: "Godina iskustva", description: "U međunarodnom zapošljavanju" },
+      { label: "Kontinenta", description: "Globalna pokrivenost" },
+      { label: "Evropska tržišta", description: "RO | AT | RS" }
+    ]
+  }
+};
+
+const icons = [Building, Calendar, Globe, Users];
+
 export default function StatsSection() {
+  const { language } = useLanguage();
+  const t = content[language] || content.ro;
   const [stats, setStats] = useState(defaultStats);
 
   useEffect(() => {
@@ -27,39 +67,14 @@ export default function StatsSection() {
       .catch(() => {});
   }, []);
 
-  const statItems = [
-    {
-      icon: Building,
-      value: stats.partner_agencies,
-      label: "Agenții Partenere",
-      description: "În Asia și Africa"
-    },
-    {
-      icon: Calendar,
-      value: stats.experience_years,
-      label: "Ani de Experiență",
-      description: "În recrutare internațională"
-    },
-    {
-      icon: Globe,
-      value: stats.continents,
-      label: "Continente",
-      description: "Acoperire globală"
-    },
-    {
-      icon: Users,
-      value: stats.target_markets,
-      label: "Piețe Europene",
-      description: "RO | AT | RS"
-    }
-  ];
+  const values = [stats.partner_agencies, stats.experience_years, stats.continents, stats.target_markets];
 
   return (
     <section className="py-16 bg-gradient-to-r from-navy-900 to-navy-800" data-testid="stats-section">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {statItems.map((item, index) => {
-            const Icon = item.icon;
+          {t.items.map((item, index) => {
+            const Icon = icons[index];
             return (
               <div 
                 key={index}
@@ -70,7 +85,7 @@ export default function StatsSection() {
                   <Icon className="h-6 w-6 text-coral" />
                 </div>
                 <div className="font-heading text-4xl md:text-5xl font-bold text-white mb-1">
-                  {item.value}
+                  {values[index]}
                 </div>
                 <div className="text-white font-semibold mb-1">{item.label}</div>
                 <div className="text-navy-300 text-sm">{item.description}</div>
