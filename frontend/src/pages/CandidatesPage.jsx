@@ -310,16 +310,16 @@ export default function CandidatesPage() {
       const result = await response.json();
       
       if (!response.ok) {
-        throw new Error(result.detail || "Eroare la trimitere");
+        throw new Error(result.detail || t.toast.error);
       }
 
-      toast.success("Aplicația a fost trimisă cu succes!");
+      toast.success(t.toast.success);
       setSubmitted(true);
       reset();
       setCvFile(null);
     } catch (error) {
       console.error("Form submission error:", error);
-      toast.error(error.message || "A apărut o eroare. Vă rugăm încercați din nou.");
+      toast.error(error.message || t.toast.error);
     } finally {
       setIsSubmitting(false);
     }
@@ -329,7 +329,7 @@ export default function CandidatesPage() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        toast.error("Fișierul este prea mare. Dimensiunea maximă este 10MB.");
+        toast.error(t.form.fileTooLarge);
         return;
       }
       setCvFile(file);
@@ -346,18 +346,17 @@ export default function CandidatesPage() {
                 <CheckCircle2 className="h-10 w-10 text-green-600" />
               </div>
               <h1 className="font-heading text-3xl font-bold text-navy-900  mb-4">
-                Aplicația a fost Trimisă!
+                {t.success.title}
               </h1>
               <p className="text-gray-600 mb-8">
-                Am primit CV-ul și informațiile dumneavoastră. Veți fi contactat 
-                în cazul în care profilul corespunde oportunităților disponibile.
+                {t.success.text}
               </p>
               <Button
                 onClick={() => setSubmitted(false)}
                 className="bg-coral hover:bg-red-600"
                 data-testid="submit-another-btn"
               >
-                Trimite o altă aplicație
+                {t.success.newApplication}
               </Button>
             </div>
           </div>
