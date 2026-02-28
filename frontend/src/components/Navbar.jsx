@@ -165,7 +165,14 @@ export default function Navbar() {
                 <Menu className={`h-6 w-6 ${isScrolled ? 'text-navy-900' : 'text-white'}`} />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]" data-testid="mobile-menu">
+            <SheetContent 
+              side="right" 
+              className="w-[300px]" 
+              data-testid="mobile-menu"
+              id="mobile-nav-menu"
+              role="dialog"
+              aria-label="Navigation menu"
+            >
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <SheetDescription className="sr-only">Site navigation links</SheetDescription>
               <div className="flex flex-col gap-4 mt-8">
