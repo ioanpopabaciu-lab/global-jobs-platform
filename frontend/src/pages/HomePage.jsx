@@ -5,37 +5,158 @@ import ProcessSection from "@/components/ProcessSection";
 import StatsSection from "@/components/StatsSection";
 import { Link } from "react-router-dom";
 import { ArrowRight, Globe, Shield, Clock, Users } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-const advantages = [
-  {
-    icon: Globe,
-    title: "Rețea Globală",
-    description: "Acces la candidați din Asia și Africa prin intermediul celor 11 agenții partenere."
+const pageContent = {
+  ro: {
+    meta: {
+      title: "Global Jobs Consulting | Recrutare și Plasare Forță de Muncă Asia & Africa",
+      description: "Agenție de recrutare All-Inclusive în România, Austria și Serbia. 11 parteneri în Asia și Africa."
+    },
+    about: {
+      label: "Despre Noi",
+      title: "Conectăm Talente Globale cu Oportunități Locale",
+      subtitle: "Soluții Globale pentru Deficitul de Forță de Muncă",
+      text1: "Global Jobs Consulting este o agenție de recrutare All-Inclusive specializată în plasarea forței de muncă din Asia și Africa în piețele europene. Cu o rețea de 11 agenții partenere, oferim soluții complete de staffing pentru angajatorii din România, Austria și Serbia.",
+      text2: "Ne ocupăm de întregul proces: de la selecția riguroasă a candidaților, întocmirea dosarelor de imigrare (vize și permise de muncă), până la integrarea în comunitate și monitorizarea pe termen lung.",
+      cta: "Descoperă Serviciile Noastre",
+      years: "Ani de Experiență"
+    },
+    advantages: [
+      { title: "Rețea Globală", description: "Acces la candidați din Asia și Africa prin intermediul celor 11 agenții partenere." },
+      { title: "Conformitate Legală", description: "Gestionăm integral documentația legală: vize, permise de muncă și autorizații." },
+      { title: "Proces Rapid", description: "Livrăm candidați selectați în cel mai scurt timp posibil, cu suport complet." },
+      { title: "Suport Continuu", description: "Monitorizare și asistență pe termen lung pentru integrarea cu succes." }
+    ],
+    markets: {
+      label: "Piețe Acoperite",
+      title: "Angajatori din 3 Țări",
+      romania: { name: "România", desc: "Soluții complete de recrutare pentru angajatorii români din toate sectoarele industriale.", link: "Detalii pentru RO →" },
+      austria: { name: "Austria", desc: "Forță de muncă calificată pentru piața austriacă, cu suport complet în procesul de imigrare.", link: "Detalii pentru AT →" },
+      serbia: { name: "Serbia", desc: "Plasare de personal pentru companiile din Serbia care caută muncitori dedicați.", link: "Detalii pentru RS →" }
+    },
+    cta: {
+      title: "Începeți Recrutarea Astăzi",
+      description: "Indiferent dacă sunteți angajator în căutare de personal sau candidat în căutarea unei oportunități, suntem aici să vă ajutăm.",
+      employer: "Sunt Angajator",
+      candidate: "Caut un Job"
+    }
   },
-  {
-    icon: Shield,
-    title: "Conformitate Legală",
-    description: "Gestionăm integral documentația legală: vize, permise de muncă și autorizații pentru RO, AT și RS."
+  en: {
+    meta: {
+      title: "Global Jobs Consulting | International Workforce Recruitment Asia & Africa",
+      description: "All-Inclusive recruitment agency in Romania, Austria, and Serbia. 11 partners in Asia and Africa."
+    },
+    about: {
+      label: "About Us",
+      title: "Connecting Global Talent with Local Opportunities",
+      subtitle: "Global Solutions for Workforce Shortage",
+      text1: "Global Jobs Consulting is an All-Inclusive recruitment agency specialized in placing workforce from Asia and Africa in European markets. With a network of 11 partner agencies, we offer complete staffing solutions for employers in Romania, Austria, and Serbia.",
+      text2: "We handle the entire process: from rigorous candidate selection, immigration documentation (visas and work permits), to community integration and long-term monitoring.",
+      cta: "Discover Our Services",
+      years: "Years of Experience"
+    },
+    advantages: [
+      { title: "Global Network", description: "Access to candidates from Asia and Africa through our 11 partner agencies." },
+      { title: "Legal Compliance", description: "We fully manage legal documentation: visas, work permits, and authorizations." },
+      { title: "Fast Process", description: "We deliver selected candidates as quickly as possible, with full support." },
+      { title: "Ongoing Support", description: "Long-term monitoring and assistance for successful integration." }
+    ],
+    markets: {
+      label: "Markets Covered",
+      title: "Employers from 3 Countries",
+      romania: { name: "Romania", desc: "Complete recruitment solutions for Romanian employers across all industrial sectors.", link: "Details for RO →" },
+      austria: { name: "Austria", desc: "Qualified workforce for the Austrian market, with full immigration process support.", link: "Details for AT →" },
+      serbia: { name: "Serbia", desc: "Staff placement for Serbian companies looking for dedicated workers.", link: "Details for RS →" }
+    },
+    cta: {
+      title: "Start Recruiting Today",
+      description: "Whether you're an employer looking for staff or a candidate looking for an opportunity, we're here to help you.",
+      employer: "I'm an Employer",
+      candidate: "Looking for a Job"
+    }
   },
-  {
-    icon: Clock,
-    title: "Proces Rapid",
-    description: "Livrăm candidați selectați în cel mai scurt timp posibil, cu suport complet pe tot parcursul."
+  de: {
+    meta: {
+      title: "Global Jobs Consulting | Internationale Arbeitskräftevermittlung Asien & Afrika",
+      description: "All-Inclusive-Rekrutierungsagentur in Rumänien, Österreich und Serbien. 11 Partner in Asien und Afrika."
+    },
+    about: {
+      label: "Über uns",
+      title: "Wir verbinden globale Talente mit lokalen Möglichkeiten",
+      subtitle: "Globale Lösungen für den Arbeitskräftemangel",
+      text1: "Global Jobs Consulting ist eine All-Inclusive-Rekrutierungsagentur, die sich auf die Vermittlung von Arbeitskräften aus Asien und Afrika in europäische Märkte spezialisiert hat. Mit einem Netzwerk von 11 Partneragenturen bieten wir vollständige Personallösungen für Arbeitgeber in Rumänien, Österreich und Serbien.",
+      text2: "Wir kümmern uns um den gesamten Prozess: von der sorgfältigen Auswahl der Kandidaten, der Erstellung von Einwanderungsdossiers (Visa und Arbeitserlaubnisse) bis hin zur Integration in die Gemeinschaft und langfristigen Überwachung.",
+      cta: "Entdecken Sie unsere Dienstleistungen",
+      years: "Jahre Erfahrung"
+    },
+    advantages: [
+      { title: "Globales Netzwerk", description: "Zugang zu Kandidaten aus Asien und Afrika durch unsere 11 Partneragenturen." },
+      { title: "Rechtliche Konformität", description: "Wir verwalten die gesamte rechtliche Dokumentation: Visa, Arbeitserlaubnisse und Genehmigungen." },
+      { title: "Schneller Prozess", description: "Wir liefern ausgewählte Kandidaten so schnell wie möglich mit voller Unterstützung." },
+      { title: "Kontinuierliche Unterstützung", description: "Langfristige Überwachung und Unterstützung für eine erfolgreiche Integration." }
+    ],
+    markets: {
+      label: "Abgedeckte Märkte",
+      title: "Arbeitgeber aus 3 Ländern",
+      romania: { name: "Rumänien", desc: "Komplette Rekrutierungslösungen für rumänische Arbeitgeber in allen Industriesektoren.", link: "Details für RO →" },
+      austria: { name: "Österreich", desc: "Qualifizierte Arbeitskräfte für den österreichischen Markt mit voller Unterstützung im Einwanderungsprozess.", link: "Details für AT →" },
+      serbia: { name: "Serbien", desc: "Personalvermittlung für serbische Unternehmen, die engagierte Mitarbeiter suchen.", link: "Details für RS →" }
+    },
+    cta: {
+      title: "Starten Sie heute mit der Rekrutierung",
+      description: "Ob Sie als Arbeitgeber Personal suchen oder als Kandidat eine Stelle suchen - wir sind hier, um Ihnen zu helfen.",
+      employer: "Ich bin Arbeitgeber",
+      candidate: "Jobsuche"
+    }
   },
-  {
-    icon: Users,
-    title: "Suport Continuu",
-    description: "Monitorizare și asistență pe termen lung pentru integrarea cu succes a noilor angajați."
+  sr: {
+    meta: {
+      title: "Global Jobs Consulting | Međunarodna regrutacija radne snage Azija i Afrika",
+      description: "Sveobuhvatna agencija za zapošljavanje u Rumuniji, Austriji i Srbiji. 11 partnera u Aziji i Africi."
+    },
+    about: {
+      label: "O nama",
+      title: "Povezujemo globalne talente sa lokalnim prilikama",
+      subtitle: "Globalna rešenja za nedostatak radne snage",
+      text1: "Global Jobs Consulting je sveobuhvatna agencija za zapošljavanje specijalizovana za plasiranje radne snage iz Azije i Afrike na evropska tržišta. Sa mrežom od 11 partnerskih agencija, nudimo kompletna rešenja za zapošljavanje poslodavcima u Rumuniji, Austriji i Srbiji.",
+      text2: "Brinemo se o celom procesu: od pažljivog odabira kandidata, pripreme imigracionih dosijea (vize i radne dozvole) do integracije u zajednicu i dugoročnog praćenja.",
+      cta: "Otkrijte naše usluge",
+      years: "Godina iskustva"
+    },
+    advantages: [
+      { title: "Globalna mreža", description: "Pristup kandidatima iz Azije i Afrike kroz naših 11 partnerskih agencija." },
+      { title: "Pravna usklađenost", description: "U potpunosti upravljamo pravnom dokumentacijom: vize, radne dozvole i ovlašćenja." },
+      { title: "Brz proces", description: "Isporučujemo odabrane kandidate što je brže moguće, uz punu podršku." },
+      { title: "Kontinuirana podrška", description: "Dugoročno praćenje i pomoć za uspešnu integraciju." }
+    ],
+    markets: {
+      label: "Pokrivena tržišta",
+      title: "Poslodavci iz 3 zemlje",
+      romania: { name: "Rumunija", desc: "Kompletna rešenja za zapošljavanje za rumunske poslodavce u svim industrijskim sektorima.", link: "Detalji za RO →" },
+      austria: { name: "Austrija", desc: "Kvalifikovana radna snaga za austrijsko tržište, uz punu podršku u imigracionom procesu.", link: "Detalji za AT →" },
+      serbia: { name: "Srbija", desc: "Plasman osoblja za srpske kompanije koje traže posvećene radnike.", link: "Detalji za RS →" }
+    },
+    cta: {
+      title: "Počnite sa regrutacijom danas",
+      description: "Bilo da ste poslodavac u potrazi za osobljem ili kandidat u potrazi za prilikom, tu smo da vam pomognemo.",
+      employer: "Ja sam poslodavac",
+      candidate: "Tražim posao"
+    }
   }
-];
+};
 
 export default function HomePage() {
+  const { language } = useLanguage();
+  const t = pageContent[language] || pageContent.ro;
+  const icons = [Globe, Shield, Clock, Users];
+
   return (
     <>
       <Helmet>
-        <title>Global Jobs Consulting | Recrutare și Plasare Forță de Muncă Asia & Africa</title>
-        <meta name="description" content="Agenție de recrutare All-Inclusive în România, Austria și Serbia. Peste 30 de parteneri în 18 țări. Soluții stabile pentru forță de muncă calificată și necalificată." />
-        <meta name="keywords" content="recrutare, forța de muncă, Asia, Africa, România, Austria, Serbia, HoReCa, construcții, agricultură, producție" />
+        <title>{t.meta.title}</title>
+        <meta name="description" content={t.meta.description} />
+        <meta name="keywords" content="recrutare, forța de muncă, Asia, Africa, România, Austria, Serbia, HoReCa, construcții, agricultură" />
         <link rel="canonical" href="https://www.gjc.ro" />
       </Helmet>
 
@@ -50,43 +171,38 @@ export default function HomePage() {
               {/* Image */}
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1740477138822-906f6b845579?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwzfHxmYXJtJTIwYWdyaWN1bHR1cmUlMjB3b3JrZXJzJTIwaGFydmVzdCUyMHNtaWxpbmclMjBhc2lhfGVufDB8fHx8MTc3MjIyMzQxNXww&ixlib=rb-4.1.0&q=85"
-                  alt="Echipa Global Jobs Consulting"
+                  src="https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png"
+                  alt="Global Jobs Consulting Team"
                   className="rounded-2xl shadow-lg w-full"
                 />
                 <div className="absolute -bottom-6 -right-6 bg-coral text-white p-6 rounded-2xl shadow-xl hidden md:block">
                   <div className="font-heading text-4xl font-bold">4</div>
-                  <div className="text-white/80 text-sm">Ani de Experiență</div>
+                  <div className="text-white/80 text-sm">{t.about.years}</div>
                 </div>
               </div>
 
               {/* Content */}
               <div>
                 <span className="text-coral font-semibold text-sm tracking-wider">
-                  Despre Noi
+                  {t.about.label}
                 </span>
                 <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
-                  Conectăm Talente Globale cu Oportunități Locale
+                  {t.about.title}
                 </h2>
                 <p className="text-xl text-gold font-medium mb-6">
-                  Soluții Globale pentru Deficitul de Forță de Muncă
+                  {t.about.subtitle}
                 </p>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  Global Jobs Consulting este o agenție de recrutare All-Inclusive specializată 
-                  în plasarea forței de muncă din Asia și Africa în piețele europene. Cu o rețea 
-                  de 11 agenții partenere, oferim soluții complete de staffing 
-                  pentru angajatorii din România, Austria și Serbia.
+                  {t.about.text1}
                 </p>
                 <p className="text-gray-600 mb-8 leading-relaxed">
-                  Ne ocupăm de întregul proces: de la selecția riguroasă a candidaților, 
-                  întocmirea dosarelor de imigrare (vize și permise de muncă), până la 
-                  integrarea în comunitate și monitorizarea pe termen lung.
+                  {t.about.text2}
                 </p>
 
                 {/* Advantages Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                  {advantages.map((adv, index) => {
-                    const Icon = adv.icon;
+                  {t.advantages.map((adv, index) => {
+                    const Icon = icons[index];
                     return (
                       <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
                         <div className="p-2 bg-coral/10 rounded-lg">
@@ -106,7 +222,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-full font-semibold hover:bg-red-600 transition-colors shadow-lg"
                   data-testid="about-cta"
                 >
-                  Descoperă Serviciile Noastre
+                  {t.about.cta}
                   <ArrowRight className="h-5 w-5" />
                 </Link>
               </div>
@@ -128,10 +244,10 @@ export default function HomePage() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <span className="text-coral font-semibold text-sm tracking-wider">
-                Piețe Acoperite
+                {t.markets.label}
               </span>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-navy-900 mt-2 mb-4">
-                Angajatori din 3 Țări
+                {t.markets.title}
               </h2>
             </div>
 
@@ -141,12 +257,10 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 flex items-center justify-center">
                   <span className="text-3xl">🇷🇴</span>
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">România</h3>
-                <p className="text-gray-600 mb-4">
-                  Soluții complete de recrutare pentru angajatorii români din toate sectoarele industriale.
-                </p>
+                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">{t.markets.romania.name}</h3>
+                <p className="text-gray-600 mb-4">{t.markets.romania.desc}</p>
                 <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
-                  Detalii pentru RO →
+                  {t.markets.romania.link}
                 </Link>
               </div>
 
@@ -155,12 +269,10 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
                   <span className="text-3xl">🇦🇹</span>
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">Austria</h3>
-                <p className="text-gray-600 mb-4">
-                  Forță de muncă calificată pentru piața austriacă, cu suport complet în procesul de imigrare.
-                </p>
+                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">{t.markets.austria.name}</h3>
+                <p className="text-gray-600 mb-4">{t.markets.austria.desc}</p>
                 <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
-                  Detalii pentru AT →
+                  {t.markets.austria.link}
                 </Link>
               </div>
 
@@ -169,12 +281,10 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 flex items-center justify-center">
                   <span className="text-3xl">🇷🇸</span>
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">Serbia</h3>
-                <p className="text-gray-600 mb-4">
-                  Plasare de personal pentru companiile din Serbia care caută muncitori dedicați.
-                </p>
+                <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">{t.markets.serbia.name}</h3>
+                <p className="text-gray-600 mb-4">{t.markets.serbia.desc}</p>
                 <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
-                  Detalii pentru RS →
+                  {t.markets.serbia.link}
                 </Link>
               </div>
             </div>
@@ -187,11 +297,10 @@ export default function HomePage() {
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-3xl mx-auto text-center text-white">
               <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6">
-                Începeți Recrutarea Astăzi
+                {t.cta.title}
               </h2>
               <p className="text-navy-200 text-lg mb-8">
-                Indiferent dacă sunteți angajator în căutare de personal sau candidat 
-                în căutarea unei oportunități, suntem aici să vă ajutăm.
+                {t.cta.description}
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
@@ -199,7 +308,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg"
                   data-testid="final-cta-employer"
                 >
-                  Sunt Angajator
+                  {t.cta.employer}
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
@@ -207,7 +316,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors"
                   data-testid="final-cta-candidate"
                 >
-                  Caut un Job
+                  {t.cta.candidate}
                 </Link>
               </div>
             </div>
