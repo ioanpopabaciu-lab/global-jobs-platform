@@ -80,6 +80,9 @@ export default function Navbar() {
                 <DropdownMenuItem onClick={() => setLanguage("ro")} className="cursor-pointer">
                   🇷🇴 Română
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage("en")} className="cursor-pointer">
+                  🇬🇧 English
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage("de")} className="cursor-pointer">
                   🇦🇹 Deutsch
                 </DropdownMenuItem>
