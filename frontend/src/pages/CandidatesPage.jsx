@@ -373,8 +373,8 @@ export default function CandidatesPage() {
   return (
     <>
       <Helmet>
-        <title>{(t && t.meta && t.meta.title) ? t.meta.title : 'Global Jobs Consulting'}</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) ? t.meta.description : ''} />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">
