@@ -132,7 +132,17 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <p>© {currentYear} Global Jobs Consulting. {t('footer.rights')}</p>
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+              <p>© {currentYear} Global Jobs Consulting. {t('footer.rights')}</p>
+              <span className="hidden md:inline">|</span>
+              <Link 
+                to="/politica-confidentialitate" 
+                className="hover:text-coral transition"
+                data-testid="footer-privacy-link"
+              >
+                Politică de Confidențialitate
+              </Link>
+            </div>
             <div className="flex gap-4">
               <span>România</span>
               <span>|</span>
