@@ -24,7 +24,7 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <img 
-              src={LOGO_TRANSPARENT} 
+              src={LOGO_WHITE} 
               alt="Global Jobs Consulting" 
               className="h-16 w-auto mb-4"
             />
