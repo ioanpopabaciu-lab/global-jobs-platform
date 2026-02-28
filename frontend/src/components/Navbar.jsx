@@ -45,6 +45,7 @@ export default function Navbar() {
 
   const languageLabels = {
     ro: "🇷🇴 RO",
+    en: "🇬🇧 EN",
     de: "🇦🇹 DE",
     sr: "🇷🇸 SR"
   };
