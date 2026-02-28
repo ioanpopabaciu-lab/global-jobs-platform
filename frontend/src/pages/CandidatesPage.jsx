@@ -373,8 +373,8 @@ export default function CandidatesPage() {
   return (
     <>
       <Helmet>
-        <title>{t?.meta?.title || 'Portal Candidați | Global Jobs Consulting'}</title>
-        <meta name="description" content={t?.meta?.description || ''} />
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDesc} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="candidates-page">
