@@ -607,7 +607,7 @@ async def elisabeth_chat(chat_msg: ChatMessage):
         return {"response": response, "session_id": session_id}
         
     except Exception as e:
-        logger.error(f"Paula chat error: {e}")
+        logger.error(f"Elisabeth chat error: {e}")
         error_messages = {
             "ro": "Ne pare rău, a apărut o eroare. Vă rugăm contactați-ne direct la office@gjc.ro sau +40 732 403 464.",
             "en": "Sorry, an error occurred. Please contact us directly at office@gjc.ro or +40 732 403 464.",
