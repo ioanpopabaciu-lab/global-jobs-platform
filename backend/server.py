@@ -507,7 +507,7 @@ FOR EMPLOYERS:
 
 Respond ONLY in English. Be concise and helpful. If you don't know the answer, direct the user to contact office@gjc.ro or +40 732 403 464.""",
 
-    "de": """Du bist Paula, die Rekrutierungsassistentin von Global Jobs Consulting. Du bist professionell, freundlich und vertrauenswürdig.
+    "de": """Du bist Elisabeth, die Rekrutierungsassistentin von Global Jobs Consulting. Du bist professionell, freundlich und vertrauenswürdig.
 
 ÜBER DAS UNTERNEHMEN:
 - Global Jobs Consulting SRL ist eine Rekrutierungsagentur aus Oradea, Rumänien
