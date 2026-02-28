@@ -1,0 +1,77 @@
+{
+  "backup_date": "2026-02-28",
+  "website": "gjc.ro",
+  "company": {
+    "name": "Global Jobs Consulting",
+    "legal_name": "NECUNOSCUT - DE SOLICITAT",
+    "cui": "NECUNOSCUT - DE SOLICITAT",
+    "j_number": "NECUNOSCUT - DE SOLICITAT",
+    "address": {
+      "street": "Str. Parcul Traian nr.1",
+      "apartment": "ap.10",
+      "city": "Oradea",
+      "country": "România"
+    },
+    "contact": {
+      "phone": "+40732/403464",
+      "email": "office@gjc.ro",
+      "whatsapp": true,
+      "working_hours": "Luni-Vineri 9:00AM - 7:00PM"
+    }
+  },
+  "statistics_old_site": {
+    "partner_agencies": "peste 30",
+    "countries": "17 (sau 12 - inconsecvent pe site)",
+    "source_countries": ["Nepal", "Vietnam", "Filipine", "India", "Egipt", "Nigeria"]
+  },
+  "services": [
+    {
+      "name": "Recrutare/Plasare Personal Asia/Africa",
+      "industries": ["Agricultură", "HoReCa", "Transport si Curierat", "Curățenie/Menaj", "Construcții", "Industrie si Servicii", "IT", "Colectare/reciclare"]
+    },
+    {
+      "name": "Consultanță și Asistență Imigrare",
+      "description": "Îndrumare pe tot parcursul procesului de imigrare, orientare culturală, asistență lingvistică"
+    },
+    {
+      "name": "Centru Formare Evaluare/Dezvoltare",
+      "description": "Evaluare abilități și competențe, ateliere, consiliere personalizată"
+    },
+    {
+      "name": "Cursuri/Conferințe HR",
+      "description": "Cursuri și conferințe de resurse umane"
+    }
+  ],
+  "slogans": [
+    "Fie ca esti in cautarea unui angajat ori esti o persoana care cauti un nou loc de munca - Ai ajuns in locul potrivit",
+    "Candidații potriviți recrutare de succes",
+    "Timpul însemnă bani, adică performanță",
+    "E momentul să faci o schimbare",
+    "Angajați internațional. Plătiți local."
+  ],
+  "images_urls": [
+    {
+      "url": "https://gjc.ro/wp-content/uploads/2023/05/MNWgXI_v_nqMPLwt2gwf3-transformed.jpeg",
+      "description": "Hero image - muncitori"
+    },
+    {
+      "url": "https://gjc.ro/wp-content/uploads/2023/06/CREATIVE-HIRING-AGENCY-job-1024x577.jpg",
+      "description": "Banner servicii recrutare"
+    }
+  ],
+  "pages_old_site": [
+    {"url": "https://gjc.ro/", "title": "Homepage", "status": "active"},
+    {"url": "https://gjc.ro/servicii-companii/", "title": "Servicii Companii", "status": "active"},
+    {"url": "https://gjc.ro/contact/", "title": "Contact", "status": "active"},
+    {"url": "https://gjc.ro/servicii-candidati/", "title": "Servicii Candidați", "status": "404"}
+  ],
+  "missing_data": [
+    "CUI (Cod Unic de Înregistrare)",
+    "Număr Registrul Comerțului (J)",
+    "Politică de confidențialitate",
+    "Termeni și condiții",
+    "Informații despre activități de voluntariat",
+    "Detalii proiecte integrare migranți"
+  ],
+  "notes": "Site-ul vechi este pe WordPress. Nu am putut descărca imaginile automat din cauza protecției anti-bot (BotGuard). Clientul trebuie să descarce manual imaginile dacă dorește să le păstreze."
+}
