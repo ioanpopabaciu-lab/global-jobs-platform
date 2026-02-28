@@ -49,10 +49,6 @@ export default function BlogPage() {
   const { language } = useLanguage();
   const t = content[language] || content.ro;
   
-  // Get safe title and description values for Helmet
-  const metaTitle = t && t.meta && t.meta.title ? t.meta.title : 'Blog | Global Jobs Consulting';
-  const metaDesc = t && t.meta && t.meta.description ? t.meta.description : '';
-  
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -78,8 +74,8 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title>{metaTitle}</title>
-        <meta name="description" content={metaDesc} />
+        <title>{t.meta.title}</title>
+        <meta name="description" content={t.meta.description} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="blog-page">
