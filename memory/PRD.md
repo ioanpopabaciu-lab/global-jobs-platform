@@ -7,107 +7,127 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Frontend**: React 19 + Tailwind CSS + Shadcn/UI
 - **Backend**: FastAPI + Motor (MongoDB async)
 - **Database**: MongoDB
+- **AI Chat**: OpenAI GPT-4o-mini via Emergent LLM Key
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
-- **Multilingv**: Română, Germană, Sârbă
+- **Multilingv**: Română, English, Deutsch, Srpski
 
-## Updates (28 Feb 2026 - v3)
-- ✅ Deploy FTP reușit pe Datahost (194.102.218.32)
-- ✅ Credențiale FTP corecte: `caiden@gjc.ro` (format user@domain necesar)
-- ✅ Fix accesibilitate meniu mobil (aria-labels)
-- ✅ SMTP configurat pentru office@gjc.ro
-- ✅ Date fiscale adăugate: CUI 48270947, J05/1458/2023
-- ✅ Backup conținut site vechi salvat în `/app/vechi_assets/`
+## Updates (28 Feb 2026 - v4)
+- ✅ **Multilingv complet**: 4 limbi (RO/EN/DE/SR) cu selector în navbar
+- ✅ **Paula AI Chat**: Asistent de recrutare cu OpenAI GPT
+- ✅ **WhatsApp Button**: Buton flotant cu link direct (+40732403464)
+- ✅ **Video Hero**: Videoclip nave de croazieră în slider
+- ✅ **Imagini noi**: Imagini originale de la client (muncitori la aeroport)
+- ✅ **Cookie Banner**: Banner GDPR cu opțiuni accept/decline
+- ✅ **Privacy Checkbox**: Pe toate formularele (Contact, Angajatori, Candidați)
 
-## Updates (27 Feb 2026 - v2)
-- ✅ Experiență actualizată la 4 ani
-- ✅ 11 agenții partenere în Asia și Africa
-- ✅ Nou serviciu: **Nave de Croazieră** (personal înalt calificat)
-- ✅ Headline: "Soluții Globale pentru Deficitul de Forță de Muncă"
-- ✅ Motto: "Conectăm Talente Globale cu Oportunități Locale"
-- ✅ Contact: "Hai să Discutăm"
-- ✅ Traduceri complete în Germană (DE) și Sârbă (SR)
-- ✅ Logo mai mare și vizibil
-- ✅ Imagini unice și calde (muncitori asiatici/africani zâmbind)
+## Updates Anterioare
+- v3: Deploy FTP, date fiscale (CUI: 48270947, J05/1458/2023)
+- v2: Traduceri DE/SR, serviciu nave de croazieră, statistici actualizate
+- v1: Implementare inițială, formulare, SMTP
 
 ## Funcționalități Implementate
 
-### ✅ Pagini și Secțiuni
-- **Home Page**: Hero slider cu 6 categorii (incluzând Nave de Croazieră), statistici, servicii grid, proces de recrutare
-- **Angajatori**: Formular complet de solicitare personal
-- **Portal Candidați**: Formular aplicare cu upload CV și Video-CV link
-- **Servicii All-Inclusive**: 6 industrii acoperite (nou: Nave de Croazieră)
-- **Blog**: Articole dinamice din MongoDB
-- **Contact**: "Hai să Discutăm" cu formular și info SEO
+### ✅ Multilingv (4 limbi)
+- **Română (RO)** - limba implicită
+- **English (EN)** - nou adăugat
+- **Deutsch (DE)** - pentru Austria
+- **Srpski (SR)** - pentru Serbia
+- Selector vizibil în navbar cu steaguri
+- Persistență în localStorage
+- Traduceri pentru toate paginile și componentele
 
-### ✅ Multilingv
-- `/app/frontend/src/i18n/translations.js` - Traduceri RO/DE/SR
-- `/app/frontend/src/i18n/LanguageContext.jsx` - Context pentru limba curentă
-- Selector de limbă în navbar (🇷🇴 RO | 🇦🇹 DE | 🇷🇸 SR)
+### ✅ Paula AI Chat
+- **Model**: OpenAI GPT-4o-mini via Emergent LLM Key
+- **Funcționalități**:
+  - Răspunde în limba selectată de utilizator
+  - Cunoaște informațiile companiei
+  - Poate răspunde la întrebări despre: aplicare job, documente necesare, sectoare de activitate, colaborare angajatori
+  - Conversații multi-turn cu istoric
+- **API Endpoint**: POST /api/chat/paula
 
-### ✅ API Endpoints
-- `POST /api/employers/submit` - Formular angajator
-- `POST /api/candidates/submit` - Formular candidat cu upload fișiere
-- `POST /api/contact/submit` - Formular contact
-- `GET /api/blog/posts` - Lista articole blog
-- `GET /api/stats` - Statistici (11 parteneri, 4 ani)
+### ✅ WhatsApp Integration
+- Buton flotant verde (bottom-left)
+- Link direct: wa.me/40732403464
+- Mesaj pre-completat
 
-### ✅ SEO și Tehnic
-- Meta tags optimizate
-- sitemap.xml și robots.txt
-- Adresă SEO local: Str. Parcul Traian nr. 1, ap. 10, Oradea
+### ✅ Hero Slider cu Video
+- Slide 1: Video nave de croazieră (autoplay, muted)
+- Slide 2-6: Imagini originale de la client
+- Navigare cu săgeți și indicatori
+- Auto-rotație la 6 secunde
 
-### ✅ Deploy FTP
-- Script: `/app/scripts/upload_to_server.py`
-- Host: `194.102.218.32`
-- User: `caiden@gjc.ro` (IMPORTANT: format user@domain necesar pentru Datahost)
-- Target: `/public_html`
-- Status: **DEPLOYED** - fișierele au fost încărcate cu succes
+### ✅ Cookie Banner GDPR
+- Opțiuni: "Accept toate" / "Doar esențiale"
+- Link către Politica de Confidențialitate
+- Persistență în localStorage
+
+### ✅ Pagină Politică de Confidențialitate
+- URL: /politica-confidentialitate
+- Secțiuni: Date colectate, Scopuri, Temei legal, Stocare, Drepturi utilizatori
+- Date fiscale: CUI 48270947, J05/1458/2023
+
+### ✅ Privacy Consent pe Formulare
+- Checkbox obligatoriu pe toate formularele
+- Link către Politica de Confidențialitate
+- Validare frontend
 
 ## Configurații Producție
 
-### FTP (Funcțional)
+### SMTP (Funcțional)
+```
+Host: mail.gjc.ro
+Port: 465
+User: office@gjc.ro
+```
+
+### FTP DataHost
 ```
 Host: 194.102.218.32
 User: caiden@gjc.ro
-Password: (rFChsqk-?yTnWlm
 Target: /public_html
 ```
 
-### SMTP (Configurat în backend/.env)
+### OpenAI (Paula Chat)
 ```
-SMTP_HOST=mail.gjc.ro
-SMTP_PORT=465
-SMTP_USER=office@gjc.ro
-SMTP_PASS=it+oN_yE5JPt+c2L
-ADMIN_EMAIL=office@gjc.ro
+EMERGENT_LLM_KEY=sk-emergent-***
+Model: gpt-4o-mini
 ```
 
-## User Personas
-- **Angajatori**: Companii din RO/AT/RS care caută forță de muncă stabilă
-- **Candidați**: Lucrători din Asia și Africa căutând oportunități în Europa
+## API Endpoints
+- `GET /api/` - Health check
+- `GET /api/health` - Server status
+- `GET /api/stats` - Statistici companie
+- `POST /api/contact/submit` - Formular contact
+- `POST /api/employers/submit` - Formular angajatori
+- `POST /api/candidates/submit` - Formular candidați (multipart)
+- `GET /api/blog/posts` - Lista articole
+- `GET /api/blog/posts/{slug}` - Articol individual
+- `POST /api/chat/paula` - AI Chat Assistant
+
+## Teste
+- **Test Report**: /app/test_reports/iteration_4.json
+- **Success Rate**: 100% backend, 100% frontend
+- **Toate testele trec**
 
 ## Backlog
-
-### P0 (Rezolvate)
-- ✅ Deploy FTP - REZOLVAT
 
 ### P1 (Important)
 - Dashboard admin pentru vizualizare aplicații
 - Notificări email către candidați
+- reCAPTCHA pe formulare
 
 ### P2 (Nice to have)
-- Chat live cu potențiali clienți
-- Tracking status aplicație
 - CMS pentru blog
+- Tracking status aplicație
+- Analytics dashboard
 
-## Statistici Site
-- 11 Agenții Partenere (Asia & Africa)
-- 4 Ani de Experiență
-- 2 Continente
-- 3 Piețe Europene (RO, AT, RS)
-- 6 Industrii (Construcții, HoReCa, Nave de Croazieră, Agricultură, Logistică, Producție)
+## Date Companie
+- **Denumire**: Global Jobs Consulting SRL
+- **CUI**: 48270947
+- **J**: J05/1458/2023
+- **Adresă**: Str. Parcul Traian nr. 1, ap. 10, Oradea
+- **Telefon**: +40 732 403 464
+- **Email**: office@gjc.ro
+- **WhatsApp**: +40 732 403 464
 
-## NOTĂ IMPORTANTĂ
-Serverul Datahost are activată protecție anti-bot (BotGuard). Aceasta poate afișa un mesaj "Please wait while your request is being verified..." pentru accesări automate. Site-ul funcționează normal pentru utilizatori reali din browser.
-
-## Status: ✅ DEPLOYED pe www.gjc.ro
+## Status: ✅ COMPLET - Gata pentru Deploy Final
