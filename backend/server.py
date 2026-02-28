@@ -132,9 +132,9 @@ class BlogPost(BaseModel):
 # ==================== EMAIL SERVICE ====================
 
 async def send_email_notification(recipient: str, subject: str, html_content: str):
-    """Send email notification via SMTP"""
-    smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
-    smtp_port = int(os.environ.get('SMTP_PORT', 587))
+    """Send email notification via SMTP with SSL (port 465)"""
+    smtp_host = os.environ.get('SMTP_HOST', 'mail.gjc.ro')
+    smtp_port = int(os.environ.get('SMTP_PORT', 465))
     smtp_user = os.environ.get('SMTP_USER', '')
     smtp_pass = os.environ.get('SMTP_PASS', '')
     
@@ -151,10 +151,17 @@ async def send_email_notification(recipient: str, subject: str, html_content: st
         html_part = MIMEText(html_content, 'html', 'utf-8')
         msg.attach(html_part)
         
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_pass)
-            server.sendmail(smtp_user, [recipient], msg.as_string())
+        # Use SSL for port 465
+        if smtp_port == 465:
+            with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
+                server.login(smtp_user, smtp_pass)
+                server.sendmail(smtp_user, [recipient], msg.as_string())
+        else:
+            # Use STARTTLS for port 587
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.sendmail(smtp_user, [recipient], msg.as_string())
         
         logging.info(f"Email sent to {recipient}")
         return True
