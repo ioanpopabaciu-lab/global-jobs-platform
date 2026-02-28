@@ -281,7 +281,12 @@ const content = {
 
 export default function CandidatesPage() {
   const { language } = useLanguage();
-  const t = content[language] || content.ro || {};
+  const t = content[language] || content.ro || content['ro'];
+  
+  // Get safe title and description values for Helmet
+  const metaTitle = t && t.meta && t.meta.title ? t.meta.title : 'Portal Candidați | Global Jobs Consulting';
+  const metaDesc = t && t.meta && t.meta.description ? t.meta.description : '';
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [cvFile, setCvFile] = useState(null);
