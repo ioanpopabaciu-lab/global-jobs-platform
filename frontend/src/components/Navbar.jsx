@@ -29,7 +29,14 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
+  const { language, setLanguage, t, getLocalizedPath, routePaths } = useLanguage();
+
+  // Generate nav links with localized paths
+  const navLinks = navLinksBase.map(link => ({
+    ...link,
+    localizedHref: getLocalizedPath(link.href)
+  }));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,8 +47,29 @@ export default function Navbar() {
   }, []);
 
   const isActive = (href) => {
-    if (href === "/") return location.pathname === "/";
-    return location.pathname.startsWith(href);
+    const currentPath = location.pathname;
+    // Check all language versions of this route
+    const paths = routePaths[href];
+    if (paths) {
+      return Object.values(paths).some(p => currentPath === p || (p !== '/' && currentPath.startsWith(p)));
+    }
+    if (href === "/") return currentPath === "/" || currentPath === "/en" || currentPath === "/de" || currentPath === "/sr";
+    return currentPath.startsWith(href);
+  };
+
+  // Handle language change with URL update
+  const handleLanguageChange = (newLang) => {
+    setLanguage(newLang);
+    // Find current base route and navigate to the new language version
+    const currentPath = location.pathname;
+    for (const [basePath, translations] of Object.entries(routePaths)) {
+      if (Object.values(translations).includes(currentPath)) {
+        navigate(translations[newLang]);
+        return;
+      }
+    }
+    // Default: navigate to home in new language
+    navigate(newLang === 'ro' ? '/' : `/${newLang}`);
   };
 
   const languageLabels = {
