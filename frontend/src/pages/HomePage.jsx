@@ -6,6 +6,7 @@ import StatsSection from "@/components/StatsSection";
 import { Link } from "react-router-dom";
 import { ArrowRight, Globe, Shield, Clock, Users } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SEOHead from "@/components/SEOHead";
 
 const pageContent = {
   ro: {
