@@ -321,7 +321,7 @@ export default function HeroSlider() {
           {/* Promotional Video - shows under "Personal Înalt Calificat" */}
           {slide.id === 0 && (
             <div 
-              className={`mb-4 transition-all duration-500 ${
+              className={`my-4 transition-all duration-500 ${
                 isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
               }`}
               style={{ transitionDelay: "250ms" }}
@@ -331,7 +331,7 @@ export default function HeroSlider() {
                 muted
                 loop
                 playsInline
-                className="w-full max-w-md h-auto rounded-lg shadow-2xl"
+                className="w-64 md:w-80 lg:w-96 h-auto rounded-xl shadow-2xl border-2 border-white/20"
                 data-testid="promo-video"
               >
                 <source src={PROMO_VIDEO_URL} type="video/mp4" />
