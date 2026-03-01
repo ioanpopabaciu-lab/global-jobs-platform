@@ -106,16 +106,16 @@ export default function Navbar() {
                 {languageLabels[language]}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setLanguage("ro")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">
                   🇷🇴 Română
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage("en")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">
                   🇬🇧 English
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage("de")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">
                   🇦🇹 Deutsch
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage("sr")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">
                   🇷🇸 Srpski
                 </DropdownMenuItem>
               </DropdownMenuContent>
