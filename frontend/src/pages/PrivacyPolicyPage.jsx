@@ -249,22 +249,23 @@ const content = {
 };
 
 export default function PrivacyPolicyPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
 
   return (
     <>
-      <Helmet>
-        <title>Politica de Confidențialitate | Global Jobs Consulting</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
-      </Helmet>
+      <SEOHead 
+        title={t.meta.title}
+        description={t.meta.description}
+        language={language}
+      />
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="privacy-policy-page">
         {/* Hero */}
         <div className="bg-navy-900 text-white py-12 mb-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <Link to="/" className="inline-flex items-center text-coral hover:text-white transition mb-4">
+              <Link to={getLocalizedPath("/")} className="inline-flex items-center text-coral hover:text-white transition mb-4">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 {t.hero.back}
               </Link>
