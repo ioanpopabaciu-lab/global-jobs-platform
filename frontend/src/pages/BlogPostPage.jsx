@@ -113,8 +113,7 @@ export default function BlogPostPage() {
   return (
     <>
       <Helmet>
-        <title>{post.title} | Global Jobs Consulting Blog</title>
-        <meta name="description" content={post.excerpt} />
+        <meta name="description" content={post.excerpt || ''} />
       </Helmet>
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="blog-post-page">
