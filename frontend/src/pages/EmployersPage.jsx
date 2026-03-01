@@ -296,10 +296,11 @@ export default function EmployersPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Angajatori | Global Jobs Consulting</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
-      </Helmet>
+      <SEOHead 
+        title={t.meta.title}
+        description={t.meta.description}
+        language={language}
+      />
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="employers-page">
         {/* Hero */}
