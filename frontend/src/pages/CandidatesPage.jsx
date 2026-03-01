@@ -17,6 +17,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Briefcase, Upload, CheckCircle2, Loader2, FileText, Video } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SEOHead from "@/components/SEOHead";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
