@@ -249,7 +249,7 @@ const content = {
 const icons = [Building2, FileCheck, Users];
 
 export default function EmployersPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
