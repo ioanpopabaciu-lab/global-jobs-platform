@@ -127,7 +127,7 @@ function AppContent() {
       <Footer />
       <CookieBanner />
       <WhatsAppButton />
-      <ElisabethChat />
+      <MariaChat />
       <Toaster position="top-right" richColors />
     </div>
   );
