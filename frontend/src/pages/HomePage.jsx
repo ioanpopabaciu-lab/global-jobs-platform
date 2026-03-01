@@ -262,7 +262,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">{t.markets.romania.name}</h3>
                 <p className="text-gray-600 mb-4">{t.markets.romania.desc}</p>
-                <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
+                <Link to={getLocalizedPath("/angajatori")} className="text-coral font-semibold text-sm hover:underline">
                   {t.markets.romania.link}
                 </Link>
               </div>
@@ -274,7 +274,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">{t.markets.austria.name}</h3>
                 <p className="text-gray-600 mb-4">{t.markets.austria.desc}</p>
-                <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
+                <Link to={getLocalizedPath("/angajatori")} className="text-coral font-semibold text-sm hover:underline">
                   {t.markets.austria.link}
                 </Link>
               </div>
@@ -286,7 +286,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-heading text-2xl font-bold text-navy-900 mb-2">{t.markets.serbia.name}</h3>
                 <p className="text-gray-600 mb-4">{t.markets.serbia.desc}</p>
-                <Link to="/angajatori" className="text-coral font-semibold text-sm hover:underline">
+                <Link to={getLocalizedPath("/angajatori")} className="text-coral font-semibold text-sm hover:underline">
                   {t.markets.serbia.link}
                 </Link>
               </div>
