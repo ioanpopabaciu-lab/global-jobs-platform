@@ -41,7 +41,7 @@ const dateLocales = {
 };
 
 export default function BlogPostPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
   
   const { slug } = useParams();
@@ -64,6 +64,13 @@ export default function BlogPostPage() {
         setLoading(false);
       });
   }, [slug, t.notFound.title]);
+
+  // Set page title dynamically via useEffect to avoid Helmet issues
+  useEffect(() => {
+    if (post) {
+      document.title = `${post.title} | Global Jobs Consulting Blog`;
+    }
+  }, [post]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
