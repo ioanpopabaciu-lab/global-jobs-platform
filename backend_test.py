@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 class GlobalJobsAPITester:
-    def __init__(self, base_url="https://gjc-careers.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://gjc-recruitment.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0
