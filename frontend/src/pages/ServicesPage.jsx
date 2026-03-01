@@ -182,15 +182,16 @@ const industryIcons = [Building2, UtensilsCrossed, Anchor, Tractor, Warehouse, F
 const advantageIcons = [Globe, Shield, Clock, Award];
 
 export default function ServicesPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
 
   return (
     <>
-      <Helmet>
-        <title>Servicii | Global Jobs Consulting</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
-      </Helmet>
+      <SEOHead 
+        title={t.meta.title}
+        description={t.meta.description}
+        language={language}
+      />
 
       <div className="min-h-screen pt-32 pb-20" data-testid="services-page">
         {/* Hero */}
