@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, ArrowRight, Tag } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SEOHead from "@/components/SEOHead";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
