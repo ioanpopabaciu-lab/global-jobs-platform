@@ -56,14 +56,15 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - Persistență în localStorage
 - Traduceri pentru toate paginile și componentele
 
-### ✅ Paula AI Chat
+### ✅ Elisabeth AI Chat (redenumit din Paula)
 - **Model**: OpenAI GPT-4o-mini via Emergent LLM Key
 - **Funcționalități**:
   - Răspunde în limba selectată de utilizator
   - Cunoaște informațiile companiei
   - Poate răspunde la întrebări despre: aplicare job, documente necesare, sectoare de activitate, colaborare angajatori
   - Conversații multi-turn cu istoric
-- **API Endpoint**: POST /api/chat/paula
+  - Text vizibil: "Hai sa vorbim?" în limba curentă
+- **API Endpoint**: POST /api/chat/elisabeth
 
 ### ✅ WhatsApp Integration
 - Buton flotant verde (bottom-left)
