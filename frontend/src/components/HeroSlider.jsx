@@ -7,8 +7,8 @@ import { useLanguage } from "@/i18n/LanguageContext";
 // Video URL - new promotional video from user
 const VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/v1pulfhw_Design%20f%C4%83r%C4%83%20titlu.mp4";
 
-// Second video for Agriculture slide (same video as requested by user)
-const AGRICULTURE_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/v1pulfhw_Design%20f%C4%83r%C4%83%20titlu.mp4";
+// Video for Agriculture slide
+const AGRICULTURE_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/bztmgx84_download.mp4";
 
 // Uploaded images
 const UPLOADED_IMAGES = {
