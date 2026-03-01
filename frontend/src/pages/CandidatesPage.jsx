@@ -281,7 +281,7 @@ const content = {
 };
 
 export default function CandidatesPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
