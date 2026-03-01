@@ -142,7 +142,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <Link
                 key={link.href}
-                to={link.href}
+                to={link.localizedHref}
                 data-testid={`nav-link-${link.href.replace('/', '') || 'home'}`}
                 className={`font-medium text-sm transition-colors hover:text-coral ${
                   isActive(link.href)
@@ -162,13 +162,16 @@ export default function Navbar() {
                   {language.toUpperCase()}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setLanguage("ro")} className="cursor-pointer">
+                  <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">
                     🇷🇴 Română
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLanguage("de")} className="cursor-pointer">
+                  <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">
+                    🇬🇧 English
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">
                     🇦🇹 Deutsch
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLanguage("sr")} className="cursor-pointer">
+                  <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">
                     🇷🇸 Srpski
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -180,7 +183,7 @@ export default function Navbar() {
               data-testid="nav-cta-button"
               className="bg-coral hover:bg-red-600 text-white rounded-full px-6"
             >
-              <Link to="/angajatori">{t('nav.cta')}</Link>
+              <Link to={getLocalizedPath("/angajatori")}>{t('nav.cta')}</Link>
             </Button>
           </div>
 
