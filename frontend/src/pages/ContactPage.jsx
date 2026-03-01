@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SEOHead from "@/components/SEOHead";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
