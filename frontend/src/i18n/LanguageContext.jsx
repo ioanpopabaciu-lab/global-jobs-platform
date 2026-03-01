@@ -1,7 +1,23 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { translations, getTranslation } from './translations';
 
 const LanguageContext = createContext();
+
+// Route translations for URL localization
+const routePaths = {
+  '/': { ro: '/', en: '/en', de: '/de', sr: '/sr' },
+  '/angajatori': { ro: '/angajatori', en: '/en/employers', de: '/de/arbeitgeber', sr: '/sr/poslodavci' },
+  '/servicii': { ro: '/servicii', en: '/en/services', de: '/de/dienstleistungen', sr: '/sr/usluge' },
+  '/candidati': { ro: '/candidati', en: '/en/candidates', de: '/de/kandidaten', sr: '/sr/kandidati' },
+  '/blog': { ro: '/blog', en: '/en/blog', de: '/de/blog', sr: '/sr/blog' },
+  '/contact': { ro: '/contact', en: '/en/contact', de: '/de/kontakt', sr: '/sr/kontakt' },
+  '/politica-confidentialitate': { 
+    ro: '/politica-confidentialitate', 
+    en: '/en/privacy-policy', 
+    de: '/de/datenschutz', 
+    sr: '/sr/politika-privatnosti' 
+  }
+};
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
@@ -25,8 +41,21 @@ export function LanguageProvider({ children }) {
 
   const t = (key) => getTranslation(language, key);
 
+  // Get localized path for the current language
+  const getLocalizedPath = useCallback((basePath) => {
+    const paths = routePaths[basePath];
+    if (paths) {
+      return paths[language] || basePath;
+    }
+    // For paths not in the mapping, add language prefix for non-Romanian
+    if (language !== 'ro') {
+      return `/${language}${basePath}`;
+    }
+    return basePath;
+  }, [language]);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, translations: translations[language] }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, translations: translations[language], getLocalizedPath, routePaths }}>
       {children}
     </LanguageContext.Provider>
   );
