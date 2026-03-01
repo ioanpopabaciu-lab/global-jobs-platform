@@ -74,8 +74,9 @@ const slides = [
   },
   {
     id: 5,
-    type: "image",
-    image: UPLOADED_IMAGES.workers_waiting,
+    type: "video",
+    video: LOGISTICS_VIDEO_URL,
+    poster: UPLOADED_IMAGES.workers_waiting,
     category: "Logistică",
     titleKey: "logistics_title",
     subtitleKey: "logistics_subtitle",
