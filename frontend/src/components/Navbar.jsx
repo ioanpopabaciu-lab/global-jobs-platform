@@ -217,7 +217,7 @@ export default function Navbar() {
                 {/* Mobile Language Selector */}
                 <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100" role="group" aria-label="Language selection">
                   <button 
-                    onClick={() => setLanguage("ro")}
+                    onClick={() => { handleLanguageChange("ro"); setIsOpen(false); }}
                     aria-label="Switch to Romanian"
                     aria-pressed={language === 'ro'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'ro' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
@@ -225,7 +225,7 @@ export default function Navbar() {
                     🇷🇴 RO
                   </button>
                   <button 
-                    onClick={() => setLanguage("en")}
+                    onClick={() => { handleLanguageChange("en"); setIsOpen(false); }}
                     aria-label="Switch to English"
                     aria-pressed={language === 'en'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'en' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
@@ -233,7 +233,7 @@ export default function Navbar() {
                     🇬🇧 EN
                   </button>
                   <button 
-                    onClick={() => setLanguage("de")}
+                    onClick={() => { handleLanguageChange("de"); setIsOpen(false); }}
                     aria-label="Switch to German"
                     aria-pressed={language === 'de'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'de' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
@@ -241,7 +241,7 @@ export default function Navbar() {
                     🇦🇹 DE
                   </button>
                   <button 
-                    onClick={() => setLanguage("sr")}
+                    onClick={() => { handleLanguageChange("sr"); setIsOpen(false); }}
                     aria-label="Switch to Serbian"
                     aria-pressed={language === 'sr'}
                     className={`px-3 py-1 rounded-full text-sm ${language === 'sr' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
@@ -253,7 +253,7 @@ export default function Navbar() {
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
-                    to={link.href}
+                    to={link.localizedHref}
                     onClick={() => setIsOpen(false)}
                     data-testid={`mobile-nav-link-${link.href.replace('/', '') || 'home'}`}
                     className={`text-lg font-medium py-2 border-b border-gray-100 ${
@@ -268,7 +268,7 @@ export default function Navbar() {
                   className="mt-4 bg-coral hover:bg-red-600 text-white rounded-full"
                   data-testid="mobile-cta-button"
                 >
-                  <Link to="/angajatori" onClick={() => setIsOpen(false)}>
+                  <Link to={getLocalizedPath("/angajatori")} onClick={() => setIsOpen(false)}>
                     {t('nav.cta')}
                   </Link>
                 </Button>
