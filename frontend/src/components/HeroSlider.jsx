@@ -315,27 +315,6 @@ export default function HeroSlider() {
             {t[slide.titleKey]}
           </h1>
 
-          {/* Promotional Video - shows under "Personal Înalt Calificat" */}
-          {slide.id === 0 && (
-            <div 
-              className={`my-4 transition-all duration-500 ${
-                isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
-              }`}
-              style={{ transitionDelay: "250ms" }}
-            >
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-64 md:w-80 lg:w-96 h-auto rounded-xl shadow-2xl border-2 border-white/20"
-                data-testid="promo-video"
-              >
-                <source src={PROMO_VIDEO_URL} type="video/mp4" />
-              </video>
-            </div>
-          )}
-
           {/* Subtitle */}
           <h2 
             className={`font-heading text-xl md:text-2xl lg:text-3xl font-medium text-gold mb-6 transition-all duration-500 ${
