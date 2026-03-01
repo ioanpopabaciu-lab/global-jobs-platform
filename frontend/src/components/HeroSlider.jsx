@@ -52,8 +52,9 @@ const slides = [
   },
   {
     id: 3,
-    type: "image",
-    image: UPLOADED_IMAGES.workers_departures,
+    type: "video",
+    video: AGRICULTURE_VIDEO_URL,
+    poster: UPLOADED_IMAGES.workers_departures,
     category: "Agricultură",
     titleKey: "agriculture_title",
     subtitleKey: "agriculture_subtitle",
