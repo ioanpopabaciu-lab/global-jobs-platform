@@ -143,7 +143,7 @@ export default function Footer() {
               <p>© {currentYear} Global Jobs Consulting. {t('footer.rights')}</p>
               <span className="hidden md:inline">|</span>
               <Link 
-                to="/politica-confidentialitate" 
+                to={getLocalizedPath("/politica-confidentialitate")} 
                 className="hover:text-coral transition"
                 data-testid="footer-privacy-link"
               >
