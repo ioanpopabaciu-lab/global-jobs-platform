@@ -148,17 +148,19 @@ const pageContent = {
 };
 
 export default function HomePage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = pageContent[language] || pageContent.ro;
   const icons = [Globe, Shield, Clock, Users];
 
   return (
     <>
+      <SEOHead 
+        title={t.meta.title}
+        description={t.meta.description}
+        language={language}
+      />
       <Helmet>
-        <title>Global Jobs Consulting | International Recruitment</title>
-        <meta name="description" content="All-inclusive recruitment agency in Romania, Austria and Serbia. 11 partners in Asia and Africa." />
         <meta name="keywords" content="recrutare, forța de muncă, Asia, Africa, România, Austria, Serbia, HoReCa, construcții, agricultură" />
-        <link rel="canonical" href="https://www.gjc.ro" />
       </Helmet>
 
       <div data-testid="home-page">
