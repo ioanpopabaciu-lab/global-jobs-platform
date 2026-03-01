@@ -19,7 +19,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import ElisabethChat from "@/components/ElisabethChat";
+import MariaChat from "@/components/MariaChat";
 
 // Language route wrapper - sets language based on URL prefix
 function LanguageRoute({ children }) {
