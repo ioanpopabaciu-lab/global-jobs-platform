@@ -196,7 +196,7 @@ const slideContent = {
 };
 
 export default function HeroSlider() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = slideContent[language] || slideContent.ro;
   
   const [currentSlide, setCurrentSlide] = useState(0);
