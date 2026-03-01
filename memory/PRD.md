@@ -7,13 +7,28 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Frontend**: React 19 + Tailwind CSS + Shadcn/UI
 - **Backend**: FastAPI + Motor (MongoDB async)
 - **Database**: MongoDB
-- **AI Chat**: OpenAI GPT-4o-mini via Emergent LLM Key
+- **AI Chat**: OpenAI GPT-4o-mini via Emergent LLM Key (Elisabeth)
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
-- **Multilingv**: Română, English, Deutsch, Srpski
+- **Multilingv**: Română, English, Deutsch, Srpski cu URL-uri specifice pentru SEO
+
+## Updates (01 Mar 2026 - v6)
+- ✅ **URL-uri SEO Multilingv**: Implementate URL-uri specifice pentru fiecare limbă
+  - Română: `/contact`, `/angajatori`, `/servicii`, `/candidati`, `/blog`
+  - Engleză: `/en/contact`, `/en/employers`, `/en/services`, `/en/candidates`, `/en/blog`
+  - Germană: `/de/kontakt`, `/de/arbeitgeber`, `/de/dienstleistungen`, `/de/kandidaten`, `/de/blog`
+  - Sârbă: `/sr/kontakt`, `/sr/poslodavci`, `/sr/usluge`, `/sr/kandidati`, `/sr/blog`
+- ✅ **Hreflang Tags**: Adăugate tag-uri hreflang pentru toate paginile (ro, en, de, sr, x-default)
+- ✅ **Canonical URLs**: Tag-uri canonical dinamice bazate pe limba curentă
+- ✅ **Video Personal Depozite**: Adăugat videoclip de fundal pe slide-ul "Personal Depozite" (Logistică)
+- ✅ **SEOHead Component**: Component nou pentru gestiunea centralizată a tag-urilor SEO
+- ✅ **Language Switcher URL**: Selectorul de limbă navigează acum la URL-ul corect localizat
+- ✅ **Test Report**: iteration_6.json - 95% success (bug canonical duplicat fixat)
 
 ## Updates (28 Feb 2026 - v5)
 - ✅ **FIX CRITIC Helmet**: Rezolvată eroarea "Helmet expects a string as child of <title>" care făcea paginile să nu se încarce
 - ✅ **Traduceri Complete**: Toate paginile (Candidați, Servicii, Blog, Contact, Angajatori, Privacy) au traduceri în 4 limbi
+- ✅ **Redenumire Paula -> Elisabeth**: Asistentul AI a fost redenumit în "Elisabeth" cu textul "Hai sa vorbim?"
+- ✅ **Video Hero Agricultură**: Adăugat videoclip de fundal pe slide-ul "Lucrători Agricoli"
 - ✅ **Testing 100%**: Toate testele de multilingv trec (iteration_5.json)
 
 ## Updates (28 Feb 2026 - v4)
