@@ -568,9 +568,9 @@ ZA POSLODAVCE:
 Odgovaraj SAMO na srpskom. Budi koncizna i korisna. Ako ne znaš odgovor, usmeri korisnika da kontaktira office@gjc.ro ili +40 732 403 464."""
 }
 
-@api_router.post("/chat/paula")
-async def elisabeth_chat(chat_msg: ChatMessage):
-    """AI Chat endpoint for Elisabeth recruitment assistant"""
+@api_router.post("/chat/maria")
+async def maria_chat(chat_msg: ChatMessage):
+    """AI Chat endpoint for Maria recruitment assistant"""
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage
         
@@ -580,13 +580,13 @@ async def elisabeth_chat(chat_msg: ChatMessage):
         
         # Get or create chat session
         session_id = chat_msg.session_id
-        language = chat_msg.language if chat_msg.language in ELISABETH_SYSTEM_PROMPTS else "ro"
+        language = chat_msg.language if chat_msg.language in MARIA_SYSTEM_PROMPTS else "ro"
         
         if session_id not in chat_sessions:
             chat_sessions[session_id] = LlmChat(
                 api_key=api_key,
                 session_id=session_id,
-                system_message=ELISABETH_SYSTEM_PROMPTS[language]
+                system_message=MARIA_SYSTEM_PROMPTS[language]
             ).with_model("openai", "gpt-4o-mini")
         
         chat = chat_sessions[session_id]
@@ -607,7 +607,7 @@ async def elisabeth_chat(chat_msg: ChatMessage):
         return {"response": response, "session_id": session_id}
         
     except Exception as e:
-        logger.error(f"Elisabeth chat error: {e}")
+        logger.error(f"Maria chat error: {e}")
         error_messages = {
             "ro": "Ne pare rău, a apărut o eroare. Vă rugăm contactați-ne direct la office@gjc.ro sau +40 732 403 464.",
             "en": "Sorry, an error occurred. Please contact us directly at office@gjc.ro or +40 732 403 464.",
