@@ -184,7 +184,7 @@ export default function BlogPostPage() {
                 {t.cta.text}
               </p>
               <Link 
-                to="/angajatori"
+                to={getLocalizedPath("/angajatori")}
                 className="inline-flex items-center bg-white text-navy-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
                 data-testid="blog-cta"
               >
