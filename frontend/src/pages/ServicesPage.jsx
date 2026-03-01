@@ -209,13 +209,13 @@ export default function ServicesPage() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button asChild size="lg" className="bg-coral hover:bg-red-600 text-white rounded-full font-semibold">
-                  <Link to="/angajatori" data-testid="services-cta-employer">
+                  <Link to={getLocalizedPath("/angajatori")} data-testid="services-cta-employer">
                     {t.cta.requestStaff}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 rounded-full font-semibold">
-                  <Link to="/contact" data-testid="services-cta-contact">
+                  <Link to={getLocalizedPath("/contact")} data-testid="services-cta-contact">
                     {t.cta.contactUs}
                   </Link>
                 </Button>
