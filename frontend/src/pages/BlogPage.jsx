@@ -74,10 +74,11 @@ export default function BlogPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Blog | Global Jobs Consulting</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
-      </Helmet>
+      <SEOHead 
+        title={t.meta.title}
+        description={t.meta.description}
+        language={language}
+      />
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="blog-page">
         {/* Hero */}
