@@ -313,7 +313,7 @@ export default function ContactPage() {
                           <div>
                             <Label htmlFor="privacy_consent" className="text-sm text-gray-600 cursor-pointer">
                               {t.form.privacy}{" "}
-                              <Link to="/politica-confidentialitate" target="_blank" className="text-coral hover:underline font-medium">{t.form.privacyLink}</Link> *
+                              <Link to={getLocalizedPath("/politica-confidentialitate")} target="_blank" className="text-coral hover:underline font-medium">{t.form.privacyLink}</Link> *
                             </Label>
                             {errors.privacy_consent && <p className="text-red-500 text-sm mt-1">{errors.privacy_consent.message}</p>}
                           </div>
