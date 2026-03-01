@@ -14,7 +14,7 @@ const privacyLinks = {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { t, language } = useLanguage();
+  const { t, language, getLocalizedPath } = useLanguage();
 
   return (
     <footer className="bg-navy-900 text-white" data-testid="footer">
@@ -55,27 +55,27 @@ export default function Footer() {
             <h4 className="font-heading text-lg font-semibold mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/angajatori" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-angajatori">
+                <Link to={getLocalizedPath("/angajatori")} className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-angajatori">
                   {t('nav.employers')}
                 </Link>
               </li>
               <li>
-                <Link to="/candidati" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-candidati">
+                <Link to={getLocalizedPath("/candidati")} className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-candidati">
                   {t('nav.candidates')}
                 </Link>
               </li>
               <li>
-                <Link to="/servicii" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-servicii">
+                <Link to={getLocalizedPath("/servicii")} className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-servicii">
                   {t('nav.services')}
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-blog">
+                <Link to={getLocalizedPath("/blog")} className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-blog">
                   {t('nav.blog')}
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-contact">
+                <Link to={getLocalizedPath("/contact")} className="text-gray-300 hover:text-coral transition text-sm" data-testid="footer-link-contact">
                   {t('nav.contact')}
                 </Link>
               </li>
