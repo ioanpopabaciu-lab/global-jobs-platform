@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Menu, Phone, Globe } from "lucide-react";
@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const navLinks = [
+// Base paths (Romanian)
+const navLinksBase = [
   { href: "/", key: "nav.home" },
   { href: "/angajatori", key: "nav.employers" },
   { href: "/servicii", key: "nav.services" },
