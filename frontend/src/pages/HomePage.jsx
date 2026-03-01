@@ -174,7 +174,7 @@ export default function HomePage() {
               {/* Image */}
               <div className="relative">
                 <img
-                  src="https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png"
+                  src="https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/zeb6mv7z_poza%20pt%20talente%20globale%20afaceri%20locale.png"
                   alt="Global Jobs Consulting Team"
                   className="rounded-2xl shadow-lg w-full"
                 />

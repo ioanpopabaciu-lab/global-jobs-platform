@@ -10,6 +10,9 @@ const VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4
 // Video for Agriculture slide
 const AGRICULTURE_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/bztmgx84_download.mp4";
 
+// Video for Construction slide - NEW
+const CONSTRUCTION_VIDEO_URL = "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/jx861bq7_lucratori%20in%20constructii.mp4";
+
 // Video for Logistics/Warehouse slide
 const LOGISTICS_VIDEO_URL = "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3f3l7wav_video%20depozite.mp4";
 
@@ -37,8 +40,9 @@ const slides = [
   },
   {
     id: 1,
-    type: "image",
-    image: UPLOADED_IMAGES.workers_airport_1,
+    type: "video",
+    video: CONSTRUCTION_VIDEO_URL,
+    poster: UPLOADED_IMAGES.workers_airport_1,
     category: "Construcții",
     titleKey: "construction_title",
     subtitleKey: "construction_subtitle",
@@ -90,7 +94,7 @@ const slideContent = {
     cruise_title: "Personal Înalt Calificat",
     cruise_subtitle: "Pentru Industria Maritimă",
     cruise_description: "Bucătari, ospătari, tehnicieni și personal hotelier pentru nave de croazieră internaționale.",
-    construction_title: "Forță de Muncă Calificată",
+    construction_title: "Muncitori Calificați și Necalificați în Construcții",
     construction_subtitle: "Pentru Proiecte de Succes",
     construction_description: "Recrutăm muncitori experimentați din Asia și Africa pentru sectorul construcțiilor din România, Austria și Serbia.",
     horeca_title: "Personal Hotelier",
@@ -117,7 +121,7 @@ const slideContent = {
     cruise_title: "Highly Qualified Staff",
     cruise_subtitle: "For the Maritime Industry",
     cruise_description: "Chefs, waiters, technicians and hospitality staff for international cruise ships.",
-    construction_title: "Qualified Workforce",
+    construction_title: "Qualified and Unskilled Construction Workers",
     construction_subtitle: "For Successful Projects",
     construction_description: "We recruit experienced workers from Asia and Africa for the construction sector in Romania, Austria and Serbia.",
     horeca_title: "Hotel Staff",
@@ -144,7 +148,7 @@ const slideContent = {
     cruise_title: "Hochqualifiziertes Personal",
     cruise_subtitle: "Für die Maritime Industrie",
     cruise_description: "Köche, Kellner, Techniker und Hotelpersonal für internationale Kreuzfahrtschiffe.",
-    construction_title: "Qualifizierte Arbeitskräfte",
+    construction_title: "Qualifizierte und ungelernte Bauarbeiter",
     construction_subtitle: "Für erfolgreiche Projekte",
     construction_description: "Wir rekrutieren erfahrene Arbeiter aus Asien und Afrika für den Bausektor in Rumänien, Österreich und Serbien.",
     horeca_title: "Hotelpersonal",
@@ -171,7 +175,7 @@ const slideContent = {
     cruise_title: "Visokokvalifikovano Osoblje",
     cruise_subtitle: "Za Pomorsku Industriju",
     cruise_description: "Kuvari, konobari, tehničari i hotelsko osoblje za međunarodne kruzere.",
-    construction_title: "Kvalifikovana Radna Snaga",
+    construction_title: "Kvalifikovani i nekvalifikovani građevinski radnici",
     construction_subtitle: "Za Uspešne Projekte",
     construction_description: "Regrutujemo iskusne radnike iz Azije i Afrike za građevinski sektor u Rumuniji, Austriji i Srbiji.",
     horeca_title: "Hotelsko Osoblje",
