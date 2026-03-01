@@ -162,7 +162,7 @@ const content = {
 };
 
 export default function ContactPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -190,10 +190,11 @@ export default function ContactPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Contact | Global Jobs Consulting</title>
-        <meta name="description" content={(t && t.meta && t.meta.description) || ''} />
-      </Helmet>
+      <SEOHead 
+        title={t.meta.title}
+        description={t.meta.description}
+        language={language}
+      />
 
       <div className="min-h-screen pt-32 pb-20 bg-gray-50" data-testid="contact-page">
         {/* Hero */}
