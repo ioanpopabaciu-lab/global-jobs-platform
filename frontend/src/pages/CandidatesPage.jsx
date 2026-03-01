@@ -629,7 +629,7 @@ export default function CandidatesPage() {
                           <Label htmlFor="privacy_consent" className="text-sm text-gray-600 cursor-pointer">
                             {t.form.privacy}{" "}
                             <Link 
-                              to="/politica-confidentialitate" 
+                              to={getLocalizedPath("/politica-confidentialitate")} 
                               target="_blank"
                               className="text-coral hover:underline font-medium"
                             >
