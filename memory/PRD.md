@@ -125,17 +125,17 @@ Model: gpt-4o-mini
 - `POST /api/candidates/submit` - Formular candidați (multipart)
 - `GET /api/blog/posts` - Lista articole
 - `GET /api/blog/posts/{slug}` - Articol individual
-- `POST /api/chat/paula` - AI Chat Assistant
+- `POST /api/chat/elisabeth` - AI Chat Assistant (redenumit din paula)
 
 ## Teste
-- **Test Report**: /app/test_reports/iteration_5.json
-- **Success Rate**: 100% frontend (multilanguage verification)
-- **Toate testele trec** - Verificate toate paginile în 4 limbi
+- **Test Report**: /app/test_reports/iteration_6.json (ultimul)
+- **Success Rate**: 95% frontend (URL-uri multilingv + hreflang)
+- **Funcționalități verificate**: URL routing, hreflang tags, canonical URLs, language switcher, navigation links, hero slider cu 3 videouri
 
 ## Backlog
 
-### P0 (În progres - Faza 2)
-- **AI Chatbot Paula Avansat**: Implementarea scriptului de cunoștințe structurat (primit de la client)
+### P0 (Important - Faza 2)
+- **AI Chatbot Elisabeth Avansat**: Implementarea scriptului de cunoștințe structurat (primit de la client)
 - **Pagini SEO**: Crearea paginilor dedicate pentru industrii (Construcții, Manufacturing, HoReCa, Maritime)
 
 ### P1 (Important)
