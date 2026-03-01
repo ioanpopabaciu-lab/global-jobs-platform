@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 
@@ -47,11 +48,21 @@ export default function SEOHead({ title, description, language = "ro" }) {
   const baseRoute = getBaseRoute(location.pathname);
   const translations = routeTranslations[baseRoute] || routeTranslations["/"];
   
+  // Use useEffect to set document.title to avoid Helmet's string parsing issues
+  useEffect(() => {
+    if (title) {
+      document.title = title;
+    }
+  }, [title]);
+  
+  // Set html lang attribute
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+  
   return (
     <Helmet>
-      <html lang={language} />
-      <title>{title}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={description || ''} />
       
       {/* Canonical URL */}
       <link rel="canonical" href={`${BASE_URL}${translations[language]}`} />
@@ -64,17 +75,17 @@ export default function SEOHead({ title, description, language = "ro" }) {
       <link rel="alternate" hreflang="x-default" href={`${BASE_URL}${translations.ro}`} />
       
       {/* Open Graph */}
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:url" href={`${BASE_URL}${translations[language]}`} />
+      <meta property="og:title" content={title || ''} />
+      <meta property="og:description" content={description || ''} />
+      <meta property="og:url" content={`${BASE_URL}${translations[language]}`} />
       <meta property="og:locale" content={language === "ro" ? "ro_RO" : language === "en" ? "en_US" : language === "de" ? "de_DE" : "sr_RS"} />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="Global Jobs Consulting" />
       
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:title" content={title || ''} />
+      <meta name="twitter:description" content={description || ''} />
     </Helmet>
   );
 }
