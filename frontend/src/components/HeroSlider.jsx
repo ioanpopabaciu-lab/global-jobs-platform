@@ -249,6 +249,7 @@ export default function HeroSlider() {
               muted
               loop
               playsInline
+              preload="auto"
               poster={s.poster}
               className="w-full h-full object-cover"
             >
