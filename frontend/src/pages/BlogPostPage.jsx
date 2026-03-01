@@ -128,7 +128,7 @@ export default function BlogPostPage() {
           <div className="absolute inset-0 flex items-center">
             <div className="container mx-auto px-4">
               <Link 
-                to="/blog"
+                to={getLocalizedPath("/blog")}
                 className="inline-flex items-center text-white/80 hover:text-white mb-4 transition-colors"
                 data-testid="back-to-blog"
               >
