@@ -7,6 +7,9 @@ import { useLanguage } from "@/i18n/LanguageContext";
 // Video URL provided by user
 const VIDEO_URL = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/3a4xa6sx_Adaug%C4%83%20un%20antet.mp4";
 
+// New promotional video
+const PROMO_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/v1pulfhw_Design%20f%C4%83r%C4%83%20titlu.mp4";
+
 // Uploaded images
 const UPLOADED_IMAGES = {
   workers_airport_1: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/aangudct_IMG-20250921-WA0000.jpg",
