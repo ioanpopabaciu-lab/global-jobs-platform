@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Shield, Mail, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SEOHead from "@/components/SEOHead";
 
 const content = {
   ro: {
