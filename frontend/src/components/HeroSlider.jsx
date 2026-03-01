@@ -357,7 +357,7 @@ export default function HeroSlider() {
               className="bg-coral hover:bg-red-600 text-white rounded-full font-semibold text-base px-8 shadow-lg"
               data-testid="hero-cta-employer"
             >
-              <Link to="/angajatori">
+              <Link to={getLocalizedPath("/angajatori")}>
                 {t.cta_employer}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -369,7 +369,7 @@ export default function HeroSlider() {
               className="border-2 border-white text-white hover:bg-white/10 rounded-full font-semibold text-base px-8"
               data-testid="hero-cta-candidate"
             >
-              <Link to="/candidati">
+              <Link to={getLocalizedPath("/candidati")}>
                 {t.cta_candidate}
               </Link>
             </Button>
