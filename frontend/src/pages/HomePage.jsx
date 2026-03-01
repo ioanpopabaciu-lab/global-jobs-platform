@@ -307,7 +307,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
-                  to="/angajatori"
+                  to={getLocalizedPath("/angajatori")}
                   className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg"
                   data-testid="final-cta-employer"
                 >
@@ -315,7 +315,7 @@ export default function HomePage() {
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
-                  to="/candidati"
+                  to={getLocalizedPath("/candidati")}
                   className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors"
                   data-testid="final-cta-candidate"
                 >
