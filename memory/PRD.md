@@ -138,7 +138,7 @@ Model: gpt-4o-mini
 - `POST /api/candidates/submit` - Formular candidați (multipart)
 - `GET /api/blog/posts` - Lista articole
 - `GET /api/blog/posts/{slug}` - Articol individual
-- `POST /api/chat/elisabeth` - AI Chat Assistant (redenumit din paula)
+- `POST /api/chat/maria` - AI Chat Assistant Maria (redenumit din paula/elisabeth)
 
 ## Teste
 - **Test Report**: /app/test_reports/iteration_6.json (ultimul)
