@@ -11,6 +11,17 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski cu URL-uri specifice pentru SEO
 
+## Updates (01 Mar 2026 - v7)
+- ✅ **Logo GJC mai mare**: Mărit dimensiunea logo-ului în navbar (h-20 md:h-24)
+- ✅ **Chat Maria (redenumit din Elisabeth)**: 
+  - Butonul de chat arată acum imaginea cu femeia care vorbește la telefon în loc de bulina roșie
+  - Numele asistentului schimbat din "Elisabeth" în "Maria" în toată aplicația
+  - Endpoint API actualizat de la `/api/chat/paula` la `/api/chat/maria`
+- ✅ **Slide Construcții actualizat**:
+  - Titlu schimbat din "Forță de muncă calificată" în "Muncitori Calificați și Necalificați în Construcții"
+  - Video de fundal nou cu muncitori în construcții
+- ✅ **Imagine "Despre Noi" actualizată**: Înlocuită imaginea cu muncitorul din fermă cu noua imagine cu harta și muncitori internaționali
+
 ## Updates (01 Mar 2026 - v6)
 - ✅ **URL-uri SEO Multilingv**: Implementate URL-uri specifice pentru fiecare limbă
   - Română: `/contact`, `/angajatori`, `/servicii`, `/candidati`, `/blog`
