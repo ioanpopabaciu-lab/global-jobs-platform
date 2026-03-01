@@ -85,9 +85,10 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 
 ### ✅ Hero Slider cu Video
 - Slide 1: Video nave de croazieră (autoplay, muted)
+- Slide 2: Video muncitori în construcții (autoplay, muted) - NOU v7
 - Slide 4: Video lucrători agricoli (autoplay, muted)
 - Slide 6: Video personal depozite (autoplay, muted) - NOU v6
-- Slide 2-3, 5: Imagini originale de la client
+- Slide 3, 5: Imagini originale de la client
 - Navigare cu săgeți și indicatori
 - Auto-rotație la 6 secunde
 
