@@ -47,7 +47,7 @@ const dateLocales = {
 };
 
 export default function BlogPage() {
-  const { language } = useLanguage();
+  const { language, getLocalizedPath } = useLanguage();
   const t = content[language] || content.ro;
   
   const [posts, setPosts] = useState([]);
