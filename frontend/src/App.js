@@ -13,6 +13,7 @@ import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
 import ContactPage from "@/pages/ContactPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import FormularAngajatorPage from "@/pages/FormularAngajatorPage";
 
 // Components
 import Navbar from "@/components/Navbar";
@@ -89,6 +90,7 @@ function AppContent() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
+          <Route path="/formular-angajator" element={<FormularAngajatorPage />} />
           
           {/* English routes */}
           <Route path="/en" element={<LanguageRoute><HomePage /></LanguageRoute>} />
@@ -99,6 +101,7 @@ function AppContent() {
           <Route path="/en/blog/:slug" element={<LanguageRoute><BlogPostPage /></LanguageRoute>} />
           <Route path="/en/contact" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
           <Route path="/en/privacy-policy" element={<LanguageRoute><PrivacyPolicyPage /></LanguageRoute>} />
+          <Route path="/en/employer-form" element={<LanguageRoute><FormularAngajatorPage /></LanguageRoute>} />
           
           {/* German routes */}
           <Route path="/de" element={<LanguageRoute><HomePage /></LanguageRoute>} />
@@ -109,6 +112,7 @@ function AppContent() {
           <Route path="/de/blog/:slug" element={<LanguageRoute><BlogPostPage /></LanguageRoute>} />
           <Route path="/de/kontakt" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
           <Route path="/de/datenschutz" element={<LanguageRoute><PrivacyPolicyPage /></LanguageRoute>} />
+          <Route path="/de/arbeitgeber-formular" element={<LanguageRoute><FormularAngajatorPage /></LanguageRoute>} />
           
           {/* Serbian routes */}
           <Route path="/sr" element={<LanguageRoute><HomePage /></LanguageRoute>} />
@@ -119,6 +123,7 @@ function AppContent() {
           <Route path="/sr/blog/:slug" element={<LanguageRoute><BlogPostPage /></LanguageRoute>} />
           <Route path="/sr/kontakt" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
           <Route path="/sr/politika-privatnosti" element={<LanguageRoute><PrivacyPolicyPage /></LanguageRoute>} />
+          <Route path="/sr/formular-poslodavac" element={<LanguageRoute><FormularAngajatorPage /></LanguageRoute>} />
           
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
