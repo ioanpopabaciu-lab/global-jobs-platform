@@ -635,6 +635,60 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_init_blog():
+    """Initialize blog posts on startup"""
+    try:
+        # Check if we have the correct blog posts
+        count = await db.blog_posts.count_documents({})
+        if count == 0 or count != 3:
+            # Delete all and reinitialize
+            await db.blog_posts.delete_many({})
+            
+            sample_posts = [
+                {
+                    "id": str(uuid.uuid4()),
+                    "title": "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas",
+                    "slug": "cum-sa-angajezi-forta-munca-asia-romania-ghid",
+                    "excerpt": "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti.",
+                    "content": "<h2>Introducere</h2><p>Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.</p>",
+                    "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/ljok1yt7_poza%201.png",
+                    "category": "Recrutare",
+                    "author": "Global Jobs Consulting",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "published": True
+                },
+                {
+                    "id": str(uuid.uuid4()),
+                    "title": "Etapele unei colaborari de succes: De la Selectie la Integrare",
+                    "slug": "etapele-colaborari-succes-selectie-integrare",
+                    "excerpt": "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.",
+                    "content": "<h2>Obiectiv</h2><p>Eliminarea stresului administrativ pentru angajator prin solutia noastra completa.</p>",
+                    "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/vriozis1_poza%202.png",
+                    "category": "Ghid",
+                    "author": "Global Jobs Consulting",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "published": True
+                },
+                {
+                    "id": str(uuid.uuid4()),
+                    "title": "Avantajele fortei de munca din Nepal pentru sectorul HoReCa",
+                    "slug": "avantaje-forta-munca-nepal-horeca",
+                    "excerpt": "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii.",
+                    "content": "<h2>De ce Nepal pentru ospitalitate?</h2><p>Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii.</p>",
+                    "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3qjb8k8w_poza%203.png",
+                    "category": "HoReCa",
+                    "author": "Global Jobs Consulting",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "published": True
+                }
+            ]
+            
+            await db.blog_posts.insert_many(sample_posts)
+            logger.info("Blog posts initialized with 3 articles")
+    except Exception as e:
+        logger.error(f"Error initializing blog posts: {e}")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
