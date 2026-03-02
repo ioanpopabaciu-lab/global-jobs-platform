@@ -16,6 +16,12 @@ const routePaths = {
     en: '/en/privacy-policy', 
     de: '/de/datenschutz', 
     sr: '/sr/politika-privatnosti' 
+  },
+  '/formular-angajator': { 
+    ro: '/formular-angajator', 
+    en: '/en/employer-form', 
+    de: '/de/arbeitgeber-formular', 
+    sr: '/sr/formular-poslodavac' 
   }
 };
 
