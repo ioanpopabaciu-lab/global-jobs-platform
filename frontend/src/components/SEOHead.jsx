@@ -16,6 +16,12 @@ const routeTranslations = {
     en: "/en/privacy-policy", 
     de: "/de/datenschutz", 
     sr: "/sr/politika-privatnosti" 
+  },
+  "/formular-angajator": { 
+    ro: "/formular-angajator", 
+    en: "/en/employer-form", 
+    de: "/de/arbeitgeber-formular", 
+    sr: "/sr/formular-poslodavac" 
   }
 };
 
@@ -39,14 +45,17 @@ const getBaseRoute = (pathname) => {
     '/candidates': '/candidati',
     '/contact': '/contact',
     '/privacy-policy': '/politica-confidentialitate',
+    '/employer-form': '/formular-angajator',
     '/arbeitgeber': '/angajatori',
     '/dienstleistungen': '/servicii',
     '/kandidaten': '/candidati',
     '/kontakt': '/contact',
     '/datenschutz': '/politica-confidentialitate',
+    '/arbeitgeber-formular': '/formular-angajator',
     '/poslodavci': '/angajatori',
     '/usluge': '/servicii',
-    '/politika-privatnosti': '/politica-confidentialitate'
+    '/politika-privatnosti': '/politica-confidentialitate',
+    '/formular-poslodavac': '/formular-angajator'
   };
   
   if (languagePathMappings[basePath]) {
