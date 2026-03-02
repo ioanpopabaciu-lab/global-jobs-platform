@@ -133,7 +133,7 @@ export default function Navbar() {
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
               alt="Global Jobs Consulting" 
-              className="h-20 md:h-24 w-auto transition-all duration-300"
+              className="h-24 md:h-28 w-auto transition-all duration-300"
             />
           </Link>
 
