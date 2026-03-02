@@ -1,197 +1,162 @@
-<analysis>
-**original_problem_statement:**
-The user wants to build a corporate website for a recruitment agency, Global Jobs Consulting (gjc.ro).
+<analysis>**original_problem_statement:**
+The user wants to build, deploy, and iterate on a corporate website for their recruitment agency, Global Jobs Consulting (gjc.ro). The project has evolved from a basic website to a full-featured, multilingual platform with an AI assistant and advanced SEO capabilities.
 
-**PRODUCT REQUIREMENTS:**
-- **Branding:** Business/corporate style with Navy Blue (#003366), Industrial Gray, and White.
-- **Hero Section:** A background video slider showing workers from Asia and Africa in various industries (HoReCa, construction, etc.).
-- **Navigation:** Sticky menu with sections: Employers (RO/AT/RS), All-Inclusive Services, Candidate Portal, Blog, Contact.
-- **Business Strategy:** Target employers in Romania, Austria, and Serbia. Highlight a network of 30+ partner agencies in 18 countries across Asia and Africa.
-- **Services:** Full recruitment process, immigration documents, and community integration for various sectors.
-- **Lead Generation Forms:**
-    - **Employer Form:** Project location, industry, number of workers, qualifications, salary, and provided logistics.
-    - **Candidate Portal:** Citizenship, experience, English level, WhatsApp, CV upload, and Video-CV link.
-- **Email Configuration:** Forms should send data via SMTP to .
-- **SEO:** Specific Meta Title and Description. Local SEO details in the footer. Generation of  and .
-- **Hosting (Datahost):** Prepare files for an Apache server (cPanel). Deploy to  via FTP (IP: , User: ). Force HTTPS.
-- **Automation:** Create a Python/PHP script for automatic FTP upload.
-- **Subsequent Revisions:**
-    - **Design:** Change to a warmer, friendlier aesthetic. Use Montserrat/Nunito fonts. Integrate the company logo. Use authentic, positive images of workers. Fix menu contrast issues.
-    - **Content:** Update stats (4 years experience, 11 partner agencies). Add a new service section for Cruise Ship Staff. Update specific headlines and body text across the site.
-    - **Internationalization:** Translate the site into German and Serbian.
+**PRODUCT REQUIREMENTS (Latest):**
+- **AI Chat Assistant (Maria):** The assistant must be updated to act as a senior recruitment consultant. Instead of displaying a form in the chat, it should professionally explain the legal process for hiring non-EU workers and then redirect the user to a dedicated form page: .
+- **New Page ():** A new page needs to be created to host the detailed lead-generation form for employers.
+- **Visual & Content Updates:** The user has requested multiple visual changes, including increasing the logo size, changing the chat widget icon, updating hero slider content, and adding specific blog posts.
+- **Deployment & Maintenance:** The user is actively deploying the site to a custom domain () and requires assistance with troubleshooting and verifying live changes.
 
-**User's preferred language**: Romanian. The next agent MUST respond in Romanian only.
+**User's preferred language**: Romanian
 
 **what currently exists?**
-A complete full-stack application has been developed. The frontend is built with React and TailwindCSS, featuring a multi-language (Romanian, German, Serbian) setup using React Context. It includes all requested pages: Home, Employers, Candidates, Services, Blog, and Contact. The backend is a FastAPI application that handles form submissions for employers, candidates, and contacts, and sends the data via SMTP using the credentials provided by the user. The application has undergone multiple design and content revisions as per user feedback, including logo integration, font changes, color scheme updates, and content updates. A Python script for FTP deployment has been created.
+The application is a full-stack React and FastAPI project.
+- **Frontend:** A fully multilingual (RO, EN, DE, SR) site with language-specific URL routing (e.g., ) and dynamic SEO tags (hreflang, canonical) managed via  hooks. The AI assistant is named Maria, and its UI has been updated. The Made with Emergent badge has been removed, and the chat widget was moved to the bottom-left. The GJC logo size has been increased.
+- **Backend:** Manages form submissions, serves blog content, and hosts the AI chat endpoint (). The blog posts are now hardcoded into a startup event in  to ensure they are present in the production database after deployment.
+- **Deployment:** The application is deployed and live on , managed via the user's Cloudflare account. The agent has successfully diagnosed and helped resolve DNS and caching issues.
 
 **Last working item**:
-- **Last item agent was working:** The agent was attempting to deploy the production build of the frontend application to the user's Datahost FTP server.
-- **Status:** BLOCKED
-- **Agent Testing Done:** N (Deployment failed before testing was possible). The email functionality was tested and confirmed to be working prior to the deployment attempt.
-- **Which testing method agent to use?** Manual testing by re-attempting FTP connection with new credentials or a modified script.
+- **Last item agent was working:** The agent was tasked with updating the AI assistant Maria with a new, two-part directive: 1) Update her system prompt to redirect users to a new form page instead of showing the form in the chat, and 2) Create that new page at . The agent successfully updated the system prompt in  for all languages but has not yet created the new page.
+- **Status:** IN PROGRESS
+- **Agent Testing Done:** N
+- **Which testing method agent to use?** Frontend testing agent to verify the creation and functionality of the new  page and ensure it is multilingual. A manual test of the chatbot flow (checking for the redirect message) is also needed.
 - **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-  - Issue 1: FTP Deployment Failure (P0)
-  - Issue 2: Mobile Menu Accessibility Warning (P2)
-  
+  - **Issue 1:** Background videos fail to load in the test environment (P2)
+
   **Issues Detail:**
   - **Issue 1:**
-     - **Description:** The agent is unable to log into the user's FTP server to deploy the application. Multiple sets of credentials provided by the user have failed with a 530 Login authentication failed error.
-     - **Attempted fixes:** The agent tried several username/password combinations provided by the user:
-       -  with password 
-       -  with password 
-       -  with password 
-       The agent also tried variations like  for the username. All attempts failed.
-     - **Next debug checklist:**
-       1.  **Ask the user** to triple-check the latest FTP credentials ( / ).
-       2.  Ask the user to confirm if there is any **IP address whitelisting** on the server that might be blocking the connection.
-       3.  Ask the user to verify the connection **protocol and port**. The script uses standard FTP. The server might require SFTP or FTPS.
-       4.  If credentials are correct, try modifying the deployment script  to handle potential SFTP/FTPS protocols if required.
-     - **Why fix this issue and what will be achieved with the fix?** This is the final step to make the website live on the user's domain, which completes the core request.
-     - **Status:**  BLOCKED
-     - **Is recurring issue?** Y
-     - **Should Test frontend/backend/both after fix?** No code changes, but the live website needs to be checked after successful deployment.
-     - **Blocked on other issue:** Blocked on receiving correct, working credentials or connection details from the user.
-
-  - **Issue 2:**
-     - **Description:** The testing agent report () mentioned a minor accessibility warning related to the mobile menu.
-     - **Attempted fixes:** None. This was a low-priority issue, and the agent focused on other tasks.
-     - **Next debug checklist:**
-       1.  Inspect .
-       2.  Identify the accessibility issue (likely related to aria-labels, roles, or focus management for the mobile menu button/panel).
-       3.  Apply the necessary attributes to fix the warning.
-     - **Why fix this issue and what will be achieved with the fix?** Improves website accessibility and compliance, leading to a better user experience on mobile devices.
-     - **Status:**  NOT STARTED
+     - **Description:** Background videos in  fail to render in the automated test environment's browser, showing a  error. This is likely a limitation of the test tool with large media files.
+     - **Attempted fixes:** Agent confirmed URLs are correct. The user was asked to verify in a real browser, but the issue was deprioritized for other requests.
+     - **Next debug checklist:** Confirm with the user if the videos work correctly on the live site (). If not, investigate the component's rendering lifecycle in a real browser's network tab.
+     - **Why fix this issue and what will be achieved with the fix?** Ensures a key visual element of the homepage is functional for all users.
+     - **Status:** USER VERIFICATION PENDING
      - **Is recurring issue?** N
-     - **Should Test frontend/backend/both after fix?** Should test frontend using the screenshot tool or by running the testing agent again.
-     - **Blocked on other issue:** None.
+     - **Should Test frontend/backend/both after fix?** Frontend
+     - **Blocked on other issue:** None
 
 **In progress Task List**:
-None. All development tasks are considered finished. The focus is on the deployment issue.
+  - **Task 1:** Create the new Employer Form page and finalize the AI redirect flow (P0)
+
+ **Task Detail:**
+  - **Task 1:**
+     - **Where to resume:**
+        1. Create a new page component: .
+        2. Implement the full employer questionnaire form within this new page, ensuring it is fully multilingual and functional.
+        3. Add a new route in  for  (and its localized versions like ) that renders the new page.
+        4. Update  in  to include the new page's translations for correct URL generation.
+     - **What will be achieved with this?** This will complete the user's primary objective of creating a professional, streamlined lead-generation funnel for potential employers, moving the detailed data collection out of the chat and onto a dedicated page.
+     - **Status:** NOT STARTED
+     - **Should Test frontend/backend/both after fix?** Frontend
+     - **Blocked on something:** None
 
 **Upcoming and Future Tasks**
+**Upcoming Tasks (Phase 2):**
+- **P1: SEO Landing Pages**: Create four new, SEO-optimized landing pages for key industries (Construction, Manufacturing, HoReCa, Maritime).
+- **P1: Conversion & SEO Improvements**:
+    - Implement  on all forms.
+    - Add a sticky CTA button for mobile views.
+    - Create a testimonials section/component.
+    - Implement structured data (Schema.org Organization).
+
 **Future Tasks:**
--   **P1:** Develop a CMS (Content Management System) for the blog to allow the user to add/edit articles.
--   **P2:** Implement an admin dashboard for user and lead management.
+- **P2:** Integrate analytics (Google Analytics, GSC, Facebook Pixel).
+- **P2:** Create a CMS or admin interface for the blog to replace the current hardcoded solution.
+- **P2:** Develop an admin dashboard for lead management.
 
 **Completed work in this session**
-- **Application Scaffolding:** Set up a full-stack project with React frontend and FastAPI backend.
-- **Backend Development:**
-    - Created API endpoints (, , ) for form submissions in .
-    - Integrated SMTP email sending for form data using user-provided credentials.
-    - Configured environment variables for SMTP settings in .
-- **Frontend Development:**
-    - Implemented a multi-page responsive website with routing in .
-    - Created all pages: , , , , , .
-    - Created reusable components: , , , , , .
-    - Integrated a multi-language system using React Context (, ).
-- **Design & UX:**
-    - Performed two major design overhauls:
-        1.  Initial corporate design.
-        2.  Updated to a warmer aesthetic with Montserrat font, new color palette, rounded buttons, and integrated the company logo.
-    - Selected and integrated authentic, diverse imagery for all sections.
-- **SEO & Deployment Prep:**
-    - Generated  and .
-    - Added SEO meta tags to .
-    - Created an FTP deployment script: .
-    - Generated a production build of the React app in the  directory.
+- **SEO & Routing:** Successfully implemented language-specific URLs (e.g., ) and hreflang tags for all pages, resolving a critical  bug by refactoring to a stable  approach.
+- **AI Chatbot Evolution:** Renamed chatbot from Elisabeth to Maria, updated the UI icon, and iterated on its system prompt based on user feedback.
+- **Visual Overhaul:**
+    - Increased the size of the GJC logo in the navbar and mobile menu.
+    - Updated multiple hero slides with new text and background videos.
+    - Replaced the Despre Noi section image.
+    - Moved the chat widget to the bottom-left and removed the Made with Emergent badge.
+- **Blog Content:** Added three new blog articles with user-provided images. Fixed a deployment issue by hardcoding the posts into a backend startup event to ensure they populate the production database.
+- **Deployment & Live Troubleshooting:** Guided the user through the entire deployment process and successfully diagnosed and resolved a complex custom domain issue caused by Cloudflare's regional caching by instructing the user to activate Development Mode.
 
 **Earlier issues found/mentioned but not fixed**
-- **Issue 1:** Mobile menu accessibility warning (now listed in **All Pending/In progress Issue list**).
+- None. The pending video issue is tracked above.
 
 **Known issue recurrence from previous fork**
-- None.
+  - **Issue recurrence in previous fork:** The  rendering bug () recurred at the beginning of the session.
+  - **Recurrence count:** 1
+  - **Status:** RESOLVED. The agent implemented a robust workaround using  to manage document head tags, which has proven stable.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
-- **Frontend:** React, TailwindCSS,  for routing.
-- **UI Components:** Shadcn/UI components were available but the agent built custom components.
-- **State Management:** React Hooks (, ) for language selection.
-- **Backend:** FastAPI (Python).
-- **Database:** MongoDB (used for logging form submissions).
-- **Email:** Python  for sending emails via an SMTP server.
-- **Deployment:** Custom Python script using  for FTP upload.
+- **Frontend:** React, TailwindCSS, 
+- **Backend:** FastAPI, MongoDB
+- **Internationalization (i18n):** Custom React Context for language state and a centralized translation object.
+- **SEO:** Language-prefixed URLs and dynamically injected hreflang/canonical tags using .
+- **AI Integration:** OpenAI GPT via  library.
+- **Deployment:** Custom domain pointing, DNS/CDN management (Cloudflare), troubleshooting production caching issues.
 
 **key DB schema**
-No formal Pydantic models were defined for a database schema. The backend saves form data directly to a MongoDB collection (). A typical document structure is:
-- **form_submissions:** 
-
-**changes in tech stack**
-None.
+  - **blog_posts:** { title, slug, image, date, excerpt, content }. Note: This collection is now populated on server startup from a hardcoded list in  to ensure consistency in production.
 
 **All files of reference**
-- **Backend Logic:**  (Contains all API routes and SMTP logic)
-- **Deployment Script:**  (Used for FTP upload, currently failing)
-- **Frontend Entrypoint & Routing:** 
-- **Internationalization:** , 
-- **Main Components:** , , 
-- **Main Pages:** All files under 
-- **Styling:** , 
-- **Environment:**  (Contains SMTP credentials)
+-  (Heavily modified for AI prompts and hardcoded blog content)
+-  (Manages all multilingual routing)
+-  (Renamed and UI updated)
+-  (Crucial for SEO; uses )
+-  (Provides localization helper functions)
+-  (Badge was removed from here)
+-  (Logo size was increased here)
 
 **Areas that need refactoring**:
-- The internationalization () implementation is basic. It uses a single large object for all translations inside . For better maintainability and performance (code-splitting), migrating to a dedicated library like  would be beneficial.
+- **Blog Content Management:** Blog posts are currently hardcoded in  and inserted into the database on startup. This is brittle but was a necessary fix for deployment. A future task should be to build a proper CMS or admin interface for managing blog content.
 
 **key api endpoints**
-- : Health check for the API.
-- : Retrieves company statistics.
-- : Submits the contact form.
-- : Submits the employer form.
-- : Submits the candidate form, including a file upload for CVs.
+- 
+- 
+- 
+- 
+- 
+- 
 
 **Critical Info for New Agent**
-The primary and only blocker is the FTP deployment. The application code is complete and has been tested successfully. Do not attempt further feature development or refactoring until the deployment issue is resolved. Your first action should be to communicate with the user to resolve the FTP credential/connection problem. The failure is persistent across multiple credentials, suggesting a server-side configuration issue (like IP blocking or a required protocol mismatch like SFTP/FTPS) is more likely than a simple wrong password.
+- **Immediate Priority:** The user's latest request is to update the Maria chatbot to redirect to a new  page. Your first task is to create this page and ensure the full workflow is functional.
+- **Deployment Workflow:** The site is LIVE. After you complete a feature, the user will expect to deploy it. Be prepared to guide them. Remember that changes may not be visible immediately due to the user's Cloudflare setup. Remind the user to use **Cloudflare's Development Mode** or **Purge Everything** to see updates.
+- **Database Content:** Any content that needs to be in the database on production (like blog posts) must be added to the startup script in . The production database is ephemeral and resets on deploy; only the data from this script will persist.
+- **Communication Style:** The user is direct and provides frequent, iterative feedback. Acknowledge each request, implement it, and show proof with screenshots of the preview environment before suggesting deployment.
 
 **documents and test reports created in this job**
-- 
-- 
-- 
-- 
+  -  (Updated)
+  - 
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** Provides new FTP credentials: User , password .
-2.  **Agent:** (Asks human for help after new credentials fail).
-3.  **User:** Provides other FTP credentials: User , password .
-4.  **Agent:** (Asks human for help after those credentials also fail).
-5.  **User:** States that the password  ends in the letter 'O', not the number zero.
-6.  **Agent:** (Asks human for help after  still fails).
-7.  **User:** Provides all SMTP and FTP credentials and asks the agent to proceed with configuration and deployment.
-8.  **Agent:** Asks for the necessary FTP and SMTP credentials to deploy the site and activate emails.
-9.  **User:** Asks what information is needed to upload the site to Datahost and activate emails.
-10. **Agent:** (Provides final summary and  tool call for the last set of content/design updates).
+1.  **User asks why the Made with Emergent badge appears.**
+2.  **User asks to move the chat widget above the WhatsApp button.**
+3.  **User directly instructs to remove the Emergent badge.**
+4.  **User provides images and asks to add 3 blog posts and increase logo size.**
+5.  **User asks for a preview of the changes.**
+6.  **User confirms they want to RE-Deploy.**
+7.  **User complains that credit was charged multiple times for the same task (logo/blog).**
+8.  **User confirms they have deployed the changes.**
+9.  **User provides a detailed script for Maria to present a long form directly in the chat.**
+10. **(LATEST/PENDING) User provides a *new*, overriding script for Maria instructing her to redirect to a dedicated form page () instead.**
 
 **Project Health Check:**
-- **Broken:** The FTP deployment process is broken due to authentication failure. The script  cannot connect to the server.
-- **Mocked:** None.
+- **Broken:** None.
+- **Mocked:** The rendering of hero slider videos is unreliable in the test environment.
 
 **3rd Party Integrations**
-- **SMTP Email:** Integrated using Python's built-in . It is configured to send emails via  using user-provided credentials.
+- **OpenAI GPT:** Powers the Maria AI Chat Assistant via  (uses Emergent LLM Key).
+- **Cloudflare:** Manages DNS, CDN, and SSL for the  domain (user-managed).
+- **SMTP ():** Used for sending form submission emails from the backend.
 
 **Testing status**
-- **Testing agent used after significant changes:** YES (3 times)
-- **Troubleshoot agent used after agent stuck in loop:** NO
-- **Test files created:**
-    - 
-    - 
-    - 
-- **Known regressions:** None.
+  - **Testing agent used after significant changes:** YES, for the initial SEO/routing implementation.
+  - **Troubleshoot agent used after agent stuck in loop:** NO
+  - **Test files created:** 
+  - **Known regressions:** None.
 
 **Credentials to test flow:**
-- **SMTP (working):**
-    - Host: 
-    - Port: 
-    - User: 
-    - Password: 
-- **FTP (NOT working):**
-    - Host: 
-    - Last tried user: 
-    - Last tried password: 
+N/A
 
 **What agent forgot to execute**
-- The agent did not resolve the minor mobile menu accessibility warning reported by the testing agent in .
-- The agent was unable to complete the final deployment step due to the FTP login issue, which was a critical part of the user's request.
-</analysis>
+- The agent has not yet created the new page  as required by the user's most recent request for the Maria chatbot. This is the main pending task.</analysis>
