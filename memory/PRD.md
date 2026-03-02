@@ -11,6 +11,37 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski cu URL-uri specifice pentru SEO
 
+## Updates (02 Mar 2026 - v9) - FAZA 1 RESTRUCTURARE MENIU
+- ✅ **Meniu Principal Restructurat cu Dropdown-uri**:
+  - **ACASĂ** - cu submeniu "Despre Noi"
+  - **SERVICII** - cu submeniu (Recrutare Internațională + viitoarele pachete)
+  - **ANGAJATORI** - cu submeniu:
+    - Procedură Recrutare Non-UE
+    - Eligibilitate Companie
+    - Costuri & Termene
+    - 🔴 Solicită Ofertă Personalizată (link coral evidențiat)
+  - **PORTAL CANDIDAȚI** - link direct
+  - **BLOG** - link direct
+  - **CONTACT** - link direct
+- ✅ **Pagină nouă /despre-noi**: 
+  - Secțiuni: Misiune, Scop, Obiective Strategice
+  - Statistici: 11+ Parteneri, 4+ Ani, 3 Piețe, 500+ Candidați
+  - Multilingv: RO, EN (/en/about-us), DE (/de/uber-uns), SR (/sr/o-nama)
+- ✅ **Pagină nouă /angajatori/procedura**:
+  - Ghid complet 6 etape pentru recrutare Non-UE
+  - Timeline vizual: 60-120 zile
+  - FAQ și documente necesare
+- ✅ **Pagină nouă /angajatori/eligibilitate**:
+  - 6 cerințe obligatorii IGI
+  - Situații de excludere
+  - Proces de verificare în 4 pași
+- ✅ **Pagină nouă /angajatori/costuri**:
+  - Structura costurilor: Taxe IGI, Consolat, Angajator
+  - Timeline detaliat
+  - Tabel comparativ (cu/fără agenție)
+- ✅ **Meniu Mobil cu Acordeon**: Funcțional pe toate dispozitivele
+- ✅ **SEO Complet**: Toate paginile noi au hreflang și canonical pentru cele 4 limbi
+
 ## Updates (02 Mar 2026 - v8)
 - ✅ **Pagină nouă /formular-angajator**: Formular detaliat pentru angajatori Non-UE
   - Rute multilingve: `/formular-angajator` (RO), `/en/employer-form` (EN), `/de/arbeitgeber-formular` (DE), `/sr/formular-poslodavac` (SR)
