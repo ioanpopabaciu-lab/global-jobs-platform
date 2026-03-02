@@ -117,7 +117,11 @@ function AppContent() {
           
           {/* German routes */}
           <Route path="/de" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/de/uber-uns" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
           <Route path="/de/arbeitgeber" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/de/arbeitgeber/verfahren" element={<LanguageRoute><ProceduraPage /></LanguageRoute>} />
+          <Route path="/de/arbeitgeber/berechtigung" element={<LanguageRoute><EligibilitatePage /></LanguageRoute>} />
+          <Route path="/de/arbeitgeber/kosten" element={<LanguageRoute><CosturiPage /></LanguageRoute>} />
           <Route path="/de/dienstleistungen" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
           <Route path="/de/kandidaten" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
           <Route path="/de/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
