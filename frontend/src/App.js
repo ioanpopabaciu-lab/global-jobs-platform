@@ -99,6 +99,11 @@ function AppContent() {
           <Route path="/angajatori/eligibilitate" element={<EligibilitatePage />} />
           <Route path="/angajatori/costuri" element={<CosturiPage />} />
           <Route path="/servicii" element={<ServicesPage />} />
+          <Route path="/servicii/student-advisor" element={<StudentAdvisorPage />} />
+          <Route path="/servicii/work-career" element={<WorkCareerPage />} />
+          <Route path="/servicii/family-reunion" element={<FamilyReunionPage />} />
+          <Route path="/servicii/settlement-citizenship" element={<SettlementCitizenshipPage />} />
+          <Route path="/servicii/administrative" element={<AdministrativePage />} />
           <Route path="/candidati" element={<CandidatesPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
