@@ -159,6 +159,11 @@ function AppContent() {
           <Route path="/sr/poslodavci/podobnost" element={<LanguageRoute><EligibilitatePage /></LanguageRoute>} />
           <Route path="/sr/poslodavci/troskovi" element={<LanguageRoute><CosturiPage /></LanguageRoute>} />
           <Route path="/sr/usluge" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/sr/usluge/student-advisor" element={<LanguageRoute><StudentAdvisorPage /></LanguageRoute>} />
+          <Route path="/sr/usluge/work-career" element={<LanguageRoute><WorkCareerPage /></LanguageRoute>} />
+          <Route path="/sr/usluge/family-reunion" element={<LanguageRoute><FamilyReunionPage /></LanguageRoute>} />
+          <Route path="/sr/usluge/settlement-citizenship" element={<LanguageRoute><SettlementCitizenshipPage /></LanguageRoute>} />
+          <Route path="/sr/usluge/administrative" element={<LanguageRoute><AdministrativePage /></LanguageRoute>} />
           <Route path="/sr/kandidati" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
           <Route path="/sr/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
           <Route path="/sr/blog/:slug" element={<LanguageRoute><BlogPostPage /></LanguageRoute>} />
