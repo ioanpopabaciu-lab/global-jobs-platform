@@ -18,6 +18,11 @@ import DespreNoiPage from "@/pages/DespreNoiPage";
 import ProceduraPage from "@/pages/ProceduraPage";
 import EligibilitatePage from "@/pages/EligibilitatePage";
 import CosturiPage from "@/pages/CosturiPage";
+import StudentAdvisorPage from "@/pages/StudentAdvisorPage";
+import WorkCareerPage from "@/pages/WorkCareerPage";
+import FamilyReunionPage from "@/pages/FamilyReunionPage";
+import SettlementCitizenshipPage from "@/pages/SettlementCitizenshipPage";
+import AdministrativePage from "@/pages/AdministrativePage";
 
 // Components
 import Navbar from "@/components/Navbar";
@@ -25,6 +30,7 @@ import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import MariaChat from "@/components/MariaChat";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 
 // Language route wrapper - sets language based on URL prefix
 function LanguageRoute({ children }) {
