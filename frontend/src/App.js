@@ -132,7 +132,11 @@ function AppContent() {
           
           {/* Serbian routes */}
           <Route path="/sr" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/sr/o-nama" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
           <Route path="/sr/poslodavci" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/sr/poslodavci/procedura" element={<LanguageRoute><ProceduraPage /></LanguageRoute>} />
+          <Route path="/sr/poslodavci/podobnost" element={<LanguageRoute><EligibilitatePage /></LanguageRoute>} />
+          <Route path="/sr/poslodavci/troskovi" element={<LanguageRoute><CosturiPage /></LanguageRoute>} />
           <Route path="/sr/usluge" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
           <Route path="/sr/kandidati" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
           <Route path="/sr/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
