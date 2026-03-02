@@ -7,9 +7,20 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Frontend**: React 19 + Tailwind CSS + Shadcn/UI
 - **Backend**: FastAPI + Motor (MongoDB async)
 - **Database**: MongoDB
-- **AI Chat**: OpenAI GPT-4o-mini via Emergent LLM Key (Elisabeth)
+- **AI Chat**: OpenAI GPT-4o-mini via Emergent LLM Key (Maria)
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski cu URL-uri specifice pentru SEO
+
+## Updates (02 Mar 2026 - v8)
+- ✅ **Pagină nouă /formular-angajator**: Formular detaliat pentru angajatori Non-UE
+  - Rute multilingve: `/formular-angajator` (RO), `/en/employer-form` (EN), `/de/arbeitgeber-formular` (DE), `/sr/formular-poslodavac` (SR)
+  - Secțiuni: Informații Companie, Necesarul de Personal, Condiții Oferite, Verificare Eligibilitate
+  - Câmpuri noi: CUI, Funcție, Tip Angajare (permanent/sezonier/detașat), Țară de Origine Preferată, Posturi Disponibile
+  - Verificare eligibilitate IGI: checkbox-uri obligatorii pentru condițiile legale
+  - Cards informative: Termen de Procesare (30-45 zile), Cerințe Minime, Documentație Completă
+  - Mesaj de succes detaliat cu lista de ce va primi angajatorul
+- ✅ **Maria AI actualizată**: Redirecționează angajatorii către /formular-angajator în loc să afișeze formularul în chat
+- ✅ **SEO complet**: hreflang tags și canonical URLs pentru noua pagină în toate cele 4 limbi
 
 ## Updates (01 Mar 2026 - v7)
 - ✅ **Logo GJC mai mare**: Mărit dimensiunea logo-ului în navbar (h-20 md:h-24)
@@ -134,11 +145,22 @@ Model: gpt-4o-mini
 - `GET /api/health` - Server status
 - `GET /api/stats` - Statistici companie
 - `POST /api/contact/submit` - Formular contact
-- `POST /api/employers/submit` - Formular angajatori
+- `POST /api/employers/submit` - Formular angajatori (folosit și de /formular-angajator)
 - `POST /api/candidates/submit` - Formular candidați (multipart)
 - `GET /api/blog/posts` - Lista articole
 - `GET /api/blog/posts/{slug}` - Articol individual
-- `POST /api/chat/maria` - AI Chat Assistant Maria (redenumit din paula/elisabeth)
+- `POST /api/chat/maria` - AI Chat Assistant Maria
+
+## Pagini Disponibile
+- `/` - Homepage cu Hero Slider
+- `/angajatori` - Pagină angajatori (formular simplu)
+- `/formular-angajator` - **NOU v8** - Formular detaliat Non-EU cu verificare eligibilitate IGI
+- `/servicii` - Servicii oferite
+- `/candidati` - Portal candidați
+- `/blog` - Lista articole blog
+- `/blog/:slug` - Articol individual
+- `/contact` - Pagină contact
+- `/politica-confidentialitate` - Privacy Policy
 
 ## Teste
 - **Test Report**: /app/test_reports/iteration_6.json (ultimul)
@@ -148,14 +170,12 @@ Model: gpt-4o-mini
 ## Backlog
 
 ### P0 (Important - Faza 2)
-- **AI Chatbot Elisabeth Avansat**: Implementarea scriptului de cunoștințe structurat (primit de la client)
 - **Pagini SEO**: Crearea paginilor dedicate pentru industrii (Construcții, Manufacturing, HoReCa, Maritime)
 
 ### P1 (Important)
 - reCAPTCHA pe formulare
 - Buton CTA sticky pentru mobil
 - Secțiune testimoniale
-- Activarea structurii blog cu articole inițiale
 - Schema.org structurat data (Organization)
 - Meta tags unice per pagină/limbă
 
@@ -165,6 +185,8 @@ Model: gpt-4o-mini
 - CMS pentru blog
 - Tracking status aplicație
 - Analytics dashboard (Google Analytics, GSC, Facebook Pixel)
+
+## Status: ✅ v8 COMPLET - Pagină /formular-angajator implementată și funcțională
 
 ## Date Companie
 - **Denumire**: Global Jobs Consulting SRL
