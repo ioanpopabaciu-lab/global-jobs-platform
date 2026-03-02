@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Menu, Phone, Globe } from "lucide-react";
+import { Menu, Phone, Globe, ChevronDown, ChevronRight } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,32 +11,237 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-// Base paths (Romanian)
-const navLinksBase = [
-  { href: "/", key: "nav.home" },
-  { href: "/angajatori", key: "nav.employers" },
-  { href: "/servicii", key: "nav.services" },
-  { href: "/candidati", key: "nav.candidates" },
-  { href: "/blog", key: "nav.blog" },
-  { href: "/contact", key: "nav.contact" },
-];
-
-// Logo URLs - Updated with new transparent logo
+// Logo URLs
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
 const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
+
+// Navigation structure with dropdowns - translations for menu labels
+const menuTranslations = {
+  ro: {
+    home: "Acasă",
+    aboutUs: "Despre Noi",
+    services: "Servicii",
+    internationalRecruitment: "Recrutare Internațională",
+    studentAdvisor: "Pachet STUDENT ADVISOR",
+    workCareer: "Pachet WORK & CAREER",
+    familyReunion: "Pachet FAMILY REUNION",
+    settlementCitizenship: "Pachet SETTLEMENT & CITIZENSHIP",
+    administrativeServices: "Servicii Administrative & Juridice",
+    employers: "Angajatori",
+    procedureNonEU: "Procedură Recrutare Non-UE",
+    companyEligibility: "Eligibilitate Companie",
+    costsTimelines: "Costuri & Termene",
+    requestOffer: "🔴 Solicită Ofertă Personalizată",
+    candidates: "Portal Candidați",
+    blog: "Blog",
+    contact: "Contact",
+    cta: "Solicită Ofertă"
+  },
+  en: {
+    home: "Home",
+    aboutUs: "About Us",
+    services: "Services",
+    internationalRecruitment: "International Recruitment",
+    studentAdvisor: "STUDENT ADVISOR Package",
+    workCareer: "WORK & CAREER Package",
+    familyReunion: "FAMILY REUNION Package",
+    settlementCitizenship: "SETTLEMENT & CITIZENSHIP Package",
+    administrativeServices: "Administrative & Legal Services",
+    employers: "Employers",
+    procedureNonEU: "Non-EU Recruitment Procedure",
+    companyEligibility: "Company Eligibility",
+    costsTimelines: "Costs & Timelines",
+    requestOffer: "🔴 Request Personalized Offer",
+    candidates: "Candidates Portal",
+    blog: "Blog",
+    contact: "Contact",
+    cta: "Request Quote"
+  },
+  de: {
+    home: "Startseite",
+    aboutUs: "Über Uns",
+    services: "Dienstleistungen",
+    internationalRecruitment: "Internationale Rekrutierung",
+    studentAdvisor: "STUDENT ADVISOR Paket",
+    workCareer: "WORK & CAREER Paket",
+    familyReunion: "FAMILY REUNION Paket",
+    settlementCitizenship: "SETTLEMENT & CITIZENSHIP Paket",
+    administrativeServices: "Administrative & Rechtliche Dienste",
+    employers: "Arbeitgeber",
+    procedureNonEU: "Nicht-EU-Rekrutierungsverfahren",
+    companyEligibility: "Firmenberechtigung",
+    costsTimelines: "Kosten & Fristen",
+    requestOffer: "🔴 Personalisiertes Angebot anfordern",
+    candidates: "Bewerberportal",
+    blog: "Blog",
+    contact: "Kontakt",
+    cta: "Angebot anfordern"
+  },
+  sr: {
+    home: "Početna",
+    aboutUs: "O Nama",
+    services: "Usluge",
+    internationalRecruitment: "Međunarodna Regrutacija",
+    studentAdvisor: "STUDENT ADVISOR Paket",
+    workCareer: "WORK & CAREER Paket",
+    familyReunion: "FAMILY REUNION Paket",
+    settlementCitizenship: "SETTLEMENT & CITIZENSHIP Paket",
+    administrativeServices: "Administrativne i Pravne Usluge",
+    employers: "Poslodavci",
+    procedureNonEU: "Procedura regrutacije Non-EU",
+    companyEligibility: "Podobnost kompanije",
+    costsTimelines: "Troškovi i rokovi",
+    requestOffer: "🔴 Zatražite personalizovanu ponudu",
+    candidates: "Portal kandidata",
+    blog: "Blog",
+    contact: "Kontakt",
+    cta: "Zatražite ponudu"
+  }
+};
+
+// Route paths for all languages
+const routePathsMap = {
+  '/': { ro: '/', en: '/en', de: '/de', sr: '/sr' },
+  '/despre-noi': { ro: '/despre-noi', en: '/en/about-us', de: '/de/uber-uns', sr: '/sr/o-nama' },
+  '/servicii': { ro: '/servicii', en: '/en/services', de: '/de/dienstleistungen', sr: '/sr/usluge' },
+  '/servicii/student-advisor': { ro: '/servicii/student-advisor', en: '/en/services/student-advisor', de: '/de/dienstleistungen/student-advisor', sr: '/sr/usluge/student-advisor' },
+  '/servicii/work-career': { ro: '/servicii/work-career', en: '/en/services/work-career', de: '/de/dienstleistungen/work-career', sr: '/sr/usluge/work-career' },
+  '/servicii/family-reunion': { ro: '/servicii/family-reunion', en: '/en/services/family-reunion', de: '/de/dienstleistungen/family-reunion', sr: '/sr/usluge/family-reunion' },
+  '/servicii/settlement-citizenship': { ro: '/servicii/settlement-citizenship', en: '/en/services/settlement-citizenship', de: '/de/dienstleistungen/settlement-citizenship', sr: '/sr/usluge/settlement-citizenship' },
+  '/servicii/administrative': { ro: '/servicii/administrative', en: '/en/services/administrative', de: '/de/dienstleistungen/administrative', sr: '/sr/usluge/administrative' },
+  '/angajatori': { ro: '/angajatori', en: '/en/employers', de: '/de/arbeitgeber', sr: '/sr/poslodavci' },
+  '/angajatori/procedura': { ro: '/angajatori/procedura', en: '/en/employers/procedure', de: '/de/arbeitgeber/verfahren', sr: '/sr/poslodavci/procedura' },
+  '/angajatori/eligibilitate': { ro: '/angajatori/eligibilitate', en: '/en/employers/eligibility', de: '/de/arbeitgeber/berechtigung', sr: '/sr/poslodavci/podobnost' },
+  '/angajatori/costuri': { ro: '/angajatori/costuri', en: '/en/employers/costs', de: '/de/arbeitgeber/kosten', sr: '/sr/poslodavci/troskovi' },
+  '/formular-angajator': { ro: '/formular-angajator', en: '/en/employer-form', de: '/de/arbeitgeber-formular', sr: '/sr/formular-poslodavac' },
+  '/candidati': { ro: '/candidati', en: '/en/candidates', de: '/de/kandidaten', sr: '/sr/kandidati' },
+  '/blog': { ro: '/blog', en: '/en/blog', de: '/de/blog', sr: '/sr/blog' },
+  '/contact': { ro: '/contact', en: '/en/contact', de: '/de/kontakt', sr: '/sr/kontakt' },
+  '/politica-confidentialitate': { ro: '/politica-confidentialitate', en: '/en/privacy-policy', de: '/de/datenschutz', sr: '/sr/politika-privatnosti' }
+};
+
+// Desktop dropdown component
+function NavDropdown({ label, items, isScrolled, language }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 150);
+  };
+
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button 
+        className={`flex items-center gap-1 font-medium text-sm transition-colors hover:text-coral ${
+          isScrolled ? "text-gray-700" : "text-white/90"
+        }`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {label}
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
+          {items.map((item, index) => (
+            <Link
+              key={index}
+              to={item.href}
+              onClick={() => setIsOpen(false)}
+              className={`block px-4 py-2.5 text-sm transition-colors ${
+                item.highlight 
+                  ? 'text-coral font-semibold hover:bg-coral/10' 
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-navy-900'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Mobile accordion menu item
+function MobileAccordion({ label, items, onClose }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="border-b border-gray-100">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between py-3 text-lg font-medium text-gray-700"
+      >
+        {label}
+        <ChevronRight className={`h-5 w-5 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+      </button>
+      {isExpanded && (
+        <div className="pl-4 pb-3 space-y-2">
+          {items.map((item, index) => (
+            <Link
+              key={index}
+              to={item.href}
+              onClick={onClose}
+              className={`block py-2 text-base ${
+                item.highlight 
+                  ? 'text-coral font-semibold' 
+                  : 'text-gray-600 hover:text-navy-900'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { language, setLanguage, t, getLocalizedPath, routePaths } = useLanguage();
+  const { language, setLanguage, getLocalizedPath, routePaths } = useLanguage();
 
-  // Generate nav links with localized paths
-  const navLinks = navLinksBase.map(link => ({
-    ...link,
-    localizedHref: getLocalizedPath(link.href)
-  }));
+  const menuLabels = menuTranslations[language] || menuTranslations.ro;
+
+  // Helper to get localized path
+  const getPath = (basePath) => {
+    const paths = routePathsMap[basePath];
+    return paths ? paths[language] : basePath;
+  };
+
+  // Build menu structure
+  const homeSubmenu = [
+    { label: menuLabels.aboutUs, href: getPath('/despre-noi') }
+  ];
+
+  const servicesSubmenu = [
+    { label: menuLabels.internationalRecruitment, href: getPath('/servicii') },
+    { label: menuLabels.studentAdvisor, href: getPath('/servicii/student-advisor') },
+    { label: menuLabels.workCareer, href: getPath('/servicii/work-career') },
+    { label: menuLabels.familyReunion, href: getPath('/servicii/family-reunion') },
+    { label: menuLabels.settlementCitizenship, href: getPath('/servicii/settlement-citizenship') },
+    { label: menuLabels.administrativeServices, href: getPath('/servicii/administrative') }
+  ];
+
+  const employersSubmenu = [
+    { label: menuLabels.procedureNonEU, href: getPath('/angajatori/procedura') },
+    { label: menuLabels.companyEligibility, href: getPath('/angajatori/eligibilitate') },
+    { label: menuLabels.costsTimelines, href: getPath('/angajatori/costuri') },
+    { label: menuLabels.requestOffer, href: getPath('/formular-angajator'), highlight: true }
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +253,6 @@ export default function Navbar() {
 
   const isActive = (href) => {
     const currentPath = location.pathname;
-    // Check all language versions of this route
     const paths = routePaths[href];
     if (paths) {
       return Object.values(paths).some(p => currentPath === p || (p !== '/' && currentPath.startsWith(p)));
@@ -60,15 +264,22 @@ export default function Navbar() {
   // Handle language change with URL update
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
-    // Find current base route and navigate to the new language version
     const currentPath = location.pathname;
+    
+    // Find matching route and navigate to new language version
+    for (const [basePath, translations] of Object.entries(routePathsMap)) {
+      if (Object.values(translations).includes(currentPath)) {
+        navigate(translations[newLang]);
+        return;
+      }
+    }
+    // Check original routePaths too
     for (const [basePath, translations] of Object.entries(routePaths)) {
       if (Object.values(translations).includes(currentPath)) {
         navigate(translations[newLang]);
         return;
       }
     }
-    // Default: navigate to home in new language
     navigate(newLang === 'ro' ? '/' : `/${newLang}`);
   };
 
@@ -128,7 +339,7 @@ export default function Navbar() {
       {/* Main Nav */}
       <nav className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
-          {/* Logo - Made much bigger */}
+          {/* Logo */}
           <Link to="/" className="flex items-center" data-testid="logo-link">
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
@@ -138,21 +349,69 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.localizedHref}
-                data-testid={`nav-link-${link.href.replace('/', '') || 'home'}`}
-                className={`font-medium text-sm transition-colors hover:text-coral ${
-                  isActive(link.href)
-                    ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
-                    : isScrolled ? "text-gray-700" : "text-white/90"
-                }`}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center gap-5">
+            {/* ACASĂ with dropdown */}
+            <NavDropdown 
+              label={menuLabels.home}
+              items={homeSubmenu}
+              isScrolled={isScrolled}
+              language={language}
+            />
+
+            {/* SERVICII with dropdown */}
+            <NavDropdown 
+              label={menuLabels.services}
+              items={servicesSubmenu}
+              isScrolled={isScrolled}
+              language={language}
+            />
+
+            {/* ANGAJATORI with dropdown */}
+            <NavDropdown 
+              label={menuLabels.employers}
+              items={employersSubmenu}
+              isScrolled={isScrolled}
+              language={language}
+            />
+
+            {/* PORTAL CANDIDAȚI - simple link */}
+            <Link
+              to={getPath('/candidati')}
+              data-testid="nav-link-candidati"
+              className={`font-medium text-sm transition-colors hover:text-coral ${
+                isActive('/candidati')
+                  ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
+                  : isScrolled ? "text-gray-700" : "text-white/90"
+              }`}
+            >
+              {menuLabels.candidates}
+            </Link>
+
+            {/* BLOG - simple link */}
+            <Link
+              to={getPath('/blog')}
+              data-testid="nav-link-blog"
+              className={`font-medium text-sm transition-colors hover:text-coral ${
+                isActive('/blog')
+                  ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
+                  : isScrolled ? "text-gray-700" : "text-white/90"
+              }`}
+            >
+              {menuLabels.blog}
+            </Link>
+
+            {/* CONTACT - simple link */}
+            <Link
+              to={getPath('/contact')}
+              data-testid="nav-link-contact"
+              className={`font-medium text-sm transition-colors hover:text-coral ${
+                isActive('/contact')
+                  ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
+                  : isScrolled ? "text-gray-700" : "text-white/90"
+              }`}
+            >
+              {menuLabels.contact}
+            </Link>
             
             {/* Language Selector Desktop (when scrolled) */}
             {isScrolled && (
@@ -183,7 +442,7 @@ export default function Navbar() {
               data-testid="nav-cta-button"
               className="bg-coral hover:bg-red-600 text-white rounded-full px-6"
             >
-              <Link to={getLocalizedPath("/angajatori")}>{t('nav.cta')}</Link>
+              <Link to={getPath('/formular-angajator')}>{menuLabels.cta}</Link>
             </Button>
           </div>
 
@@ -203,7 +462,7 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent 
               side="right" 
-              className="w-[300px]" 
+              className="w-[320px] overflow-y-auto" 
               data-testid="mobile-menu"
               id="mobile-nav-menu"
               role="dialog"
@@ -211,65 +470,80 @@ export default function Navbar() {
             >
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <SheetDescription className="sr-only">Site navigation links</SheetDescription>
-              <div className="flex flex-col gap-4 mt-8">
-                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-20 w-auto mb-4" />
+              <div className="flex flex-col gap-2 mt-6">
+                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-16 w-auto mb-4" />
                 
                 {/* Mobile Language Selector */}
                 <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100" role="group" aria-label="Language selection">
-                  <button 
-                    onClick={() => { handleLanguageChange("ro"); setIsOpen(false); }}
-                    aria-label="Switch to Romanian"
-                    aria-pressed={language === 'ro'}
-                    className={`px-3 py-1 rounded-full text-sm ${language === 'ro' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
-                  >
-                    🇷🇴 RO
-                  </button>
-                  <button 
-                    onClick={() => { handleLanguageChange("en"); setIsOpen(false); }}
-                    aria-label="Switch to English"
-                    aria-pressed={language === 'en'}
-                    className={`px-3 py-1 rounded-full text-sm ${language === 'en' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
-                  >
-                    🇬🇧 EN
-                  </button>
-                  <button 
-                    onClick={() => { handleLanguageChange("de"); setIsOpen(false); }}
-                    aria-label="Switch to German"
-                    aria-pressed={language === 'de'}
-                    className={`px-3 py-1 rounded-full text-sm ${language === 'de' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
-                  >
-                    🇦🇹 DE
-                  </button>
-                  <button 
-                    onClick={() => { handleLanguageChange("sr"); setIsOpen(false); }}
-                    aria-label="Switch to Serbian"
-                    aria-pressed={language === 'sr'}
-                    className={`px-3 py-1 rounded-full text-sm ${language === 'sr' ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
-                  >
-                    🇷🇸 SR
-                  </button>
+                  {['ro', 'en', 'de', 'sr'].map(lang => (
+                    <button 
+                      key={lang}
+                      onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
+                      aria-label={`Switch to ${lang.toUpperCase()}`}
+                      aria-pressed={language === lang}
+                      className={`px-3 py-1 rounded-full text-sm ${language === lang ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
+                    >
+                      {languageLabels[lang]}
+                    </button>
+                  ))}
                 </div>
                 
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.localizedHref}
-                    onClick={() => setIsOpen(false)}
-                    data-testid={`mobile-nav-link-${link.href.replace('/', '') || 'home'}`}
-                    className={`text-lg font-medium py-2 border-b border-gray-100 ${
-                      isActive(link.href) ? "text-navy-900" : "text-gray-600"
-                    }`}
-                  >
-                    {t(link.key)}
-                  </Link>
-                ))}
+                {/* ACASĂ with submenu */}
+                <MobileAccordion 
+                  label={menuLabels.home}
+                  items={homeSubmenu}
+                  onClose={() => setIsOpen(false)}
+                />
+
+                {/* SERVICII with submenu */}
+                <MobileAccordion 
+                  label={menuLabels.services}
+                  items={servicesSubmenu}
+                  onClose={() => setIsOpen(false)}
+                />
+
+                {/* ANGAJATORI with submenu */}
+                <MobileAccordion 
+                  label={menuLabels.employers}
+                  items={employersSubmenu}
+                  onClose={() => setIsOpen(false)}
+                />
+
+                {/* Simple links */}
+                <Link
+                  to={getPath('/candidati')}
+                  onClick={() => setIsOpen(false)}
+                  data-testid="mobile-nav-link-candidati"
+                  className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100"
+                >
+                  {menuLabels.candidates}
+                </Link>
+
+                <Link
+                  to={getPath('/blog')}
+                  onClick={() => setIsOpen(false)}
+                  data-testid="mobile-nav-link-blog"
+                  className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100"
+                >
+                  {menuLabels.blog}
+                </Link>
+
+                <Link
+                  to={getPath('/contact')}
+                  onClick={() => setIsOpen(false)}
+                  data-testid="mobile-nav-link-contact"
+                  className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100"
+                >
+                  {menuLabels.contact}
+                </Link>
+
                 <Button
                   asChild
                   className="mt-4 bg-coral hover:bg-red-600 text-white rounded-full"
                   data-testid="mobile-cta-button"
                 >
-                  <Link to={getLocalizedPath("/angajatori")} onClick={() => setIsOpen(false)}>
-                    {t('nav.cta')}
+                  <Link to={getPath('/formular-angajator')} onClick={() => setIsOpen(false)}>
+                    {menuLabels.cta}
                   </Link>
                 </Button>
               </div>
