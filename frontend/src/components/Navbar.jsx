@@ -128,12 +128,12 @@ export default function Navbar() {
       {/* Main Nav */}
       <nav className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
-          {/* Logo - Made bigger */}
+          {/* Logo - Made much bigger */}
           <Link to="/" className="flex items-center" data-testid="logo-link">
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
               alt="Global Jobs Consulting" 
-              className="h-24 md:h-28 w-auto transition-all duration-300"
+              className="h-32 md:h-36 w-auto transition-all duration-300"
             />
           </Link>
 
