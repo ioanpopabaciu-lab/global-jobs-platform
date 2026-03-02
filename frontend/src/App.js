@@ -87,7 +87,11 @@ function AppContent() {
         <Routes>
           {/* Default Romanian routes */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/despre-noi" element={<DespreNoiPage />} />
           <Route path="/angajatori" element={<EmployersPage />} />
+          <Route path="/angajatori/procedura" element={<ProceduraPage />} />
+          <Route path="/angajatori/eligibilitate" element={<EligibilitatePage />} />
+          <Route path="/angajatori/costuri" element={<CosturiPage />} />
           <Route path="/servicii" element={<ServicesPage />} />
           <Route path="/candidati" element={<CandidatesPage />} />
           <Route path="/blog" element={<BlogPage />} />
