@@ -139,6 +139,11 @@ function AppContent() {
           <Route path="/de/arbeitgeber/berechtigung" element={<LanguageRoute><EligibilitatePage /></LanguageRoute>} />
           <Route path="/de/arbeitgeber/kosten" element={<LanguageRoute><CosturiPage /></LanguageRoute>} />
           <Route path="/de/dienstleistungen" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/de/dienstleistungen/student-advisor" element={<LanguageRoute><StudentAdvisorPage /></LanguageRoute>} />
+          <Route path="/de/dienstleistungen/work-career" element={<LanguageRoute><WorkCareerPage /></LanguageRoute>} />
+          <Route path="/de/dienstleistungen/family-reunion" element={<LanguageRoute><FamilyReunionPage /></LanguageRoute>} />
+          <Route path="/de/dienstleistungen/settlement-citizenship" element={<LanguageRoute><SettlementCitizenshipPage /></LanguageRoute>} />
+          <Route path="/de/dienstleistungen/administrative" element={<LanguageRoute><AdministrativePage /></LanguageRoute>} />
           <Route path="/de/kandidaten" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
           <Route path="/de/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
           <Route path="/de/blog/:slug" element={<LanguageRoute><BlogPostPage /></LanguageRoute>} />
