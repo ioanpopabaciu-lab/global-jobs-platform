@@ -11,6 +11,26 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski cu URL-uri specifice pentru SEO
 
+## Updates (02 Mar 2026 - v10) - FAZA 2 PAGINI PACHETE + STICKY CTA
+- ✅ **5 Pagini Noi Pachete Servicii** (fiecare cu 4 limbi):
+  - `/servicii/student-advisor` - Pentru studenți internaționali
+  - `/servicii/work-career` - Angajare, schimbare angajator, prelungire
+  - `/servicii/family-reunion` - Reunificarea familiei
+  - `/servicii/settlement-citizenship` - Rezidență permanentă și cetățenie
+  - `/servicii/administrative` - Traduceri, legalizări, echivalări
+- ✅ **Fiecare pagină include**:
+  - Hero section cu label pachet
+  - Secțiune "Cui se adresează"
+  - Ce include pachetul (6 servicii)
+  - Proces pas cu pas (6-8 etape)
+  - Documente necesare
+  - FAQ (4 întrebări)
+  - CTA cu formular precompletat
+- ✅ **Butoane Sticky Mobile** (MobileStickyCTA.jsx):
+  - "Solicită Consultanță" → /contact
+  - "Recrutare Non-UE" → /formular-angajator
+- ✅ **Meniu Services actualizat** cu toate cele 6 pachete în dropdown
+
 ## Updates (02 Mar 2026 - v9) - FAZA 1 RESTRUCTURARE MENIU
 - ✅ **Meniu Principal Restructurat cu Dropdown-uri**:
   - **ACASĂ** - cu submeniu "Despre Noi"
