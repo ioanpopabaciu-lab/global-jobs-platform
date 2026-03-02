@@ -119,6 +119,11 @@ function AppContent() {
           <Route path="/en/employers/eligibility" element={<LanguageRoute><EligibilitatePage /></LanguageRoute>} />
           <Route path="/en/employers/costs" element={<LanguageRoute><CosturiPage /></LanguageRoute>} />
           <Route path="/en/services" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/en/services/student-advisor" element={<LanguageRoute><StudentAdvisorPage /></LanguageRoute>} />
+          <Route path="/en/services/work-career" element={<LanguageRoute><WorkCareerPage /></LanguageRoute>} />
+          <Route path="/en/services/family-reunion" element={<LanguageRoute><FamilyReunionPage /></LanguageRoute>} />
+          <Route path="/en/services/settlement-citizenship" element={<LanguageRoute><SettlementCitizenshipPage /></LanguageRoute>} />
+          <Route path="/en/services/administrative" element={<LanguageRoute><AdministrativePage /></LanguageRoute>} />
           <Route path="/en/candidates" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
           <Route path="/en/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
           <Route path="/en/blog/:slug" element={<LanguageRoute><BlogPostPage /></LanguageRoute>} />
