@@ -370,17 +370,20 @@ async def get_blog_post(slug: str):
         post['created_at'] = datetime.fromisoformat(post['created_at'])
     return post
 
-# Initialize sample blog posts
+# Initialize blog posts with correct content
 @api_router.post("/blog/init-sample")
 async def init_sample_blog_posts():
+    # Delete all existing blog posts first
+    await db.blog_posts.delete_many({})
+    
     sample_posts = [
         {
             "id": str(uuid.uuid4()),
-            "title": "Cum să angajezi forță de muncă din Asia în România",
-            "slug": "angajare-forta-munca-asia-romania",
-            "excerpt": "Ghid complet pentru angajatorii români care doresc să recruteze lucrători din țările asiatice.",
-            "content": "Procesul de angajare a forței de muncă din Asia implică mai mulți pași esențiali: identificarea nevoilor, selectarea candidaților, obținerea permiselor de muncă și integrarea culturală. La Global Jobs Consulting, oferim suport complet în toate aceste etape.",
-            "image_url": "https://images.unsplash.com/photo-1760009436767-d154e930e55c?w=800",
+            "title": "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas",
+            "slug": "cum-sa-angajezi-forta-munca-asia-romania-ghid",
+            "excerpt": "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.",
+            "content": "<h2>Introducere</h2><p>Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.</p><h2>De unde incepe procesul?</h2><p>Totul porneste de la Analiza de Necesar. Angajatorul defineste profilul postului, numarul de persoane si conditiile de cazare/masa.</p><h2>Rolul Angajatorului:</h2><ul><li><strong>Definirea cerintelor:</strong> Specifica clar aptitudinile tehnice necesare.</li><li><strong>Asigurarea logisticii:</strong> Ofera cazare corespunzatoare si conditii de masa conform legii.</li><li><strong>Interviul final:</strong> Participa la selectia finala a muncitorilor.</li></ul><h2>Rolul Agentiei Global Jobs Consulting:</h2><ul><li><strong>Sourcing si Pre-selectie:</strong> Identificam doar acei candidati care corespund profilului.</li><li><strong>Birocratie completa:</strong> Ne ocupam de obtinerea Avizului de Munca de la IGI si a Vizei de lunga sedere.</li><li><strong>Logistica sosirii:</strong> Coordonam zborul si transportul de la aeroport pana la sediul angajatorului.</li></ul>",
+            "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/ljok1yt7_poza%201.png",
             "category": "Recrutare",
             "author": "Global Jobs Consulting",
             "created_at": datetime.now(timezone.utc).isoformat(),
@@ -388,36 +391,33 @@ async def init_sample_blog_posts():
         },
         {
             "id": str(uuid.uuid4()),
-            "title": "Avantajele forței de muncă din Africa pentru sectorul HoReCa",
-            "slug": "avantaje-forta-munca-africa-horeca",
-            "excerpt": "Descoperă de ce tot mai mulți angajatori din Europa aleg să recruteze personal din Africa pentru industria ospitalității.",
-            "content": "Lucrătorii din Africa aduc o combinație unică de etică a muncii, adaptabilitate și dorință de a învăța. În sectorul HoReCa, aceste calități sunt esențiale pentru succesul afacerii.",
-            "image_url": "https://images.unsplash.com/photo-1765735049473-7cb6466e5b3f?w=800",
-            "category": "Industrie",
+            "title": "Etapele unei colaborari de succes: De la Selectie la Integrare",
+            "slug": "etapele-colaborari-succes-selectie-integrare",
+            "excerpt": "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.",
+            "content": "<h2>Obiectiv</h2><p>Eliminarea stresului administrativ pentru angajator prin solutia noastra completa.</p><h2>Etapa 1: Selectia Riguroasa (Zilele 1-20)</h2><p>Nu trimitem doar CV-uri. Organizam probe practice in tarile de origine pentru a ne asigura ca muncitorii au abilitatile declarate.</p><h2>Etapa 2: Dosarul de Imigrare (Zilele 20-120)</h2><p>Aceasta este etapa cea mai complexa. Agentia intocmeste tot dosarul pentru Inspectoratul General pentru Imigrari (IGI).</p><h2>Etapa 3: Viza si Transportul (Zilele 120-360)</h2><p>Dupa obtinerea avizului, asistam muncitorul la consulatul Romaniei din tara sa pentru obtinerea vizei.</p><h2>Etapa 4: Integrarea si Monitorizarea</h2><p>Colaborarea nu se incheie la aeroport. Monitorizam integrarea in comunitate si oferim suport in cazul oricaror dificultati.</p>",
+            "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/vriozis1_poza%202.png",
+            "category": "Ghid",
             "author": "Global Jobs Consulting",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "published": True
         },
         {
             "id": str(uuid.uuid4()),
-            "title": "Ghid: Vize și permise de muncă în Austria",
-            "slug": "ghid-vize-permise-munca-austria",
-            "excerpt": "Tot ce trebuie să știți despre procesul de obținere a vizelor și permiselor de muncă pentru Austria.",
-            "content": "Austria are un sistem specific pentru angajarea cetățenilor din țări terțe. Procesul include verificarea pieței muncii, obținerea aprobării AMS și aplicarea pentru permisul de ședere.",
-            "image_url": "https://images.unsplash.com/photo-1627660080110-20045fd3875d?w=800",
-            "category": "Legislație",
+            "title": "Avantajele fortei de munca din Nepal pentru sectorul HoReCa",
+            "slug": "avantaje-forta-munca-nepal-horeca",
+            "excerpt": "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.",
+            "content": "<h2>De ce Nepal pentru ospitalitate?</h2><p>Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.</p><h2>Beneficii specifice:</h2><ul><li><strong>Cunoasterea limbii engleze:</strong> Majoritatea candidatilor din Nepal au un nivel de engleza care le permite sa interactioneze direct cu clientii.</li><li><strong>Stabilitate:</strong> Angajatii nepalezi cauta contracte pe termen lung (minim 2 ani), reducand costurile de recrutare recurenta.</li><li><strong>Adaptabilitate:</strong> Sunt obisnuiti cu munca in ritm sustinut si se integreaza rapid in echipe multiculturale.</li><li><strong>Polivalenta:</strong> Pot acoperi roluri diverse, de la ajutor de bucatar si housekeeping, pana la ospatari sau barmani.</li></ul>",
+            "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3qjb8k8w_poza%203.png",
+            "category": "HoReCa",
             "author": "Global Jobs Consulting",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "published": True
         }
     ]
     
-    for post in sample_posts:
-        existing = await db.blog_posts.find_one({"slug": post["slug"]})
-        if not existing:
-            await db.blog_posts.insert_one(post)
+    await db.blog_posts.insert_many(sample_posts)
     
-    return {"message": "Sample blog posts initialized", "count": len(sample_posts)}
+    return {"message": "Blog posts initialized", "count": len(sample_posts)}
 
 # Statistics
 @api_router.get("/stats")
