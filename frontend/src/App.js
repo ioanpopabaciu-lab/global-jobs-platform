@@ -179,6 +179,7 @@ function AppContent() {
       <CookieBanner />
       <WhatsAppButton />
       <MariaChat />
+      <MobileStickyCTA />
       <Toaster position="top-right" richColors />
     </div>
   );
