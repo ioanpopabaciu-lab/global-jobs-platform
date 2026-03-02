@@ -14,6 +14,10 @@ import BlogPostPage from "@/pages/BlogPostPage";
 import ContactPage from "@/pages/ContactPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import FormularAngajatorPage from "@/pages/FormularAngajatorPage";
+import DespreNoiPage from "@/pages/DespreNoiPage";
+import ProceduraPage from "@/pages/ProceduraPage";
+import EligibilitatePage from "@/pages/EligibilitatePage";
+import CosturiPage from "@/pages/CosturiPage";
 
 // Components
 import Navbar from "@/components/Navbar";
