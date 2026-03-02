@@ -102,7 +102,11 @@ function AppContent() {
           
           {/* English routes */}
           <Route path="/en" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/en/about-us" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
           <Route path="/en/employers" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/en/employers/procedure" element={<LanguageRoute><ProceduraPage /></LanguageRoute>} />
+          <Route path="/en/employers/eligibility" element={<LanguageRoute><EligibilitatePage /></LanguageRoute>} />
+          <Route path="/en/employers/costs" element={<LanguageRoute><CosturiPage /></LanguageRoute>} />
           <Route path="/en/services" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
           <Route path="/en/candidates" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
           <Route path="/en/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
