@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, User, Tag, Facebook, Linkedin, Share2, Check, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -11,25 +12,29 @@ const content = {
     loading: "Se încarcă articolul...",
     notFound: { title: "Articol Negăsit", text: "Articolul solicitat nu a fost găsit.", backToBlog: "Înapoi la Blog" },
     backToBlog: "Înapoi la Blog",
-    cta: { title: "Aveți Nevoie de Personal?", text: "Contactați-ne pentru o consultație gratuită despre nevoile dumneavoastră de recrutare.", button: "Solicită Ofertă" }
+    cta: { title: "Aveți Nevoie de Personal?", text: "Contactați-ne pentru o consultație gratuită despre nevoile dumneavoastră de recrutare.", button: "Solicită Ofertă" },
+    share: { title: "Distribuie articolul", copied: "Link copiat!", facebook: "Facebook", linkedin: "LinkedIn", whatsapp: "WhatsApp", copy: "Copiază Link" }
   },
   en: {
     loading: "Loading article...",
     notFound: { title: "Article Not Found", text: "The requested article was not found.", backToBlog: "Back to Blog" },
     backToBlog: "Back to Blog",
-    cta: { title: "Need Staff?", text: "Contact us for a free consultation about your recruitment needs.", button: "Request Quote" }
+    cta: { title: "Need Staff?", text: "Contact us for a free consultation about your recruitment needs.", button: "Request Quote" },
+    share: { title: "Share this article", copied: "Link copied!", facebook: "Facebook", linkedin: "LinkedIn", whatsapp: "WhatsApp", copy: "Copy Link" }
   },
   de: {
     loading: "Artikel wird geladen...",
     notFound: { title: "Artikel nicht gefunden", text: "Der angeforderte Artikel wurde nicht gefunden.", backToBlog: "Zurück zum Blog" },
     backToBlog: "Zurück zum Blog",
-    cta: { title: "Benötigen Sie Personal?", text: "Kontaktieren Sie uns für eine kostenlose Beratung zu Ihren Rekrutierungsbedürfnissen.", button: "Angebot anfordern" }
+    cta: { title: "Benötigen Sie Personal?", text: "Kontaktieren Sie uns für eine kostenlose Beratung zu Ihren Rekrutierungsbedürfnissen.", button: "Angebot anfordern" },
+    share: { title: "Artikel teilen", copied: "Link kopiert!", facebook: "Facebook", linkedin: "LinkedIn", whatsapp: "WhatsApp", copy: "Link Kopieren" }
   },
   sr: {
     loading: "Učitavanje članka...",
     notFound: { title: "Članak nije pronađen", text: "Traženi članak nije pronađen.", backToBlog: "Nazad na Blog" },
     backToBlog: "Nazad na Blog",
-    cta: { title: "Potrebno vam je osoblje?", text: "Kontaktirajte nas za besplatnu konsultaciju o vašim potrebama za zapošljavanjem.", button: "Zatražite ponudu" }
+    cta: { title: "Potrebno vam je osoblje?", text: "Kontaktirajte nas za besplatnu konsultaciju o vašim potrebama za zapošljavanjem.", button: "Zatražite ponudu" },
+    share: { title: "Podelite članak", copied: "Link kopiran!", facebook: "Facebook", linkedin: "LinkedIn", whatsapp: "WhatsApp", copy: "Kopiraj Link" }
   }
 };
 
