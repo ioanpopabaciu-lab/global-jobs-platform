@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Menu, Phone, Globe, ChevronDown, ChevronRight } from "lucide-react";
+import { Menu, Phone, Globe, ChevronDown, ChevronRight, Facebook, Instagram, Linkedin } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+// Social Media Links
+const SOCIAL_LINKS = {
+  facebook: "https://www.facebook.com/globaljobsconsulting",
+  instagram: "https://www.instagram.com/globaljobsconsulting",
+  linkedin: "https://www.linkedin.com/company/global-jobs-consulting"
+};
 
 // Logo URLs
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
