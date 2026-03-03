@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 const BASE_URL = "https://www.gjc.ro";
+const OG_IMAGE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png";
 
 // Map routes to their translations
 const routeTranslations = {
@@ -162,7 +163,10 @@ export default function SEOHead({ title, description, language = "ro" }) {
       { property: 'og:url', content: `${BASE_URL}${translations[language]}` },
       { property: 'og:locale', content: language === "ro" ? "ro_RO" : language === "en" ? "en_US" : language === "de" ? "de_DE" : "sr_RS" },
       { property: 'og:type', content: 'website' },
-      { property: 'og:site_name', content: 'Global Jobs Consulting' }
+      { property: 'og:site_name', content: 'Global Jobs Consulting' },
+      { property: 'og:image', content: OG_IMAGE },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' }
     ];
     
     ogTags.forEach(tag => {
@@ -178,7 +182,8 @@ export default function SEOHead({ title, description, language = "ro" }) {
     const twitterTags = [
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: title || '' },
-      { name: 'twitter:description', content: description || '' }
+      { name: 'twitter:description', content: description || '' },
+      { name: 'twitter:image', content: OG_IMAGE }
     ];
     
     twitterTags.forEach(tag => {
