@@ -91,6 +91,7 @@ const slides = [
 const slideContent = {
   ro: {
     headline: "Soluții Globale pentru Deficitul de Forță de Muncă",
+    differentiator: "Specialiști în Recrutare Legală Non-UE, Proceduri IGI și Soluții Complete de Imigrare pentru Companii și Persoane Fizice.",
     cruise_title: "Personal Înalt Calificat",
     cruise_subtitle: "Pentru Industria Maritimă",
     cruise_description: "Bucătari, ospătari, tehnicieni și personal hotelier pentru nave de croazieră internaționale.",
@@ -118,6 +119,7 @@ const slideContent = {
   },
   en: {
     headline: "Global Solutions for Workforce Shortage",
+    differentiator: "Specialists in Legal Non-EU Recruitment, IGI Procedures and Complete Immigration Solutions for Companies and Individuals.",
     cruise_title: "Highly Qualified Staff",
     cruise_subtitle: "For the Maritime Industry",
     cruise_description: "Chefs, waiters, technicians and hospitality staff for international cruise ships.",
@@ -145,6 +147,7 @@ const slideContent = {
   },
   de: {
     headline: "Globale Lösungen für den Arbeitskräftemangel",
+    differentiator: "Spezialisten für legale Nicht-EU-Rekrutierung, IGI-Verfahren und vollständige Einwanderungslösungen für Unternehmen und Privatpersonen.",
     cruise_title: "Hochqualifiziertes Personal",
     cruise_subtitle: "Für die Maritime Industrie",
     cruise_description: "Köche, Kellner, Techniker und Hotelpersonal für internationale Kreuzfahrtschiffe.",
@@ -172,6 +175,7 @@ const slideContent = {
   },
   sr: {
     headline: "Globalna Rešenja za Nedostatak Radne Snage",
+    differentiator: "Specijalisti za legalnu Non-EU regrutaciju, IGI procedure i kompletna imigraciona rešenja za kompanije i fizička lica.",
     cruise_title: "Visokokvalifikovano Osoblje",
     cruise_subtitle: "Za Pomorsku Industriju",
     cruise_description: "Kuvari, konobari, tehničari i hotelsko osoblje za međunarodne kruzere.",
