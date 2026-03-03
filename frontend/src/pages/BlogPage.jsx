@@ -141,7 +141,7 @@ export default function BlogPage() {
                       {post.excerpt}
                     </p>
                     <Link 
-                      to={`/blog/${post.slug}`}
+                      to={getLocalizedPath(`/blog/${post.slug}`)}
                       className="inline-flex items-center text-navy-600 font-semibold text-sm hover:text-navy-800 transition-colors"
                       data-testid={`blog-read-more-${index}`}
                     >
