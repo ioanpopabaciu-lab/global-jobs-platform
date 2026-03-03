@@ -317,6 +317,40 @@ export default function Navbar() {
             <span className="hidden sm:block">office@gjc.ro</span>
           </div>
           <div className="flex items-center gap-4">
+            {/* Social Media Icons */}
+            <div className="flex items-center gap-2">
+              <a 
+                href={SOCIAL_LINKS.facebook} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-coral transition-colors"
+                aria-label="Facebook"
+                data-testid="header-social-facebook"
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a 
+                href={SOCIAL_LINKS.instagram} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-coral transition-colors"
+                aria-label="Instagram"
+                data-testid="header-social-instagram"
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a 
+                href={SOCIAL_LINKS.linkedin} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-coral transition-colors"
+                aria-label="LinkedIn"
+                data-testid="header-social-linkedin"
+              >
+                <Linkedin className="h-4 w-4" />
+              </a>
+            </div>
+            <span className="hidden sm:block text-white/50">|</span>
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-1 hover:text-coral transition-colors cursor-pointer">
