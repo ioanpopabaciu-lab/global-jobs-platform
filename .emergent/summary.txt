@@ -1,34 +1,58 @@
 <analysis>**original_problem_statement:**
-The user wants to build, deploy, and iterate on a corporate website for their recruitment agency, Global Jobs Consulting (gjc.ro). The project has evolved from a basic website to a full-featured, multilingual platform with an AI assistant and advanced SEO capabilities.
+The user wants to build, deploy, and iterate on a corporate website for their recruitment agency, Global Jobs Consulting (gjc.ro). The project has evolved from a basic website to a full-featured, multilingual platform with an AI assistant, advanced SEO capabilities, and a strong focus on lead generation and conversion rate optimization.
 
 **PRODUCT REQUIREMENTS (Latest):**
-- **AI Chat Assistant (Maria):** The assistant must be updated to act as a senior recruitment consultant. Instead of displaying a form in the chat, it should professionally explain the legal process for hiring non-EU workers and then redirect the user to a dedicated form page: .
-- **New Page ():** A new page needs to be created to host the detailed lead-generation form for employers.
-- **Visual & Content Updates:** The user has requested multiple visual changes, including increasing the logo size, changing the chat widget icon, updating hero slider content, and adding specific blog posts.
-- **Deployment & Maintenance:** The user is actively deploying the site to a custom domain () and requires assistance with troubleshooting and verifying live changes.
+The user has requested a major overhaul focused on conversion rate optimization (CRO) and user experience (UX). The key requirements are:
+1.  **Fix Hero Section:** Resolve the issue where the header overlaps the main title text.
+2.  **Add Differentiating Subtitle:** Add a specific subtitle in the hero section.
+3.  **Social Media Integration:** Add social media icons (Facebook, Instagram, LinkedIn) in the header/footer and implement Open Graph/Twitter Card meta tags.
+4.  **Blog Shareability:** Add social sharing buttons (Facebook, LinkedIn, WhatsApp, Copy Link) to individual blog posts.
+5.  **Mobile Call Button:** Add a sticky bottom bar on mobile with Call Now and Request Offer buttons.
+6.  **Differentiated CTAs:** Create specific Call-to-Action buttons for employers, candidates, and students.
+7.  **Homepage Mini-Form:** Add a quick request form on the homepage for urgent staffing needs.
+8.  **Urgency Section:** Add a visible section highlighting the limited annual contingent for non-EU workers.
+9.  **General UX Optimization:** Improve spacing, alignment, and button tap sizes on mobile.
 
 **User's preferred language**: Romanian
 
 **what currently exists?**
-The application is a full-stack React and FastAPI project.
-- **Frontend:** A fully multilingual (RO, EN, DE, SR) site with language-specific URL routing (e.g., ) and dynamic SEO tags (hreflang, canonical) managed via  hooks. The AI assistant is named Maria, and its UI has been updated. The Made with Emergent badge has been removed, and the chat widget was moved to the bottom-left. The GJC logo size has been increased.
-- **Backend:** Manages form submissions, serves blog content, and hosts the AI chat endpoint (). The blog posts are now hardcoded into a startup event in  to ensure they are present in the production database after deployment.
-- **Deployment:** The application is deployed and live on , managed via the user's Cloudflare account. The agent has successfully diagnosed and helped resolve DNS and caching issues.
+The application is a full-stack React/FastAPI project. It is fully multilingual (RO, EN, DE, SR) with a complex routing system.
+- **Frontend:** The site has undergone a major restructuring. The main navigation () now uses dropdown menus for Home, Services, and Employers. Numerous new pages have been created:
+    - A dedicated Despre Noi (About Us) page.
+    - Three new sub-pages for the Employers section: , , .
+    - Five new pages for each service package under the Services menu (, , etc.).
+    - A detailed employer lead-generation form at .
+    - The AI assistant Maria now correctly redirects users to this form page.
+    - Mobile sticky CTA buttons for Request Consultation and Non-EU Recruitment were implemented.
+- **Backend:** The backend supports the multilingual frontend, handles various form submissions, and serves blog content. The AI Maria prompt has been updated.
 
 **Last working item**:
-- **Last item agent was working:** The agent was tasked with updating the AI assistant Maria with a new, two-part directive: 1) Update her system prompt to redirect users to a new form page instead of showing the form in the chat, and 2) Create that new page at . The agent successfully updated the system prompt in  for all languages but has not yet created the new page.
-- **Status:** IN PROGRESS
-- **Agent Testing Done:** N
-- **Which testing method agent to use?** Frontend testing agent to verify the creation and functionality of the new  page and ensure it is multilingual. A manual test of the chatbot flow (checking for the redirect message) is also needed.
+- **Last item agent was working:** The agent received a large, detailed list of 9 new requirements focused on conversion rate optimization, UX improvements, and social media integration. The agent acknowledged the new tasks and was about to start working on the first one: fixing the text overlap issue in the hero section.
+- **Status:** NOT STARTED
+- **Agent Testing Done:** N/A
+- **Which testing method agent to use?** Frontend testing agent and screenshot tool will be needed to verify the visual fixes and new UI elements across different screen sizes (especially mobile).
 - **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-  - **Issue 1:** Background videos fail to load in the test environment (P2)
+  - **Issue 1:** Hero section text is partially covered by the header (P0)
+  - **Issue 2:** Background videos fail to load in the test environment (P2)
 
   **Issues Detail:**
   - **Issue 1:**
-     - **Description:** Background videos in  fail to render in the automated test environment's browser, showing a  error. This is likely a limitation of the test tool with large media files.
-     - **Attempted fixes:** Agent confirmed URLs are correct. The user was asked to verify in a real browser, but the issue was deprioritized for other requests.
+     - **Description:** The user provided a screenshot showing the main title in the hero section is overlapped by the transparent header, making it hard to read.
+     - **Next debug checklist:**
+        1.  Inspect  and the main layout/header component.
+        2.  Check  properties of the header and the hero content.
+        3.  Adjust  or  on the hero section container to push the content down.
+        4.  Verify the fix on multiple screen sizes from 320px to 1440px using the screenshot tool.
+     - **Why fix this issue and what will be achieved with the fix?** This is a critical UX bug that affects the first impression of the site. Fixing it will improve readability and professionalism.
+     - **Status:** NOT STARTED
+     - **Is recurring issue?** N
+     - **Should Test frontend/backend/both after fix?** Frontend
+     - **Blocked on other issue:** None
+  - **Issue 2:**
+     - **Description:** Background videos in  fail to render in the automated test environment's browser, showing a  error.
+     - **Attempted fixes:** Agent confirmed URLs are correct. The user was asked to verify in a real browser, but the issue was deprioritized.
      - **Next debug checklist:** Confirm with the user if the videos work correctly on the live site (). If not, investigate the component's rendering lifecycle in a real browser's network tab.
      - **Why fix this issue and what will be achieved with the fix?** Ensures a key visual element of the homepage is functional for all users.
      - **Status:** USER VERIFICATION PENDING
@@ -37,52 +61,55 @@ The application is a full-stack React and FastAPI project.
      - **Blocked on other issue:** None
 
 **In progress Task List**:
-  - **Task 1:** Create the new Employer Form page and finalize the AI redirect flow (P0)
+  - **Task 1:** Implement a major list of CRO/UX features (P0)
 
  **Task Detail:**
   - **Task 1:**
-     - **Where to resume:**
-        1. Create a new page component: .
-        2. Implement the full employer questionnaire form within this new page, ensuring it is fully multilingual and functional.
-        3. Add a new route in  for  (and its localized versions like ) that renders the new page.
-        4. Update  in  to include the new page's translations for correct URL generation.
-     - **What will be achieved with this?** This will complete the user's primary objective of creating a professional, streamlined lead-generation funnel for potential employers, moving the detailed data collection out of the chat and onto a dedicated page.
+     - **Where to resume:** This is a large, multi-part task. The starting point is fixing the hero section overlap (Issue 1). After that, the agent must proceed through the 9-point list provided by the user in their last message.
+     - **What will be achieved with this?** This will transform the website from an informational site into a powerful lead-generation and conversion-focused platform, addressing specific user personas (employers, candidates, students) with tailored CTAs and features.
      - **Status:** NOT STARTED
-     - **Should Test frontend/backend/both after fix?** Frontend
+     - **Should Test frontend/backend/both after fix?** Both (Frontend for UI changes, Backend for the new mini-form).
      - **Blocked on something:** None
 
 **Upcoming and Future Tasks**
-**Upcoming Tasks (Phase 2):**
-- **P1: SEO Landing Pages**: Create four new, SEO-optimized landing pages for key industries (Construction, Manufacturing, HoReCa, Maritime).
-- **P1: Conversion & SEO Improvements**:
-    - Implement  on all forms.
-    - Add a sticky CTA button for mobile views.
-    - Create a testimonials section/component.
-    - Implement structured data (Schema.org Organization).
+**Upcoming Tasks (The current P0 task list):**
+- **P0:** Add differentiating subtitle in the hero section.
+- **P0:** Add social media icons (header/footer) and configure Open Graph/Twitter Card meta tags in .
+- **P0:** Add social share buttons to the blog post page component.
+- **P0:** Implement a new sticky bottom bar on mobile with Call Now and Request Offer buttons, replacing .
+- **P1:** Implement differentiated CTAs for different user types.
+- **P1:** Create and integrate a new quick request mini-form component on the homepage and update  to handle its submission.
+- **P1:** Add a new Urgency Section component to the homepage.
+- **P1:** Perform general UX review and optimization (spacing, button sizes).
 
 **Future Tasks:**
+- **P2:** SEO Landing Pages: Create four new, SEO-optimized landing pages for key industries (Construction, Manufacturing, HoReCa, Maritime).
+- **P2:** Implement  on all forms.
+- **P2:** Create a testimonials section/component.
+- **P2:** Implement structured data (Schema.org Organization).
 - **P2:** Integrate analytics (Google Analytics, GSC, Facebook Pixel).
-- **P2:** Create a CMS or admin interface for the blog to replace the current hardcoded solution.
+- **P2:** Create a CMS or admin interface for the blog.
 - **P2:** Develop an admin dashboard for lead management.
 
 **Completed work in this session**
-- **SEO & Routing:** Successfully implemented language-specific URLs (e.g., ) and hreflang tags for all pages, resolving a critical  bug by refactoring to a stable  approach.
-- **AI Chatbot Evolution:** Renamed chatbot from Elisabeth to Maria, updated the UI icon, and iterated on its system prompt based on user feedback.
-- **Visual Overhaul:**
-    - Increased the size of the GJC logo in the navbar and mobile menu.
-    - Updated multiple hero slides with new text and background videos.
-    - Replaced the Despre Noi section image.
-    - Moved the chat widget to the bottom-left and removed the Made with Emergent badge.
-- **Blog Content:** Added three new blog articles with user-provided images. Fixed a deployment issue by hardcoding the posts into a backend startup event to ensure they populate the production database.
-- **Deployment & Live Troubleshooting:** Guided the user through the entire deployment process and successfully diagnosed and resolved a complex custom domain issue caused by Cloudflare's regional caching by instructing the user to activate Development Mode.
+- **Form Page Creation:** Created the  page with a detailed, multilingual form for employers. Tested and verified its functionality.
+- **Phase 1 (Menu Restructuring):**
+    - Reworked  to use dropdown menus.
+    - Created the .
+    - Created three new pages for the Employers section: , , and .
+    - Updated all routing in , , and .
+    - Verified the new menu structure on desktop (dropdowns) and mobile (accordion).
+- **Phase 2 (Service Pages & Mobile CTAs):**
+    - Created five new pages for each service package: , , , , and .
+    - Created and integrated the  component.
+    - Updated  and  with the new service page routes.
+    - Verified the new pages and mobile CTA buttons via screenshots.
 
 **Earlier issues found/mentioned but not fixed**
-- None. The pending video issue is tracked above.
+- The background video loading issue is tracked in the All Pending/In progress Issue list.
 
 **Known issue recurrence from previous fork**
-  - **Issue recurrence in previous fork:** The  rendering bug () recurred at the beginning of the session.
-  - **Recurrence count:** 1
-  - **Status:** RESOLVED. The agent implemented a robust workaround using  to manage document head tags, which has proven stable.
+- None in this session. The  bug mentioned in the previous handoff remains resolved.
 
 **Code Architecture**
 
@@ -90,73 +117,61 @@ The application is a full-stack React and FastAPI project.
 **Key Technical Concepts**
 - **Frontend:** React, TailwindCSS, 
 - **Backend:** FastAPI, MongoDB
-- **Internationalization (i18n):** Custom React Context for language state and a centralized translation object.
-- **SEO:** Language-prefixed URLs and dynamically injected hreflang/canonical tags using .
-- **AI Integration:** OpenAI GPT via  library.
-- **Deployment:** Custom domain pointing, DNS/CDN management (Cloudflare), troubleshooting production caching issues.
+- **Internationalization (i18n):** A complex, custom implementation using React Context for state management, language-prefixed URLs, and centralized translation files for both static text and dynamic routes.
+- **Component-Based Architecture:** The site is built with a heavy emphasis on reusable components and dedicated page components.
 
 **key DB schema**
-  - **blog_posts:** { title, slug, image, date, excerpt, content }. Note: This collection is now populated on server startup from a hardcoded list in  to ensure consistency in production.
+- No changes. The  collection is still populated on server startup.
 
 **All files of reference**
--  (Heavily modified for AI prompts and hardcoded blog content)
--  (Manages all multilingual routing)
--  (Renamed and UI updated)
--  (Crucial for SEO; uses )
--  (Provides localization helper functions)
--  (Badge was removed from here)
--  (Logo size was increased here)
+- 
+- 
+- 
+- 
+- All newly created page files under .
+- User-provided artifact:  (shows the hero text overlap issue).
 
 **Areas that need refactoring**:
-- **Blog Content Management:** Blog posts are currently hardcoded in  and inserted into the database on startup. This is brittle but was a necessary fix for deployment. A future task should be to build a proper CMS or admin interface for managing blog content.
+- The  component will need to be replaced or heavily modified to accommodate the user's new request for a Call Now button.
+- Blog content is still hardcoded in , a known technical debt.
 
 **key api endpoints**
-- 
-- 
-- 
-- 
-- 
-- 
+-  (used by the new formular-angajator page)
 
 **Critical Info for New Agent**
-- **Immediate Priority:** The user's latest request is to update the Maria chatbot to redirect to a new  page. Your first task is to create this page and ensure the full workflow is functional.
-- **Deployment Workflow:** The site is LIVE. After you complete a feature, the user will expect to deploy it. Be prepared to guide them. Remember that changes may not be visible immediately due to the user's Cloudflare setup. Remind the user to use **Cloudflare's Development Mode** or **Purge Everything** to see updates.
-- **Database Content:** Any content that needs to be in the database on production (like blog posts) must be added to the startup script in . The production database is ephemeral and resets on deploy; only the data from this script will persist.
-- **Communication Style:** The user is direct and provides frequent, iterative feedback. Acknowledge each request, implement it, and show proof with screenshots of the preview environment before suggesting deployment.
+- **Start with the Bug:** The user's highest priority is fixing the hero section text overlap. Start there.
+- **Follow the List:** The user has provided a very specific 9-point list for CRO/UX improvements. Address them systematically.
+- **Phased Development:** The user prefers to work in large, defined phases. The current task list is effectively Phase 3. Complete all items before asking for a full review.
+- **Multilingual Complexity:** Every new page, route, and UI text element MUST be implemented in all 4 languages (RO, EN, DE, SR) and correctly registered in , , and . This is a recurring source of complexity.
+- **Testing:** Use the screenshot tool extensively to verify visual changes, especially on mobile, for things like the sticky buttons and layout fixes.
 
 **documents and test reports created in this job**
-  -  (Updated)
-  - 
+  -  (Updated with Phase 1 and 2 completion).
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User asks why the Made with Emergent badge appears.**
-2.  **User asks to move the chat widget above the WhatsApp button.**
-3.  **User directly instructs to remove the Emergent badge.**
-4.  **User provides images and asks to add 3 blog posts and increase logo size.**
-5.  **User asks for a preview of the changes.**
-6.  **User confirms they want to RE-Deploy.**
-7.  **User complains that credit was charged multiple times for the same task (logo/blog).**
-8.  **User confirms they have deployed the changes.**
-9.  **User provides a detailed script for Maria to present a long form directly in the chat.**
-10. **(LATEST/PENDING) User provides a *new*, overriding script for Maria instructing her to redirect to a dedicated form page () instead.**
+1.  **User:** (Finish message) Faza 1 (Menu Restructure) is complete.
+2.  **User:** Let's continue directly with Phase 2.
+3.  **User:** Details for Phase 2: Create 5 service package pages and implement mobile sticky buttons.
+4.  **Agent:** Starts working on Phase 2.
+5.  **Agent:** (Finish message) Faza 2 (Service pages & sticky CTAs) is complete and verified.
+6.  **User:** (PENDING) Provides a large, 9-point list of new CRO/UX optimizations, starting with fixing a hero section text overlap issue (and provides a screenshot). This is the current active task.
 
 **Project Health Check:**
-- **Broken:** None.
+- **Broken:** The hero section title is overlapped by the header.
 - **Mocked:** The rendering of hero slider videos is unreliable in the test environment.
 
 **3rd Party Integrations**
-- **OpenAI GPT:** Powers the Maria AI Chat Assistant via  (uses Emergent LLM Key).
+- **OpenAI GPT:** Powers the Maria AI Chat Assistant (uses Emergent LLM Key).
 - **Cloudflare:** Manages DNS, CDN, and SSL for the  domain (user-managed).
-- **SMTP ():** Used for sending form submission emails from the backend.
 
 **Testing status**
-  - **Testing agent used after significant changes:** YES, for the initial SEO/routing implementation.
-  - **Troubleshoot agent used after agent stuck in loop:** NO
-  - **Test files created:** 
-  - **Known regressions:** None.
+- **Testing agent used after significant changes:** NO (for the latest phases, agent used manual testing).
+- **Troubleshoot agent used after agent stuck in loop:** NO
+- **Test files created:** None in this session.
+- **Known regressions:** None.
 
 **Credentials to test flow:**
 N/A
 
 **What agent forgot to execute**
-- The agent has not yet created the new page  as required by the user's most recent request for the Maria chatbot. This is the main pending task.</analysis>
+- Nothing was forgotten. The agent had just received a large new set of tasks from the user and was about to begin implementation.</analysis>
