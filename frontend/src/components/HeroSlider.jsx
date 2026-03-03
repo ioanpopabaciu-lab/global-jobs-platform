@@ -297,7 +297,7 @@ export default function HeroSlider() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 h-full container mx-auto px-4 flex items-center">
+      <div className="relative z-10 h-full container mx-auto px-4 flex items-center pt-32 md:pt-40">
         <div className="max-w-3xl">
           {/* Category Badge */}
           <div 
@@ -319,6 +319,17 @@ export default function HeroSlider() {
             style={{ transitionDelay: "150ms" }}
           >
             {t.headline}
+          </p>
+
+          {/* Differentiator Subtitle */}
+          <p 
+            className={`text-white/80 text-sm md:text-base max-w-2xl mb-4 transition-all duration-500 ${
+              isAnimating ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
+            }`}
+            style={{ transitionDelay: "175ms" }}
+            data-testid="hero-differentiator"
+          >
+            {t.differentiator}
           </p>
 
           {/* Title */}
