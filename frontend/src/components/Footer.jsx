@@ -32,17 +32,17 @@ export default function Footer() {
               {t('footer.description')}
             </p>
             <div className="flex gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.facebook.com/globaljobsconsulting" target="_blank" rel="noopener noreferrer" 
                  className="p-2 bg-white/10 rounded-full hover:bg-coral transition"
                  data-testid="footer-facebook">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.linkedin.com/company/global-jobs-consulting" target="_blank" rel="noopener noreferrer"
                  className="p-2 bg-white/10 rounded-full hover:bg-coral transition"
                  data-testid="footer-linkedin">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.instagram.com/globaljobsconsulting" target="_blank" rel="noopener noreferrer"
                  className="p-2 bg-white/10 rounded-full hover:bg-coral transition"
                  data-testid="footer-instagram">
                 <Instagram className="h-5 w-5" />
