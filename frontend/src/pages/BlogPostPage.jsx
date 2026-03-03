@@ -203,6 +203,50 @@ export default function BlogPostPage() {
               </span>
             </div>
 
+            {/* Share Buttons */}
+            <div className="flex flex-wrap items-center gap-3 mb-8" data-testid="share-buttons">
+              <span className="text-sm font-medium text-gray-600 flex items-center gap-1">
+                <Share2 className="h-4 w-4" />
+                {t.share.title}:
+              </span>
+              <button
+                onClick={shareOnFacebook}
+                className="flex items-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-full text-sm font-medium hover:bg-[#166FE5] transition-colors"
+                data-testid="share-facebook"
+              >
+                <Facebook className="h-4 w-4" />
+                {t.share.facebook}
+              </button>
+              <button
+                onClick={shareOnLinkedIn}
+                className="flex items-center gap-2 px-4 py-2 bg-[#0A66C2] text-white rounded-full text-sm font-medium hover:bg-[#095196] transition-colors"
+                data-testid="share-linkedin"
+              >
+                <Linkedin className="h-4 w-4" />
+                {t.share.linkedin}
+              </button>
+              <button
+                onClick={shareOnWhatsApp}
+                className="flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-full text-sm font-medium hover:bg-[#22BF5B] transition-colors"
+                data-testid="share-whatsapp"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {t.share.whatsapp}
+              </button>
+              <button
+                onClick={copyToClipboard}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  copied 
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+                data-testid="share-copy"
+              >
+                {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
+                {t.share.copy}
+              </button>
+            </div>
+
             {/* Content */}
             <article className="bg-white rounded-lg p-8 shadow-sm" data-testid="blog-content">
               <p className="text-xl text-gray-700 mb-6 font-medium leading-relaxed">
