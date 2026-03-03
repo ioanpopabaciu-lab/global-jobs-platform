@@ -53,6 +53,41 @@ export default function BlogPostPage() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  // Get current page URL for sharing
+  const getShareUrl = () => {
+    return `https://www.gjc.ro${getLocalizedPath(`/blog/${slug}`)}`;
+  };
+
+  // Share handlers
+  const shareOnFacebook = () => {
+    const url = encodeURIComponent(getShareUrl());
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+  };
+
+  const shareOnLinkedIn = () => {
+    const url = encodeURIComponent(getShareUrl());
+    const title = encodeURIComponent(post?.title || '');
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+  };
+
+  const shareOnWhatsApp = () => {
+    const url = encodeURIComponent(getShareUrl());
+    const text = encodeURIComponent(`${post?.title || ''} - `);
+    window.open(`https://wa.me/?text=${text}${url}`, '_blank');
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(getShareUrl());
+      setCopied(true);
+      toast.success(t.share.copied);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
   useEffect(() => {
     fetch(`${API}/blog/posts/${slug}`)
