@@ -80,7 +80,7 @@ export default function EmployerLayout() {
           {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
         <span className="font-semibold text-navy-900">Portal Angajator</span>
-        <div className="w-10" />
+        <NotificationCenter />
       </div>
 
       {/* Sidebar */}
