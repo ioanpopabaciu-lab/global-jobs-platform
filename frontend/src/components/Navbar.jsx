@@ -557,15 +557,6 @@ export default function Navbar() {
 
                 {/* Simple links */}
                 <Link
-                  to={getPath('/candidati')}
-                  onClick={() => setIsOpen(false)}
-                  data-testid="mobile-nav-link-candidati"
-                  className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100"
-                >
-                  {menuLabels.candidates}
-                </Link>
-
-                <Link
                   to={getPath('/blog')}
                   onClick={() => setIsOpen(false)}
                   data-testid="mobile-nav-link-blog"
@@ -583,15 +574,15 @@ export default function Navbar() {
                   {menuLabels.contact}
                 </Link>
 
-                {/* Portal Login Button Mobile */}
+                {/* MY ACCOUNT Button Mobile */}
                 <Button
                   asChild
                   variant="outline"
-                  className="mt-4 border-navy-600 text-navy-600 rounded-full"
-                  data-testid="mobile-login-button"
+                  className="mt-4 border-navy-600 text-navy-600 rounded-full font-semibold"
+                  data-testid="mobile-myaccount-button"
                 >
-                  <Link to="/login" onClick={() => setIsOpen(false)}>
-                    {menuLabels.portal}
+                  <Link to="/my-account" onClick={() => setIsOpen(false)}>
+                    {menuLabels.myAccount}
                   </Link>
                 </Button>
 
