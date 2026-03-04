@@ -427,32 +427,40 @@ class Project(BaseModel):
 # ==================== DOCUMENT MODELS ====================
 
 DocumentType = Literal[
+    # Candidate documents
     "passport", "cv", "diploma", "criminal_record", 
-    "medical_certificate", "company_registration", 
-    "fiscal_certificate", "contract", "invoice", "other"
+    "medical_certificate", "passport_photo", "video_presentation",
+    "profile_photo",
+    # Employer documents
+    "cui_certificate", "administrator_id", "company_criminal_record",
+    "company_registration", "fiscal_certificate",
+    # Project documents
+    "contract", "invoice", 
+    # Other
+    "other"
 ]
 
 class Document(BaseModel):
-    """Document model"""
+    """Document model for cloud storage"""
     model_config = ConfigDict(extra="ignore")
     doc_id: str = Field(default_factory=lambda: f"doc_{uuid.uuid4().hex[:12]}")
     
     # Owner
-    owner_id: str  # user_id or profile_id
+    owner_id: str  # user_id or profile_id or project_id
     owner_type: Literal["candidate", "employer", "project"]
     
     # File info
-    filename: str
-    original_filename: str
+    filename: str  # Generated unique filename
+    original_filename: str  # Original upload filename
     file_type: str  # mime type
     file_size: int  # bytes
-    storage_path: str  # S3 key or local path
+    storage_path: str  # Cloud storage path
     
     # Document metadata
     document_type: DocumentType
     document_number: Optional[str] = None  # e.g., passport number
-    issue_date: Optional[datetime] = None
-    expiry_date: Optional[datetime] = None
+    issue_date: Optional[str] = None  # YYYY-MM-DD
+    expiry_date: Optional[str] = None  # YYYY-MM-DD
     issuing_authority: Optional[str] = None
     
     # Status
@@ -460,6 +468,9 @@ class Document(BaseModel):
     verification_notes: Optional[str] = None
     verified_by: Optional[str] = None
     verified_at: Optional[datetime] = None
+    
+    # Soft delete
+    is_deleted: bool = False
     
     # Metadata
     uploaded_by: str  # user_id
