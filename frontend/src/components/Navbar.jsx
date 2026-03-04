@@ -42,7 +42,9 @@ const menuTranslations = {
     candidates: "Portal Candidați",
     blog: "Blog",
     contact: "Contact",
-    cta: "Solicită Ofertă"
+    cta: "Solicită Ofertă",
+    login: "Autentificare",
+    portal: "Portal Clienți"
   },
   en: {
     home: "Home",
@@ -62,7 +64,9 @@ const menuTranslations = {
     candidates: "Candidates Portal",
     blog: "Blog",
     contact: "Contact",
-    cta: "Request Quote"
+    cta: "Request Quote",
+    login: "Login",
+    portal: "Client Portal"
   },
   de: {
     home: "Startseite",
@@ -82,7 +86,9 @@ const menuTranslations = {
     candidates: "Bewerberportal",
     blog: "Blog",
     contact: "Kontakt",
-    cta: "Angebot anfordern"
+    cta: "Angebot anfordern",
+    login: "Anmelden",
+    portal: "Kundenportal"
   },
   sr: {
     home: "Početna",
@@ -102,7 +108,9 @@ const menuTranslations = {
     candidates: "Portal kandidata",
     blog: "Blog",
     contact: "Kontakt",
-    cta: "Zatražite ponudu"
+    cta: "Zatražite ponudu",
+    login: "Prijava",
+    portal: "Portal klijenata"
   }
 };
 
