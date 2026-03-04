@@ -557,11 +557,12 @@ async def submit_candidate_profile(request: Request):
         "created_at": datetime.now(timezone.utc)
     })
     
-    # Send email notification to admin (office@gjc.ro)
+    # Send email notification to admin (candidati@gjc.ro)
     profile["email"] = user.get("email")
     await notify_admin_new_profile_pending(
         profile_type="Candidat",
         profile_data=profile,
+        account_type="candidate",
         platform_url=PLATFORM_URL
     )
     
