@@ -727,6 +727,13 @@ async def startup_init():
     set_portal_db(db)
     set_admin_db(db)
     
+    # Initialize cloud storage
+    try:
+        init_storage()
+        logger.info("Cloud storage initialized successfully")
+    except Exception as e:
+        logger.warning(f"Cloud storage initialization failed (will retry on first use): {e}")
+    
     # Create indexes for better performance
     await db.users.create_index("email", unique=True)
     await db.users.create_index("user_id", unique=True)
