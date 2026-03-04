@@ -604,9 +604,21 @@ export default function Navbar() {
                   {menuLabels.contact}
                 </Link>
 
+                {/* Portal Login Button Mobile */}
                 <Button
                   asChild
-                  className="mt-4 bg-coral hover:bg-red-600 text-white rounded-full"
+                  variant="outline"
+                  className="mt-4 border-navy-600 text-navy-600 rounded-full"
+                  data-testid="mobile-login-button"
+                >
+                  <Link to="/login" onClick={() => setIsOpen(false)}>
+                    {menuLabels.portal}
+                  </Link>
+                </Button>
+
+                <Button
+                  asChild
+                  className="mt-2 bg-coral hover:bg-red-600 text-white rounded-full"
                   data-testid="mobile-cta-button"
                 >
                   <Link to={getPath('/formular-angajator')} onClick={() => setIsOpen(false)}>
