@@ -40,6 +40,8 @@ import CandidateProfileForm from "@/pages/portal/CandidateProfileForm";
 import EmployerLayout from "@/pages/portal/EmployerLayout";
 import EmployerDashboard from "@/pages/portal/EmployerDashboard";
 import EmployerProfileForm from "@/pages/portal/EmployerProfileForm";
+import JobRequestsList from "@/pages/portal/JobRequestsList";
+import JobRequestForm from "@/pages/portal/JobRequestForm";
 
 // Portal Pages - Student
 import StudentLayout from "@/pages/portal/StudentLayout";
@@ -253,7 +255,10 @@ function AppRouter() {
         <Route path="/portal/employer" element={<EmployerLayout />}>
           <Route index element={<EmployerDashboard />} />
           <Route path="profile" element={<EmployerProfileForm />} />
-          <Route path="jobs" element={<div className="p-4">Job Requests - Coming Soon</div>} />
+          <Route path="jobs" element={<JobRequestsList />} />
+          <Route path="jobs/new" element={<JobRequestForm />} />
+          <Route path="jobs/:jobId" element={<JobRequestForm />} />
+          <Route path="jobs/:jobId/edit" element={<JobRequestForm />} />
           <Route path="projects" element={<div className="p-4">Projects - Coming Soon</div>} />
           <Route path="invoices" element={<div className="p-4">Invoices - Coming Soon</div>} />
           <Route path="notifications" element={<div className="p-4">Notifications - Coming Soon</div>} />
