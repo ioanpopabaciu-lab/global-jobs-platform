@@ -490,6 +490,20 @@ export default function Navbar() {
               </DropdownMenu>
             )}
             
+            {/* Portal Login Button */}
+            <Button
+              asChild
+              variant="outline"
+              data-testid="nav-login-button"
+              className={`rounded-full px-5 ${
+                isScrolled 
+                  ? "border-navy-600 text-navy-600 hover:bg-navy-50" 
+                  : "border-white text-white hover:bg-white/10"
+              }`}
+            >
+              <Link to="/login">{menuLabels.portal}</Link>
+            </Button>
+            
             <Button
               asChild
               data-testid="nav-cta-button"
