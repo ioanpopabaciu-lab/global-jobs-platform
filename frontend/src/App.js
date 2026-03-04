@@ -198,7 +198,6 @@ function AppContent() {
       <WhatsAppButton />
       <MariaChat />
       <MobileStickyCTA />
-      <Toaster position="top-right" richColors />
     </div>
   );
 }
