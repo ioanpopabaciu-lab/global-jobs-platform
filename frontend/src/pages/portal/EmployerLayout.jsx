@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import NotificationCenter from '@/components/NotificationCenter';
 import { 
   Building2, FileText, Briefcase, Bell, LogOut, Menu, X, 
   Home, Users, CreditCard, Settings 
