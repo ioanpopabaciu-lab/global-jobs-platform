@@ -243,8 +243,8 @@ function AppRouter() {
         {/* Candidate Portal */}
         <Route path="/portal/candidate" element={<CandidateLayout />}>
           <Route index element={<CandidateDashboard />} />
-          <Route path="profile" element={<div className="p-4">Candidate Profile - Coming Soon</div>} />
-          <Route path="documents" element={<div className="p-4">Documents - Coming Soon</div>} />
+          <Route path="profile" element={<CandidateProfileForm />} />
+          <Route path="documents" element={<CandidateProfileForm />} />
           <Route path="applications" element={<div className="p-4">Applications - Coming Soon</div>} />
           <Route path="notifications" element={<div className="p-4">Notifications - Coming Soon</div>} />
         </Route>
@@ -252,7 +252,7 @@ function AppRouter() {
         {/* Employer Portal */}
         <Route path="/portal/employer" element={<EmployerLayout />}>
           <Route index element={<EmployerDashboard />} />
-          <Route path="profile" element={<div className="p-4">Company Profile - Coming Soon</div>} />
+          <Route path="profile" element={<EmployerProfileForm />} />
           <Route path="jobs" element={<div className="p-4">Job Requests - Coming Soon</div>} />
           <Route path="projects" element={<div className="p-4">Projects - Coming Soon</div>} />
           <Route path="invoices" element={<div className="p-4">Invoices - Coming Soon</div>} />
