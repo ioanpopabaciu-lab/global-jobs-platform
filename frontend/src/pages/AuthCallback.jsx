@@ -42,8 +42,8 @@ export default function AuthCallback() {
 
         const data = await response.json();
         
-        // Redirect based on user role
-        const redirectPath = getRedirectPath(data.user.role);
+        // Redirect based on user account_type
+        const redirectPath = getRedirectPath(data.user.account_type || data.user.role);
         
         // Clear the hash and navigate
         window.history.replaceState(null, '', window.location.pathname);
