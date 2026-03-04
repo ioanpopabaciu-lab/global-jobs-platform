@@ -79,7 +79,7 @@ export default function CandidateLayout() {
           {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
         <span className="font-semibold text-navy-900">Portal Candidat</span>
-        <div className="w-10" />
+        <NotificationCenter />
       </div>
 
       {/* Sidebar */}
