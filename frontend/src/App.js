@@ -34,10 +34,12 @@ import MyAccountPage from "@/pages/MyAccountPage";
 // Portal Pages - Candidate
 import CandidateLayout from "@/pages/portal/CandidateLayout";
 import CandidateDashboard from "@/pages/portal/CandidateDashboard";
+import CandidateProfileForm from "@/pages/portal/CandidateProfileForm";
 
 // Portal Pages - Employer
 import EmployerLayout from "@/pages/portal/EmployerLayout";
 import EmployerDashboard from "@/pages/portal/EmployerDashboard";
+import EmployerProfileForm from "@/pages/portal/EmployerProfileForm";
 
 // Portal Pages - Student
 import StudentLayout from "@/pages/portal/StudentLayout";
