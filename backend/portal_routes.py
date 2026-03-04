@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from typing import Optional, List
 import uuid
 import logging
+import os
 import io
 
 from models import (
@@ -18,8 +19,12 @@ from models import (
 )
 from auth_routes import get_current_user, require_role
 from storage import put_object, get_object, generate_storage_path, get_content_type, init_storage
+from notification_service import notify_admin_new_profile_pending
 
 logger = logging.getLogger(__name__)
+
+# Platform URL for emails
+PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://visa-platform-2.preview.emergentagent.com")
 
 # Database will be injected
 db = None
