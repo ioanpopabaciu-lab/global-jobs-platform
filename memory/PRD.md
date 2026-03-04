@@ -1,7 +1,7 @@
 # Global Jobs Consulting (GJC) - PRD
 
 ## Problema Originală
-Site web + Platformă SaaS pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare internațională specializată în plasarea forței de muncă din Asia și Africa în România, Austria și Serbia.
+Site web + Platformă SaaS pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare internațională și servicii de imigrare specializată în plasarea forței de muncă din Asia și Africa în România, Austria și Serbia.
 
 ## Arhitectura Tehnică
 - **Frontend**: React 19 + Tailwind CSS + Shadcn/UI
@@ -12,76 +12,59 @@ Site web + Platformă SaaS pentru Global Jobs Consulting (www.gjc.ro) - agenție
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski
 
+---
+
 ## FAZA 1 - FUNDAȚIA SaaS (COMPLETĂ) ✅
 
-### 1. Sistem Autentificare (03 Mar 2026)
+### 1. Sistem Autentificare
 - ✅ JWT-based auth cu email/password
 - ✅ Google OAuth via Emergent Auth
-- ✅ Roluri: candidate, employer, admin
 - ✅ Session management cu cookies httpOnly
-- ✅ Admin implicit: admin@gjc.ro / admin123
 
-### 2. Modele de Date
-- ✅ Users (user_id, email, name, role, auth_provider)
-- ✅ CandidateProfile (profile_id, user_id, personal info, documents, status)
-- ✅ EmployerProfile (profile_id, company info, IGI eligibility, status)
-- ✅ JobRequest (job_id, employer_id, requirements, conditions)
-- ✅ Project (project_id, candidate_id, employer_id, workflow stages)
-- ✅ Document (doc_id, owner, file info, expiry tracking)
-- ✅ Notification (notification_id, user_id, message, read status)
+### 2. Pagina "My Account" - Punct Central de Acces (NOU)
+- ✅ Buton **"MY ACCOUNT"** în navbar (înlocuiește "Portal Candidați")
+- ✅ Pagină intermediară cu 4 carduri de servicii
+- ✅ Design responsive și optimizat pentru mobil
 
-### 3. Dashboard-uri de bază
-- ✅ **Login Page** - email/password + Google OAuth
-- ✅ **Register Page** - selector rol (Candidat/Angajator)
-- ✅ **Candidate Portal** - dashboard cu stats, profile status, quick actions
-- ✅ **Employer Portal** - dashboard cu company status, jobs, projects
-- ✅ **Admin Dashboard** - overview complet, pipeline proiecte, stats
+### 3. Tipuri de Cont în Sistem
+| Account Type | Descriere | Dashboard |
+|--------------|-----------|-----------|
+| `employer` | Recruit workers for your company | /portal/employer |
+| `candidate` | Apply for jobs in Romania | /portal/candidate |
+| `student` | Apply to study in Romania | /portal/student |
+| `immigration_client` | Visas, residence permits, family reunification | /portal/immigration |
+| `admin` | Agency admin | /admin |
 
-### 4. API Endpoints Implementate
-**Auth:**
-- POST /api/auth/register - înregistrare
-- POST /api/auth/login - autentificare
-- POST /api/auth/google/session - Google OAuth
-- GET /api/auth/me - user curent
-- POST /api/auth/logout - deconectare
-- POST /api/auth/password/reset-request
-- POST /api/auth/password/reset
+### 4. Dashboard-uri Implementate
+- ✅ **Candidate Portal** - Dashboard cu stats, status profil
+- ✅ **Employer Portal** - Dashboard companie, joburi, proiecte
+- ✅ **Student Portal** (NOU) - Application process, timeline, universities
+- ✅ **Immigration Services Portal** (NOU) - Visa, residence, family, citizenship
+- ✅ **Admin Dashboard** - Overview complet, pipeline proiecte
 
-**Portal Candidat:**
-- GET /api/portal/candidate/profile
-- POST /api/portal/candidate/profile
-- POST /api/portal/candidate/profile/submit
-- GET /api/portal/candidate/applications
-- GET /api/portal/candidate/dashboard
-- GET /api/portal/candidate/notifications
+### 5. Modele de Date
+- ✅ Users cu `account_type` field
+- ✅ CandidateProfile, EmployerProfile
+- ✅ JobRequest, Project, Document, Notification
 
-**Portal Angajator:**
-- GET /api/portal/employer/profile
-- POST /api/portal/employer/profile
-- POST /api/portal/employer/profile/submit
-- GET /api/portal/employer/jobs
-- POST /api/portal/employer/jobs
-- GET /api/portal/employer/projects
-- GET /api/portal/employer/dashboard
+---
 
-**Admin:**
-- GET /api/admin/dashboard
-- GET /api/admin/candidates
-- PUT /api/admin/candidates/{id}/validate
-- GET /api/admin/employers
-- PUT /api/admin/employers/{id}/validate
-- GET /api/admin/jobs
-- GET /api/admin/projects
-- POST /api/admin/projects
-- PUT /api/admin/projects/{id}/stage
-- GET /api/admin/matching/candidates/{job_id}
+## CREDENȚIALE TEST
+- **Admin**: admin@gjc.ro / admin123
+- **Test Candidat**: test.candidat@example.com / test123
+- **Test Student**: test.student@example.com / test123
+- **Test Immigration**: test.immigration@example.com / test123
+
+---
 
 ## BACKLOG - FAZE URMĂTOARE
 
-### FAZA 2 - Portaluri Complete (P0)
+### FAZA 2 - Portaluri Complete (P0) 🟡 NEXT
 - [ ] Formular complet profil candidat (personal, experiență, preferințe)
 - [ ] Formular complet profil angajator (companie, eligibilitate IGI)
 - [ ] Upload documente (pașaport, CV, diplome, cazier)
+- [ ] Formular aplicație student
+- [ ] Formular cerere servicii imigrare
 - [ ] Crearea cereri de personal cu toate câmpurile
 - [ ] Matching engine funcțional cu scor compatibilitate
 - [ ] Liste și filtrare în admin (candidați, angajatori, joburi)
@@ -94,11 +77,10 @@ Site web + Platformă SaaS pentru Global Jobs Consulting (www.gjc.ro) - agenție
 - [ ] Generare contract PDF
 - [ ] Generare factură PDF
 
-### FAZA 4 - Notificări & Storage (P1)
+### FAZA 4 - Storage & Notificări (P1)
+- [ ] Integrare AWS S3/Cloudflare R2 pentru documente
 - [ ] Sistem notificări complet (dashboard + email)
-- [ ] Integrare AWS S3 pentru documente
 - [ ] Email templates pentru fiecare etapă
-- [ ] Dashboard notificări în timp real
 
 ### P2 - Nice to Have
 - [ ] Stripe pentru plăți online
@@ -106,35 +88,38 @@ Site web + Platformă SaaS pentru Global Jobs Consulting (www.gjc.ro) - agenție
 - [ ] Schema.org structured data
 - [ ] Analytics (GA, GSC, Facebook Pixel)
 - [ ] CMS pentru blog
-- [ ] Landing pages SEO industrii
 
-## Credențiale Test
-- **Admin**: admin@gjc.ro / admin123
-- **Test Candidat**: test.candidat@example.com / test123
+---
 
-## Fișiere Importante
+## FIȘIERE IMPORTANTE
+
 ```
 /app/backend/
-├── server.py          # Main server + routes existente
-├── models.py          # Toate modelele de date
-├── auth_routes.py     # Autentificare
+├── server.py          # Main server
+├── models.py          # Toate modelele (cu account_type)
+├── auth_routes.py     # Autentificare + account_type
 ├── portal_routes.py   # Portal candidat/angajator
 ├── admin_routes.py    # Admin dashboard
 
 /app/frontend/src/
-├── contexts/AuthContext.jsx   # Auth state management
+├── contexts/AuthContext.jsx   # Auth state
 ├── pages/
-│   ├── LoginPage.jsx
-│   ├── RegisterPage.jsx
-│   ├── AuthCallback.jsx
+│   ├── MyAccountPage.jsx      # Pagina selectare serviciu (NOU)
+│   ├── LoginPage.jsx          # Login cu redirect account_type
+│   ├── RegisterPage.jsx       # Register cu account_type din URL
+│   ├── AuthCallback.jsx       # OAuth callback
 │   ├── portal/
-│   │   ├── CandidateLayout.jsx
-│   │   ├── CandidateDashboard.jsx
-│   │   ├── EmployerLayout.jsx
-│   │   └── EmployerDashboard.jsx
+│   │   ├── CandidateLayout.jsx + Dashboard
+│   │   ├── EmployerLayout.jsx + Dashboard
+│   │   ├── StudentLayout.jsx + Dashboard (NOU)
+│   │   └── ImmigrationLayout.jsx + Dashboard (NOU)
 │   └── admin/
 │       ├── AdminLayout.jsx
 │       └── AdminDashboard.jsx
+├── components/
+│   └── Navbar.jsx            # Actualizat cu "MY ACCOUNT"
 ```
 
-## Status: ✅ FAZA 1 COMPLETĂ - Fundație SaaS funcțională
+---
+
+## Status: ✅ FAZA 1.2 COMPLETĂ - Reorganizare acces utilizatori finalizată
