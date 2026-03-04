@@ -1,125 +1,215 @@
-# Global Jobs Consulting (GJC) - PRD
+# GJC Recruitment Platform - Product Requirements Document
 
-## Problema Originală
-Site web + Platformă SaaS pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare internațională și servicii de imigrare specializată în plasarea forței de muncă din Asia și Africa în România, Austria și Serbia.
-
-## Arhitectura Tehnică
-- **Frontend**: React 19 + Tailwind CSS + Shadcn/UI
-- **Backend**: FastAPI + Motor (MongoDB async)
-- **Database**: MongoDB
-- **AI Chat**: OpenAI GPT-4o-mini via Emergent LLM Key (Maria)
-- **Auth**: JWT email/password + Google OAuth (Emergent Auth)
-- **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
-- **Multilingv**: Română, English, Deutsch, Srpski
+## Project Overview
+**Platform:** Global Jobs Consulting (GJC) SaaS Platform  
+**Purpose:** Full recruitment and immigration management for Non-EU workers in Romania, Austria, and Serbia  
+**Last Updated:** 2026-03-04
 
 ---
 
-## FAZA 1 - FUNDAȚIA SaaS (COMPLETĂ) ✅
+## Core Architecture
 
-### 1. Sistem Autentificare
-- ✅ JWT-based auth cu email/password
-- ✅ Google OAuth via Emergent Auth
-- ✅ Session management cu cookies httpOnly
+### Multi-Portal Structure
+1. **Public Website** - Marketing and lead generation (existing)
+2. **Candidate Portal** - Profile creation, document upload, application tracking
+3. **Employer Portal** - Company profile, job requests, candidate matching
+4. **Admin Dashboard** - Full CRUD for all entities, validation workflow
 
-### 2. Pagina "My Account" - Punct Central de Acces (NOU)
-- ✅ Buton **"MY ACCOUNT"** în navbar (înlocuiește "Portal Candidați")
-- ✅ Pagină intermediară cu 4 carduri de servicii
-- ✅ Design responsive și optimizat pentru mobil
-
-### 3. Tipuri de Cont în Sistem
-| Account Type | Descriere | Dashboard |
-|--------------|-----------|-----------|
-| `employer` | Recruit workers for your company | /portal/employer |
-| `candidate` | Apply for jobs in Romania | /portal/candidate |
-| `student` | Apply to study in Romania | /portal/student |
-| `immigration_client` | Visas, residence permits, family reunification | /portal/immigration |
-| `admin` | Agency admin | /admin |
-
-### 4. Dashboard-uri Implementate
-- ✅ **Candidate Portal** - Dashboard cu stats, status profil
-- ✅ **Employer Portal** - Dashboard companie, joburi, proiecte
-- ✅ **Student Portal** (NOU) - Application process, timeline, universities
-- ✅ **Immigration Services Portal** (NOU) - Visa, residence, family, citizenship
-- ✅ **Admin Dashboard** - Overview complet, pipeline proiecte
-
-### 5. Modele de Date
-- ✅ Users cu `account_type` field
-- ✅ CandidateProfile, EmployerProfile
-- ✅ JobRequest, Project, Document, Notification
+### Tech Stack
+- **Frontend:** React, TailwindCSS, Shadcn/UI
+- **Backend:** FastAPI, Python
+- **Database:** MongoDB
+- **Storage:** Emergent Object Storage (cloud)
+- **Auth:** JWT + Google OAuth (Emergent Auth)
 
 ---
 
-## CREDENȚIALE TEST
-- **Admin**: admin@gjc.ro / admin123
-- **Test Candidat**: test.candidat@example.com / test123
-- **Test Student**: test.student@example.com / test123
-- **Test Immigration**: test.immigration@example.com / test123
+## Phase Status
+
+### ✅ Phase 1 - Foundation (COMPLETE)
+- [x] JWT email/password authentication
+- [x] Google OAuth integration
+- [x] User access flow via `/my-account`
+- [x] Four account types: candidate, employer, student, immigration_client
+- [x] Role-based dashboards for all user types
+- [x] Admin panel foundation
+
+### ✅ Phase 2 - Complete Portals (COMPLETE - 2026-03-04)
+- [x] **Candidate Profile Form** - All 5 sections implemented:
+  - Section 1: Personal Information (name, DOB, gender, religion, citizenship)
+  - Section 2: Family (parents, spouse, children)
+  - Section 3: Professional Experience (profession, COR code, languages)
+  - Section 4: Documents (CV, passport, criminal record, photo, video)
+  - Section 5: Additional Info (salary, residence permits)
+- [x] **Employer Profile Form** - All 4 sections implemented:
+  - Section 1: Company Information (CUI, J number, address, administrator)
+  - Section 2: Contact Person
+  - Section 3: Documents (CUI certificate, administrator ID, criminal record)
+  - Section 4: IGI Eligibility Requirements (Romania only)
+- [x] **Cloud Storage Integration** - Emergent Object Storage for documents
+- [x] **Profile Validation Workflow** - draft → pending_validation → validated
+
+### 🔄 Phase 3 - Core Workflow (NEXT)
+- [ ] Job Request creation (Employer Portal)
+- [ ] Candidate-to-Job matching engine (Admin)
+- [ ] Automated contract PDF generation
+- [ ] Automated invoice PDF generation
+- [ ] Visual progress tracker for immigration stages
+
+### ⏳ Phase 4 - Notifications & Advanced Features
+- [ ] Email notification system (SMTP via mail.gjc.ro)
+- [ ] Document expiry tracking and alerts
+- [ ] In-app notification center
+
+### 📋 Backlog (P2)
+- [ ] Stripe payment integration
+- [ ] Full Admin CRUD for users/projects/jobs
+- [ ] SEO landing pages (Construction, HoReCa, etc.)
+- [ ] reCAPTCHA on public forms
+- [ ] Testimonials section
 
 ---
 
-## BACKLOG - FAZE URMĂTOARE
+## Database Models
 
-### FAZA 2 - Portaluri Complete (P0) 🟡 NEXT
-- [ ] Formular complet profil candidat (personal, experiență, preferințe)
-- [ ] Formular complet profil angajator (companie, eligibilitate IGI)
-- [ ] Upload documente (pașaport, CV, diplome, cazier)
-- [ ] Formular aplicație student
-- [ ] Formular cerere servicii imigrare
-- [ ] Crearea cereri de personal cu toate câmpurile
-- [ ] Matching engine funcțional cu scor compatibilitate
-- [ ] Liste și filtrare în admin (candidați, angajatori, joburi)
-
-### FAZA 3 - Workflow Imigrare (P1)
-- [ ] 21 etape de workflow complet
-- [ ] Update stage cu notificări automate
-- [ ] Timeline vizual pentru progres
-- [ ] Tracking documente cu expiry alerts
-- [ ] Generare contract PDF
-- [ ] Generare factură PDF
-
-### FAZA 4 - Storage & Notificări (P1)
-- [ ] Integrare AWS S3/Cloudflare R2 pentru documente
-- [ ] Sistem notificări complet (dashboard + email)
-- [ ] Email templates pentru fiecare etapă
-
-### P2 - Nice to Have
-- [ ] Stripe pentru plăți online
-- [ ] reCAPTCHA pe formulare
-- [ ] Schema.org structured data
-- [ ] Analytics (GA, GSC, Facebook Pixel)
-- [ ] CMS pentru blog
-
----
-
-## FIȘIERE IMPORTANTE
-
-```
-/app/backend/
-├── server.py          # Main server
-├── models.py          # Toate modelele (cu account_type)
-├── auth_routes.py     # Autentificare + account_type
-├── portal_routes.py   # Portal candidat/angajator
-├── admin_routes.py    # Admin dashboard
-
-/app/frontend/src/
-├── contexts/AuthContext.jsx   # Auth state
-├── pages/
-│   ├── MyAccountPage.jsx      # Pagina selectare serviciu (NOU)
-│   ├── LoginPage.jsx          # Login cu redirect account_type
-│   ├── RegisterPage.jsx       # Register cu account_type din URL
-│   ├── AuthCallback.jsx       # OAuth callback
-│   ├── portal/
-│   │   ├── CandidateLayout.jsx + Dashboard
-│   │   ├── EmployerLayout.jsx + Dashboard
-│   │   ├── StudentLayout.jsx + Dashboard (NOU)
-│   │   └── ImmigrationLayout.jsx + Dashboard (NOU)
-│   └── admin/
-│       ├── AdminLayout.jsx
-│       └── AdminDashboard.jsx
-├── components/
-│   └── Navbar.jsx            # Actualizat cu "MY ACCOUNT"
+### Users Collection
+```javascript
+{
+  user_id: "user_xxx",
+  email: "email@example.com",
+  name: "Full Name",
+  role: "candidate|employer|student|immigration_client|admin",
+  account_type: "candidate|employer|student|immigration_client|admin",
+  is_active: true,
+  is_verified: false,
+  created_at: ISODate()
+}
 ```
 
+### Candidate Profiles Collection
+```javascript
+{
+  profile_id: "cand_xxx",
+  user_id: "user_xxx",
+  // Section 1 - Personal
+  first_name, last_name, country_of_origin, date_of_birth,
+  gender, marital_status, religion, citizenship,
+  // Section 2 - Family
+  father_name, mother_name, spouse_name, children_count, children_ages,
+  // Section 3 - Professional
+  current_profession, target_position_cor, experience_years,
+  worked_abroad, countries_worked_in, languages_known, english_level,
+  // Section 4 - Documents (doc_ids)
+  cv_doc_id, passport_doc_id, criminal_record_doc_id, passport_photo_doc_id,
+  profile_photo_url, video_presentation_url, diploma_doc_ids,
+  // Section 5 - Additional
+  salary_expectation, existing_residence_permit,
+  // Status
+  status: "draft|pending_validation|validated|rejected",
+  validation_notes
+}
+```
+
+### Employer Profiles Collection
+```javascript
+{
+  profile_id: "emp_xxx",
+  user_id: "user_xxx",
+  // Company Info
+  company_name, company_cui, company_j_number, address, phone, email,
+  administrator_name, country, city, industry, employees_count,
+  // Contact
+  contact_person, contact_email, contact_phone,
+  // Documents (doc_ids)
+  cui_certificate_doc_id, administrator_id_doc_id, company_criminal_record_doc_id,
+  // IGI Eligibility (Romania)
+  has_no_debts, has_no_sanctions, has_min_employees, company_age_over_1_year,
+  // Status
+  status: "draft|pending_validation|validated|rejected"
+}
+```
+
+### Documents Collection
+```javascript
+{
+  doc_id: "doc_xxx",
+  owner_id: "cand_xxx|emp_xxx",
+  owner_type: "candidate|employer|project",
+  filename, original_filename, file_type, file_size, storage_path,
+  document_type: "passport|cv|diploma|criminal_record|...",
+  status: "uploaded|verified|rejected|expired",
+  is_deleted: false
+}
+```
+
 ---
 
-## Status: ✅ FAZA 1.2 COMPLETĂ - Reorganizare acces utilizatori finalizată
+## API Endpoints
+
+### Authentication (`/api/auth`)
+- POST `/register` - New user registration
+- POST `/login` - Email/password login
+- GET `/me` - Get current user
+- POST `/logout` - End session
+- GET `/google/auth` - Start Google OAuth
+- GET `/google/callback` - Google OAuth callback
+- POST `/google/exchange` - Exchange session for token
+
+### Candidate Portal (`/api/portal/candidate`)
+- GET `/profile` - Get profile with documents
+- POST `/profile` - Create/update profile
+- POST `/profile/submit` - Submit for validation
+- POST `/documents/upload` - Upload document
+- GET `/documents` - List documents
+- DELETE `/documents/{doc_id}` - Delete document
+- GET `/dashboard` - Dashboard statistics
+- GET `/applications` - Job applications
+- GET `/notifications` - User notifications
+
+### Employer Portal (`/api/portal/employer`)
+- GET `/profile` - Get company profile
+- POST `/profile` - Create/update profile
+- POST `/profile/submit` - Submit for validation
+- POST `/documents/upload` - Upload document
+- GET `/documents` - List documents
+- GET `/jobs` - Job requests
+- POST `/jobs` - Create job request
+- PUT `/jobs/{job_id}` - Update job
+- GET `/projects` - Active projects
+- GET `/dashboard` - Dashboard statistics
+
+### Admin (`/api/admin`)
+- GET `/candidates/pending` - Candidates for validation
+- POST `/candidates/{id}/validate` - Approve candidate
+- POST `/candidates/{id}/reject` - Reject candidate
+- GET `/employers/pending` - Employers for validation
+- POST `/employers/{id}/validate` - Approve employer
+- POST `/employers/{id}/reject` - Reject employer
+
+---
+
+## Test Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@gjc.ro | admin123 |
+| Test Candidate | test.candidate@example.com | test123 |
+| Test Employer | test.employer@example.com | test123 |
+
+---
+
+## Key Integrations
+
+1. **Emergent Object Storage** - Document uploads (cloud)
+2. **Emergent Auth** - Google OAuth social login
+3. **Emergent LLM (GPT)** - Maria AI Chat Assistant
+
+---
+
+## Notes
+
+- Profile validation workflow: draft → pending_validation → validated
+- IGI eligibility requirements apply only to Romanian employers
+- Document types mapped to specific profile fields
+- All file uploads limited to 50MB
+- Supported formats: PDF, JPG, PNG, WEBP, MP4, MOV
