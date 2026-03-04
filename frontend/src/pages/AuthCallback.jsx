@@ -64,6 +64,10 @@ export default function AuthCallback() {
         return '/admin';
       case 'employer':
         return '/portal/employer';
+      case 'student':
+        return '/portal/student';
+      case 'immigration_client':
+        return '/portal/immigration';
       case 'candidate':
       default:
         return '/portal/candidate';
