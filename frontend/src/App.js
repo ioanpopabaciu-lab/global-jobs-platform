@@ -204,18 +204,77 @@ function AppContent() {
 }
 
 function AppRouter() {
-  return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
-  );
+  const location = useLocation();
+  
+  // Check URL fragment (not query params) for session_id - handle OAuth callback
+  if (location.hash?.includes('session_id=')) {
+    return <AuthCallback />;
+  }
+  
+  // Check if we're in portal or admin area (no public layout)
+  const isPortalRoute = location.pathname.startsWith('/portal') || 
+                        location.pathname.startsWith('/admin') ||
+                        location.pathname.startsWith('/login') ||
+                        location.pathname.startsWith('/register') ||
+                        location.pathname.startsWith('/auth');
+  
+  if (isPortalRoute) {
+    return (
+      <Routes>
+        {/* Auth routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        
+        {/* Candidate Portal */}
+        <Route path="/portal/candidate" element={<CandidateLayout />}>
+          <Route index element={<CandidateDashboard />} />
+          <Route path="profile" element={<div className="p-4">Profilul Candidat - În dezvoltare</div>} />
+          <Route path="documents" element={<div className="p-4">Documente - În dezvoltare</div>} />
+          <Route path="applications" element={<div className="p-4">Aplicații - În dezvoltare</div>} />
+          <Route path="notifications" element={<div className="p-4">Notificări - În dezvoltare</div>} />
+        </Route>
+        
+        {/* Employer Portal */}
+        <Route path="/portal/employer" element={<EmployerLayout />}>
+          <Route index element={<EmployerDashboard />} />
+          <Route path="profile" element={<div className="p-4">Profilul Companiei - În dezvoltare</div>} />
+          <Route path="jobs" element={<div className="p-4">Cereri de Personal - În dezvoltare</div>} />
+          <Route path="projects" element={<div className="p-4">Proiecte - În dezvoltare</div>} />
+          <Route path="invoices" element={<div className="p-4">Facturi - În dezvoltare</div>} />
+          <Route path="notifications" element={<div className="p-4">Notificări - În dezvoltare</div>} />
+        </Route>
+        
+        {/* Admin Dashboard */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="candidates" element={<div className="p-4">Candidați Admin - În dezvoltare</div>} />
+          <Route path="employers" element={<div className="p-4">Angajatori Admin - În dezvoltare</div>} />
+          <Route path="jobs" element={<div className="p-4">Joburi Admin - În dezvoltare</div>} />
+          <Route path="projects" element={<div className="p-4">Proiecte Admin - În dezvoltare</div>} />
+          <Route path="documents" element={<div className="p-4">Documente Admin - În dezvoltare</div>} />
+          <Route path="users" element={<div className="p-4">Utilizatori Admin - În dezvoltare</div>} />
+        </Route>
+        
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
+  
+  // Public website with full layout
+  return <AppContent />;
 }
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppRouter />
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <BrowserRouter>
+          <AppRouter />
+          <Toaster position="top-right" richColors />
+        </BrowserRouter>
+      </LanguageProvider>
+    </AuthProvider>
   );
 }
 
