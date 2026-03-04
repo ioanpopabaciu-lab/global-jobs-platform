@@ -543,7 +543,7 @@ async def submit_candidate_profile(request: Request):
         }}
     )
     
-    # Create notification for admins
+    # Create notification for admins (in-app)
     await db.notifications.insert_one({
         "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
         "user_id": "admin",
@@ -556,6 +556,14 @@ async def submit_candidate_profile(request: Request):
         "is_read": False,
         "created_at": datetime.now(timezone.utc)
     })
+    
+    # Send email notification to admin (office@gjc.ro)
+    profile["email"] = user.get("email")
+    await notify_admin_new_profile_pending(
+        profile_type="Candidat",
+        profile_data=profile,
+        platform_url=PLATFORM_URL
+    )
     
     return {"message": "Profile submitted for validation", "status": "pending_validation"}
 
