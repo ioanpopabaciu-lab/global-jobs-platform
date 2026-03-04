@@ -419,19 +419,6 @@ export default function Navbar() {
               language={language}
             />
 
-            {/* PORTAL CANDIDAȚI - simple link */}
-            <Link
-              to={getPath('/candidati')}
-              data-testid="nav-link-candidati"
-              className={`font-medium text-sm transition-colors hover:text-coral ${
-                isActive('/candidati')
-                  ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
-                  : isScrolled ? "text-gray-700" : "text-white/90"
-              }`}
-            >
-              {menuLabels.candidates}
-            </Link>
-
             {/* BLOG - simple link */}
             <Link
               to={getPath('/blog')}
