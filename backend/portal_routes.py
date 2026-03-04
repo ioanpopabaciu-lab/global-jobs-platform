@@ -487,6 +487,9 @@ async def create_candidate_profile(data: CandidateProfileCreate, request: Reques
         
         await db.candidate_profiles.insert_one(profile_doc)
         
+        # Remove MongoDB _id before returning
+        profile_doc.pop("_id", None)
+        
         return {"profile": profile_doc, "message": "Profile created"}
 
 @portal_router.post("/candidate/profile/submit")
