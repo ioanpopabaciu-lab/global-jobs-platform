@@ -179,6 +179,56 @@ def get_email_template(template_type: str, data: dict) -> tuple[str, str]:
             </body>
             </html>
             """
+        },
+        
+        "new_profile_pending": {
+            "subject": f"📋 Profil nou pentru validare: {data.get('profile_type', 'Candidat')} - {data.get('profile_name', 'N/A')}",
+            "body": f"""
+            <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0;">
+                        <h1 style="margin: 0;">Global Jobs Consulting</h1>
+                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Profil Nou pentru Validare</p>
+                    </div>
+                    
+                    <div style="background: #f7f9fc; padding: 30px; border-radius: 0 0 10px 10px;">
+                        <h2 style="color: #1e3a5f; margin-top: 0;">
+                            📋 Un {data.get('profile_type', 'profil')} nou așteaptă validarea
+                        </h2>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3182ce;">
+                            <h3 style="margin: 0 0 15px 0; color: #2d3748;">Detalii Profil</h3>
+                            <p style="margin: 5px 0;"><strong>Tip:</strong> {data.get('profile_type', 'N/A')}</p>
+                            <p style="margin: 5px 0;"><strong>Nume:</strong> {data.get('profile_name', 'N/A')}</p>
+                            <p style="margin: 5px 0;"><strong>Email:</strong> {data.get('profile_email', 'N/A')}</p>
+                            <p style="margin: 5px 0;"><strong>Telefon:</strong> {data.get('profile_phone', 'N/A')}</p>
+                            {'<p style="margin: 5px 0;"><strong>Cetățenie:</strong> ' + data.get('citizenship', '') + '</p>' if data.get('citizenship') else ''}
+                            {'<p style="margin: 5px 0;"><strong>Profesie:</strong> ' + data.get('profession', '') + '</p>' if data.get('profession') else ''}
+                            {'<p style="margin: 5px 0;"><strong>Companie:</strong> ' + data.get('company_name', '') + '</p>' if data.get('company_name') else ''}
+                            {'<p style="margin: 5px 0;"><strong>CUI:</strong> ' + data.get('company_cui', '') + '</p>' if data.get('company_cui') else ''}
+                            <p style="margin: 5px 0;"><strong>Data trimiterii:</strong> {data.get('submitted_at', 'N/A')}</p>
+                        </div>
+                        
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="{data.get('platform_url', '#')}/admin" 
+                               style="background: #1e3a5f; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                                Validează Profilul
+                            </a>
+                        </div>
+                        
+                        <p style="color: #718096; font-size: 14px; text-align: center;">
+                            Acest profil necesită validarea dvs. înainte de a fi activ în sistem.
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px; color: #718096; font-size: 12px;">
+                        <p>© 2026 Global Jobs Consulting. Toate drepturile rezervate.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
         }
     }
     
