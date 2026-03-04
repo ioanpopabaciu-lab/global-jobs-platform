@@ -1,115 +1,106 @@
 <analysis>**original_problem_statement:**
-The user wants to build, deploy, and iterate on a corporate website for their recruitment agency, Global Jobs Consulting (gjc.ro). The project has evolved from a basic website to a full-featured, multilingual platform with an AI assistant, advanced SEO capabilities, and a strong focus on lead generation and conversion rate optimization.
+The user wants to build a full SaaS recruitment and immigration management platform for their agency, Global Jobs Consulting. This platform will replace and extend their existing public website.
 
-**PRODUCT REQUIREMENTS (Latest):**
-The user has requested a major overhaul focused on conversion rate optimization (CRO) and user experience (UX). The key requirements are:
-1.  **Fix Hero Section:** Resolve the issue where the header overlaps the main title text.
-2.  **Add Differentiating Subtitle:** Add a specific subtitle in the hero section.
-3.  **Social Media Integration:** Add social media icons (Facebook, Instagram, LinkedIn) in the header/footer and implement Open Graph/Twitter Card meta tags.
-4.  **Blog Shareability:** Add social sharing buttons (Facebook, LinkedIn, WhatsApp, Copy Link) to individual blog posts.
-5.  **Mobile Call Button:** Add a sticky bottom bar on mobile with Call Now and Request Offer buttons.
-6.  **Differentiated CTAs:** Create specific Call-to-Action buttons for employers, candidates, and students.
-7.  **Homepage Mini-Form:** Add a quick request form on the homepage for urgent staffing needs.
-8.  **Urgency Section:** Add a visible section highlighting the limited annual contingent for non-EU workers.
-9.  **General UX Optimization:** Improve spacing, alignment, and button tap sizes on mobile.
+**PRODUCT REQUIREMENTS (SaaS Platform):**
+The system must include four distinct portals:
+1.  **Public Website:** The existing marketing and lead-generation site.
+2.  **Candidate Portal:** For candidates to create profiles, upload documents (CV, passport, etc.), and track their application status.
+3.  **Employer Portal:** For companies to post job requests, view matched candidates, manage contracts, and track project progress.
+4.  **Agency Admin Dashboard:** For GJC staff to have full control over candidates, employers, jobs, documents, and the entire immigration workflow.
+
+**Core Workflow:**
+The platform must manage the end-to-end process: Candidate registration → Profile validation → Employer registration → Job request → Candidate matching → Contract & Invoice generation → Document upload → Work permit (IGI) process → e-Visa → Embassy interview → Travel → Residence permit.
+
+**Key Features:**
+*   **Authentication:** Dual system with classic email/password (JWT) and social login (Google).
+*   **User Roles & Types:** Differentiated access for , , , , and .
+*   **Dashboards:** Tailored dashboards for each user type to track progress and manage tasks.
+*   **Document Management:** Secure cloud storage for all user-uploaded documents with validation and expiry tracking.
+*   **Automated Generation:** Contracts and invoices should be generated automatically.
+*   **Workflow Management:** A system to track each stage of the recruitment and immigration process.
+*   **Notifications:** Email and in-app alerts for all parties.
+
+The project is being developed in phases. **Phase 1 (Foundation)** is complete. Work has just begun on **Phase 2 (Complete Portals)**.
 
 **User's preferred language**: Romanian
 
 **what currently exists?**
-The application is a full-stack React/FastAPI project. It is fully multilingual (RO, EN, DE, SR) with a complex routing system.
-- **Frontend:** The site has undergone a major restructuring. The main navigation () now uses dropdown menus for Home, Services, and Employers. Numerous new pages have been created:
-    - A dedicated Despre Noi (About Us) page.
-    - Three new sub-pages for the Employers section: , , .
-    - Five new pages for each service package under the Services menu (, , etc.).
-    - A detailed employer lead-generation form at .
-    - The AI assistant Maria now correctly redirects users to this form page.
-    - Mobile sticky CTA buttons for Request Consultation and Non-EU Recruitment were implemented.
-- **Backend:** The backend supports the multilingual frontend, handles various form submissions, and serves blog content. The AI Maria prompt has been updated.
+The project is a full-stack application with a React frontend and a FastAPI backend. The initial public-facing website has been significantly extended to include the foundation for the new SaaS platform.
+
+*   **SaaS Foundation (Phase 1 - COMPLETE):**
+    *   **Authentication System:** A complete authentication system has been implemented, supporting both email/password (JWT) and Google OAuth.
+    *   **User Access Flow:** A new central access point at  allows users to select their account type before registering. The system now supports four distinct user types: , , , and , stored in the  model.
+    *   **Backend Structure:** The backend has been modularized with new files for data models (), authentication routes (), portal-specific routes (), and admin routes ().
+    *   **Frontend Portals:** Placeholder dashboards and layouts have been created for all four user types (Candidate, Employer, Student, Immigration) and the Admin. These are protected routes accessible only after login.
+    *   **UI Integration:** The main website's navigation bar now features a MY ACCOUNT button that directs users to the new service selection page.
 
 **Last working item**:
-- **Last item agent was working:** The agent received a large, detailed list of 9 new requirements focused on conversion rate optimization, UX improvements, and social media integration. The agent acknowledged the new tasks and was about to start working on the first one: fixing the text overlap issue in the hero section.
-- **Status:** NOT STARTED
-- **Agent Testing Done:** N/A
-- **Which testing method agent to use?** Frontend testing agent and screenshot tool will be needed to verify the visual fixes and new UI elements across different screen sizes (especially mobile).
+- **Last item agent was working:** The agent started **Phase 2 - Complete Portals**. The goal of this phase is to build the detailed profile forms and document upload functionality for each user portal. The agent created the initial frontend component files for this phase but has not yet integrated them or built the corresponding backend APIs.
+- **Status:** IN PROGRESS
+- **Agent Testing Done:** N
+- **Which testing method agent to use?** Frontend testing agent and Backend testing agent. Once the forms and APIs are built, comprehensive testing will be needed to verify data submission, file uploads, and UI functionality.
 - **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-  - **Issue 1:** Hero section text is partially covered by the header (P0)
-  - **Issue 2:** Background videos fail to load in the test environment (P2)
-
-  **Issues Detail:**
-  - **Issue 1:**
-     - **Description:** The user provided a screenshot showing the main title in the hero section is overlapped by the transparent header, making it hard to read.
-     - **Next debug checklist:**
-        1.  Inspect  and the main layout/header component.
-        2.  Check  properties of the header and the hero content.
-        3.  Adjust  or  on the hero section container to push the content down.
-        4.  Verify the fix on multiple screen sizes from 320px to 1440px using the screenshot tool.
-     - **Why fix this issue and what will be achieved with the fix?** This is a critical UX bug that affects the first impression of the site. Fixing it will improve readability and professionalism.
-     - **Status:** NOT STARTED
-     - **Is recurring issue?** N
-     - **Should Test frontend/backend/both after fix?** Frontend
-     - **Blocked on other issue:** None
-  - **Issue 2:**
-     - **Description:** Background videos in  fail to render in the automated test environment's browser, showing a  error.
-     - **Attempted fixes:** Agent confirmed URLs are correct. The user was asked to verify in a real browser, but the issue was deprioritized.
-     - **Next debug checklist:** Confirm with the user if the videos work correctly on the live site (). If not, investigate the component's rendering lifecycle in a real browser's network tab.
-     - **Why fix this issue and what will be achieved with the fix?** Ensures a key visual element of the homepage is functional for all users.
-     - **Status:** USER VERIFICATION PENDING
-     - **Is recurring issue?** N
-     - **Should Test frontend/backend/both after fix?** Frontend
-     - **Blocked on other issue:** None
+There are no active blocking issues. The work is focused on new feature development.
 
 **In progress Task List**:
-  - **Task 1:** Implement a major list of CRO/UX features (P0)
+  - **Task 1:**  Complete Faza 2 - Portaluri Complete (P0)
 
  **Task Detail:**
   - **Task 1:**
-     - **Where to resume:** This is a large, multi-part task. The starting point is fixing the hero section overlap (Issue 1). After that, the agent must proceed through the 9-point list provided by the user in their last message.
-     - **What will be achieved with this?** This will transform the website from an informational site into a powerful lead-generation and conversion-focused platform, addressing specific user personas (employers, candidates, students) with tailored CTAs and features.
-     - **Status:** NOT STARTED
-     - **Should Test frontend/backend/both after fix?** Both (Frontend for UI changes, Backend for the new mini-form).
+     - **Where to resume:** The agent has created the following empty/scaffolded files:
+        - 
+        - 
+        - 
+     The next step is to build out the functionality within these files and create the supporting infrastructure.
+     - **Next Steps:**
+        1.  Implement the UI for the profile forms and the document uploader.
+        2.  Create the backend API endpoints in  to handle saving form data and processing file uploads.
+        3.  Update the database models in  if necessary to store the new profile/document information.
+        4.  Integrate these new pages into the application by adding routes in  and links within the respective user dashboards.
+        5.  Create and implement the initial forms for the  and  portals.
+        6.  Test the entire flow for all user types: profile creation/update and document uploading.
+     - **What will be achieved with this?** Users will be able to complete their profiles and upload necessary documents, which is the first critical step after registration and unlocks the rest of the recruitment workflow.
+     - **Status:** IN PROGRESS
+     - **Should Test frontend/backend/both after fix?** Both
      - **Blocked on something:** None
 
 **Upcoming and Future Tasks**
-**Upcoming Tasks (The current P0 task list):**
-- **P0:** Add differentiating subtitle in the hero section.
-- **P0:** Add social media icons (header/footer) and configure Open Graph/Twitter Card meta tags in .
-- **P0:** Add social share buttons to the blog post page component.
-- **P0:** Implement a new sticky bottom bar on mobile with Call Now and Request Offer buttons, replacing .
-- **P1:** Implement differentiated CTAs for different user types.
-- **P1:** Create and integrate a new quick request mini-form component on the homepage and update  to handle its submission.
-- **P1:** Add a new Urgency Section component to the homepage.
-- **P1:** Perform general UX review and optimization (spacing, button sizes).
+**Upcoming Tasks:**
+- **P0: Faza 3 - Core Workflow Implementation:**
+    - Employer Portal: Implement job request creation.
+    - Admin Dashboard: Develop the candidate-to-job matching engine.
+    - Backend: Implement automated contract and invoice PDF generation.
+    - All Portals: Build out the visual progress tracker for the immigration workflow.
+- **P1: Faza 4 - Notifications & Document Management:**
+    - Implement the email notification system (using  SMTP).
+    - Integrate a secure cloud storage solution (e.g., AWS S3, Cloudflare R2) for document uploads, replacing the current local storage approach.
+    - Add document expiry tracking and alerts.
 
 **Future Tasks:**
-- **P2:** SEO Landing Pages: Create four new, SEO-optimized landing pages for key industries (Construction, Manufacturing, HoReCa, Maritime).
-- **P2:** Implement  on all forms.
-- **P2:** Create a testimonials section/component.
-- **P2:** Implement structured data (Schema.org Organization).
-- **P2:** Integrate analytics (Google Analytics, GSC, Facebook Pixel).
-- **P2:** Create a CMS or admin interface for the blog.
-- **P2:** Develop an admin dashboard for lead management.
+- **P2:** Integrate an online payment gateway (e.g., Stripe) for invoices.
+- **P2:** Build out full CRUD functionality in the Admin Dashboard for managing users, projects, and jobs.
+- **P2:** Enhance the public website with SEO-optimized landing pages (Construction, HoReCa, etc.).
+- **P2:** Add  to all public forms.
+- **P2:** Create a testimonials section on the public website.
 
 **Completed work in this session**
-- **Form Page Creation:** Created the  page with a detailed, multilingual form for employers. Tested and verified its functionality.
-- **Phase 1 (Menu Restructuring):**
-    - Reworked  to use dropdown menus.
-    - Created the .
-    - Created three new pages for the Employers section: , , and .
-    - Updated all routing in , , and .
-    - Verified the new menu structure on desktop (dropdowns) and mobile (accordion).
-- **Phase 2 (Service Pages & Mobile CTAs):**
-    - Created five new pages for each service package: , , , , and .
-    - Created and integrated the  component.
-    - Updated  and  with the new service page routes.
-    - Verified the new pages and mobile CTA buttons via screenshots.
+- **SaaS Platform - Phase 1 (Foundation):**
+    - Implemented a complete user authentication system (JWT & Google OAuth).
+    - Created a new user access flow via a  page with four distinct account types (, , , ).
+    - Built functional, role-based dashboards for all four user types and an admin panel.
+    - Restructured the backend into modular route files and created new database models.
+    - Integrated the portal access flow into the main website's navigation.
+- **CRO & UX Overhaul:**
+    - Fixed hero section text overlap.
+    - Added social media icons and sharing buttons.
+    - Implemented a Call Now floating button and updated the mobile sticky bar.
+    - Added Open Graph meta tags.
+    - Fixed an HTML rendering bug on blog posts.
 
 **Earlier issues found/mentioned but not fixed**
-- The background video loading issue is tracked in the All Pending/In progress Issue list.
-
-**Known issue recurrence from previous fork**
-- None in this session. The  bug mentioned in the previous handoff remains resolved.
+   - **Issue 1:** Background videos in  can fail to load in the test environment's browser, showing a  error. This was deprioritized due to the major pivot to the SaaS platform and has not been investigated further.
 
 **Code Architecture**
 
@@ -117,61 +108,65 @@ The application is a full-stack React/FastAPI project. It is fully multilingual 
 **Key Technical Concepts**
 - **Frontend:** React, TailwindCSS, 
 - **Backend:** FastAPI, MongoDB
-- **Internationalization (i18n):** A complex, custom implementation using React Context for state management, language-prefixed URLs, and centralized translation files for both static text and dynamic routes.
-- **Component-Based Architecture:** The site is built with a heavy emphasis on reusable components and dedicated page components.
+- **Authentication:** JWT for session management, Google OAuth for social login.
+- **Architecture:** Multi-portal SaaS architecture with Role-Based Access Control (RBAC) separating public-facing site from protected user/admin areas.
+- **Internationalization (i18n):** Custom React Context-based system for the public site.
 
 **key DB schema**
-- No changes. The  collection is still populated on server startup.
+- **users:** 
 
 **All files of reference**
-- 
-- 
-- 
-- 
-- All newly created page files under .
-- User-provided artifact:  (shows the hero text overlap issue).
-
-**Areas that need refactoring**:
-- The  component will need to be replaced or heavily modified to accommodate the user's new request for a Call Now button.
-- Blog content is still hardcoded in , a known technical debt.
-
-**key api endpoints**
--  (used by the new formular-angajator page)
+*   **Backend (New/Modified):**
+    *   
+    *   
+    *   
+    *   
+    *   
+*   **Frontend (New/Modified):**
+    *   
+    *   
+    *   
+    *   
+    *   
+    *   
+    *   All new files under  and .
 
 **Critical Info for New Agent**
-- **Start with the Bug:** The user's highest priority is fixing the hero section text overlap. Start there.
-- **Follow the List:** The user has provided a very specific 9-point list for CRO/UX improvements. Address them systematically.
-- **Phased Development:** The user prefers to work in large, defined phases. The current task list is effectively Phase 3. Complete all items before asking for a full review.
-- **Multilingual Complexity:** Every new page, route, and UI text element MUST be implemented in all 4 languages (RO, EN, DE, SR) and correctly registered in , , and . This is a recurring source of complexity.
-- **Testing:** Use the screenshot tool extensively to verify visual changes, especially on mobile, for things like the sticky buttons and layout fixes.
+- **Project Pivot:** The primary goal has shifted from a simple corporate website to building a full-featured SaaS platform. The user's request in  is the main source of truth for the platform's vision.
+- **Phased Development:** You are currently in the middle of **Phase 2 (Complete Portals)**. Your immediate task is to build out the profile forms and document upload functionality using the placeholder files already created.
+- **User Access Model:** The access flow is now centered around the  page and the four s. All new features for users must respect this structure.
+- **Authentication:** The  is the central point for managing user state on the frontend. Protected routes redirect to  if no valid user is found.
 
 **documents and test reports created in this job**
-  -  (Updated with Phase 1 and 2 completion).
+  -  (Significantly updated with the full SaaS platform requirements and phase tracking)
+  -  (Covers the CRO/UX tasks from the beginning of the session)
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** (Finish message) Faza 1 (Menu Restructure) is complete.
-2.  **User:** Let's continue directly with Phase 2.
-3.  **User:** Details for Phase 2: Create 5 service package pages and implement mobile sticky buttons.
-4.  **Agent:** Starts working on Phase 2.
-5.  **Agent:** (Finish message) Faza 2 (Service pages & sticky CTAs) is complete and verified.
-6.  **User:** (PENDING) Provides a large, 9-point list of new CRO/UX optimizations, starting with fixing a hero section text overlap issue (and provides a screenshot). This is the current active task.
+1.  **User:** Asks for a complete reorganization of user access, introducing the MY ACCOUNT page and the four user types (Employer, Candidate, Student, Immigration). (This was fully implemented).
+2.  **User:** Asks to continue with the other phases.
+3.  **Agent:** States the plan for Phase 2: build complete profile forms and document upload.
+4.  **Agent:** Creates placeholder files for , , and .
+5.  **User:** Asks what has been completed so far.
+6.  **Agent:** Explains that the files for Phase 2 have been created but are not yet functional, and asks if they should continue. (This is the last interaction).
 
 **Project Health Check:**
-- **Broken:** The hero section title is overlapped by the header.
-- **Mocked:** The rendering of hero slider videos is unreliable in the test environment.
+- **Broken:** No features are currently broken.
+- **Mocked:** The document upload functionality is not yet connected to a real storage backend.
 
 **3rd Party Integrations**
-- **OpenAI GPT:** Powers the Maria AI Chat Assistant (uses Emergent LLM Key).
-- **Cloudflare:** Manages DNS, CDN, and SSL for the  domain (user-managed).
+- **Emergent-managed Google Auth:** Used for the Continue with Google social login feature.
+- **OpenAI GPT:** Powers the Maria AI Chat Assistant on the public site (uses Emergent LLM Key).
 
 **Testing status**
-- **Testing agent used after significant changes:** NO (for the latest phases, agent used manual testing).
-- **Troubleshoot agent used after agent stuck in loop:** NO
-- **Test files created:** None in this session.
+- **Testing agent used after significant changes:** YES, an early version was used for the CRO fixes. The new SaaS foundation was tested via screenshots and curl commands.
+- **Test files created:** None.
 - **Known regressions:** None.
 
 **Credentials to test flow:**
-N/A
+*   **Admin User:**
+    *   Email: 
+    *   Password: 
+*   New accounts can be created via the  page for testing other roles.
 
 **What agent forgot to execute**
-- Nothing was forgotten. The agent had just received a large new set of tasks from the user and was about to begin implementation.</analysis>
+The agent correctly identified the next steps for Phase 2 but was interrupted before implementation could proceed. No tasks were forgotten; the work is simply paused at a logical point.</analysis>
