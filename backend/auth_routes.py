@@ -234,6 +234,7 @@ async def login(data: UserLogin, response: Response):
         name=user_doc["name"],
         picture=user_doc.get("picture"),
         role=user_doc["role"],
+        account_type=user_doc.get("account_type", user_doc["role"]),
         is_active=user_doc.get("is_active", True),
         is_verified=user_doc.get("is_verified", False),
         created_at=user_doc["created_at"] if isinstance(user_doc["created_at"], datetime) 
