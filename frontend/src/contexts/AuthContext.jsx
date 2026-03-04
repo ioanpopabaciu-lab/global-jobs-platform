@@ -51,12 +51,12 @@ export function AuthProvider({ children }) {
       body: JSON.stringify({ email, password })
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Login failed');
+      throw new Error(data.detail || 'Login failed');
     }
 
-    const data = await response.json();
     setUser(data.user);
     setIsAuthenticated(true);
     return data;
