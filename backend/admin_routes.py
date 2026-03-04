@@ -319,37 +319,44 @@ async def validate_employer(
     if status not in ["validated", "rejected"]:
         raise HTTPException(status_code=400, detail="Status must be 'validated' or 'rejected'")
     
+    # Get employer before update
+    employer = await db.employer_profiles.find_one(
+        {"profile_id": profile_id},
+        {"_id": 0}
+    )
+    
+    if not employer:
+        raise HTTPException(status_code=404, detail="Employer not found")
+    
+    # Update status
     result = await db.employer_profiles.update_one(
         {"profile_id": profile_id},
         {"$set": {
             "status": status,
             "validation_notes": notes,
+            "validated_by": admin["user_id"],
+            "validated_at": datetime.now(timezone.utc),
             "updated_at": datetime.now(timezone.utc)
         }}
     )
     
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Employer not found")
-    
-    # Get employer for notification
-    employer = await db.employer_profiles.find_one(
-        {"profile_id": profile_id},
-        {"_id": 0, "user_id": 1, "company_name": 1}
+    # Get user info for notifications
+    user = await db.users.find_one(
+        {"user_id": employer["user_id"]},
+        {"_id": 0, "email": 1, "name": 1}
     )
     
-    # Create notification
-    await db.notifications.insert_one({
-        "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-        "user_id": employer["user_id"],
-        "title": "Companie validată" if status == "validated" else "Companie respinsă",
-        "message": f"Profilul companiei a fost {'aprobat' if status == 'validated' else 'respins'}. {notes or ''}",
-        "type": "success" if status == "validated" else "error",
-        "category": "profile",
-        "related_entity_type": "employer_profile",
-        "related_entity_id": profile_id,
-        "is_read": False,
-        "created_at": datetime.now(timezone.utc)
-    })
+    company_name = employer.get("company_name") or user.get("name", "Companie")
+    
+    # Send notification with email
+    await notify_profile_validation(
+        user_id=employer["user_id"],
+        user_name=company_name,
+        user_type="employer",
+        is_validated=(status == "validated"),
+        rejection_reason=notes if status == "rejected" else None,
+        platform_url=PLATFORM_URL
+    )
     
     return {"message": f"Employer profile {status}"}
 
