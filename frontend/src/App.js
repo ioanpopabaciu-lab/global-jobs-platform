@@ -3,8 +3,9 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider, useLanguage } from "@/i18n/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
-// Pages
+// Public Pages
 import HomePage from "@/pages/HomePage";
 import EmployersPage from "@/pages/EmployersPage";
 import ServicesPage from "@/pages/ServicesPage";
@@ -23,6 +24,21 @@ import WorkCareerPage from "@/pages/WorkCareerPage";
 import FamilyReunionPage from "@/pages/FamilyReunionPage";
 import SettlementCitizenshipPage from "@/pages/SettlementCitizenshipPage";
 import AdministrativePage from "@/pages/AdministrativePage";
+
+// Auth Pages
+import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "@/pages/RegisterPage";
+import AuthCallback from "@/pages/AuthCallback";
+
+// Portal Pages
+import CandidateLayout from "@/pages/portal/CandidateLayout";
+import CandidateDashboard from "@/pages/portal/CandidateDashboard";
+import EmployerLayout from "@/pages/portal/EmployerLayout";
+import EmployerDashboard from "@/pages/portal/EmployerDashboard";
+
+// Admin Pages
+import AdminLayout from "@/pages/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
 
 // Components
 import Navbar from "@/components/Navbar";
