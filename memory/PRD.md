@@ -68,16 +68,16 @@
   - Minimum 60% score to trigger match notification
 
 ### 🔄 Phase 3 - Core Workflow (NEXT)
-- [ ] Job Request creation (Employer Portal)
-- [ ] Candidate-to-Job matching engine (Admin)
+- [ ] Job Request creation UI (Employer Portal)
+- [ ] Candidate-to-Job matching UI (Admin Dashboard)
 - [ ] Automated contract PDF generation
 - [ ] Automated invoice PDF generation
 - [ ] Visual progress tracker for immigration stages
 
-### ⏳ Phase 4 - Notifications & Advanced Features
-- [ ] Email notification system (SMTP via mail.gjc.ro)
+### ⏳ Phase 4 - Document Management & Expiry
 - [ ] Document expiry tracking and alerts
-- [ ] In-app notification center
+- [ ] Document verification workflow in Admin
+- [ ] Bulk document operations
 
 ### 📋 Backlog (P2)
 - [ ] Stripe payment integration
