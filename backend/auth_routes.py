@@ -105,9 +105,19 @@ async def register(data: UserCreate, response: Response):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Validate role
-    if data.role not in ["candidate", "employer"]:
-        raise HTTPException(status_code=400, detail="Invalid role. Must be 'candidate' or 'employer'")
+    # Validate account_type
+    valid_types = ["candidate", "employer", "student", "immigration_client"]
+    if data.account_type not in valid_types:
+        raise HTTPException(status_code=400, detail=f"Invalid account type. Must be one of: {valid_types}")
+    
+    # Map account_type to role (for permissions)
+    role_mapping = {
+        "candidate": "candidate",
+        "employer": "employer",
+        "student": "student",
+        "immigration_client": "immigration_client"
+    }
+    role = role_mapping.get(data.account_type, "candidate")
     
     # Create user
     user_id = f"user_{uuid.uuid4().hex[:12]}"
@@ -116,7 +126,8 @@ async def register(data: UserCreate, response: Response):
         "email": data.email,
         "name": data.name,
         "password_hash": hash_password(data.password),
-        "role": data.role,
+        "role": role,
+        "account_type": data.account_type,
         "picture": None,
         "is_active": True,
         "is_verified": False,
@@ -158,7 +169,8 @@ async def register(data: UserCreate, response: Response):
         email=data.email,
         name=data.name,
         picture=None,
-        role=data.role,
+        role=role,
+        account_type=data.account_type,
         is_active=True,
         is_verified=False,
         created_at=user_doc["created_at"]
