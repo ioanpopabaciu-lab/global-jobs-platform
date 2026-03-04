@@ -698,6 +698,11 @@ async def maria_chat(chat_msg: ChatMessage):
 # Include the router - must be after all routes are defined
 app.include_router(api_router)
 
+# Include new SaaS platform routes
+app.include_router(auth_router, prefix="/api")
+app.include_router(portal_router, prefix="/api")
+app.include_router(admin_router, prefix="/api")
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
