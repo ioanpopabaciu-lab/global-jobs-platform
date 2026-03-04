@@ -6,12 +6,21 @@ from fastapi import APIRouter, HTTPException, Request
 from datetime import datetime, timezone
 from typing import Optional, List
 import uuid
+import os
 
 from models import Project, ProjectStageHistory, ImmigrationStage
 from auth_routes import get_current_user
+from notification_service import (
+    notify_employers_of_new_candidate,
+    notify_profile_validation,
+    calculate_match_score
+)
 
 # Database will be injected
 db = None
+
+# Platform URL for emails
+PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://visa-platform-2.preview.emergentagent.com")
 
 def set_database(database):
     global db
