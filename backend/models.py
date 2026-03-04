@@ -272,33 +272,42 @@ class EmployerProfileCreate(BaseModel):
     company_age_over_1_year: Optional[bool] = None
 
 # ==================== JOB REQUEST MODELS ====================
+# Job Position (Cerere poziție) - Employer can create multiple
 
 class JobRequest(BaseModel):
-    """Job request from employer"""
+    """Job request/position from employer"""
     model_config = ConfigDict(extra="ignore")
     job_id: str = Field(default_factory=lambda: f"job_{uuid.uuid4().hex[:12]}")
     employer_id: str  # employer profile_id
     
-    # Job details
-    title: str
-    description: str
-    industry: str
-    positions_count: int = 1
+    # Position details (Secțiune poziții deschise)
+    title: str = ""  # Position name
+    cor_code: Optional[str] = None  # Cod COR
+    description: str = ""
+    positions_count: int = 1  # Număr poziții deschise
     
     # Requirements
-    required_experience_years: int = 0
+    required_experience_years: int = 0  # Nivel experiență dorit
+    preferred_gender: Optional[Literal["male", "female", "any"]] = "any"  # Sex preferat
+    age_range_min: Optional[int] = None  # Interval vârstă - min
+    age_range_max: Optional[int] = None  # Interval vârstă - max
+    preferred_nationalities: list[str] = []  # Țară de proveniență dorită
+    required_languages: list[str] = []  # Limbi străine
+    required_language_level: Optional[str] = None  # Nivel limbă
     required_english_level: str = "basic"
     required_skills: list[str] = []
-    preferred_nationalities: list[str] = []
     
     # Conditions
-    salary_gross: str  # e.g., "2000-2500 EUR"
+    salary_gross: Optional[str] = None  # Salariu oferit (opțional)
     contract_type: Literal["permanent", "seasonal", "detached"] = "permanent"
     contract_duration_months: Optional[int] = None
     accommodation_provided: bool = False
     meals_provided: bool = False
     transport_provided: bool = False
-    work_location: str
+    work_location: str = ""
+    
+    # Industry
+    industry: str = ""
     
     # Status
     status: Literal["draft", "open", "in_progress", "filled", "cancelled"] = "draft"
@@ -311,17 +320,26 @@ class JobRequest(BaseModel):
 class JobRequestCreate(BaseModel):
     """Create job request"""
     title: str
-    description: str
-    industry: str
+    cor_code: Optional[str] = None
+    description: Optional[str] = None
     positions_count: int = 1
     required_experience_years: int = 0
+    preferred_gender: Optional[str] = "any"
+    age_range_min: Optional[int] = None
+    age_range_max: Optional[int] = None
+    preferred_nationalities: Optional[list[str]] = []
+    required_languages: Optional[list[str]] = []
+    required_language_level: Optional[str] = None
     required_english_level: str = "basic"
-    required_skills: list[str] = []
-    salary_gross: str
+    required_skills: Optional[list[str]] = []
+    salary_gross: Optional[str] = None
     contract_type: str = "permanent"
+    contract_duration_months: Optional[int] = None
     accommodation_provided: bool = False
     meals_provided: bool = False
-    work_location: str
+    transport_provided: bool = False
+    work_location: str = ""
+    industry: str = ""
 
 # ==================== PROJECT MODELS ====================
 
