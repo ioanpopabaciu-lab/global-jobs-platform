@@ -11,6 +11,22 @@ Site web pentru Global Jobs Consulting (www.gjc.ro) - agenție de recrutare inte
 - **Styling**: Navy Blue (#003366) + Coral (#E74C3C), Montserrat font
 - **Multilingv**: Română, English, Deutsch, Srpski cu URL-uri specifice pentru SEO
 
+## Updates (03 Mar 2026 - v11) - FAZA 3 CRO/UX OPTIMIZATION
+- ✅ **Fix Hero Overlap**: Adăugat padding-top pe content pentru a compensa header-ul fix (270px gap)
+- ✅ **Subtitlu Diferențiator**: Adăugat în Hero section în toate cele 4 limbi:
+  - RO: "Specialiști în Recrutare Legală Non-UE, Proceduri IGI și Soluții Complete de Imigrare pentru Companii și Persoane Fizice."
+- ✅ **Social Media Icons Header**: Facebook, Instagram, LinkedIn în top bar cu link-uri corecte
+- ✅ **Social Media Icons Footer**: Link-uri actualizate către paginile oficiale:
+  - Facebook: facebook.com/globaljobsconsulting
+  - Instagram: instagram.com/globaljobsconsulting
+  - LinkedIn: linkedin.com/company/global-jobs-consulting
+- ✅ **Open Graph / Twitter Cards**: Meta tags configurate în SEOHead.jsx cu imagine og:image
+- ✅ **Blog Share Buttons**: Butoane pentru Facebook, LinkedIn, WhatsApp, Copy Link pe paginile de blog
+- ✅ **Mobile Sticky CTA Actualizat**: 
+  - "Sună Acum" (verde) → tel:+40732403464
+  - "Solicită Ofertă" (coral) → /formular-angajator
+- ✅ **Blog HTML Rendering**: Content-ul articolelor renderizează corect HTML (headings, liste, etc.)
+
 ## Updates (02 Mar 2026 - v10) - FAZA 2 PAGINI PACHETE + STICKY CTA
 - ✅ **5 Pagini Noi Pachete Servicii** (fiecare cu 4 limbi):
   - `/servicii/student-advisor` - Pentru studenți internaționali
@@ -220,23 +236,30 @@ Model: gpt-4o-mini
 
 ## Backlog
 
-### P0 (Important - Faza 3)
-- **Pagini SEO Industrii**: Construcții, Manufacturing, HoReCa, Maritime
+### P0 (Important - Faza 3 - În Progres)
+- ✅ Fix Hero Overlap - COMPLET
+- ✅ Subtitlu diferențiator - COMPLET
+- ✅ Social Media Icons (header/footer) - COMPLET
+- ✅ Open Graph / Twitter Cards - COMPLET
+- ✅ Blog Share Buttons - COMPLET
+- ✅ Mobile Sticky CTA nou - COMPLET
+- 🟡 CTA-uri diferențiate pentru user types (angajatori, candidați, studenți)
+- 🟡 Mini-formular Homepage pentru nevoi urgente
+- 🟡 Secțiune Urgență (contingent limitat Non-UE)
+- 🟡 UX review general (spacing, button sizes mobile)
 
-### P1 (Important)
-- reCAPTCHA pe formulare
-- Schema.org structured data (Organization)
-- Meta tags unice per pagină/limbă
-- Secțiune testimoniale
+### P1 (Pagini SEO Industrii)
+- **Pagini Landing SEO**: Construcții, Manufacturing, HoReCa, Maritime
 
 ### P2 (Nice to have)
+- reCAPTCHA pe formulare
+- Schema.org structured data (Organization)
+- Secțiune testimoniale
 - Dashboard admin pentru vizualizare aplicații
-- Notificări email către candidați
 - CMS pentru blog
-- Tracking status aplicație
 - Analytics dashboard (Google Analytics, GSC, Facebook Pixel)
 
-## Status: ✅ v10 COMPLET - Faza 2 finalizată cu pagini pachete și sticky CTA
+## Status: ✅ v11 COMPLET - Faza 3 CRO/UX (Prima parte) finalizată
 
 ## Date Companie
 - **Denumire**: Global Jobs Consulting SRL
