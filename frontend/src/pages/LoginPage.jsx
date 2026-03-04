@@ -40,12 +40,16 @@ export default function LoginPage() {
     }
   };
 
-  const getRedirectPath = (role) => {
-    switch (role) {
+  const getRedirectPath = (accountType) => {
+    switch (accountType) {
       case 'admin':
         return '/admin';
       case 'employer':
         return '/portal/employer';
+      case 'student':
+        return '/portal/student';
+      case 'immigration_client':
+        return '/portal/immigration';
       case 'candidate':
       default:
         return '/portal/candidate';
