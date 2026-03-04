@@ -777,10 +777,11 @@ async def submit_employer_profile(request: Request):
         "created_at": datetime.now(timezone.utc)
     })
     
-    # Send email notification to admin (office@gjc.ro)
+    # Send email notification to admin (angajatori@gjc.ro)
     await notify_admin_new_profile_pending(
         profile_type="Angajator",
         profile_data=profile,
+        account_type="employer",
         platform_url=PLATFORM_URL
     )
     
