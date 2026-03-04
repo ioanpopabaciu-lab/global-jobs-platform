@@ -310,10 +310,14 @@ export default function Navbar() {
       <div className={`py-2 px-4 text-sm transition-all ${isScrolled ? 'hidden' : 'bg-navy-900 text-white'}`}>
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
+            <a 
+              href="tel:+40732403464" 
+              className="flex items-center gap-1 hover:text-coral transition-colors"
+              data-testid="header-phone-link"
+            >
               <Phone className="h-3 w-3" />
               +40 732 403 464
-            </span>
+            </a>
             <span className="hidden sm:block">office@gjc.ro</span>
           </div>
           <div className="flex items-center gap-4">
