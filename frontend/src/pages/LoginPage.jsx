@@ -28,10 +28,10 @@ export default function LoginPage() {
 
     try {
       const data = await login(email, password);
-      toast.success('Autentificare reușită!');
+      toast.success('Authentication successful!');
       
-      // Redirect based on role
-      const redirectPath = getRedirectPath(data.user.role);
+      // Redirect based on account_type
+      const redirectPath = getRedirectPath(data.user.account_type || data.user.role);
       navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.message);
