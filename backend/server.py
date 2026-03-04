@@ -727,6 +727,7 @@ async def startup_init():
     set_auth_db(db)
     set_portal_db(db)
     set_admin_db(db)
+    set_notification_db(db)
     
     # Initialize cloud storage
     try:
