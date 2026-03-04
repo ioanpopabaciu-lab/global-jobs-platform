@@ -39,12 +39,10 @@ const menuTranslations = {
     companyEligibility: "Eligibilitate Companie",
     costsTimelines: "Costuri & Termene",
     requestOffer: "🔴 Solicită Ofertă Personalizată",
-    candidates: "Portal Candidați",
     blog: "Blog",
     contact: "Contact",
     cta: "Solicită Ofertă",
-    login: "Autentificare",
-    portal: "Portal Clienți"
+    myAccount: "MY ACCOUNT"
   },
   en: {
     home: "Home",
@@ -61,12 +59,10 @@ const menuTranslations = {
     companyEligibility: "Company Eligibility",
     costsTimelines: "Costs & Timelines",
     requestOffer: "🔴 Request Personalized Offer",
-    candidates: "Candidates Portal",
     blog: "Blog",
     contact: "Contact",
     cta: "Request Quote",
-    login: "Login",
-    portal: "Client Portal"
+    myAccount: "MY ACCOUNT"
   },
   de: {
     home: "Startseite",
@@ -83,12 +79,10 @@ const menuTranslations = {
     companyEligibility: "Firmenberechtigung",
     costsTimelines: "Kosten & Fristen",
     requestOffer: "🔴 Personalisiertes Angebot anfordern",
-    candidates: "Bewerberportal",
     blog: "Blog",
     contact: "Kontakt",
     cta: "Angebot anfordern",
-    login: "Anmelden",
-    portal: "Kundenportal"
+    myAccount: "MY ACCOUNT"
   },
   sr: {
     home: "Početna",
@@ -105,12 +99,10 @@ const menuTranslations = {
     companyEligibility: "Podobnost kompanije",
     costsTimelines: "Troškovi i rokovi",
     requestOffer: "🔴 Zatražite personalizovanu ponudu",
-    candidates: "Portal kandidata",
     blog: "Blog",
     contact: "Kontakt",
     cta: "Zatražite ponudu",
-    login: "Prijava",
-    portal: "Portal klijenata"
+    myAccount: "MY ACCOUNT"
   }
 };
 
