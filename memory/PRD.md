@@ -49,6 +49,24 @@
 - [x] **Cloud Storage Integration** - Emergent Object Storage for documents
 - [x] **Profile Validation Workflow** - draft → pending_validation → validated
 
+### ✅ Notification System (COMPLETE - 2026-03-04)
+- [x] **In-App Notifications**
+  - Bell icon with unread badge in portal header
+  - Dropdown panel with notification list
+  - Mark as read / Delete functionality
+  - 30-second polling for real-time updates
+- [x] **Email Notifications** (SMTP configured)
+  - HTML email templates for: candidate match, profile validated, profile rejected
+  - Automatic email on profile validation events
+- [x] **Advanced Matching Algorithm**
+  - Profession/COR code matching (30 pts)
+  - Experience years (20 pts)
+  - Language/English level (20 pts)
+  - Nationality preference (15 pts)
+  - Age range (10 pts)
+  - Gender preference (5 pts)
+  - Minimum 60% score to trigger match notification
+
 ### 🔄 Phase 3 - Core Workflow (NEXT)
 - [ ] Job Request creation (Employer Portal)
 - [ ] Candidate-to-Job matching engine (Admin)
