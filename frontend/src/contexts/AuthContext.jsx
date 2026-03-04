@@ -67,15 +67,15 @@ export function AuthProvider({ children }) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ name, email, password, role })
+      body: JSON.stringify({ name, email, password, account_type: role })
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Registration failed');
+      throw new Error(data.detail || 'Registration failed');
     }
 
-    const data = await response.json();
     setUser(data.user);
     setIsAuthenticated(true);
     return data;
