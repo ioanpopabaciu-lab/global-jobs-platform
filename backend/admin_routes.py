@@ -183,37 +183,55 @@ async def validate_candidate(
     if status not in ["validated", "rejected"]:
         raise HTTPException(status_code=400, detail="Status must be 'validated' or 'rejected'")
     
+    # Get candidate before update
+    candidate = await db.candidate_profiles.find_one(
+        {"profile_id": profile_id},
+        {"_id": 0}
+    )
+    
+    if not candidate:
+        raise HTTPException(status_code=404, detail="Candidate not found")
+    
+    # Update status
     result = await db.candidate_profiles.update_one(
         {"profile_id": profile_id},
         {"$set": {
             "status": status,
             "validation_notes": notes,
+            "validated_by": admin["user_id"],
+            "validated_at": datetime.now(timezone.utc),
             "updated_at": datetime.now(timezone.utc)
         }}
     )
     
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Candidate not found")
-    
-    # Get candidate for notification
-    candidate = await db.candidate_profiles.find_one(
-        {"profile_id": profile_id},
-        {"_id": 0, "user_id": 1, "full_name": 1}
+    # Get user info for notifications
+    user = await db.users.find_one(
+        {"user_id": candidate["user_id"]},
+        {"_id": 0, "email": 1, "name": 1}
     )
     
-    # Create notification for candidate
-    await db.notifications.insert_one({
-        "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-        "user_id": candidate["user_id"],
-        "title": "Profil validat" if status == "validated" else "Profil respins",
-        "message": f"Profilul tău a fost {'aprobat' if status == 'validated' else 'respins'}. {notes or ''}",
-        "type": "success" if status == "validated" else "error",
-        "category": "profile",
-        "related_entity_type": "candidate_profile",
-        "related_entity_id": profile_id,
-        "is_read": False,
-        "created_at": datetime.now(timezone.utc)
-    })
+    candidate_name = f"{candidate.get('first_name', '')} {candidate.get('last_name', '')}".strip()
+    if not candidate_name:
+        candidate_name = user.get("name", "Candidat")
+    
+    # Send notification with email
+    await notify_profile_validation(
+        user_id=candidate["user_id"],
+        user_name=candidate_name,
+        user_type="candidate",
+        is_validated=(status == "validated"),
+        rejection_reason=notes if status == "rejected" else None,
+        platform_url=PLATFORM_URL
+    )
+    
+    # If validated, trigger matching with open jobs and notify employers
+    if status == "validated":
+        # Refresh candidate data with full profile
+        updated_candidate = await db.candidate_profiles.find_one(
+            {"profile_id": profile_id},
+            {"_id": 0}
+        )
+        await notify_employers_of_new_candidate(updated_candidate, PLATFORM_URL)
     
     return {"message": f"Candidate profile {status}"}
 
