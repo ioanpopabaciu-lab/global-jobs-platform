@@ -25,16 +25,27 @@ import FamilyReunionPage from "@/pages/FamilyReunionPage";
 import SettlementCitizenshipPage from "@/pages/SettlementCitizenshipPage";
 import AdministrativePage from "@/pages/AdministrativePage";
 
-// Auth Pages
+// Auth & Account Pages
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import AuthCallback from "@/pages/AuthCallback";
+import MyAccountPage from "@/pages/MyAccountPage";
 
-// Portal Pages
+// Portal Pages - Candidate
 import CandidateLayout from "@/pages/portal/CandidateLayout";
 import CandidateDashboard from "@/pages/portal/CandidateDashboard";
+
+// Portal Pages - Employer
 import EmployerLayout from "@/pages/portal/EmployerLayout";
 import EmployerDashboard from "@/pages/portal/EmployerDashboard";
+
+// Portal Pages - Student
+import StudentLayout from "@/pages/portal/StudentLayout";
+import StudentDashboard from "@/pages/portal/StudentDashboard";
+
+// Portal Pages - Immigration
+import ImmigrationLayout from "@/pages/portal/ImmigrationLayout";
+import ImmigrationDashboard from "@/pages/portal/ImmigrationDashboard";
 
 // Admin Pages
 import AdminLayout from "@/pages/admin/AdminLayout";
