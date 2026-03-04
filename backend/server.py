@@ -19,6 +19,7 @@ import shutil
 from auth_routes import auth_router, set_database as set_auth_db
 from portal_routes import portal_router, set_database as set_portal_db
 from admin_routes import admin_router, set_database as set_admin_db
+from storage import init_storage
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
