@@ -1,49 +1,101 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Loader2, Mail, Lock, User, Chrome, Briefcase, UserCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Chrome, Building2, UserCircle, GraduationCap, FileText, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
+const accountTypeConfig = {
+  employer: {
+    title: 'Create Employer Account',
+    description: 'Recruit workers for your company in Romania',
+    icon: Building2,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50'
+  },
+  candidate: {
+    title: 'Create Candidate Profile',
+    description: 'Apply for jobs in Romania',
+    icon: UserCircle,
+    color: 'text-green-600',
+    bgColor: 'bg-green-50'
+  },
+  student: {
+    title: 'Student Application',
+    description: 'Apply to study in Romania with our assistance',
+    icon: GraduationCap,
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-50'
+  },
+  immigration_client: {
+    title: 'Immigration Services',
+    description: 'Assistance for visas, residence permits, family reunification and citizenship',
+    icon: FileText,
+    color: 'text-coral',
+    bgColor: 'bg-red-50'
+  }
+};
+
 export default function RegisterPage() {
+  const [searchParams] = useSearchParams();
+  const accountType = searchParams.get('type') || 'candidate';
+  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('candidate');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
   const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
+  const config = accountTypeConfig[accountType] || accountTypeConfig.candidate;
+  const Icon = config.icon;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Parolele nu coincid');
+      setError('Passwords do not match');
       return;
     }
 
     if (password.length < 6) {
-      setError('Parola trebuie să aibă minim 6 caractere');
+      setError('Password must be at least 6 characters');
       return;
     }
 
     setLoading(true);
 
     try {
-      const data = await register(name, email, password, role);
-      toast.success('Cont creat cu succes!');
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ 
+          name, 
+          email, 
+          password, 
+          account_type: accountType 
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Registration failed');
+      }
+
+      const data = await response.json();
+      toast.success('Account created successfully!');
       
-      // Redirect based on role
-      const redirectPath = role === 'employer' ? '/portal/employer' : '/portal/candidate';
+      // Redirect based on account type
+      const redirectPath = getRedirectPath(data.user.account_type);
       navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -52,9 +104,25 @@ export default function RegisterPage() {
     }
   };
 
+  const getRedirectPath = (type) => {
+    switch (type) {
+      case 'admin':
+        return '/admin';
+      case 'employer':
+        return '/portal/employer';
+      case 'student':
+        return '/portal/student';
+      case 'immigration_client':
+        return '/portal/immigration';
+      case 'candidate':
+      default:
+        return '/portal/candidate';
+    }
+  };
+
   const handleGoogleLogin = () => {
-    // Note: Google login will default to 'candidate' role
-    // User can change role later or contact admin
+    // Store intended account type in sessionStorage for after OAuth
+    sessionStorage.setItem('intended_account_type', accountType);
     loginWithGoogle();
   };
 
@@ -62,15 +130,17 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-navy-900 to-navy-800 px-4 py-12">
       <Card className="w-full max-w-md" data-testid="register-card">
         <CardHeader className="text-center">
-          <Link to="/" className="inline-block mb-4">
-            <img 
-              src="https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png" 
-              alt="GJC Logo" 
-              className="h-16 mx-auto"
-            />
+          <Link to="/my-account" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm mb-4">
+            <ArrowLeft className="h-4 w-4" />
+            Back to service selection
           </Link>
-          <CardTitle className="text-2xl font-heading text-navy-900">Creează Cont</CardTitle>
-          <CardDescription>Înregistrează-te în platforma Global Jobs Consulting</CardDescription>
+          
+          <div className={`mx-auto w-16 h-16 ${config.bgColor} rounded-full flex items-center justify-center mb-4`}>
+            <Icon className={`h-8 w-8 ${config.color}`} />
+          </div>
+          
+          <CardTitle className="text-2xl font-heading text-navy-900">{config.title}</CardTitle>
+          <CardDescription>{config.description}</CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-4">
@@ -88,7 +158,7 @@ export default function RegisterPage() {
             data-testid="google-register-btn"
           >
             <Chrome className="mr-2 h-4 w-4" />
-            Continuă cu Google
+            Continue with Google
           </Button>
 
           <div className="relative">
@@ -96,49 +166,20 @@ export default function RegisterPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-gray-500">sau</span>
+              <span className="bg-white px-2 text-gray-500">or</span>
             </div>
           </div>
 
           {/* Registration Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Role Selection */}
-            <div className="space-y-3">
-              <Label>Tip de cont</Label>
-              <RadioGroup value={role} onValueChange={setRole} className="grid grid-cols-2 gap-4">
-                <div>
-                  <RadioGroupItem value="candidate" id="candidate" className="peer sr-only" />
-                  <Label
-                    htmlFor="candidate"
-                    className="flex flex-col items-center justify-center rounded-md border-2 border-gray-200 bg-white p-4 hover:bg-gray-50 peer-data-[state=checked]:border-navy-600 peer-data-[state=checked]:bg-navy-50 cursor-pointer"
-                  >
-                    <UserCircle className="mb-2 h-6 w-6 text-navy-600" />
-                    <span className="text-sm font-medium">Candidat</span>
-                    <span className="text-xs text-gray-500">Caut un job</span>
-                  </Label>
-                </div>
-                <div>
-                  <RadioGroupItem value="employer" id="employer" className="peer sr-only" />
-                  <Label
-                    htmlFor="employer"
-                    className="flex flex-col items-center justify-center rounded-md border-2 border-gray-200 bg-white p-4 hover:bg-gray-50 peer-data-[state=checked]:border-navy-600 peer-data-[state=checked]:bg-navy-50 cursor-pointer"
-                  >
-                    <Briefcase className="mb-2 h-6 w-6 text-navy-600" />
-                    <span className="text-sm font-medium">Angajator</span>
-                    <span className="text-xs text-gray-500">Caut personal</span>
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
-
             <div className="space-y-2">
-              <Label htmlFor="name">Nume complet</Label>
+              <Label htmlFor="name">Full Name</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Ion Popescu"
+                  placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
@@ -155,7 +196,7 @@ export default function RegisterPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="email@exemplu.com"
+                  placeholder="email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -166,7 +207,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Parolă</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -184,7 +225,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmă parola</Label>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -209,10 +250,10 @@ export default function RegisterPage() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Se creează contul...
+                  Creating account...
                 </>
               ) : (
-                'Creează Cont'
+                'Create Account'
               )}
             </Button>
           </form>
@@ -220,9 +261,9 @@ export default function RegisterPage() {
 
         <CardFooter className="text-center text-sm">
           <p className="text-gray-500 w-full">
-            Ai deja cont?{' '}
+            Already have an account?{' '}
             <Link to="/login" className="text-navy-600 hover:underline font-medium">
-              Autentifică-te
+              Sign In
             </Link>
           </p>
         </CardFooter>
