@@ -9,8 +9,8 @@ import uuid
 # User Roles (for permissions)
 UserRole = Literal["candidate", "employer", "student", "immigration_client", "admin"]
 
-# Account Types (for service differentiation)
-AccountType = Literal["candidate", "employer", "student", "immigration_client"]
+# Account Types (for service differentiation) - includes admin for backwards compatibility
+AccountType = Literal["candidate", "employer", "student", "immigration_client", "admin"]
 
 # ==================== AUTH MODELS ====================
 
