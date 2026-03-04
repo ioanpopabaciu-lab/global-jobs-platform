@@ -252,11 +252,10 @@ export default function BlogPostPage() {
               <p className="text-xl text-gray-700 mb-6 font-medium leading-relaxed">
                 {post.excerpt}
               </p>
-              <div className="prose prose-lg max-w-none text-gray-600 leading-relaxed">
-                {post.content.split('\n').map((paragraph, index) => (
-                  <p key={index} className="mb-4">{paragraph}</p>
-                ))}
-              </div>
+              <div 
+                className="prose prose-lg max-w-none text-gray-600 leading-relaxed prose-headings:text-navy-900 prose-headings:font-heading prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-p:mb-4 prose-ul:my-4 prose-li:my-1 prose-strong:text-navy-800"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
             </article>
 
             {/* CTA */}
