@@ -24,7 +24,7 @@ from notification_service import notify_admin_new_profile_pending
 logger = logging.getLogger(__name__)
 
 # Platform URL for emails
-PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://visa-platform-2.preview.emergentagent.com")
+PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://global-jobs-recruit.preview.emergentagent.com")
 
 # Database will be injected
 db = None
