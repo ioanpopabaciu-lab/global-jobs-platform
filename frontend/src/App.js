@@ -29,6 +29,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PhoneButton from "@/components/PhoneButton";
 import MariaChat from "@/components/MariaChat";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 
@@ -177,6 +178,7 @@ function AppContent() {
       </main>
       <Footer />
       <CookieBanner />
+      <PhoneButton />
       <WhatsAppButton />
       <MariaChat />
       <MobileStickyCTA />
