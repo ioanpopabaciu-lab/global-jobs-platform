@@ -289,11 +289,13 @@ async def google_session(data: GoogleSessionData, response: Response):
             )
             user_id = user_doc["user_id"]
             role = user_doc["role"]
+            account_type = user_doc.get("account_type", role)
             is_verified = user_doc.get("is_verified", False)
         else:
-            # Create new user (default role: candidate)
+            # Create new user (default: candidate - they can change via my-account page)
             user_id = f"user_{uuid.uuid4().hex[:12]}"
             role = "candidate"
+            account_type = "candidate"
             is_verified = True  # Google users are verified by default
             
             user_doc = {
@@ -302,6 +304,7 @@ async def google_session(data: GoogleSessionData, response: Response):
                 "name": name or email.split("@")[0],
                 "picture": picture,
                 "role": role,
+                "account_type": account_type,
                 "is_active": True,
                 "is_verified": is_verified,
                 "auth_provider": "google",
@@ -342,6 +345,7 @@ async def google_session(data: GoogleSessionData, response: Response):
             name=name or email.split("@")[0],
             picture=picture,
             role=role,
+            account_type=account_type,
             is_active=True,
             is_verified=is_verified,
             created_at=user_doc.get("created_at", datetime.now(timezone.utc))
