@@ -226,12 +226,14 @@ function AppRouter() {
                         location.pathname.startsWith('/admin') ||
                         location.pathname.startsWith('/login') ||
                         location.pathname.startsWith('/register') ||
-                        location.pathname.startsWith('/auth');
+                        location.pathname.startsWith('/auth') ||
+                        location.pathname.startsWith('/my-account');
   
   if (isPortalRoute) {
     return (
       <Routes>
         {/* Auth routes */}
+        <Route path="/my-account" element={<MyAccountPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
@@ -239,34 +241,51 @@ function AppRouter() {
         {/* Candidate Portal */}
         <Route path="/portal/candidate" element={<CandidateLayout />}>
           <Route index element={<CandidateDashboard />} />
-          <Route path="profile" element={<div className="p-4">Profilul Candidat - În dezvoltare</div>} />
-          <Route path="documents" element={<div className="p-4">Documente - În dezvoltare</div>} />
-          <Route path="applications" element={<div className="p-4">Aplicații - În dezvoltare</div>} />
-          <Route path="notifications" element={<div className="p-4">Notificări - În dezvoltare</div>} />
+          <Route path="profile" element={<div className="p-4">Candidate Profile - Coming Soon</div>} />
+          <Route path="documents" element={<div className="p-4">Documents - Coming Soon</div>} />
+          <Route path="applications" element={<div className="p-4">Applications - Coming Soon</div>} />
+          <Route path="notifications" element={<div className="p-4">Notifications - Coming Soon</div>} />
         </Route>
         
         {/* Employer Portal */}
         <Route path="/portal/employer" element={<EmployerLayout />}>
           <Route index element={<EmployerDashboard />} />
-          <Route path="profile" element={<div className="p-4">Profilul Companiei - În dezvoltare</div>} />
-          <Route path="jobs" element={<div className="p-4">Cereri de Personal - În dezvoltare</div>} />
-          <Route path="projects" element={<div className="p-4">Proiecte - În dezvoltare</div>} />
-          <Route path="invoices" element={<div className="p-4">Facturi - În dezvoltare</div>} />
-          <Route path="notifications" element={<div className="p-4">Notificări - În dezvoltare</div>} />
+          <Route path="profile" element={<div className="p-4">Company Profile - Coming Soon</div>} />
+          <Route path="jobs" element={<div className="p-4">Job Requests - Coming Soon</div>} />
+          <Route path="projects" element={<div className="p-4">Projects - Coming Soon</div>} />
+          <Route path="invoices" element={<div className="p-4">Invoices - Coming Soon</div>} />
+          <Route path="notifications" element={<div className="p-4">Notifications - Coming Soon</div>} />
+        </Route>
+        
+        {/* Student Portal */}
+        <Route path="/portal/student" element={<StudentLayout />}>
+          <Route index element={<StudentDashboard />} />
+          <Route path="application" element={<div className="p-4">Application - Coming Soon</div>} />
+          <Route path="documents" element={<div className="p-4">Documents - Coming Soon</div>} />
+          <Route path="timeline" element={<div className="p-4">Timeline - Coming Soon</div>} />
+          <Route path="notifications" element={<div className="p-4">Notifications - Coming Soon</div>} />
+        </Route>
+        
+        {/* Immigration Services Portal */}
+        <Route path="/portal/immigration" element={<ImmigrationLayout />}>
+          <Route index element={<ImmigrationDashboard />} />
+          <Route path="cases" element={<div className="p-4">My Cases - Coming Soon</div>} />
+          <Route path="documents" element={<div className="p-4">Documents - Coming Soon</div>} />
+          <Route path="notifications" element={<div className="p-4">Notifications - Coming Soon</div>} />
         </Route>
         
         {/* Admin Dashboard */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="candidates" element={<div className="p-4">Candidați Admin - În dezvoltare</div>} />
-          <Route path="employers" element={<div className="p-4">Angajatori Admin - În dezvoltare</div>} />
-          <Route path="jobs" element={<div className="p-4">Joburi Admin - În dezvoltare</div>} />
-          <Route path="projects" element={<div className="p-4">Proiecte Admin - În dezvoltare</div>} />
-          <Route path="documents" element={<div className="p-4">Documente Admin - În dezvoltare</div>} />
-          <Route path="users" element={<div className="p-4">Utilizatori Admin - În dezvoltare</div>} />
+          <Route path="candidates" element={<div className="p-4">Candidates Admin - Coming Soon</div>} />
+          <Route path="employers" element={<div className="p-4">Employers Admin - Coming Soon</div>} />
+          <Route path="jobs" element={<div className="p-4">Jobs Admin - Coming Soon</div>} />
+          <Route path="projects" element={<div className="p-4">Projects Admin - Coming Soon</div>} />
+          <Route path="documents" element={<div className="p-4">Documents Admin - Coming Soon</div>} />
+          <Route path="users" element={<div className="p-4">Users Admin - Coming Soon</div>} />
         </Route>
         
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/my-account" replace />} />
       </Routes>
     );
   }
