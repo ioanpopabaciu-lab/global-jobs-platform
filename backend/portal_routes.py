@@ -834,6 +834,8 @@ async def create_job_request(data: JobRequestCreate, request: Request):
     job_doc["updated_at"] = job_doc["updated_at"].isoformat()
     
     await db.job_requests.insert_one(job_doc)
+    # Remove MongoDB _id to avoid serialization error
+    job_doc.pop('_id', None)
     
     return {"job": job_doc, "message": "Job request created"}
 
