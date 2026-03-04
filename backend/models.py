@@ -6,8 +6,11 @@ from typing import Optional, Literal
 from datetime import datetime, timezone
 import uuid
 
-# User Roles
-UserRole = Literal["candidate", "employer", "admin"]
+# User Roles (for permissions)
+UserRole = Literal["candidate", "employer", "student", "immigration_client", "admin"]
+
+# Account Types (for service differentiation)
+AccountType = Literal["candidate", "employer", "student", "immigration_client"]
 
 # ==================== AUTH MODELS ====================
 
@@ -19,6 +22,7 @@ class UserBase(BaseModel):
     name: str
     picture: Optional[str] = None
     role: UserRole = "candidate"
+    account_type: AccountType = "candidate"
     is_active: bool = True
     is_verified: bool = False
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -29,7 +33,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     name: str
-    role: UserRole = "candidate"
+    account_type: AccountType = "candidate"
 
 class UserLogin(BaseModel):
     """User login model"""
@@ -43,6 +47,7 @@ class UserResponse(BaseModel):
     name: str
     picture: Optional[str] = None
     role: UserRole
+    account_type: AccountType
     is_active: bool
     is_verified: bool
     created_at: datetime
