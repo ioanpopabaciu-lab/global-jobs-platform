@@ -185,6 +185,10 @@ export default function CandidateLayout() {
 
       {/* Main content */}
       <main className="lg:pl-64 pt-14 lg:pt-0">
+        {/* Desktop header with notification center */}
+        <div className="hidden lg:flex items-center justify-end p-4 border-b bg-white">
+          <NotificationCenter />
+        </div>
         <div className="p-6">
           <Outlet context={{ dashboardData, user }} />
         </div>
