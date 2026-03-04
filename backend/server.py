@@ -704,6 +704,7 @@ app.include_router(api_router)
 app.include_router(auth_router, prefix="/api")
 app.include_router(portal_router, prefix="/api")
 app.include_router(admin_router, prefix="/api")
+app.include_router(notification_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
