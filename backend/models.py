@@ -77,62 +77,118 @@ class PasswordReset(BaseModel):
     new_password: str
 
 # ==================== CANDIDATE MODELS ====================
+# Comprehensive profile for Non-EU worker recruitment in Romania
 
 class CandidateProfile(BaseModel):
-    """Candidate profile model"""
+    """Candidate profile model - Full profile for international recruitment"""
     model_config = ConfigDict(extra="ignore")
     profile_id: str = Field(default_factory=lambda: f"cand_{uuid.uuid4().hex[:12]}")
     user_id: str
     
-    # Personal info
-    full_name: str
-    date_of_birth: Optional[datetime] = None
-    nationality: str
-    current_country: str
-    phone: str
-    whatsapp: Optional[str] = None
+    # SECTION 1 - Personal Information (Informații personale)
+    profile_photo_url: Optional[str] = None  # Poză profil (obligatoriu)
+    first_name: str = ""  # Prenume
+    last_name: str = ""  # Nume
+    country_of_origin: str = ""  # Țară de origine
+    date_of_birth: Optional[str] = None  # Data nașterii (stored as string YYYY-MM-DD)
+    gender: Literal["male", "female", "other"] = "male"  # Sex
+    marital_status: Literal["single", "married", "divorced", "widowed"] = "single"  # Stare civilă
+    religion: Optional[str] = None  # Religie
+    citizenship: str = ""  # Cetățenie
     
-    # Professional info
-    profession: str
-    experience_years: int = 0
-    english_level: Literal["none", "basic", "intermediate", "advanced", "fluent"] = "basic"
+    # SECTION 2 - Family (Familie)
+    father_name: Optional[str] = None  # Nume tată
+    mother_name: Optional[str] = None  # Nume mamă
+    spouse_name: Optional[str] = None  # Nume soț / soție
+    children_count: int = 0  # Număr copii
+    children_ages: list[int] = []  # Vârsta copiilor
+    
+    # SECTION 3 - Professional Experience (Experiență profesională)
+    current_profession: str = ""  # Profesie actuală
+    target_position_cor: Optional[str] = None  # Postul vizat (cod COR România)
+    experience_years: int = 0  # Număr ani experiență
+    worked_abroad: bool = False  # A lucrat în străinătate (Da / Nu)
+    countries_worked_in: list[str] = []  # În ce țări a lucrat
+    languages_known: list[str] = []  # Limbi străine cunoscute
+    english_level: Literal["none", "basic", "intermediate", "advanced", "fluent"] = "none"  # Nivel limbă engleză
+    
+    # SECTION 4 - Documents (Documente obligatorii) - stored as doc_ids
+    cv_doc_id: Optional[str] = None  # CV fără date de contact
+    diploma_doc_ids: list[str] = []  # Diplome / certificate
+    video_presentation_url: Optional[str] = None  # Video prezentare candidat
+    passport_doc_id: Optional[str] = None  # Copie pașaport
+    criminal_record_doc_id: Optional[str] = None  # Certificat cazier judiciar
+    passport_photo_doc_id: Optional[str] = None  # Fotografie tip pașaport
+    
+    # SECTION 5 - Additional Information (Informații suplimentare)
+    salary_expectation: Optional[str] = None  # Salariul solicitat (opțional)
+    existing_residence_permit: Optional[str] = None  # Permis de ședere într-o altă țară
+    existing_residence_permit_country: Optional[str] = None  # Țara permisului de ședere
+    
+    # Contact (for internal use only)
+    phone: str = ""
+    whatsapp: Optional[str] = None
+    email: Optional[str] = None
+    
+    # Legacy fields for backward compatibility
+    full_name: Optional[str] = None
+    nationality: Optional[str] = None
+    current_country: Optional[str] = None
+    profession: Optional[str] = None
     other_languages: list[str] = []
     skills: list[str] = []
-    
-    # Preferences
-    preferred_countries: list[str] = []  # RO, AT, RS
+    preferred_countries: list[str] = []
     preferred_industries: list[str] = []
-    salary_expectation: Optional[str] = None
     available_from: Optional[datetime] = None
-    
-    # Documents (references to document IDs)
-    passport_doc_id: Optional[str] = None
-    cv_doc_id: Optional[str] = None
-    diploma_doc_ids: list[str] = []
-    criminal_record_doc_id: Optional[str] = None
     medical_certificate_doc_id: Optional[str] = None
-    video_presentation_url: Optional[str] = None
     
     # Status
     status: Literal["draft", "pending_validation", "validated", "rejected"] = "draft"
     validation_notes: Optional[str] = None
+    validated_by: Optional[str] = None
+    validated_at: Optional[datetime] = None
     
     # Metadata
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class CandidateProfileCreate(BaseModel):
-    """Create candidate profile"""
-    full_name: str
-    nationality: str
-    current_country: str
-    phone: str
+    """Create/Update candidate profile - all fields optional for partial updates"""
+    # Section 1 - Personal
+    profile_photo_url: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    country_of_origin: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    gender: Optional[str] = None
+    marital_status: Optional[str] = None
+    religion: Optional[str] = None
+    citizenship: Optional[str] = None
+    
+    # Section 2 - Family
+    father_name: Optional[str] = None
+    mother_name: Optional[str] = None
+    spouse_name: Optional[str] = None
+    children_count: Optional[int] = None
+    children_ages: Optional[list[int]] = None
+    
+    # Section 3 - Professional
+    current_profession: Optional[str] = None
+    target_position_cor: Optional[str] = None
+    experience_years: Optional[int] = None
+    worked_abroad: Optional[bool] = None
+    countries_worked_in: Optional[list[str]] = None
+    languages_known: Optional[list[str]] = None
+    english_level: Optional[str] = None
+    
+    # Section 5 - Additional
+    salary_expectation: Optional[str] = None
+    existing_residence_permit: Optional[str] = None
+    existing_residence_permit_country: Optional[str] = None
+    
+    # Contact
+    phone: Optional[str] = None
     whatsapp: Optional[str] = None
-    profession: str
-    experience_years: int = 0
-    english_level: str = "basic"
-    preferred_countries: list[str] = []
-    preferred_industries: list[str] = []
 
 # ==================== EMPLOYER MODELS ====================
 
