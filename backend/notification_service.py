@@ -19,7 +19,18 @@ SMTP_HOST = os.environ.get("SMTP_HOST", "mail.gjc.ro")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "465"))
 SMTP_USER = os.environ.get("SMTP_USER", "office@gjc.ro")
 SMTP_PASS = os.environ.get("SMTP_PASS", "")
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "office@gjc.ro")
+
+# Admin email addresses per account type
+ADMIN_EMAILS = {
+    "candidate": os.environ.get("ADMIN_EMAIL_CANDIDATES", "candidati@gjc.ro"),
+    "employer": os.environ.get("ADMIN_EMAIL_EMPLOYERS", "angajatori@gjc.ro"),
+    "student": os.environ.get("ADMIN_EMAIL_STUDENTS", "studenti@gjc.ro"),
+    "immigration_client": os.environ.get("ADMIN_EMAIL_SERVICES", "services@gjc.ro"),
+    "default": os.environ.get("ADMIN_EMAIL", "office@gjc.ro")
+}
+
+# Legacy - for backwards compatibility
+ADMIN_EMAIL = ADMIN_EMAILS["default"]
 
 # Database reference
 db = None
