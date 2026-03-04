@@ -15,6 +15,11 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import shutil
 
+# Import new routes
+from auth_routes import auth_router, set_database as set_auth_db
+from portal_routes import portal_router, set_database as set_portal_db
+from admin_routes import admin_router, set_database as set_admin_db
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
