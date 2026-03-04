@@ -582,18 +582,23 @@ async def notify_profile_validation(
 
 
 async def notify_admin_new_profile_pending(
-    profile_type: str,  # "Candidat" or "Angajator"
+    profile_type: str,  # "Candidat", "Angajator", "Student", "Servicii Imigrare"
     profile_data: dict,
+    account_type: str = "candidate",  # candidate, employer, student, immigration_client
     platform_url: str = ""
 ):
     """
     Notify admin via email when a new profile is submitted for validation.
-    Email is sent to ADMIN_EMAIL (default: office@gjc.ro)
+    Email is sent to specific address based on account type:
+    - candidati@gjc.ro for candidates
+    - angajatori@gjc.ro for employers
+    - studenti@gjc.ro for students
+    - services@gjc.ro for immigration services
     """
     from datetime import datetime
     
-    # Build profile name
-    if profile_type == "Candidat":
+    # Build profile name and email data based on profile type
+    if profile_type == "Candidat" or account_type == "candidate":
         profile_name = f"{profile_data.get('first_name', '')} {profile_data.get('last_name', '')}".strip()
         email_data = {
             "profile_type": "Candidat",
@@ -605,7 +610,9 @@ async def notify_admin_new_profile_pending(
             "submitted_at": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M"),
             "platform_url": platform_url
         }
-    else:  # Angajator
+        admin_email = ADMIN_EMAILS.get("candidate", ADMIN_EMAILS["default"])
+        
+    elif profile_type == "Angajator" or account_type == "employer":
         profile_name = profile_data.get("company_name", "N/A")
         email_data = {
             "profile_type": "Angajator",
@@ -617,15 +624,48 @@ async def notify_admin_new_profile_pending(
             "submitted_at": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M"),
             "platform_url": platform_url
         }
+        admin_email = ADMIN_EMAILS.get("employer", ADMIN_EMAILS["default"])
+        
+    elif profile_type == "Student" or account_type == "student":
+        profile_name = f"{profile_data.get('first_name', '')} {profile_data.get('last_name', '')}".strip()
+        email_data = {
+            "profile_type": "Student",
+            "profile_name": profile_name or "N/A",
+            "profile_email": profile_data.get("email", "N/A"),
+            "profile_phone": profile_data.get("phone", "N/A"),
+            "citizenship": profile_data.get("citizenship") or profile_data.get("country_of_origin"),
+            "submitted_at": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M"),
+            "platform_url": platform_url
+        }
+        admin_email = ADMIN_EMAILS.get("student", ADMIN_EMAILS["default"])
+        
+    else:  # Servicii Imigrare / immigration_client
+        profile_name = f"{profile_data.get('first_name', '')} {profile_data.get('last_name', '')}".strip()
+        email_data = {
+            "profile_type": "Servicii Imigrare",
+            "profile_name": profile_name or "N/A",
+            "profile_email": profile_data.get("email", "N/A"),
+            "profile_phone": profile_data.get("phone", "N/A"),
+            "citizenship": profile_data.get("citizenship") or profile_data.get("country_of_origin"),
+            "submitted_at": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M"),
+            "platform_url": platform_url
+        }
+        admin_email = ADMIN_EMAILS.get("immigration_client", ADMIN_EMAILS["default"])
     
     # Get email template
     subject, html_body = get_email_template("new_profile_pending", email_data)
     
-    # Send email to admin
-    admin_email = ADMIN_EMAIL
-    logger.info(f"Sending new profile notification to admin: {admin_email}")
+    # Send email to specific admin address
+    logger.info(f"Sending new {profile_type} profile notification to: {admin_email}")
     
     email_sent = await send_email_async(admin_email, subject, html_body)
+    
+    if email_sent:
+        logger.info(f"Admin ({admin_email}) notified about new {profile_type} profile: {profile_name}")
+    else:
+        logger.warning(f"Failed to notify admin ({admin_email}) about new {profile_type} profile (SMTP may not be configured)")
+    
+    return email_sent
     
     if email_sent:
         logger.info(f"Admin notified about new {profile_type} profile: {profile_name}")
