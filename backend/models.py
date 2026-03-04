@@ -193,60 +193,83 @@ class CandidateProfileCreate(BaseModel):
 # ==================== EMPLOYER MODELS ====================
 
 class EmployerProfile(BaseModel):
-    """Employer profile model"""
+    """Employer profile model - Full company profile with job positions"""
     model_config = ConfigDict(extra="ignore")
     profile_id: str = Field(default_factory=lambda: f"emp_{uuid.uuid4().hex[:12]}")
     user_id: str
     
-    # Company info
-    company_name: str
-    company_cui: str  # Romanian CUI
-    company_j_number: Optional[str] = None  # J number
-    country: Literal["RO", "AT", "RS"]
-    city: str
-    address: str
+    # Company Information (Date companie)
+    company_name: str = ""  # Denumire companie
+    company_cui: str = ""  # CUI
+    company_j_number: Optional[str] = None  # Nr. Registrul Comerțului
+    address: str = ""  # Adresă sediu
+    phone: str = ""  # Telefon
+    email: str = ""  # Email
+    administrator_name: str = ""  # Nume administrator
     
-    # Contact
-    contact_person: str
-    contact_email: str
-    contact_phone: str
-    
-    # Company details
-    industry: str
+    # Additional company details
+    country: Literal["RO", "AT", "RS"] = "RO"
+    city: str = ""
+    industry: str = ""
     employees_count: int = 0
     year_founded: Optional[int] = None
     website: Optional[str] = None
     
-    # IGI Eligibility (for RO employers)
-    has_no_debts: bool = False
-    has_no_sanctions: bool = False
-    has_min_employees: bool = False  # min 2 employees
-    company_age_over_1_year: bool = False
+    # Contact person (for communication)
+    contact_person: str = ""
+    contact_email: str = ""
+    contact_phone: str = ""
     
-    # Documents
-    company_registration_doc_id: Optional[str] = None
-    fiscal_certificate_doc_id: Optional[str] = None
+    # Documents (Documente obligatorii)
+    cui_certificate_doc_id: Optional[str] = None  # Certificat CUI
+    administrator_id_doc_id: Optional[str] = None  # Carte identitate administrator
+    company_criminal_record_doc_id: Optional[str] = None  # Cazier judiciar persoană juridică
+    company_registration_doc_id: Optional[str] = None  # Legacy
+    fiscal_certificate_doc_id: Optional[str] = None  # Legacy
+    
+    # IGI Eligibility (for RO employers)
+    has_no_debts: bool = False  # Obligații fiscale plătite la zi
+    has_no_sanctions: bool = False  # Fără sancțiuni ANAF / ITM / AJOFM / IGI
+    has_min_employees: bool = False  # min 2 angajați activi
+    company_age_over_1_year: bool = False  # Vechime companie peste 1 an
     
     # Status
     status: Literal["draft", "pending_validation", "validated", "rejected"] = "draft"
     validation_notes: Optional[str] = None
+    validated_by: Optional[str] = None
+    validated_at: Optional[datetime] = None
     
     # Metadata
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class EmployerProfileCreate(BaseModel):
-    """Create employer profile"""
-    company_name: str
-    company_cui: str
-    country: str = "RO"
-    city: str
-    address: str
-    contact_person: str
-    contact_email: str
-    contact_phone: str
-    industry: str
-    employees_count: int = 0
+    """Create/Update employer profile"""
+    # Company info
+    company_name: Optional[str] = None
+    company_cui: Optional[str] = None
+    company_j_number: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    administrator_name: Optional[str] = None
+    country: Optional[str] = None
+    city: Optional[str] = None
+    industry: Optional[str] = None
+    employees_count: Optional[int] = None
+    year_founded: Optional[int] = None
+    website: Optional[str] = None
+    
+    # Contact
+    contact_person: Optional[str] = None
+    contact_email: Optional[str] = None
+    contact_phone: Optional[str] = None
+    
+    # IGI Eligibility
+    has_no_debts: Optional[bool] = None
+    has_no_sanctions: Optional[bool] = None
+    has_min_employees: Optional[bool] = None
+    company_age_over_1_year: Optional[bool] = None
 
 # ==================== JOB REQUEST MODELS ====================
 
