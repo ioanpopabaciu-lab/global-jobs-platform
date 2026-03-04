@@ -376,6 +376,7 @@ async def get_me(request: Request):
         name=user["name"],
         picture=user.get("picture"),
         role=user["role"],
+        account_type=user.get("account_type", user["role"]),
         is_active=user.get("is_active", True),
         is_verified=user.get("is_verified", False),
         created_at=created_at
