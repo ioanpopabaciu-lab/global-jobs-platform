@@ -43,6 +43,19 @@ const statusIcons = {
   expired: AlertCircle
 };
 
+// Document type labels in Romanian
+const documentTypeLabels = {
+  passport: 'Pașaport',
+  cv: 'CV',
+  diploma: 'Diplomă',
+  criminal_record: 'Cazier judiciar',
+  medical_certificate: 'Certificat medical',
+  passport_photo: 'Foto pașaport',
+  profile_photo: 'Foto profil',
+  video_presentation: 'Video prezentare',
+  other: 'Alte documente'
+};
+
 export default function DocumentsUpload({ ownerType = 'candidate' }) {
   const { user } = useOutletContext();
   const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -51,6 +64,14 @@ export default function DocumentsUpload({ ownerType = 'candidate' }) {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState({});
   const [dragOver, setDragOver] = useState(null);
+  
+  // State for replace confirmation dialog
+  const [replaceDialog, setReplaceDialog] = useState({
+    open: false,
+    documentType: null,
+    existingDoc: null,
+    pendingFile: null
+  });
 
   useEffect(() => {
     fetchDocuments();
