@@ -4,12 +4,13 @@ Extended with cloud storage document upload
 """
 from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Form, Response
 from fastapi.responses import StreamingResponse
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 import uuid
 import logging
 import os
 import io
+import base64
 
 from models import (
     CandidateProfile, CandidateProfileCreate,
@@ -20,6 +21,13 @@ from models import (
 from auth_routes import get_current_user, require_role
 from storage import put_object, get_object, generate_storage_path, get_content_type, init_storage
 from notification_service import notify_admin_new_profile_pending
+from document_ocr_service import (
+    extract_id_card_data, 
+    extract_document_expiry,
+    calculate_expiry_status,
+    get_documents_expiring_soon,
+    DOCUMENT_VALIDITY
+)
 
 logger = logging.getLogger(__name__)
 
