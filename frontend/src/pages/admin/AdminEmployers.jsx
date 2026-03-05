@@ -37,6 +37,37 @@ const statusConfig = {
   rejected: { label: 'Respins', color: 'bg-red-100 text-red-700' }
 };
 
+// Helper function to extract city from employer data
+const getEmployerLocation = (employer) => {
+  // First try the city field
+  if (employer.city && employer.city.trim()) {
+    return employer.city;
+  }
+  
+  // Try to extract city from address (typically at the end after comma)
+  if (employer.address) {
+    const parts = employer.address.split(',');
+    if (parts.length >= 2) {
+      // Get the last part which usually contains the city
+      const lastPart = parts[parts.length - 1].trim();
+      // Remove any sector info like "Sector 1"
+      if (!lastPart.toLowerCase().includes('sector') && !lastPart.toLowerCase().includes('str.') && !lastPart.toLowerCase().includes('nr.')) {
+        return lastPart;
+      }
+      // If last part is sector, get the one before
+      if (parts.length >= 3) {
+        const secondLastPart = parts[parts.length - 2].trim();
+        if (!secondLastPart.toLowerCase().includes('str.') && !secondLastPart.toLowerCase().includes('nr.')) {
+          return secondLastPart;
+        }
+      }
+    }
+  }
+  
+  // Fallback to country code
+  return employer.country || 'N/A';
+};
+
 export default function AdminEmployers() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [employers, setEmployers] = useState([]);
