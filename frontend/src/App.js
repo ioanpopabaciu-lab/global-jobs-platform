@@ -290,12 +290,12 @@ function AppRouter() {
         {/* Admin Dashboard */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="candidates" element={<div className="p-4">Candidates Admin - Coming Soon</div>} />
-          <Route path="employers" element={<div className="p-4">Employers Admin - Coming Soon</div>} />
-          <Route path="jobs" element={<div className="p-4">Jobs Admin - Coming Soon</div>} />
-          <Route path="projects" element={<div className="p-4">Projects Admin - Coming Soon</div>} />
-          <Route path="documents" element={<div className="p-4">Documents Admin - Coming Soon</div>} />
-          <Route path="users" element={<div className="p-4">Users Admin - Coming Soon</div>} />
+          <Route path="candidates" element={<AdminCandidates />} />
+          <Route path="employers" element={<AdminEmployers />} />
+          <Route path="jobs" element={<AdminJobs />} />
+          <Route path="projects" element={<AdminProjects />} />
+          <Route path="documents" element={<AdminDocuments />} />
+          <Route path="users" element={<AdminUsers />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/my-account" replace />} />
