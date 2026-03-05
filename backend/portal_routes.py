@@ -412,7 +412,7 @@ async def upload_employer_document(
         raise HTTPException(status_code=500, detail=f"Failed to upload document: {str(e)}")
 
 @portal_router.get("/candidate/documents")
-async def get_candidate_documents(request: Request):
+async def get_candidate_documents(request: Request, include_archived: bool = False):
     """Get all documents for candidate"""
     user = await get_current_user(request)
     
@@ -420,15 +420,22 @@ async def get_candidate_documents(request: Request):
     if not profile:
         return {"documents": []}
     
-    documents = await db.documents.find(
-        {"owner_id": profile["profile_id"], "owner_type": "candidate", "is_deleted": {"$ne": True}},
-        {"_id": 0}
-    ).to_list(100)
+    query = {
+        "owner_id": profile["profile_id"], 
+        "owner_type": "candidate", 
+        "is_deleted": {"$ne": True}
+    }
+    
+    # Exclude archived documents unless specifically requested
+    if not include_archived:
+        query["status"] = {"$ne": "archived"}
+    
+    documents = await db.documents.find(query, {"_id": 0}).to_list(100)
     
     return {"documents": documents}
 
 @portal_router.get("/employer/documents")
-async def get_employer_documents(request: Request):
+async def get_employer_documents(request: Request, include_archived: bool = False):
     """Get all documents for employer"""
     user = await get_current_user(request)
     
@@ -436,10 +443,17 @@ async def get_employer_documents(request: Request):
     if not profile:
         return {"documents": []}
     
-    documents = await db.documents.find(
-        {"owner_id": profile["profile_id"], "owner_type": "employer", "is_deleted": {"$ne": True}},
-        {"_id": 0}
-    ).to_list(100)
+    query = {
+        "owner_id": profile["profile_id"], 
+        "owner_type": "employer", 
+        "is_deleted": {"$ne": True}
+    }
+    
+    # Exclude archived documents unless specifically requested
+    if not include_archived:
+        query["status"] = {"$ne": "archived"}
+    
+    documents = await db.documents.find(query, {"_id": 0}).to_list(100)
     
     return {"documents": documents}
 
