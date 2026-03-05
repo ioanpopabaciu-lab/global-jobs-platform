@@ -93,7 +93,7 @@ export default function DocumentsUpload({ ownerType = 'candidate' }) {
     }
   };
 
-  const handleFileSelect = async (documentType, files) => {
+  const handleFileSelect = async (documentType, files, replaceExisting = false) => {
     if (!files || files.length === 0) return;
     
     const file = files[0];
@@ -118,6 +118,7 @@ export default function DocumentsUpload({ ownerType = 'candidate' }) {
       formData.append('file', file);
       formData.append('document_type', documentType);
       formData.append('owner_type', ownerType);
+      formData.append('replace_existing', replaceExisting ? 'true' : 'false');
       
       const response = await fetch(`${API_URL}/api/portal/${ownerType}/documents/upload`, {
         method: 'POST',
@@ -125,18 +126,59 @@ export default function DocumentsUpload({ ownerType = 'candidate' }) {
         body: formData
       });
       
+      const data = await response.json();
+      
       if (response.ok) {
-        toast.success('Document uploaded successfully!');
-        fetchDocuments();
+        // Check if backend is asking for confirmation
+        if (data.exists && data.existing_document) {
+          // Show confirmation dialog
+          setReplaceDialog({
+            open: true,
+            documentType: documentType,
+            existingDoc: data.existing_document,
+            pendingFile: file
+          });
+        } else {
+          toast.success('Documentul a fost încărcat cu succes!');
+          fetchDocuments();
+        }
       } else {
-        const error = await response.json();
-        toast.error(error.detail || 'Failed to upload document');
+        toast.error(data.detail || 'Eroare la încărcarea documentului');
       }
     } catch (error) {
-      toast.error('Failed to upload document');
+      toast.error('Eroare la încărcarea documentului');
     } finally {
       setUploading(prev => ({ ...prev, [documentType]: false }));
     }
+  };
+  
+  // Handle replace confirmation
+  const handleReplaceConfirm = async () => {
+    if (!replaceDialog.pendingFile || !replaceDialog.documentType) return;
+    
+    setReplaceDialog(prev => ({ ...prev, open: false }));
+    
+    // Upload with replace flag
+    await handleFileSelect(replaceDialog.documentType, [replaceDialog.pendingFile], true);
+    
+    // Reset dialog state
+    setReplaceDialog({
+      open: false,
+      documentType: null,
+      existingDoc: null,
+      pendingFile: null
+    });
+  };
+  
+  // Handle replace cancel
+  const handleReplaceCancel = () => {
+    setReplaceDialog({
+      open: false,
+      documentType: null,
+      existingDoc: null,
+      pendingFile: null
+    });
+    toast.info('Documentul existent a fost păstrat');
   };
 
   const handleDelete = async (docId) => {
