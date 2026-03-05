@@ -247,6 +247,7 @@ function AppRouter() {
         <Route path="/my-account" element={<MyAccountPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register/employer" element={<EmployerRegisterPage />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         
         {/* Candidate Portal */}
