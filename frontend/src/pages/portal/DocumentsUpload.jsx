@@ -6,9 +6,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { 
   Upload, FileText, Trash2, Eye, CheckCircle, Clock, 
-  AlertCircle, Loader2, X, File, Image
+  AlertCircle, Loader2, X, File, Image, RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 
