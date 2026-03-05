@@ -804,3 +804,108 @@ def calculate_matching_score(candidate: dict, job: dict) -> int:
         score += 10
     
     return score
+
+
+# ==================== DOCUMENT EXPIRY ADMIN ====================
+
+from document_ocr_service import calculate_expiry_status, get_documents_expiring_soon
+
+@admin_router.get("/documents/expiring")
+async def get_all_expiring_documents(
+    request: Request,
+    days: int = 30,
+    filter_status: str = "all"
+):
+    """
+    Get all documents expiring within specified days across all employers
+    Used for admin monitoring of document expiry
+    """
+    await require_admin(request)
+    
+    # Get all employer documents with expiry dates
+    documents = await db.documents.find(
+        {
+            "owner_type": "employer",
+            "is_deleted": {"$ne": True},
+            "status": {"$ne": "archived"},
+            "expiry_date": {"$exists": True, "$ne": None}
+        },
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Add status info and employer details to each document
+    docs_with_status = []
+    summary = {"in_5_days": 0, "in_14_days": 0, "in_30_days": 0, "expired": 0}
+    
+    for doc in documents:
+        expiry_date = doc.get("expiry_date") or doc.get("data_expirare")
+        if not expiry_date:
+            continue
+        
+        status_info = calculate_expiry_status(expiry_date)
+        
+        # Get employer info
+        employer = await db.employer_profiles.find_one(
+            {"profile_id": doc["owner_id"]},
+            {"_id": 0, "company_name": 1, "phone": 1, "email": 1, "contact_name": 1}
+        )
+        
+        doc_info = {
+            **doc,
+            "expiry_status": status_info,
+            "employer": employer
+        }
+        
+        # Update summary
+        days_remaining = status_info.get("days_remaining", 9999)
+        if days_remaining <= 0:
+            summary["expired"] += 1
+        elif days_remaining <= 5:
+            summary["in_5_days"] += 1
+        elif days_remaining <= 14:
+            summary["in_14_days"] += 1
+        elif days_remaining <= 30:
+            summary["in_30_days"] += 1
+        
+        # Apply filter
+        if filter_status == "all":
+            docs_with_status.append(doc_info)
+        elif filter_status == "expired" and days_remaining <= 0:
+            docs_with_status.append(doc_info)
+        elif filter_status == "7days" and 0 < days_remaining <= 7:
+            docs_with_status.append(doc_info)
+        elif filter_status == "30days" and 0 < days_remaining <= 30:
+            docs_with_status.append(doc_info)
+    
+    # Sort by days remaining (most urgent first)
+    docs_with_status.sort(
+        key=lambda x: x.get("expiry_status", {}).get("days_remaining", 9999)
+    )
+    
+    return {
+        "documents": docs_with_status,
+        "summary": summary,
+        "total": len(docs_with_status)
+    }
+
+
+@admin_router.put("/documents/{doc_id}/renew")
+async def mark_document_renewed(doc_id: str, request: Request):
+    """
+    Mark a document as renewed (for admin use when new document is uploaded)
+    """
+    await require_admin(request)
+    
+    result = await db.documents.update_one(
+        {"doc_id": doc_id},
+        {"$set": {
+            "renewed_at": datetime.now(timezone.utc).isoformat(),
+            "renewed_by": "admin"
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    return {"message": "Document marked as renewed"}
+
