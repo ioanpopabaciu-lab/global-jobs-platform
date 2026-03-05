@@ -255,7 +255,7 @@ export default function AdminJobs() {
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4 text-gray-400" />
                           <span className="text-sm truncate max-w-[150px]">
-                            {job.employer_name || job.employer_id?.slice(0, 12)}
+                            {job.employer?.company_name || job.employer_id?.slice(0, 12) || 'N/A'}
                           </span>
                         </div>
                       </TableCell>
