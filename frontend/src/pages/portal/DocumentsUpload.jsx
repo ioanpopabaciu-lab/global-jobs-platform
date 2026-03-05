@@ -384,6 +384,45 @@ export default function DocumentsUpload({ ownerType = 'candidate' }) {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Replace Document Confirmation Dialog */}
+      <Dialog open={replaceDialog.open} onOpenChange={(open) => !open && handleReplaceCancel()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <RefreshCw className="h-5 w-5 text-amber-500" />
+              Înlocuire Document
+            </DialogTitle>
+            <DialogDescription>
+              Ai deja un document de tip <strong>{documentTypeLabels[replaceDialog.documentType] || replaceDialog.documentType}</strong> încărcat.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {replaceDialog.existingDoc && (
+            <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+              <p className="text-sm font-medium text-gray-700">Document existent:</p>
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-600">{replaceDialog.existingDoc.original_filename}</span>
+              </div>
+            </div>
+          )}
+          
+          <p className="text-sm text-gray-600">
+            Dacă înlocuiești, documentul vechi va fi arhivat și noul document va deveni activ.
+          </p>
+          
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={handleReplaceCancel}>
+              Nu, păstrează
+            </Button>
+            <Button onClick={handleReplaceConfirm} className="bg-amber-600 hover:bg-amber-700">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Da, înlocuiește
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
