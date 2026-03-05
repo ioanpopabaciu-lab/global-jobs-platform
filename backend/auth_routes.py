@@ -10,12 +10,13 @@ import hashlib
 import secrets
 import os
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from models import (
     UserBase, UserCreate, UserLogin, UserResponse, UserSession,
     TokenResponse, PasswordResetRequest, PasswordReset
 )
+from anaf_service import lookup_company_anaf, RECRUITMENT_INDUSTRIES
 
 # Database will be injected
 db = None
