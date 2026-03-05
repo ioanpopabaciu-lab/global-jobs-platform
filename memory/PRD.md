@@ -78,6 +78,13 @@
 - [ ] Automated contract PDF generation
 - [ ] Automated invoice PDF generation
 - [ ] Visual progress tracker for immigration stages
+- [x] **Admin Dashboard UI Pages** ✅ COMPLETE - 2026-03-05
+  - Admin Candidates page - listare, căutare, validare/respingere
+  - Admin Employers page - listare, detalii companie, eligibilitate IGI
+  - Admin Jobs page - statistici status, matching candidați, schimbare status
+  - Admin Projects page - pipeline vizual, actualizare stadii, note
+  - Admin Users page - listare toți utilizatorii, filtrare pe rol
+  - Admin Documents page - vizualizare toate documentele, download
 
 ### ⏳ Phase 4 - Document Management & Expiry
 - [ ] Document expiry tracking and alerts
@@ -86,7 +93,7 @@
 
 ### 📋 Backlog (P2)
 - [ ] Stripe payment integration
-- [ ] Full Admin CRUD for users/projects/jobs
+- [x] ~~Full Admin CRUD for users/projects/jobs~~ ✅ COMPLETE - 2026-03-05
 - [ ] SEO landing pages (Construction, HoReCa, etc.)
 - [ ] reCAPTCHA on public forms
 - [ ] Testimonials section
