@@ -54,6 +54,12 @@ import ImmigrationDashboard from "@/pages/portal/ImmigrationDashboard";
 // Admin Pages
 import AdminLayout from "@/pages/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminCandidates from "@/pages/admin/AdminCandidates";
+import AdminEmployers from "@/pages/admin/AdminEmployers";
+import AdminJobs from "@/pages/admin/AdminJobs";
+import AdminProjects from "@/pages/admin/AdminProjects";
+import AdminUsers from "@/pages/admin/AdminUsers";
+import AdminDocuments from "@/pages/admin/AdminDocuments";
 
 // Components
 import Navbar from "@/components/Navbar";
