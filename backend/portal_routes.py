@@ -583,6 +583,245 @@ async def delete_employer_document(doc_id: str, request: Request):
     
     return {"message": "Document deleted"}
 
+
+# ==================== OCR AND DOCUMENT EXPIRY ====================
+
+from pydantic import BaseModel
+
+class OCRRequest(BaseModel):
+    image_base64: str
+    mime_type: Optional[str] = "image/jpeg"
+
+class DocumentExpiryRequest(BaseModel):
+    image_base64: str
+    document_type: str
+    mime_type: Optional[str] = "image/jpeg"
+
+
+@portal_router.post("/employer/ocr/id-card")
+async def ocr_id_card(data: OCRRequest, request: Request):
+    """
+    Extract data from Romanian ID card using OCR
+    Returns structured data that can be mapped to profile fields
+    """
+    user = await get_current_user(request)
+    
+    if user["role"] not in ["employer", "admin"]:
+        raise HTTPException(status_code=403, detail="Employer access required")
+    
+    result = await extract_id_card_data(data.image_base64, data.mime_type)
+    return result
+
+
+@portal_router.post("/employer/ocr/document-expiry")
+async def ocr_document_expiry(data: DocumentExpiryRequest, request: Request):
+    """
+    Extract expiry date and other data from documents
+    Automatically calculates expiry for documents with fixed validity periods
+    """
+    user = await get_current_user(request)
+    
+    if user["role"] not in ["employer", "admin"]:
+        raise HTTPException(status_code=403, detail="Employer access required")
+    
+    result = await extract_document_expiry(data.image_base64, data.document_type, data.mime_type)
+    return result
+
+
+@portal_router.get("/employer/documents/expiring")
+async def get_employer_expiring_documents(request: Request, days: int = 30):
+    """
+    Get employer documents that are expiring within specified days
+    Returns documents with status and days remaining
+    """
+    user = await get_current_user(request)
+    
+    if user["role"] not in ["employer", "admin"]:
+        raise HTTPException(status_code=403, detail="Employer access required")
+    
+    profile = await db.employer_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not profile:
+        return {"expiring_documents": [], "summary": {"valid": 0, "warning": 0, "urgent": 0, "expired": 0}}
+    
+    # Get all non-archived documents
+    documents = await db.documents.find(
+        {
+            "owner_id": profile["profile_id"],
+            "owner_type": "employer",
+            "is_deleted": {"$ne": True},
+            "status": {"$ne": "archived"}
+        },
+        {"_id": 0}
+    ).to_list(100)
+    
+    # Add expiry status to each document
+    docs_with_status = []
+    summary = {"valid": 0, "warning": 0, "urgent": 0, "expired": 0}
+    
+    for doc in documents:
+        expiry_date = doc.get("expiry_date") or doc.get("data_expirare")
+        if expiry_date:
+            status_info = calculate_expiry_status(expiry_date)
+            doc_info = {
+                **doc,
+                "expiry_status": status_info
+            }
+            docs_with_status.append(doc_info)
+            
+            # Update summary
+            if status_info["status"] == "expired" or status_info["status"] == "expires_today":
+                summary["expired"] += 1
+            elif status_info["status"] in ["critical", "urgent"]:
+                summary["urgent"] += 1
+            elif status_info["status"] == "warning":
+                summary["warning"] += 1
+            else:
+                summary["valid"] += 1
+        else:
+            docs_with_status.append(doc)
+            summary["valid"] += 1  # No expiry = valid
+    
+    # Sort by days remaining (most urgent first)
+    docs_with_status.sort(
+        key=lambda x: x.get("expiry_status", {}).get("days_remaining", 9999) if x.get("expiry_status") else 9999
+    )
+    
+    return {
+        "documents": docs_with_status,
+        "summary": summary,
+        "expiring_soon": [d for d in docs_with_status if d.get("expiry_status", {}).get("days_remaining", 9999) <= days]
+    }
+
+
+@portal_router.post("/employer/documents/upload-with-ocr")
+async def upload_employer_document_with_ocr(
+    request: Request,
+    file: UploadFile = File(...),
+    document_type: str = Form(...),
+    apply_ocr: str = Form("false"),
+    replace_existing: Optional[str] = Form("false")
+):
+    """
+    Upload a document for employer with optional OCR extraction
+    For administrator_id (CI), automatically extracts and returns data
+    """
+    user = await get_current_user(request)
+    
+    if user["role"] not in ["employer", "admin"]:
+        raise HTTPException(status_code=403, detail="Employer access required")
+    
+    # Get or create employer profile
+    profile = await db.employer_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    owner_id = profile["profile_id"]
+    
+    # Check for existing document
+    existing_doc = await db.documents.find_one({
+        "owner_id": owner_id,
+        "owner_type": "employer",
+        "document_type": document_type,
+        "status": {"$ne": "archived"}
+    })
+    
+    if existing_doc and replace_existing.lower() != "true":
+        return {
+            "exists": True,
+            "existing_document": {
+                "doc_id": existing_doc.get("doc_id"),
+                "original_filename": existing_doc.get("original_filename"),
+                "document_type": document_type
+            },
+            "message": f"Ai deja un document de tip '{document_type}' încărcat. Dorești să-l înlocuiești?"
+        }
+    
+    # Archive existing if replacing
+    if existing_doc and replace_existing.lower() == "true":
+        await db.documents.update_one(
+            {"doc_id": existing_doc.get("doc_id")},
+            {"$set": {
+                "status": "archived",
+                "archived_at": datetime.now(timezone.utc).isoformat(),
+                "archived_reason": "Replaced by newer document"
+            }}
+        )
+    
+    # Validate file
+    if file.content_type not in ALLOWED_DOCUMENT_TYPES:
+        raise HTTPException(status_code=400, detail=f"File type {file.content_type} not allowed")
+    
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="File too large (max 50MB)")
+    
+    # Apply OCR if requested and document type supports it
+    ocr_result = None
+    extracted_expiry = None
+    
+    if apply_ocr.lower() == "true":
+        image_base64 = base64.b64encode(content).decode('utf-8')
+        
+        if document_type == "administrator_id":
+            # Extract ID card data
+            ocr_result = await extract_id_card_data(image_base64, file.content_type)
+            if ocr_result.get("success") and ocr_result.get("data", {}).get("data_expirare"):
+                extracted_expiry = ocr_result["data"]["data_expirare"]
+        elif document_type in ["cazier_judiciar", "certificat_constatator", "certificat_fiscal"]:
+            # Extract document dates
+            ocr_result = await extract_document_expiry(image_base64, document_type, file.content_type)
+            if ocr_result.get("success") and ocr_result.get("data", {}).get("data_expirare"):
+                extracted_expiry = ocr_result["data"]["data_expirare"]
+    
+    # Generate storage path
+    storage_path = generate_storage_path("employer_documents", user["user_id"], file.filename)
+    
+    try:
+        # Upload to cloud storage
+        result = put_object(storage_path, content, file.content_type or "application/octet-stream")
+        actual_path = result.get("path", storage_path)
+        
+        # Create document record
+        doc = Document(
+            owner_id=owner_id,
+            owner_type="employer",
+            filename=actual_path.split("/")[-1],
+            original_filename=file.filename,
+            file_type=file.content_type or "application/octet-stream",
+            file_size=len(content),
+            storage_path=actual_path,
+            document_type=document_type,
+            expiry_date=extracted_expiry,
+            uploaded_by=user["user_id"]
+        )
+        
+        doc_dict = doc.model_dump()
+        doc_dict["created_at"] = doc_dict["created_at"].isoformat()
+        
+        # Add OCR extracted data if available
+        if ocr_result and ocr_result.get("success"):
+            doc_dict["ocr_data"] = ocr_result.get("data", {})
+        
+        await db.documents.insert_one(doc_dict)
+        doc_dict.pop('_id', None)
+        
+        # Calculate expiry status if we have expiry date
+        expiry_status = None
+        if extracted_expiry:
+            expiry_status = calculate_expiry_status(extracted_expiry)
+        
+        return {
+            "message": "Document uploaded successfully",
+            "document": doc_dict,
+            "ocr_result": ocr_result,
+            "expiry_status": expiry_status
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to upload document: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload document")
+
+
 # ==================== CANDIDATE PORTAL ====================
 
 @portal_router.get("/candidate/profile")
