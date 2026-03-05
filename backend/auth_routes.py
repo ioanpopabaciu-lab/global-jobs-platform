@@ -96,6 +96,167 @@ def require_role(allowed_roles: list):
         return user
     return check_role
 
+# ==================== ANAF COMPANY LOOKUP ====================
+
+class CUILookupRequest(BaseModel):
+    cui: str
+
+class EmployerRegisterRequest(BaseModel):
+    email: str
+    password: str
+    # Company data from ANAF
+    cui: str
+    company_name: str
+    company_address: str
+    numar_reg_com: Optional[str] = None
+    cod_caen: Optional[str] = None
+    denumire_caen: Optional[str] = None
+    is_vat_payer: Optional[bool] = False
+    data_infiintare: Optional[str] = None
+    # Contact person data
+    contact_name: str
+    contact_position: str
+    contact_phone: str
+    contact_email: str
+    # Additional info
+    employees_count: Optional[int] = 0
+    recruitment_industries: Optional[List[str]] = []
+
+
+@auth_router.post("/lookup-company")
+async def lookup_company(data: CUILookupRequest):
+    """
+    Lookup company information from ANAF by CUI
+    Public endpoint - no authentication required
+    """
+    result = await lookup_company_anaf(data.cui)
+    return result
+
+
+@auth_router.get("/recruitment-industries")
+async def get_recruitment_industries():
+    """Get list of available recruitment industries"""
+    return {"industries": RECRUITMENT_INDUSTRIES}
+
+
+@auth_router.post("/register/employer", response_model=TokenResponse)
+async def register_employer(data: EmployerRegisterRequest, response: Response):
+    """
+    Register new employer with company data from ANAF lookup
+    This is a specialized registration flow for employers
+    """
+    # Check if email exists
+    existing = await db.users.find_one({"email": data.email}, {"_id": 0})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email deja înregistrat")
+    
+    # Check if company CUI already registered
+    existing_company = await db.employer_profiles.find_one({"company_cui": data.cui}, {"_id": 0})
+    if existing_company:
+        raise HTTPException(status_code=400, detail="Această companie este deja înregistrată pe platformă")
+    
+    # Create user
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    user_doc = {
+        "user_id": user_id,
+        "email": data.email,
+        "name": data.contact_name,
+        "password_hash": hash_password(data.password),
+        "role": "employer",
+        "account_type": "employer",
+        "picture": None,
+        "is_active": True,
+        "is_verified": False,
+        "auth_provider": "email",
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.users.insert_one(user_doc)
+    
+    # Create employer profile with company data
+    profile_id = f"emp_{uuid.uuid4().hex[:12]}"
+    profile_doc = {
+        "profile_id": profile_id,
+        "user_id": user_id,
+        "status": "draft",
+        
+        # Company data from ANAF
+        "company_name": data.company_name,
+        "company_cui": data.cui,
+        "company_j_number": data.numar_reg_com,
+        "address": data.company_address,
+        "cod_caen": data.cod_caen,
+        "denumire_caen": data.denumire_caen,
+        "is_vat_payer": data.is_vat_payer,
+        "data_infiintare": data.data_infiintare,
+        
+        # Contact person
+        "contact_name": data.contact_name,
+        "contact_position": data.contact_position,
+        "phone": data.contact_phone,
+        "email": data.contact_email,
+        
+        # Additional info
+        "employees_count": data.employees_count,
+        "recruitment_industries": data.recruitment_industries,
+        
+        # Country defaults to Romania
+        "country": "RO",
+        
+        # IGI eligibility (to be completed later)
+        "has_no_debts": None,
+        "has_no_sanctions": None,
+        "has_min_employees": data.employees_count >= 2 if data.employees_count else None,
+        "company_age_over_1_year": None,
+        
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.employer_profiles.insert_one(profile_doc)
+    
+    # Create session
+    session_token = generate_session_token()
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    
+    session_doc = {
+        "session_id": f"sess_{uuid.uuid4().hex}",
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": expires_at,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.user_sessions.insert_one(session_doc)
+    
+    # Set cookie
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,
+        path="/"
+    )
+    
+    return TokenResponse(
+        access_token=session_token,
+        token_type="bearer",
+        user=UserResponse(
+            user_id=user_id,
+            email=data.email,
+            name=data.contact_name,
+            role="employer",
+            account_type="employer",
+            picture=None,
+            is_active=True,
+            is_verified=False,
+            created_at=user_doc["created_at"]
+        )
+    )
+
 # ==================== REGISTRATION ====================
 
 @auth_router.post("/register", response_model=TokenResponse)
