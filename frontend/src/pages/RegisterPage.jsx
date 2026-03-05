@@ -259,7 +259,13 @@ export default function RegisterPage() {
           </form>
         </CardContent>
 
-        <CardFooter className="text-center text-sm">
+        <CardFooter className="flex flex-col gap-4 text-center text-sm">
+          <div className="w-full p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-blue-800 font-medium">Sunteți angajator?</p>
+            <Link to="/register/employer" className="text-blue-600 hover:underline font-medium">
+              Înregistrați-vă compania cu CUI →
+            </Link>
+          </div>
           <p className="text-gray-500 w-full">
             Already have an account?{' '}
             <Link to="/login" className="text-navy-600 hover:underline font-medium">
