@@ -28,6 +28,7 @@ import AdministrativePage from "@/pages/AdministrativePage";
 // Auth & Account Pages
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
+import EmployerRegisterPage from "@/pages/EmployerRegisterPage";
 import AuthCallback from "@/pages/AuthCallback";
 import MyAccountPage from "@/pages/MyAccountPage";
 
