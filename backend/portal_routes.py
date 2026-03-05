@@ -248,6 +248,43 @@ async def upload_candidate_document(
         logger.error(f"Failed to upload document: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to upload document: {str(e)}")
 
+@portal_router.get("/employer/documents/check-existing")
+async def check_existing_employer_document(
+    request: Request,
+    document_type: str
+):
+    """Check if employer already has an active document of this type"""
+    user = await get_current_user(request)
+    
+    if user["role"] not in ["employer", "admin"]:
+        raise HTTPException(status_code=403, detail="Employer access required")
+    
+    profile = await db.employer_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not profile:
+        return {"exists": False, "document": None}
+    
+    # Check for existing active document of same type
+    existing_doc = await db.documents.find_one({
+        "owner_id": profile["profile_id"],
+        "owner_type": "employer",
+        "document_type": document_type,
+        "status": {"$ne": "archived"}
+    }, {"_id": 0})
+    
+    if existing_doc:
+        return {
+            "exists": True,
+            "document": {
+                "doc_id": existing_doc.get("doc_id"),
+                "original_filename": existing_doc.get("original_filename"),
+                "created_at": existing_doc.get("created_at"),
+                "document_type": existing_doc.get("document_type")
+            }
+        }
+    
+    return {"exists": False, "document": None}
+
+
 @portal_router.post("/employer/documents/upload")
 async def upload_employer_document(
     request: Request,
@@ -255,7 +292,8 @@ async def upload_employer_document(
     document_type: str = Form(...),
     document_number: Optional[str] = Form(None),
     issue_date: Optional[str] = Form(None),
-    expiry_date: Optional[str] = Form(None)
+    expiry_date: Optional[str] = Form(None),
+    replace_existing: Optional[str] = Form("false")
 ):
     """Upload a document for employer profile"""
     user = await get_current_user(request)
@@ -272,6 +310,38 @@ async def upload_employer_document(
         await db.employer_profiles.insert_one(profile)
     
     owner_id = profile["profile_id"]
+    
+    # Check for existing document of same type
+    existing_doc = await db.documents.find_one({
+        "owner_id": owner_id,
+        "owner_type": "employer",
+        "document_type": document_type,
+        "status": {"$ne": "archived"}
+    })
+    
+    if existing_doc and replace_existing.lower() != "true":
+        # Return info that document exists - frontend should confirm replacement
+        return {
+            "exists": True,
+            "existing_document": {
+                "doc_id": existing_doc.get("doc_id"),
+                "original_filename": existing_doc.get("original_filename"),
+                "document_type": document_type
+            },
+            "message": f"Ai deja un document de tip '{document_type}' încărcat. Dorești să-l înlocuiești?"
+        }
+    
+    # Archive existing document if replacement confirmed
+    if existing_doc and replace_existing.lower() == "true":
+        await db.documents.update_one(
+            {"doc_id": existing_doc.get("doc_id")},
+            {"$set": {
+                "status": "archived",
+                "archived_at": datetime.now(timezone.utc).isoformat(),
+                "archived_reason": "Replaced by newer document"
+            }}
+        )
+        logger.info(f"Archived employer document {existing_doc.get('doc_id')} - replaced by new upload")
     
     # Validate file
     if file.content_type not in ALLOWED_DOCUMENT_TYPES:
