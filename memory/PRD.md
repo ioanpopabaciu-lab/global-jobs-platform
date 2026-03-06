@@ -254,6 +254,7 @@
 1. **Emergent Object Storage** - Document uploads (cloud)
 2. **Emergent Auth** - Google OAuth social login
 3. **Emergent LLM (GPT)** - Maria AI Chat Assistant
+4. **Claude Sonnet 4.5** - Document OCR extraction (passport, CV)
 
 ---
 
@@ -264,3 +265,5 @@
 - Document types mapped to specific profile fields
 - All file uploads limited to 50MB
 - Supported formats: PDF, JPG, PNG, WEBP, MP4, MOV
+- OCR extraction uses Claude AI via Emergent LLM Key
+- Candidate registration auto-saves every 30 seconds
