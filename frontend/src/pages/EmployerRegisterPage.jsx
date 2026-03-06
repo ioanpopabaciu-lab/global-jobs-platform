@@ -79,12 +79,19 @@ export default function EmployerRegisterPage() {
       
       const data = await response.json();
       
-      if (data.success) {
+      if (data.success && data.verified !== false) {
         setCompanyData(data.company);
         setEligibility(data.eligibility);
         setCurrentStep(2);
       } else {
-        setLookupError(data.error || 'Nu am putut găsi compania. Verificați CUI-ul introdus.');
+        // Company not verified - BLOCK registration
+        const errorMsg = data.error || 'Compania nu a fost identificată în registrele oficiale.';
+        setLookupError(errorMsg);
+        
+        // Show specific message for unverified companies
+        if (data.verified === false) {
+          toast.error('Înregistrarea este permisă doar pentru companii verificate oficial.');
+        }
       }
     } catch (error) {
       setLookupError('Eroare la căutarea companiei. Vă rugăm să încercați din nou.');
