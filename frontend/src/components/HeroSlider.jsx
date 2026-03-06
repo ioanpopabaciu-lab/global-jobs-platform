@@ -263,7 +263,8 @@ export default function HeroSlider() {
               playsInline
               preload="auto"
               poster={s.poster}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-center"
+              style={{ objectPosition: 'center center' }}
             >
               <source src={s.video} type="video/mp4" />
             </video>
@@ -271,7 +272,8 @@ export default function HeroSlider() {
             <img
               src={s.image}
               alt={s.category}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-center"
+              style={{ objectPosition: 'center center' }}
               loading={index === 0 ? "eager" : "lazy"}
             />
           )}
