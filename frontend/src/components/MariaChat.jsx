@@ -180,7 +180,7 @@ export default function MariaChat() {
       {/* Chat Window */}
       {isOpen && (
         <div 
-          className="fixed bottom-44 left-6 z-50 w-[360px] max-w-[calc(100vw-48px)] bg-white rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-5 duration-300"
+          className="fixed bottom-44 right-6 z-50 w-[360px] max-w-[calc(100vw-48px)] bg-white rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-5 duration-300"
           data-testid="maria-chat-window"
         >
           {/* Header */}
