@@ -86,7 +86,7 @@ async def extract_id_card_data(image_base64: str, mime_type: str = "image/jpeg")
         # Send message with image
         user_message = UserMessage(
             text=extraction_prompt,
-            image_contents=[image_content]
+            file_contents=[image_content]
         )
         
         response = await chat.send_message(user_message)
