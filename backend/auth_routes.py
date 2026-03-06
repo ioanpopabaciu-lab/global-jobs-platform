@@ -709,3 +709,199 @@ async def admin_toggle_user_status(
         await db.user_sessions.delete_many({"user_id": user_id})
     
     return {"message": f"User {'activated' if is_active else 'deactivated'}"}
+
+
+
+# ==================== CANDIDATE REGISTRATION WITH OCR ====================
+
+from candidate_ocr_service import extract_passport_data, extract_cv_data, merge_extracted_data, calculate_profile_score
+
+class PassportOCRRequest(BaseModel):
+    image_base64: str
+    mime_type: Optional[str] = "image/jpeg"
+
+class CVOCRRequest(BaseModel):
+    file_base64: str
+    mime_type: Optional[str] = "application/pdf"
+
+class CandidateProfileData(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    citizenship: Optional[str] = None
+    nationality: Optional[str] = None
+    passport_number: Optional[str] = None
+    passport_expiry_date: Optional[str] = None
+    gender: Optional[str] = "male"
+    phone: Optional[str] = None
+    current_profession: Optional[str] = None
+    experience_years: Optional[int] = 0
+    countries_worked_in: Optional[List[str]] = []
+    languages_known: Optional[List[str]] = []
+    marital_status: Optional[str] = "single"
+    religion: Optional[str] = None
+    address: Optional[str] = None
+    target_position: Optional[str] = None
+    salary_expectation: Optional[str] = None
+    availability: Optional[str] = "immediate"
+    already_in_romania: Optional[bool] = False
+    work_permit_expiry: Optional[str] = None
+    available_for_change: Optional[bool] = False
+    accept_part_time: Optional[bool] = False
+
+class CandidateRegisterWithProfileRequest(BaseModel):
+    email: str
+    password: str
+    profile_data: CandidateProfileData
+
+
+@auth_router.post("/candidate/ocr/passport")
+async def ocr_passport(data: PassportOCRRequest):
+    """
+    Extract data from passport image using AI OCR
+    Public endpoint for registration flow
+    """
+    result = await extract_passport_data(data.image_base64, data.mime_type)
+    return result
+
+
+@auth_router.post("/candidate/ocr/cv")
+async def ocr_cv(data: CVOCRRequest):
+    """
+    Extract data from CV document using AI OCR
+    Public endpoint for registration flow
+    """
+    result = await extract_cv_data(data.file_base64, data.mime_type)
+    return result
+
+
+@auth_router.post("/candidate/register-with-profile", response_model=TokenResponse)
+async def register_candidate_with_profile(data: CandidateRegisterWithProfileRequest, response: Response):
+    """
+    Register new candidate with pre-filled profile data from OCR
+    Creates both user account and candidate profile in one step
+    """
+    # Check if email exists
+    existing = await db.users.find_one({"email": data.email}, {"_id": 0})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email deja înregistrat")
+    
+    # Create user
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    user_doc = {
+        "user_id": user_id,
+        "email": data.email,
+        "name": f"{data.profile_data.first_name or ''} {data.profile_data.last_name or ''}".strip() or data.email.split("@")[0],
+        "password_hash": hash_password(data.password),
+        "role": "candidate",
+        "account_type": "candidate",
+        "picture": None,
+        "is_active": True,
+        "is_verified": False,
+        "auth_provider": "email",
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.users.insert_one(user_doc)
+    
+    # Create candidate profile
+    profile_id = f"cand_{uuid.uuid4().hex[:12]}"
+    profile_doc = {
+        "profile_id": profile_id,
+        "user_id": user_id,
+        "email": data.email,
+        "status": "draft",
+        
+        # Personal data
+        "first_name": data.profile_data.first_name,
+        "last_name": data.profile_data.last_name,
+        "date_of_birth": data.profile_data.date_of_birth,
+        "citizenship": data.profile_data.citizenship,
+        "nationality": data.profile_data.nationality,
+        "country_of_origin": data.profile_data.citizenship,  # Map citizenship to country
+        "passport_number": data.profile_data.passport_number,
+        "passport_expiry_date": data.profile_data.passport_expiry_date,
+        "gender": data.profile_data.gender,
+        
+        # Contact
+        "phone": data.profile_data.phone,
+        "whatsapp": data.profile_data.phone,
+        
+        # Professional
+        "current_profession": data.profile_data.current_profession,
+        "target_position_cor": data.profile_data.target_position,
+        "experience_years": data.profile_data.experience_years or 0,
+        "worked_abroad": len(data.profile_data.countries_worked_in or []) > 0,
+        "countries_worked_in": data.profile_data.countries_worked_in or [],
+        "languages_known": data.profile_data.languages_known or [],
+        "english_level": "basic",  # Default
+        
+        # Personal details
+        "marital_status": data.profile_data.marital_status or "single",
+        "religion": data.profile_data.religion,
+        "address": data.profile_data.address,
+        
+        # Preferences
+        "salary_expectation": data.profile_data.salary_expectation,
+        "availability": data.profile_data.availability,
+        "already_in_romania": data.profile_data.already_in_romania,
+        "existing_residence_permit": data.profile_data.work_permit_expiry if data.profile_data.already_in_romania else None,
+        "available_for_change": data.profile_data.available_for_change,
+        "accept_part_time": data.profile_data.accept_part_time,
+        
+        # Documents (will be uploaded separately)
+        "cv_doc_id": None,
+        "passport_doc_id": None,
+        "criminal_record_doc_id": None,
+        "passport_photo_doc_id": None,
+        "profile_photo_url": None,
+        "video_presentation_url": None,
+        "diploma_doc_ids": [],
+        
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.candidate_profiles.insert_one(profile_doc)
+    
+    # Create session
+    session_token = generate_session_token()
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    
+    session_doc = {
+        "session_id": f"sess_{uuid.uuid4().hex}",
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": expires_at,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.user_sessions.insert_one(session_doc)
+    
+    # Set cookie
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,
+        path="/"
+    )
+    
+    return TokenResponse(
+        access_token=session_token,
+        token_type="bearer",
+        user=UserResponse(
+            user_id=user_id,
+            email=data.email,
+            name=user_doc["name"],
+            role="candidate",
+            account_type="candidate",
+            picture=None,
+            is_active=True,
+            is_verified=False,
+            created_at=user_doc["created_at"]
+        )
+    )
