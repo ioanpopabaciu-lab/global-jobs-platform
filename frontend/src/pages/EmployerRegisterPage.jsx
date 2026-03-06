@@ -256,7 +256,7 @@ export default function EmployerRegisterPage() {
             </CardTitle>
             <CardDescription className={eligibility?.is_eligible ? 'text-green-600' : 'text-red-600'}>
               {eligibility?.is_eligible 
-                ? 'Datele au fost preluate automat din baza de date ANAF'
+                ? 'Datele au fost identificate automat în registre publice oficiale securizate.'
                 : 'Această companie nu îndeplinește criteriile de eligibilitate'}
             </CardDescription>
           </div>
