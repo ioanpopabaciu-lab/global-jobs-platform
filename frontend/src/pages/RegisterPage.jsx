@@ -43,6 +43,7 @@ const accountTypeConfig = {
 export default function RegisterPage() {
   const [searchParams] = useSearchParams();
   const accountType = searchParams.get('type') || 'candidate';
+  const navigate = useNavigate();
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,10 +53,16 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   
   const { register, loginWithGoogle } = useAuth();
-  const navigate = useNavigate();
 
   const config = accountTypeConfig[accountType] || accountTypeConfig.candidate;
   const Icon = config.icon;
+
+  // Redirect candidates to new registration flow
+  useEffect(() => {
+    if (accountType === 'candidate') {
+      navigate('/register/candidate', { replace: true });
+    }
+  }, [accountType, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
