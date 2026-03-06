@@ -11,7 +11,7 @@ import re
 
 logger = logging.getLogger(__name__)
 
-# ANAF API endpoint
+# ANAF API endpoint - Official REST API for VAT payer information
 ANAF_API_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva"
 
 # CAEN codes eligible for international workforce recruitment
@@ -121,11 +121,14 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     Returns:
         Dictionary with company information or error
     """
-    # Clean CUI - remove RO prefix and any spaces
+    # Clean CUI - remove RO prefix and any spaces/special characters
     cui_clean = re.sub(r'[^0-9]', '', cui)
     
     if not cui_clean:
         return {"success": False, "error": "CUI invalid"}
+    
+    if len(cui_clean) < 2 or len(cui_clean) > 10:
+        return {"success": False, "error": "CUI trebuie să aibă între 2 și 10 cifre"}
     
     try:
         cui_int = int(cui_clean)
@@ -137,72 +140,143 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
+            logger.info(f"Querying ANAF API for CUI: {cui_int}")
+            
             response = await client.post(
                 ANAF_API_URL,
                 json=[{"cui": cui_int, "data": query_date}],
-                headers={"Content-Type": "application/json"}
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
             )
+            
+            logger.info(f"ANAF API response status: {response.status_code}")
             
             if response.status_code == 200:
                 data = response.json()
+                logger.info(f"ANAF API response data keys: {data.keys() if isinstance(data, dict) else 'not a dict'}")
+                
+                # Check if company was found
                 if data and "found" in data and len(data["found"]) > 0:
                     company = data["found"][0]
+                    logger.info(f"Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
                     return parse_anaf_response(company)
-                elif data and "notfound" in data and len(data["notfound"]) > 0:
-                    return {"success": False, "error": "Companie negăsită în baza de date ANAF"}
-                else:
-                    # API returned but no data - use mock for demo
-                    logger.warning(f"ANAF returned unexpected format for CUI {cui_clean}, using demo data")
-                    return get_demo_company_data(cui_clean)
+                    
+                # Check if company was not found
+                if data and "notfound" in data and len(data["notfound"]) > 0:
+                    logger.info(f"Company not found for CUI: {cui_clean}")
+                    return {
+                        "success": False, 
+                        "error": "Compania nu a fost găsită în registrele oficiale.",
+                        "cui_searched": cui_clean
+                    }
+                
+                # API returned but unexpected format
+                logger.warning(f"ANAF API returned unexpected format: {data}")
+                return {
+                    "success": False,
+                    "error": "Răspuns neașteptat de la serviciul ANAF. Vă rugăm încercați din nou.",
+                    "cui_searched": cui_clean
+                }
+            
+            elif response.status_code == 400:
+                return {
+                    "success": False,
+                    "error": "CUI invalid sau format incorect.",
+                    "cui_searched": cui_clean
+                }
+            
+            elif response.status_code == 500:
+                return {
+                    "success": False,
+                    "error": "Serviciul ANAF este temporar indisponibil. Vă rugăm încercați mai târziu.",
+                    "cui_searched": cui_clean
+                }
+            
             else:
-                logger.warning(f"ANAF API returned status {response.status_code}, using demo data")
-                return get_demo_company_data(cui_clean)
+                logger.error(f"ANAF API returned unexpected status: {response.status_code}")
+                return {
+                    "success": False,
+                    "error": f"Eroare la comunicarea cu serviciul ANAF (cod: {response.status_code}). Vă rugăm încercați mai târziu.",
+                    "cui_searched": cui_clean
+                }
                 
     except httpx.TimeoutException:
-        logger.warning(f"ANAF API timeout for CUI {cui_clean}, using demo data")
-        return get_demo_company_data(cui_clean)
+        logger.error(f"ANAF API timeout for CUI {cui_clean}")
+        return {
+            "success": False,
+            "error": "Serviciul ANAF nu a răspuns în timp util. Vă rugăm încercați din nou.",
+            "cui_searched": cui_clean
+        }
+    except httpx.ConnectError:
+        logger.error(f"Cannot connect to ANAF API")
+        return {
+            "success": False,
+            "error": "Nu s-a putut stabili conexiunea cu serviciul ANAF. Verificați conexiunea la internet.",
+            "cui_searched": cui_clean
+        }
     except Exception as e:
         logger.error(f"Error querying ANAF API: {str(e)}")
-        return get_demo_company_data(cui_clean)
+        return {
+            "success": False,
+            "error": f"Eroare la interogarea registrului oficial: {str(e)}",
+            "cui_searched": cui_clean
+        }
 
 
 def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     """Parse ANAF API response into our format"""
     
-    # Extract date info
+    # Extract data sections
     date_general = company.get("date_generale", {})
     inreg_scope_tva = company.get("inregistrare_scop_Tva", {})
     
+    # Get basic company info
+    cui_value = date_general.get("cui", "")
+    denumire = date_general.get("denumire", "")
+    adresa = date_general.get("adresa", "")
+    numar_reg_com = date_general.get("nrRegCom", "")
+    
     # Determine company status
     stare = date_general.get("stare_inregistrare", "")
-    is_active = stare.upper() == "ACTIVA" or stare.upper() == "INREGISTRAT"
+    is_active = stare.upper() in ["ACTIVA", "INREGISTRAT", "ÎNREGISTRAT"]
     
-    # Calculate company age
+    # Calculate company age from founding date
     data_infiintare = date_general.get("data_inregistrare", "")
     company_age_years = 0
     if data_infiintare:
         try:
             founding_date = datetime.strptime(data_infiintare, "%Y-%m-%d")
             company_age_years = (datetime.now() - founding_date).days // 365
-        except:
-            pass
+        except ValueError:
+            logger.warning(f"Could not parse founding date: {data_infiintare}")
     
     # Check VAT status
-    is_vat_payer = inreg_scope_tva.get("scpTVA", False) if inreg_scope_tva else False
+    is_vat_payer = False
+    data_inceput_tva = ""
+    if inreg_scope_tva:
+        is_vat_payer = inreg_scope_tva.get("scpTVA", False)
+        data_inceput_tva = inreg_scope_tva.get("data_inceput_ScpTVA", "")
     
-    # Get CAEN code
+    # Get CAEN code and description
     cod_caen = str(date_general.get("cod_CAEN", ""))
-    caen_description = ELIGIBLE_CAEN_CODES.get(cod_caen, date_general.get("denumire_CAEN", ""))
+    denumire_caen = date_general.get("denumire_CAEN", "")
+    
+    # Check if CAEN is in our eligible list
     is_caen_eligible = cod_caen in ELIGIBLE_CAEN_CODES
+    if is_caen_eligible and not denumire_caen:
+        denumire_caen = ELIGIBLE_CAEN_CODES.get(cod_caen, "")
     
     return {
         "success": True,
+        "source": "ANAF",
         "company": {
-            "cui": f"RO{date_general.get('cui', '')}",
-            "cui_numeric": date_general.get("cui", ""),
-            "denumire": date_general.get("denumire", ""),
-            "adresa": date_general.get("adresa", ""),
-            "numar_reg_com": date_general.get("nrRegCom", ""),
+            "cui": f"RO{cui_value}" if cui_value else "",
+            "cui_numeric": str(cui_value),
+            "denumire": denumire,
+            "adresa": adresa,
+            "numar_reg_com": numar_reg_com,
             "telefon": date_general.get("telefon", ""),
             "cod_postal": date_general.get("codPostal", ""),
             "stare": stare,
@@ -210,10 +284,10 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
             "data_infiintare": data_infiintare,
             "company_age_years": company_age_years,
             "cod_caen": cod_caen,
-            "denumire_caen": caen_description,
+            "denumire_caen": denumire_caen,
             "is_caen_eligible": is_caen_eligible,
             "is_vat_payer": is_vat_payer,
-            "data_inceput_tva": inreg_scope_tva.get("data_inceput_ScpTVA", "") if inreg_scope_tva else "",
+            "data_inceput_tva": data_inceput_tva,
         },
         "eligibility": {
             "is_active": is_active,
@@ -245,154 +319,6 @@ def get_eligibility_reasons(is_active: bool, age_years: int, is_caen_eligible: b
         reasons.append({"check": "Cod CAEN eligibil", "passed": None, "detail": "Verificare manuală necesară pentru eligibilitate"})
     
     return reasons
-
-
-def get_demo_company_data(cui: str) -> Dict[str, Any]:
-    """
-    Generate demo company data for testing when ANAF API is unavailable
-    This allows the registration flow to be tested without live API access
-    """
-    # Demo companies for different scenarios
-    demo_companies = {
-        "12345678": {
-            "success": True,
-            "company": {
-                "cui": "RO12345678",
-                "cui_numeric": "12345678",
-                "denumire": "DEMO CONSTRUCT SRL",
-                "adresa": "Str. Exemplu nr. 10, București, Sector 1",
-                "numar_reg_com": "J40/1234/2020",
-                "telefon": "",
-                "cod_postal": "010101",
-                "stare": "ACTIVA",
-                "is_active": True,
-                "data_infiintare": "2020-01-15",
-                "company_age_years": 6,
-                "cod_caen": "4120",
-                "denumire_caen": "Lucrări de construcții a clădirilor rezidențiale și nerezidențiale",
-                "is_caen_eligible": True,
-                "is_vat_payer": True,
-                "data_inceput_tva": "2020-02-01",
-            },
-            "eligibility": {
-                "is_active": True,
-                "is_over_1_year": True,
-                "is_caen_eligible": True,
-                "is_eligible": True,
-                "reasons": [
-                    {"check": "Firmă activă", "passed": True, "detail": "Stare: ACTIVA"},
-                    {"check": "Vechime peste 1 an", "passed": True, "detail": "Vechime: 6 ani"},
-                    {"check": "Cod CAEN eligibil", "passed": True, "detail": "Domeniu de activitate eligibil pentru recrutare internațională"}
-                ]
-            }
-        },
-        "99999999": {
-            "success": True,
-            "company": {
-                "cui": "RO99999999",
-                "cui_numeric": "99999999",
-                "denumire": "FIRMA RADIATA SRL",
-                "adresa": "Str. Veche nr. 5, Cluj-Napoca",
-                "numar_reg_com": "J12/999/2015",
-                "telefon": "",
-                "cod_postal": "400001",
-                "stare": "RADIATA",
-                "is_active": False,
-                "data_infiintare": "2015-06-01",
-                "company_age_years": 10,
-                "cod_caen": "4120",
-                "denumire_caen": "Lucrări de construcții",
-                "is_caen_eligible": True,
-                "is_vat_payer": False,
-                "data_inceput_tva": "",
-            },
-            "eligibility": {
-                "is_active": False,
-                "is_over_1_year": True,
-                "is_caen_eligible": True,
-                "is_eligible": False,
-                "reasons": [
-                    {"check": "Firmă activă", "passed": False, "detail": "Stare: RADIATA - Firma nu este activă"},
-                    {"check": "Vechime peste 1 an", "passed": True, "detail": "Vechime: 10 ani"},
-                    {"check": "Cod CAEN eligibil", "passed": True, "detail": "Domeniu de activitate eligibil"}
-                ]
-            }
-        },
-        "11111111": {
-            "success": True,
-            "company": {
-                "cui": "RO11111111",
-                "cui_numeric": "11111111",
-                "denumire": "STARTUP NOU SRL",
-                "adresa": "Bd. Unirii nr. 20, București, Sector 3",
-                "numar_reg_com": "J40/11111/2025",
-                "telefon": "",
-                "cod_postal": "030167",
-                "stare": "ACTIVA",
-                "is_active": True,
-                "data_infiintare": "2025-06-01",
-                "company_age_years": 0,
-                "cod_caen": "5610",
-                "denumire_caen": "Restaurante",
-                "is_caen_eligible": True,
-                "is_vat_payer": False,
-                "data_inceput_tva": "",
-            },
-            "eligibility": {
-                "is_active": True,
-                "is_over_1_year": False,
-                "is_caen_eligible": True,
-                "is_eligible": False,
-                "reasons": [
-                    {"check": "Firmă activă", "passed": True, "detail": "Stare: ACTIVA"},
-                    {"check": "Vechime peste 1 an", "passed": False, "detail": "Vechime: 0 ani - Firma trebuie să aibă minim 1 an"},
-                    {"check": "Cod CAEN eligibil", "passed": True, "detail": "Domeniu de activitate eligibil"}
-                ]
-            }
-        }
-    }
-    
-    # Check if we have demo data for this CUI
-    if cui in demo_companies:
-        return demo_companies[cui]
-    
-    # Generate generic active company for any other CUI
-    current_year = datetime.now().year
-    founding_year = current_year - 5  # Assume 5 years old
-    
-    return {
-        "success": True,
-        "company": {
-            "cui": f"RO{cui}",
-            "cui_numeric": cui,
-            "denumire": f"COMPANIE {cui[:4]} SRL",
-            "adresa": "România",
-            "numar_reg_com": f"J40/{cui[:4]}/{founding_year}",
-            "telefon": "",
-            "cod_postal": "",
-            "stare": "ACTIVA",
-            "is_active": True,
-            "data_infiintare": f"{founding_year}-01-01",
-            "company_age_years": current_year - founding_year,
-            "cod_caen": "4120",
-            "denumire_caen": "Lucrări de construcții a clădirilor rezidențiale și nerezidențiale",
-            "is_caen_eligible": True,
-            "is_vat_payer": True,
-            "data_inceput_tva": f"{founding_year}-02-01",
-        },
-        "eligibility": {
-            "is_active": True,
-            "is_over_1_year": True,
-            "is_caen_eligible": True,
-            "is_eligible": True,
-            "reasons": [
-                {"check": "Firmă activă", "passed": True, "detail": "Stare: ACTIVA"},
-                {"check": "Vechime peste 1 an", "passed": True, "detail": f"Vechime: {current_year - founding_year} ani"},
-                {"check": "Cod CAEN eligibil", "passed": True, "detail": "Domeniu de activitate eligibil pentru recrutare internațională"}
-            ]
-        },
-        "_note": "Date demonstrate - API ANAF indisponibil temporar. Datele reale vor fi preluate automat când serviciul devine disponibil."
-    }
 
 
 # Recruitment industries for employer registration
