@@ -299,7 +299,7 @@ export default function HeroSlider() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 h-full container mx-auto px-4 flex items-center pt-32 md:pt-40">
+      <div className="relative z-10 h-full container mx-auto px-4 flex items-center pt-36 md:pt-44">
         <div className="max-w-3xl">
           {/* Category Badge */}
           <div 
