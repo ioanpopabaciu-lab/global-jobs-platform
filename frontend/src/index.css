@@ -1,456 +1,107 @@
-/* =========================================
-   GJC DESIGN SYSTEM - Global Styles
-   Version 2.0
-   ========================================= */
-
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* =========================================
-   CSS Variables - Design Tokens
-   ========================================= */
 @layer base {
     :root {
-        /* ===== BRAND COLORS ===== */
-        --color-primary: #1E3A8A;        /* Navy - Titluri, header */
-        --color-primary-rgb: 30, 58, 138;
-        --color-cta-green: #10B981;      /* Verde - CTA principal */
-        --color-cta-hover: #059669;      /* Verde închis - hover */
-        --color-text-dark: #1F2937;      /* Text principal */
-        --color-text-grey: #6B7280;      /* Text secundar */
-        --color-background: #F9FAFB;     /* Fundal pagini */
-        --color-white: #FFFFFF;          /* Carduri, secțiuni */
-        --color-accent: #F97316;         /* Portocaliu - highlight */
-        --color-border: #E5E7EB;         /* Borduri subtile */
-        --color-navy-light: #EFF6FF;     /* Fundal secțiuni albastre */
-        
-        /* ===== SHADCN/UI VARIABLES ===== */
-        --background: 210 20% 98%;       /* #F9FAFB */
-        --foreground: 220 14% 20%;       /* #1F2937 */
-        --card: 0 0% 100%;               /* #FFFFFF */
-        --card-foreground: 220 14% 20%;
+        --background: 0 0% 100%;
+        --foreground: 222 47% 11%;
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 11%;
         --popover: 0 0% 100%;
-        --popover-foreground: 220 14% 20%;
-        --primary: 224 64% 33%;          /* #1E3A8A */
+        --popover-foreground: 222 47% 11%;
+        --primary: 210 100% 20%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 160 84% 39%;        /* #10B981 */
+        --secondary: 220 9% 46%;
         --secondary-foreground: 0 0% 100%;
-        --muted: 220 14% 96%;
-        --muted-foreground: 220 9% 46%;  /* #6B7280 */
-        --accent: 25 95% 53%;            /* #F97316 */
-        --accent-foreground: 0 0% 100%;
+        --muted: 210 40% 96%;
+        --muted-foreground: 215 16% 47%;
+        --accent: 210 40% 96%;
+        --accent-foreground: 210 100% 20%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 98%;
-        --border: 220 13% 91%;           /* #E5E7EB */
-        --input: 220 13% 91%;
-        --ring: 224 64% 33%;
+        --border: 214 32% 91%;
+        --input: 214 32% 91%;
+        --ring: 210 100% 20%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
         --radius: 0.5rem;
         
-        /* ===== SPACING (8px Grid) ===== */
-        --space-xs: 8px;
-        --space-sm: 16px;
-        --space-md: 24px;
-        --space-lg: 32px;
-        --space-xl: 48px;
-        --space-2xl: 64px;
-        --space-3xl: 96px;
+        --navy-50: #f0f4f8;
+        --navy-100: #d9e2ec;
+        --navy-200: #bcccdc;
+        --navy-300: #9fb3c8;
+        --navy-400: #829ab1;
+        --navy-500: #627d98;
+        --navy-600: #486581;
+        --navy-700: #334e68;
+        --navy-800: #243b53;
+        --navy-900: #003366;
         
-        /* ===== SHADOWS ===== */
-        --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
-        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
-        --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
-        --shadow-button: 0 4px 14px rgba(16, 185, 129, 0.35);
-        
-        /* ===== TYPOGRAPHY ===== */
-        --font-heading: 'Sora', sans-serif;
-        --font-body: 'Inter', sans-serif;
-        
-        /* ===== CHART COLORS ===== */
-        --chart-1: 160 84% 39%;
-        --chart-2: 224 64% 33%;
-        --chart-3: 25 95% 53%;
-        --chart-4: 220 9% 46%;
-        --chart-5: 220 14% 20%;
-    }
-    
-    /* Dark Mode Support (optional) */
-    .dark {
-        --background: 220 14% 10%;
-        --foreground: 0 0% 95%;
-        --card: 220 14% 15%;
-        --card-foreground: 0 0% 95%;
-        --popover: 220 14% 15%;
-        --popover-foreground: 0 0% 95%;
-        --muted: 220 14% 20%;
-        --muted-foreground: 0 0% 65%;
-        --border: 220 14% 25%;
-        --input: 220 14% 25%;
+        --coral: #E74C3C;
+        --gold: #D4A853;
     }
 }
 
-/* =========================================
-   BASE STYLES
-   ========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-}
-
 body {
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    font-weight: 400;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--color-background);
-    color: var(--color-text-dark);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
 }
 
-/* =========================================
-   TYPOGRAPHY - Headings (Sora)
-   ========================================= */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    color: var(--color-primary);
-    letter-spacing: -0.02em;
-}
-
-h1 {
-    font-size: 56px;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 700;
-    line-height: 1.15;
+    letter-spacing: -0.01em;
 }
 
-h2 {
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 1.2;
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-h3 {
-    font-size: 28px;
-    font-weight: 600;
-    line-height: 1.3;
-}
-
-h4 {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-h5 {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-h6 {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-/* Responsive Typography */
-@media (max-width: 768px) {
-    h1 { font-size: 36px; }
-    h2 { font-size: 28px; }
-    h3 { font-size: 22px; }
-    h4 { font-size: 18px; }
-}
-
-/* =========================================
-   TYPOGRAPHY - Body Text (Inter)
-   ========================================= */
-p, span, div, label, input, textarea, select, button, a {
-    font-family: var(--font-body);
-}
-
-.text-body-lg {
-    font-size: 18px;
-    line-height: 1.7;
-}
-
-.text-body {
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-.text-small {
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.text-caption {
-    font-size: 12px;
-    line-height: 1.4;
-}
-
-/* Text Colors */
-.text-primary { color: var(--color-primary); }
-.text-dark { color: var(--color-text-dark); }
-.text-grey { color: var(--color-text-grey); }
-.text-accent { color: var(--color-accent); }
-.text-cta { color: var(--color-cta-green); }
-
-/* =========================================
-   BUTTONS - Global Styles
-   ========================================= */
-@layer components {
-    /* Primary Button (CTA Verde) */
-    .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background-color: var(--color-cta-green);
-        color: var(--color-white);
-        font-family: var(--font-body);
-        font-size: 16px;
-        font-weight: 600;
-        padding: 14px 28px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    
-    .btn-primary:hover {
-        background-color: var(--color-cta-hover);
-        box-shadow: var(--shadow-button);
-        transform: translateY(-1px);
-    }
-    
-    .btn-primary:active {
-        transform: translateY(0);
-    }
-    
-    .btn-primary:disabled {
-        background-color: var(--color-text-grey);
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: none;
-    }
-    
-    /* Secondary Button (Outline Navy) */
-    .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background-color: transparent;
-        color: var(--color-primary);
-        font-family: var(--font-body);
-        font-size: 16px;
-        font-weight: 600;
-        padding: 12px 26px;
-        border: 2px solid var(--color-primary);
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    
-    .btn-secondary:hover {
-        background-color: var(--color-navy-light);
-    }
-    
-    .btn-secondary:active {
-        background-color: #DBEAFE;
-    }
-    
-    .btn-secondary:disabled {
-        border-color: var(--color-border);
-        color: var(--color-text-grey);
-        cursor: not-allowed;
-    }
-    
-    /* Ghost Button (Link Style) */
-    .btn-ghost {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        background-color: transparent;
-        color: var(--color-primary);
-        font-family: var(--font-body);
-        font-size: 15px;
-        font-weight: 500;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    
-    .btn-ghost:hover {
-        text-decoration: underline;
-        background-color: var(--color-navy-light);
-    }
-    
-    /* Small Button Variant */
-    .btn-sm {
-        font-size: 14px;
-        padding: 10px 20px;
-    }
-    
-    /* Large Button Variant */
-    .btn-lg {
-        font-size: 18px;
-        padding: 16px 32px;
-    }
-    
-    /* Icon Button */
-    .btn-icon {
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border-radius: 8px;
+@layer base {
+    * {
+        @apply border-border;
     }
 }
 
-/* =========================================
-   CARDS & CONTAINERS
-   ========================================= */
-@layer components {
-    .gjc-card {
-        background-color: var(--color-white);
-        border-radius: 12px;
-        box-shadow: var(--shadow-card);
-        border: 1px solid var(--color-border);
-        padding: var(--space-md);
-        transition: all 0.2s ease;
-    }
-    
-    .gjc-card:hover {
-        box-shadow: var(--shadow-hover);
-    }
-    
-    .gjc-section {
-        padding: var(--space-3xl) 0;
-    }
-    
-    .gjc-section-navy {
-        background-color: var(--color-navy-light);
-    }
-    
-    .gjc-container {
-        width: 100%;
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 var(--space-md);
-    }
-}
-
-/* =========================================
-   FORM ELEMENTS
-   ========================================= */
-@layer components {
-    .gjc-input {
-        width: 100%;
-        font-family: var(--font-body);
-        font-size: 16px;
-        padding: 12px 16px;
-        border: 1px solid var(--color-border);
-        border-radius: 8px;
-        background-color: var(--color-white);
-        color: var(--color-text-dark);
-        transition: all 0.2s ease;
-    }
-    
-    .gjc-input:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    }
-    
-    .gjc-input::placeholder {
-        color: var(--color-text-grey);
-    }
-    
-    .gjc-label {
-        display: block;
-        font-family: var(--font-body);
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--color-text-dark);
-        margin-bottom: 6px;
-    }
-}
-
-/* =========================================
-   UTILITY CLASSES
-   ========================================= */
 @layer utilities {
-    /* Backgrounds */
-    .bg-primary { background-color: var(--color-primary); }
-    .bg-cta { background-color: var(--color-cta-green); }
-    .bg-accent { background-color: var(--color-accent); }
-    .bg-navy-light { background-color: var(--color-navy-light); }
-    .bg-page { background-color: var(--color-background); }
-    
-    /* Shadows */
-    .shadow-card { box-shadow: var(--shadow-card); }
-    .shadow-hover { box-shadow: var(--shadow-hover); }
-    .shadow-modal { box-shadow: var(--shadow-modal); }
-    
-    /* Spacing */
-    .gap-xs { gap: var(--space-xs); }
-    .gap-sm { gap: var(--space-sm); }
-    .gap-md { gap: var(--space-md); }
-    .gap-lg { gap: var(--space-lg); }
-    .gap-xl { gap: var(--space-xl); }
-    
-    .p-xs { padding: var(--space-xs); }
-    .p-sm { padding: var(--space-sm); }
-    .p-md { padding: var(--space-md); }
-    .p-lg { padding: var(--space-lg); }
-    .p-xl { padding: var(--space-xl); }
-    
-    .m-xs { margin: var(--space-xs); }
-    .m-sm { margin: var(--space-sm); }
-    .m-md { margin: var(--space-md); }
-    .m-lg { margin: var(--space-lg); }
-    .m-xl { margin: var(--space-xl); }
-    
-    /* Hero overlay */
-    .hero-overlay {
-        background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(30, 58, 138, 0.6) 100%);
+    .text-shadow-hero {
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
     }
     
-    /* Glass effect */
     .glass-nav {
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        background-color: rgba(255, 255, 255, 0.9);
     }
     
-    /* Text shadow for hero */
-    .text-shadow-hero {
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    .hero-overlay {
+        background: linear-gradient(to right, rgba(0, 51, 102, 0.85) 0%, rgba(0, 51, 102, 0.4) 100%);
     }
     
-    /* Font families */
-    .font-heading { font-family: var(--font-heading); }
-    .font-body { font-family: var(--font-body); }
+    .card-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 51, 102, 0.1), 0 2px 4px -1px rgba(0, 51, 102, 0.06);
+    }
+    
+    .card-shadow-hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 51, 102, 0.1), 0 4px 6px -2px rgba(0, 51, 102, 0.05);
+    }
 }
 
-/* =========================================
-   ANIMATIONS
-   ========================================= */
+/* Animation keyframes */
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -463,33 +114,21 @@ p, span, div, label, input, textarea, select, button, a {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideInLeft {
     from {
         opacity: 0;
-        transform: translateX(-20px);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
     }
 }
 
 @keyframes pulse-glow {
     0%, 100% {
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+        box-shadow: 0 0 0 0 rgba(0, 51, 102, 0.4);
     }
     50% {
-        box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+        box-shadow: 0 0 0 10px rgba(0, 51, 102, 0);
     }
-}
-
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
 }
 
 .animate-slide-in {
@@ -497,96 +136,32 @@ p, span, div, label, input, textarea, select, button, a {
 }
 
 .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-slide-left {
-    animation: slideInLeft 0.5s ease-out forwards;
+    animation: fadeIn 0.8s ease-out forwards;
 }
 
 .animate-pulse-glow {
     animation: pulse-glow 2s infinite;
 }
 
-/* Stagger animations */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
 
-/* =========================================
-   SCROLLBAR
-   ========================================= */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
-    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-background);
+    background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-text-grey);
+    background: var(--navy-500);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-primary);
-}
-
-/* =========================================
-   BORDERS (Tailwind Override)
-   ========================================= */
-@layer base {
-    * {
-        @apply border-border;
-    }
-}
-
-/* =========================================
-   COMPONENT OVERRIDES
-   ========================================= */
-
-/* Override Shadcn Button to match GJC design */
-.gjc-btn-primary,
-button[data-variant="default"] {
-    background-color: var(--color-cta-green) !important;
-    font-family: var(--font-body);
-    font-weight: 600;
-}
-
-.gjc-btn-primary:hover,
-button[data-variant="default"]:hover {
-    background-color: var(--color-cta-hover) !important;
-}
-
-/* Success states */
-.text-success { color: var(--color-cta-green); }
-.bg-success { background-color: var(--color-cta-green); }
-.border-success { border-color: var(--color-cta-green); }
-
-/* Warning states */
-.text-warning { color: var(--color-accent); }
-.bg-warning { background-color: var(--color-accent); }
-.border-warning { border-color: var(--color-accent); }
-
-/* Error states */
-.text-error { color: #EF4444; }
-.bg-error { background-color: #EF4444; }
-.border-error { border-color: #EF4444; }
-
-/* =========================================
-   PRINT STYLES
-   ========================================= */
-@media print {
-    body {
-        background: white;
-        color: black;
-    }
-    
-    .no-print {
-        display: none !important;
-    }
+    background: var(--navy-700);
 }
