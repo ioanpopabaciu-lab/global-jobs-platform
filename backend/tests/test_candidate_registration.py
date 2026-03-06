@@ -284,7 +284,9 @@ class TestCandidateProfileAccess:
         
         assert response.status_code == 200, f"Profile access failed. Status: {response.status_code}"
         
-        profile = response.json()
+        data = response.json()
+        # Profile endpoint returns {"profile": {...}, "documents": [...]}
+        profile = data.get("profile", {})
         assert profile.get("first_name") == "Access", "First name should match"
         assert profile.get("last_name") == "Test", "Last name should match"
         assert profile.get("citizenship") == "Bangladesh", "Citizenship should match"
