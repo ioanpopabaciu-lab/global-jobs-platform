@@ -406,18 +406,19 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     
     query_date = date.today().strftime("%Y-%m-%d")
     
+    # Track if any API explicitly said "not found"
+    any_not_found = False
+    any_api_worked = False
+    
     # Step 1: Try primary API
     logger.info(f"Step 1: Querying primary registry for CUI {cui_clean}")
     primary_result = await query_primary_api(cui_int, query_date)
     
     if primary_result:
+        any_api_worked = True
         if primary_result.get("not_found"):
-            return {
-                "success": False,
-                "error": "Compania nu a fost găsită în registrele oficiale.",
-                "cui_searched": cui_clean
-            }
-        if primary_result.get("success"):
+            any_not_found = True
+        elif primary_result.get("success"):
             return primary_result
     
     # Step 2: Try secondary API (fallback)
@@ -425,13 +426,10 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     secondary_result = await query_secondary_api(cui_clean)
     
     if secondary_result:
+        any_api_worked = True
         if secondary_result.get("not_found"):
-            return {
-                "success": False,
-                "error": "Compania nu a fost găsită în registrele oficiale.",
-                "cui_searched": cui_clean
-            }
-        if secondary_result.get("success"):
+            any_not_found = True
+        elif secondary_result.get("success"):
             return secondary_result
     
     # Step 3: Try tertiary API (last fallback)
@@ -439,16 +437,22 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     tertiary_result = await query_tertiary_api(cui_clean)
     
     if tertiary_result:
+        any_api_worked = True
         if tertiary_result.get("not_found"):
-            return {
-                "success": False,
-                "error": "Compania nu a fost găsită în registrele oficiale.",
-                "cui_searched": cui_clean
-            }
-        if tertiary_result.get("success"):
+            any_not_found = True
+        elif tertiary_result.get("success"):
             return tertiary_result
     
-    # All APIs failed
+    # Determine appropriate error message
+    if any_not_found and any_api_worked:
+        # At least one API responded and said company doesn't exist
+        return {
+            "success": False,
+            "error": "Compania nu a fost găsită în registrele oficiale.",
+            "cui_searched": cui_clean
+        }
+    
+    # All APIs failed or timed out
     logger.error(f"All registries failed for CUI {cui_clean}")
     return {
         "success": False,
