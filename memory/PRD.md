@@ -202,6 +202,9 @@
 - GET `/google/auth` - Start Google OAuth
 - GET `/google/callback` - Google OAuth callback
 - POST `/google/exchange` - Exchange session for token
+- POST `/candidate/ocr/passport` - Extract data from passport (AI OCR)
+- POST `/candidate/ocr/cv` - Extract data from CV (AI OCR)
+- POST `/candidate/register-with-profile` - Register candidate with pre-filled profile
 
 ### Candidate Portal (`/api/portal/candidate`)
 - GET `/profile` - Get profile with documents
