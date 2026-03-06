@@ -139,7 +139,9 @@ class TestCandidateRegistrationEndpoints:
         
         assert profile_response.status_code == 200, f"Profile fetch failed. Status: {profile_response.status_code}"
         
-        profile = profile_response.json()
+        profile_data = profile_response.json()
+        # Profile endpoint returns {"profile": {...}, "documents": [...]}
+        profile = profile_data.get("profile", {})
         assert profile.get("first_name") == "John", "Profile first_name should match"
         assert profile.get("last_name") == "Doe", "Profile last_name should match"
         assert profile.get("citizenship") == "Nepal", "Profile citizenship should match"
