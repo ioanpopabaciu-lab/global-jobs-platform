@@ -11,8 +11,13 @@ import re
 
 logger = logging.getLogger(__name__)
 
-# ANAF API endpoint - Official REST API for VAT payer information
-ANAF_API_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva"
+# ANAF API endpoints - try multiple versions
+ANAF_API_URLS = [
+    "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva",
+    "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v7/ws/tva",
+    "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v6/ws/tva",
+    "https://webservicesp.anaf.ro/AsynchWebService/api/v6/ws/tva",
+]
 
 # CAEN codes eligible for international workforce recruitment
 ELIGIBLE_CAEN_CODES = {
