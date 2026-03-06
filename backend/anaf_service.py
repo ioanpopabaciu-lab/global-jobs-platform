@@ -1,9 +1,10 @@
 """
-ANAF Company Lookup Service
-Queries the Romanian National Agency for Fiscal Administration (ANAF) API
-to retrieve company information based on CUI (Unique Identification Code)
+Company Lookup Service
+Queries multiple Romanian public company registries to retrieve company information
+based on CUI (Unique Identification Code) with automatic fallback
 """
 import httpx
+import asyncio
 import logging
 from datetime import datetime, date
 from typing import Optional, Dict, Any
@@ -11,13 +12,16 @@ import re
 
 logger = logging.getLogger(__name__)
 
-# ANAF API endpoints - try multiple versions
-ANAF_API_URLS = [
-    "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva",
-    "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v7/ws/tva",
-    "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v6/ws/tva",
-    "https://webservicesp.anaf.ro/AsynchWebService/api/v6/ws/tva",
+# Primary API endpoint
+PRIMARY_API_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva"
+
+# Secondary/Fallback API endpoints (OpenAPI Romania, Lista Firme, etc.)
+SECONDARY_API_URLS = [
+    "https://api.openapi.ro/api/companies/",  # OpenAPI Romania
 ]
+
+# API timeout in seconds
+API_TIMEOUT = 5
 
 # CAEN codes eligible for international workforce recruitment
 ELIGIBLE_CAEN_CODES = {
@@ -116,132 +120,118 @@ ELIGIBLE_CAEN_CODES = {
 }
 
 
-async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
-    """
-    Query ANAF API to get company information
-    
-    Args:
-        cui: Company Unique Identification Code (with or without 'RO' prefix)
-    
-    Returns:
-        Dictionary with company information or error
-    """
-    # Clean CUI - remove RO prefix and any spaces/special characters
-    cui_clean = re.sub(r'[^0-9]', '', cui)
-    
-    if not cui_clean:
-        return {"success": False, "error": "CUI invalid"}
-    
-    if len(cui_clean) < 2 or len(cui_clean) > 10:
-        return {"success": False, "error": "CUI trebuie să aibă între 2 și 10 cifre"}
-    
+async def query_primary_api(cui_int: int, query_date: str) -> Optional[Dict[str, Any]]:
+    """Query primary government registry API"""
     try:
-        cui_int = int(cui_clean)
-    except ValueError:
-        return {"success": False, "error": "CUI trebuie să conțină doar cifre"}
-    
-    # Current date for the query
-    query_date = date.today().strftime("%Y-%m-%d")
-    
-    # Try multiple ANAF API endpoints
-    last_error = None
-    
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        for api_url in ANAF_API_URLS:
-            try:
-                logger.info(f"Querying ANAF API ({api_url}) for CUI: {cui_int}")
+        async with httpx.AsyncClient(timeout=API_TIMEOUT) as client:
+            logger.info(f"Querying primary registry for CUI: {cui_int}")
+            
+            response = await client.post(
+                PRIMARY_API_URL,
+                json=[{"cui": cui_int, "data": query_date}],
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
                 
-                response = await client.post(
-                    api_url,
-                    json=[{"cui": cui_int, "data": query_date}],
-                    headers={
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    }
-                )
-                
-                logger.info(f"ANAF API response status: {response.status_code}")
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    logger.info(f"ANAF API response: {data}")
+                if data and "found" in data and len(data["found"]) > 0:
+                    company = data["found"][0]
+                    logger.info(f"Primary API: Company found")
+                    return parse_primary_response(company)
                     
-                    # Check if company was found
-                    if data and "found" in data and len(data["found"]) > 0:
-                        company = data["found"][0]
-                        logger.info(f"Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
-                        return parse_anaf_response(company)
-                        
-                    # Check if company was not found
-                    if data and "notfound" in data and len(data["notfound"]) > 0:
-                        logger.info(f"Company not found for CUI: {cui_clean}")
-                        return {
-                            "success": False, 
-                            "error": "Compania nu a fost găsită în registrele oficiale.",
-                            "cui_searched": cui_clean
-                        }
-                    
-                    # API returned but unexpected format - try next endpoint
-                    logger.warning(f"ANAF API returned unexpected format from {api_url}")
-                    continue
-                
-                elif response.status_code == 404:
-                    # Try next endpoint
-                    logger.warning(f"ANAF API endpoint {api_url} returned 404, trying next...")
-                    continue
-                
-                elif response.status_code == 400:
-                    return {
-                        "success": False,
-                        "error": "CUI invalid sau format incorect.",
-                        "cui_searched": cui_clean
-                    }
-                
-                elif response.status_code == 500:
-                    last_error = "Serviciul ANAF este temporar indisponibil."
-                    continue
-                
-                else:
-                    last_error = f"Eroare ANAF (cod: {response.status_code})"
-                    continue
-                    
-            except httpx.TimeoutException:
-                last_error = "Serviciul ANAF nu a răspuns în timp util."
-                continue
-            except httpx.ConnectError:
-                last_error = "Nu s-a putut stabili conexiunea cu serviciul ANAF."
-                continue
-            except Exception as e:
-                logger.error(f"Error querying ANAF API {api_url}: {str(e)}")
-                last_error = str(e)
-                continue
-    
-    # All endpoints failed - return error
-    return {
-        "success": False,
-        "error": f"Serviciul de verificare a companiilor (ANAF) nu este disponibil momentan. {last_error or ''} Vă rugăm încercați mai târziu sau contactați suportul tehnic.",
-        "cui_searched": cui_clean
-    }
+                if data and "notfound" in data and len(data["notfound"]) > 0:
+                    logger.info(f"Primary API: Company not found")
+                    return {"not_found": True}
+            
+            logger.warning(f"Primary API returned status {response.status_code}")
+            return None
+            
+    except asyncio.TimeoutError:
+        logger.warning("Primary API timeout")
+        return None
+    except Exception as e:
+        logger.warning(f"Primary API error: {str(e)}")
+        return None
 
 
-def parse_anaf_response(company: Dict) -> Dict[str, Any]:
-    """Parse ANAF API response into our format"""
-    
-    # Extract data sections
+async def query_secondary_api(cui: str) -> Optional[Dict[str, Any]]:
+    """Query secondary/fallback company registry API"""
+    try:
+        async with httpx.AsyncClient(timeout=API_TIMEOUT) as client:
+            logger.info(f"Querying secondary registry for CUI: {cui}")
+            
+            # Try OpenAPI Romania
+            response = await client.get(
+                f"https://api.openapi.ro/api/companies/{cui}",
+                headers={"Accept": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data:
+                    logger.info("Secondary API: Company found")
+                    return parse_secondary_response(data)
+            
+            if response.status_code == 404:
+                return {"not_found": True}
+            
+            return None
+            
+    except asyncio.TimeoutError:
+        logger.warning("Secondary API timeout")
+        return None
+    except Exception as e:
+        logger.warning(f"Secondary API error: {str(e)}")
+        return None
+
+
+async def query_tertiary_api(cui: str) -> Optional[Dict[str, Any]]:
+    """Query tertiary fallback - Lista Firme API"""
+    try:
+        async with httpx.AsyncClient(timeout=API_TIMEOUT) as client:
+            logger.info(f"Querying tertiary registry for CUI: {cui}")
+            
+            response = await client.get(
+                f"https://listafirme.ro/api/v1/company/{cui}",
+                headers={"Accept": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data:
+                    logger.info("Tertiary API: Company found")
+                    return parse_tertiary_response(data)
+            
+            if response.status_code == 404:
+                return {"not_found": True}
+            
+            return None
+            
+    except asyncio.TimeoutError:
+        logger.warning("Tertiary API timeout")
+        return None
+    except Exception as e:
+        logger.warning(f"Tertiary API error: {str(e)}")
+        return None
+
+
+def parse_primary_response(company: Dict) -> Dict[str, Any]:
+    """Parse primary API (government registry) response"""
     date_general = company.get("date_generale", {})
     inreg_scope_tva = company.get("inregistrare_scop_Tva", {})
     
-    # Get basic company info
     cui_value = date_general.get("cui", "")
     denumire = date_general.get("denumire", "")
     adresa = date_general.get("adresa", "")
     numar_reg_com = date_general.get("nrRegCom", "")
     
-    # Determine company status
     stare = date_general.get("stare_inregistrare", "")
     is_active = stare.upper() in ["ACTIVA", "INREGISTRAT", "ÎNREGISTRAT"]
     
-    # Calculate company age from founding date
     data_infiintare = date_general.get("data_inregistrare", "")
     company_age_years = 0
     if data_infiintare:
@@ -249,27 +239,23 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
             founding_date = datetime.strptime(data_infiintare, "%Y-%m-%d")
             company_age_years = (datetime.now() - founding_date).days // 365
         except ValueError:
-            logger.warning(f"Could not parse founding date: {data_infiintare}")
+            pass
     
-    # Check VAT status
     is_vat_payer = False
     data_inceput_tva = ""
     if inreg_scope_tva:
         is_vat_payer = inreg_scope_tva.get("scpTVA", False)
         data_inceput_tva = inreg_scope_tva.get("data_inceput_ScpTVA", "")
     
-    # Get CAEN code and description
     cod_caen = str(date_general.get("cod_CAEN", ""))
     denumire_caen = date_general.get("denumire_CAEN", "")
-    
-    # Check if CAEN is in our eligible list
     is_caen_eligible = cod_caen in ELIGIBLE_CAEN_CODES
     if is_caen_eligible and not denumire_caen:
         denumire_caen = ELIGIBLE_CAEN_CODES.get(cod_caen, "")
     
     return {
         "success": True,
-        "source": "ANAF",
+        "source": "registru_oficial",
         "company": {
             "cui": f"RO{cui_value}" if cui_value else "",
             "cui_numeric": str(cui_value),
@@ -298,6 +284,72 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     }
 
 
+def parse_secondary_response(data: Dict) -> Dict[str, Any]:
+    """Parse secondary API (OpenAPI) response"""
+    denumire = data.get("denumire", data.get("name", ""))
+    cui_value = data.get("cui", data.get("cif", ""))
+    adresa = data.get("adresa", data.get("address", ""))
+    numar_reg_com = data.get("numar_registru", data.get("reg_com", ""))
+    
+    stare = data.get("stare", data.get("status", "ACTIVA"))
+    is_active = stare.upper() in ["ACTIVA", "INREGISTRAT", "ÎNREGISTRAT", "ACTIVE"]
+    
+    data_infiintare = data.get("data_infiintare", data.get("registration_date", ""))
+    company_age_years = 0
+    if data_infiintare:
+        try:
+            if "-" in data_infiintare:
+                founding_date = datetime.strptime(data_infiintare[:10], "%Y-%m-%d")
+            else:
+                founding_date = datetime.strptime(data_infiintare[:10], "%d.%m.%Y")
+            company_age_years = (datetime.now() - founding_date).days // 365
+        except ValueError:
+            pass
+    
+    cod_caen = str(data.get("cod_caen", data.get("caen", "")))
+    denumire_caen = data.get("denumire_caen", data.get("caen_description", ""))
+    is_caen_eligible = cod_caen in ELIGIBLE_CAEN_CODES
+    if is_caen_eligible and not denumire_caen:
+        denumire_caen = ELIGIBLE_CAEN_CODES.get(cod_caen, "")
+    
+    is_vat_payer = data.get("platitor_tva", data.get("vat_payer", False))
+    
+    return {
+        "success": True,
+        "source": "registru_public",
+        "company": {
+            "cui": f"RO{cui_value}" if cui_value and not str(cui_value).startswith("RO") else str(cui_value),
+            "cui_numeric": str(cui_value).replace("RO", ""),
+            "denumire": denumire,
+            "adresa": adresa,
+            "numar_reg_com": numar_reg_com,
+            "telefon": data.get("telefon", ""),
+            "cod_postal": data.get("cod_postal", ""),
+            "stare": stare,
+            "is_active": is_active,
+            "data_infiintare": data_infiintare,
+            "company_age_years": company_age_years,
+            "cod_caen": cod_caen,
+            "denumire_caen": denumire_caen,
+            "is_caen_eligible": is_caen_eligible,
+            "is_vat_payer": is_vat_payer,
+            "data_inceput_tva": "",
+        },
+        "eligibility": {
+            "is_active": is_active,
+            "is_over_1_year": company_age_years >= 1,
+            "is_caen_eligible": is_caen_eligible,
+            "is_eligible": is_active and company_age_years >= 1,
+            "reasons": get_eligibility_reasons(is_active, company_age_years, is_caen_eligible, stare)
+        }
+    }
+
+
+def parse_tertiary_response(data: Dict) -> Dict[str, Any]:
+    """Parse tertiary API response (same structure as secondary)"""
+    return parse_secondary_response(data)
+
+
 def get_eligibility_reasons(is_active: bool, age_years: int, is_caen_eligible: bool, stare: str) -> list:
     """Generate list of eligibility check results"""
     reasons = []
@@ -318,6 +370,83 @@ def get_eligibility_reasons(is_active: bool, age_years: int, is_caen_eligible: b
         reasons.append({"check": "Cod CAEN eligibil", "passed": None, "detail": "Verificare manuală necesară pentru eligibilitate"})
     
     return reasons
+
+
+async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
+    """
+    Query multiple company registries with automatic fallback
+    
+    Args:
+        cui: Company Unique Identification Code (with or without 'RO' prefix)
+    
+    Returns:
+        Dictionary with company information or error
+    """
+    # Clean CUI - remove RO prefix and any spaces/special characters
+    cui_clean = re.sub(r'[^0-9]', '', cui)
+    
+    if not cui_clean:
+        return {"success": False, "error": "CUI invalid"}
+    
+    if len(cui_clean) < 2 or len(cui_clean) > 10:
+        return {"success": False, "error": "CUI trebuie să aibă între 2 și 10 cifre"}
+    
+    try:
+        cui_int = int(cui_clean)
+    except ValueError:
+        return {"success": False, "error": "CUI trebuie să conțină doar cifre"}
+    
+    query_date = date.today().strftime("%Y-%m-%d")
+    
+    # Step 1: Try primary API
+    logger.info(f"Step 1: Querying primary registry for CUI {cui_clean}")
+    primary_result = await query_primary_api(cui_int, query_date)
+    
+    if primary_result:
+        if primary_result.get("not_found"):
+            return {
+                "success": False,
+                "error": "Compania nu a fost găsită în registrele oficiale.",
+                "cui_searched": cui_clean
+            }
+        if primary_result.get("success"):
+            return primary_result
+    
+    # Step 2: Try secondary API (fallback)
+    logger.info(f"Step 2: Primary failed, trying secondary registry for CUI {cui_clean}")
+    secondary_result = await query_secondary_api(cui_clean)
+    
+    if secondary_result:
+        if secondary_result.get("not_found"):
+            return {
+                "success": False,
+                "error": "Compania nu a fost găsită în registrele oficiale.",
+                "cui_searched": cui_clean
+            }
+        if secondary_result.get("success"):
+            return secondary_result
+    
+    # Step 3: Try tertiary API (last fallback)
+    logger.info(f"Step 3: Secondary failed, trying tertiary registry for CUI {cui_clean}")
+    tertiary_result = await query_tertiary_api(cui_clean)
+    
+    if tertiary_result:
+        if tertiary_result.get("not_found"):
+            return {
+                "success": False,
+                "error": "Compania nu a fost găsită în registrele oficiale.",
+                "cui_searched": cui_clean
+            }
+        if tertiary_result.get("success"):
+            return tertiary_result
+    
+    # All APIs failed
+    logger.error(f"All registries failed for CUI {cui_clean}")
+    return {
+        "success": False,
+        "error": "Compania nu a putut fi identificată momentan. Vă rugăm încercați din nou în câteva momente.",
+        "cui_searched": cui_clean
+    }
 
 
 # Recruitment industries for employer registration
