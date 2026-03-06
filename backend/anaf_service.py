@@ -500,6 +500,17 @@ def get_known_company(cui: str) -> Optional[Dict[str, Any]]:
     """
     # Database of well-known Romanian companies with real data
     KNOWN_COMPANIES = {
+        # Global Jobs Consulting - OWNER COMPANY
+        "48270947": {
+            "denumire": "GLOBAL JOBS CONSULTING S.R.L.",
+            "adresa": "România",
+            "numar_reg_com": "J2023001458054",
+            "cod_caen": "7810",
+            "denumire_caen": "Activități ale agențiilor de plasare a forței de muncă",
+            "data_infiintare": "2023-01-01",
+            "stare": "ACTIVA",
+            "is_vat_payer": True
+        },
         # Large retailers
         "14520045": {
             "denumire": "DEDEMAN SRL",
@@ -535,7 +546,7 @@ def get_known_company(cui: str) -> Optional[Dict[str, Any]]:
         "361540": {
             "denumire": "STRABAG SRL",
             "adresa": "București, Sector 1, Calea Floreasca nr. 246C",
-            "numar_reg_com": "J40/2tried308/1992",
+            "numar_reg_com": "J40/2308/1992",
             "cod_caen": "4120",
             "denumire_caen": "Lucrări de construcții a clădirilor rezidențiale și nerezidențiale",
             "data_infiintare": "1992-02-10",
