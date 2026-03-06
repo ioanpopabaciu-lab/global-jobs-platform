@@ -220,7 +220,7 @@ async def extract_cv_data(file_base64: str, mime_type: str = "application/pdf") 
         # Send message with document
         user_message = UserMessage(
             text=extraction_prompt,
-            image_contents=[image_content]
+            file_contents=[image_content]
         )
         
         response = await chat.send_message(user_message)
