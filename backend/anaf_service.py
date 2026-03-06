@@ -559,7 +559,7 @@ def get_known_company(cui: str) -> Optional[Dict[str, Any]]:
             "stare": "ACTIVA",
             "is_vat_payer": True
         },
-        "16## Sample companies for testing
+        # Sample companies for testing
         "38363437": {
             "denumire": "GLOBAL JOBS CONSULTING SRL",
             "adresa": "București, Sector 1, Str. Exemple nr. 100",
