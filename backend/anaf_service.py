@@ -450,9 +450,13 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
         elif tertiary_result.get("success"):
             return tertiary_result
     
-    # Step 5: Generate data for valid CUI (fallback when APIs unavailable)
-    logger.info(f"Step 5: All APIs failed, generating data for valid CUI {cui_clean}")
-    return generate_company_data(cui_clean)
+    # All APIs failed - return error (no fake data generation)
+    logger.error(f"All registries failed for CUI {cui_clean}")
+    return {
+        "success": False,
+        "error": "Serviciul de verificare a companiilor nu este disponibil momentan. Vă rugăm încercați din nou mai târziu sau contactați suportul tehnic.",
+        "cui_searched": cui_clean
+    }
 
 
 def validate_cui_checksum(cui: str) -> bool:
