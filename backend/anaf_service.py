@@ -176,12 +176,7 @@ async def query_secondary_api(cui: str) -> Optional[Dict[str, Any]]:
                     logger.info("Secondary API: Company found")
                     return parse_secondary_response(data)
             
-            # 404 means company not found, other errors mean API issue
-            if response.status_code == 404:
-                logger.info("Secondary API: Company not found (404)")
-                return {"not_found": True}
-            
-            # Any other status code - API has issues, continue to next
+            # Don't trust 404 from external APIs - they might not work properly
             logger.warning(f"Secondary API returned status {response.status_code}")
             return None
             
