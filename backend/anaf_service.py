@@ -142,9 +142,10 @@ async def query_primary_api(cui_int: int, query_date: str) -> Optional[Dict[str,
                     company = data["found"][0]
                     logger.info(f"Primary API: Company found")
                     return parse_primary_response(company)
-                    
+                
+                # Only trust "notfound" from primary API (government source)
                 if data and "notfound" in data and len(data["notfound"]) > 0:
-                    logger.info(f"Primary API: Company not found")
+                    logger.info(f"Primary API: Company explicitly not found")
                     return {"not_found": True}
             
             logger.warning(f"Primary API returned status {response.status_code}")
