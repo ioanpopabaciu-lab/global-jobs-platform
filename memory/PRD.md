@@ -3,7 +3,7 @@
 ## Project Overview
 **Platform:** Global Jobs Consulting (GJC) SaaS Platform  
 **Purpose:** Full recruitment and immigration management for Non-EU workers in Romania, Austria, and Serbia  
-**Last Updated:** 2026-03-04
+**Last Updated:** 2026-03-06
 
 ---
 
@@ -21,6 +21,7 @@
 - **Database:** MongoDB
 - **Storage:** Emergent Object Storage (cloud)
 - **Auth:** JWT + Google OAuth (Emergent Auth)
+- **AI/OCR:** Claude Sonnet 4.5 (via Emergent LLM Key)
 
 ---
 
@@ -67,6 +68,22 @@
   - Gender preference (5 pts)
   - Minimum 60% score to trigger match notification
 
+### ✅ Phase 2.5 - AI-Powered Candidate Registration (COMPLETE - 2026-03-06)
+- [x] **7-Step Registration Wizard** (`/register/candidate`)
+  - Step 1: Welcome screen with 3 icons
+  - Step 2: Document upload (passport, CV, diploma, criminal record)
+  - Step 3: AI processing animation
+  - Step 4: Confirm extracted data with status indicators
+  - Step 5: Fill missing fields (account, personal, professional)
+  - Step 6: Document checklist
+  - Step 7: Final confirmation with profile score
+- [x] **Claude AI OCR Integration**
+  - Passport extraction: name, DOB, citizenship, passport number, expiry, sex
+  - CV extraction: email, phone, profession, experience, employers, languages
+  - Field status indicators (green/yellow/red)
+- [x] **Auto-save** every 30 seconds with localStorage draft persistence
+- [x] **Profile Score Calculator** with improvement suggestions
+
 ### 🔄 Phase 3 - Core Workflow (IN PROGRESS)
 - [x] **Job Request UI (Employer Portal)** ✅ COMPLETE - 2026-03-04
   - Job list page (`/portal/employer/jobs`) with search functionality
@@ -90,6 +107,7 @@
 - [ ] Document expiry tracking and alerts
 - [ ] Document verification workflow in Admin
 - [ ] Bulk document operations
+- [ ] Background job for expiry alert emails
 
 ### 📋 Backlog (P2)
 - [ ] Stripe payment integration
