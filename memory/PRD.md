@@ -7,6 +7,22 @@
 
 ---
 
+## Recent Changes (2026-03-06)
+
+### ✅ Design System Conflict Resolution - COMPLETE
+**Issue:** Previous agent made conflicting design changes - first updated global styles, then created separate homepage styles without reverting global changes.
+
+**Resolution (Opțiunea B implementată):**
+- ✅ Reverted `index.css` to original (Montserrat font, original navy variables)
+- ✅ Reverted `tailwind.config.js` to original configuration
+- ✅ Reverted `button.jsx` to original Shadcn/UI version
+- ✅ Preserved `/app/frontend/src/styles/gjc-homepage-new.css` intact
+- ✅ Imported `gjc-homepage-new.css` ONLY in `HomePage.jsx`
+- ✅ Verified all portals work correctly: `/login`, `/register`, `/admin`, `/portal/candidate`, `/portal/employer`
+- ✅ No CSS conflicts between global styles and `gjc-new-*` classes
+
+---
+
 ## Core Architecture
 
 ### Multi-Portal Structure
