@@ -297,7 +297,7 @@ class TestCandidateProfileAccess:
         print(f"Status: {profile.get('status')}")
     
     def test_candidate_can_update_profile(self, registered_candidate):
-        """Test PUT /api/portal/candidate/profile updates profile"""
+        """Test POST /api/portal/candidate/profile updates profile"""
         # First get current profile
         get_response = requests.get(
             f"{BASE_URL}/api/portal/candidate/profile",
@@ -309,8 +309,8 @@ class TestCandidateProfileAccess:
         
         assert get_response.status_code == 200
         
-        # Update profile
-        update_response = requests.put(
+        # Update profile using POST (not PUT)
+        update_response = requests.post(
             f"{BASE_URL}/api/portal/candidate/profile",
             json={
                 "current_profession": "Senior Plumber",
@@ -325,7 +325,9 @@ class TestCandidateProfileAccess:
         
         assert update_response.status_code == 200, f"Profile update failed. Status: {update_response.status_code}"
         
-        updated_profile = update_response.json()
+        data = update_response.json()
+        # Response returns {"profile": {...}, "message": "..."}
+        updated_profile = data.get("profile", {})
         assert updated_profile.get("current_profession") == "Senior Plumber", "Profession should be updated"
         assert updated_profile.get("experience_years") == 10, "Experience years should be updated"
         
