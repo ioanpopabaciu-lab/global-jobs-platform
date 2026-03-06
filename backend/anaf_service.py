@@ -143,91 +143,85 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     # Current date for the query
     query_date = date.today().strftime("%Y-%m-%d")
     
-    try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            logger.info(f"Querying ANAF API for CUI: {cui_int}")
-            
-            response = await client.post(
-                ANAF_API_URL,
-                json=[{"cui": cui_int, "data": query_date}],
-                headers={
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            )
-            
-            logger.info(f"ANAF API response status: {response.status_code}")
-            
-            if response.status_code == 200:
-                data = response.json()
-                logger.info(f"ANAF API response data keys: {data.keys() if isinstance(data, dict) else 'not a dict'}")
+    # Try multiple ANAF API endpoints
+    last_error = None
+    
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        for api_url in ANAF_API_URLS:
+            try:
+                logger.info(f"Querying ANAF API ({api_url}) for CUI: {cui_int}")
                 
-                # Check if company was found
-                if data and "found" in data and len(data["found"]) > 0:
-                    company = data["found"][0]
-                    logger.info(f"Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
-                    return parse_anaf_response(company)
+                response = await client.post(
+                    api_url,
+                    json=[{"cui": cui_int, "data": query_date}],
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                )
+                
+                logger.info(f"ANAF API response status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    logger.info(f"ANAF API response: {data}")
                     
-                # Check if company was not found
-                if data and "notfound" in data and len(data["notfound"]) > 0:
-                    logger.info(f"Company not found for CUI: {cui_clean}")
+                    # Check if company was found
+                    if data and "found" in data and len(data["found"]) > 0:
+                        company = data["found"][0]
+                        logger.info(f"Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
+                        return parse_anaf_response(company)
+                        
+                    # Check if company was not found
+                    if data and "notfound" in data and len(data["notfound"]) > 0:
+                        logger.info(f"Company not found for CUI: {cui_clean}")
+                        return {
+                            "success": False, 
+                            "error": "Compania nu a fost găsită în registrele oficiale.",
+                            "cui_searched": cui_clean
+                        }
+                    
+                    # API returned but unexpected format - try next endpoint
+                    logger.warning(f"ANAF API returned unexpected format from {api_url}")
+                    continue
+                
+                elif response.status_code == 404:
+                    # Try next endpoint
+                    logger.warning(f"ANAF API endpoint {api_url} returned 404, trying next...")
+                    continue
+                
+                elif response.status_code == 400:
                     return {
-                        "success": False, 
-                        "error": "Compania nu a fost găsită în registrele oficiale.",
+                        "success": False,
+                        "error": "CUI invalid sau format incorect.",
                         "cui_searched": cui_clean
                     }
                 
-                # API returned but unexpected format
-                logger.warning(f"ANAF API returned unexpected format: {data}")
-                return {
-                    "success": False,
-                    "error": "Răspuns neașteptat de la serviciul ANAF. Vă rugăm încercați din nou.",
-                    "cui_searched": cui_clean
-                }
-            
-            elif response.status_code == 400:
-                return {
-                    "success": False,
-                    "error": "CUI invalid sau format incorect.",
-                    "cui_searched": cui_clean
-                }
-            
-            elif response.status_code == 500:
-                return {
-                    "success": False,
-                    "error": "Serviciul ANAF este temporar indisponibil. Vă rugăm încercați mai târziu.",
-                    "cui_searched": cui_clean
-                }
-            
-            else:
-                logger.error(f"ANAF API returned unexpected status: {response.status_code}")
-                return {
-                    "success": False,
-                    "error": f"Eroare la comunicarea cu serviciul ANAF (cod: {response.status_code}). Vă rugăm încercați mai târziu.",
-                    "cui_searched": cui_clean
-                }
+                elif response.status_code == 500:
+                    last_error = "Serviciul ANAF este temporar indisponibil."
+                    continue
                 
-    except httpx.TimeoutException:
-        logger.error(f"ANAF API timeout for CUI {cui_clean}")
-        return {
-            "success": False,
-            "error": "Serviciul ANAF nu a răspuns în timp util. Vă rugăm încercați din nou.",
-            "cui_searched": cui_clean
-        }
-    except httpx.ConnectError:
-        logger.error(f"Cannot connect to ANAF API")
-        return {
-            "success": False,
-            "error": "Nu s-a putut stabili conexiunea cu serviciul ANAF. Verificați conexiunea la internet.",
-            "cui_searched": cui_clean
-        }
-    except Exception as e:
-        logger.error(f"Error querying ANAF API: {str(e)}")
-        return {
-            "success": False,
-            "error": f"Eroare la interogarea registrului oficial: {str(e)}",
-            "cui_searched": cui_clean
-        }
+                else:
+                    last_error = f"Eroare ANAF (cod: {response.status_code})"
+                    continue
+                    
+            except httpx.TimeoutException:
+                last_error = "Serviciul ANAF nu a răspuns în timp util."
+                continue
+            except httpx.ConnectError:
+                last_error = "Nu s-a putut stabili conexiunea cu serviciul ANAF."
+                continue
+            except Exception as e:
+                logger.error(f"Error querying ANAF API {api_url}: {str(e)}")
+                last_error = str(e)
+                continue
+    
+    # All endpoints failed - return error
+    return {
+        "success": False,
+        "error": f"Serviciul de verificare a companiilor (ANAF) nu este disponibil momentan. {last_error or ''} Vă rugăm încercați mai târziu sau contactați suportul tehnic.",
+        "cui_searched": cui_clean
+    }
 
 
 def parse_anaf_response(company: Dict) -> Dict[str, Any]:
