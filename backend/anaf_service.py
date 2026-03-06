@@ -559,27 +559,6 @@ def get_known_company(cui: str) -> Optional[Dict[str, Any]]:
             "stare": "ACTIVA",
             "is_vat_payer": True
         },
-        # Sample companies for testing
-        "38363437": {
-            "denumire": "GLOBAL JOBS CONSULTING SRL",
-            "adresa": "București, Sector 1, Str. Exemple nr. 100",
-            "numar_reg_com": "J40/12345/2018",
-            "cod_caen": "7810",
-            "denumire_caen": "Activități ale agențiilor de plasare a forței de muncă",
-            "data_infiintare": "2018-03-15",
-            "stare": "ACTIVA",
-            "is_vat_payer": True
-        },
-        "12345678": {
-            "denumire": "TEST CONSTRUCT SRL",
-            "adresa": "Cluj-Napoca, Str. Memorandumului nr. 28",
-            "numar_reg_com": "J12/1234/2015",
-            "cod_caen": "4120",
-            "denumire_caen": "Lucrări de construcții a clădirilor rezidențiale și nerezidențiale",
-            "data_infiintare": "2015-01-20",
-            "stare": "ACTIVA",
-            "is_vat_payer": True
-        },
     }
     
     if cui in KNOWN_COMPANIES:
