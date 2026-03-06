@@ -178,7 +178,7 @@ export default function EmployerRegisterPage() {
         </div>
         <CardTitle className="text-2xl">Înregistrare Angajator</CardTitle>
         <CardDescription>
-          Introduceți CUI-ul companiei pentru a prelua automat datele din ANAF
+          Introduceți CUI-ul companiei pentru a prelua automat datele
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
