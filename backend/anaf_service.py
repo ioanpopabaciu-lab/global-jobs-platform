@@ -176,9 +176,13 @@ async def query_secondary_api(cui: str) -> Optional[Dict[str, Any]]:
                     logger.info("Secondary API: Company found")
                     return parse_secondary_response(data)
             
+            # 404 means company not found, other errors mean API issue
             if response.status_code == 404:
+                logger.info("Secondary API: Company not found (404)")
                 return {"not_found": True}
             
+            # Any other status code - API has issues, continue to next
+            logger.warning(f"Secondary API returned status {response.status_code}")
             return None
             
     except asyncio.TimeoutError:
@@ -206,9 +210,13 @@ async def query_tertiary_api(cui: str) -> Optional[Dict[str, Any]]:
                     logger.info("Tertiary API: Company found")
                     return parse_tertiary_response(data)
             
+            # 404 means company not found
             if response.status_code == 404:
+                logger.info("Tertiary API: Company not found (404)")
                 return {"not_found": True}
             
+            # Any other status - API issues
+            logger.warning(f"Tertiary API returned status {response.status_code}")
             return None
             
     except asyncio.TimeoutError:
