@@ -140,8 +140,8 @@ export default function MariaChat() {
 
   return (
     <>
-      {/* Chat Button with Label - positioned above WhatsApp button on the left */}
-      <div className="fixed bottom-24 left-6 z-50 flex items-center gap-3">
+      {/* Chat Button with Label - positioned above WhatsApp button on the right */}
+      <div className="fixed bottom-24 right-6 z-50 flex items-center gap-3 flex-row-reverse">
         {/* "Hai să vorbim?" label - only show when chat is closed */}
         {!isOpen && (
           <div 
