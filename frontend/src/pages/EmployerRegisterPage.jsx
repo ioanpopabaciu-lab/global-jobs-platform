@@ -42,7 +42,7 @@ export default function EmployerRegisterPage() {
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupError, setLookupError] = useState('');
   
-  // Step 2-3: Company data from ANAF
+  // Step 2-3: Company data from registry
   const [companyData, setCompanyData] = useState(null);
   const [eligibility, setEligibility] = useState(null);
   
