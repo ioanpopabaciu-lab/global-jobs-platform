@@ -149,7 +149,7 @@ const pageContent = {
 
 export default function RequestWorkersPage() {
   const { language } = useLanguage();
-  const t = pageContent[language] || pageContent.ro;
+  const t = pageContent[language || 'ro'] || pageContent.ro;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
