@@ -29,6 +29,19 @@ const industriesData = {
       stats: { workers: "500+", projects: "50+", satisfaction: "98%" }
     }
   },
+  // Alias for Romanian URL
+  constructii: {
+    ro: {
+      title: "Muncitori în Construcții",
+      subtitle: "Personal calificat și necalificat pentru proiecte de construcții",
+      metaTitle: "Muncitori în Construcții | Global Jobs Consulting",
+      metaDescription: "Recrutăm muncitori calificați și necalificați pentru sectorul construcțiilor din România, Austria și Serbia.",
+      image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200",
+      positions: ["Dulgheri", "Zidari", "Fierari betonisti", "Instalatori", "Electricieni", "Operatori utilaje", "Muncitori necalificați"],
+      benefits: ["Experiență dovedită în proiecte mari", "Certificări și calificări verificate", "Capacitate fizică testată", "Disponibilitate pentru ore suplimentare"],
+      stats: { workers: "500+", projects: "50+", satisfaction: "98%" }
+    }
+  },
   hospitality: {
     ro: {
       title: "Personal HoReCa",
