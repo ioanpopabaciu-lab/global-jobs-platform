@@ -3,29 +3,27 @@ import { translations, getTranslation } from './translations';
 
 const LanguageContext = createContext();
 
+// Supported languages
+const SUPPORTED_LANGUAGES = ['ro', 'en', 'ne', 'bn', 'hi', 'si'];
+
 // Route translations for URL localization
 const routePaths = {
-  '/': { ro: '/', en: '/en', de: '/de', sr: '/sr' },
-  '/despre-noi': { ro: '/despre-noi', en: '/en/about-us', de: '/de/uber-uns', sr: '/sr/o-nama' },
-  '/angajatori': { ro: '/angajatori', en: '/en/employers', de: '/de/arbeitgeber', sr: '/sr/poslodavci' },
-  '/angajatori/procedura': { ro: '/angajatori/procedura', en: '/en/employers/procedure', de: '/de/arbeitgeber/verfahren', sr: '/sr/poslodavci/procedura' },
-  '/angajatori/eligibilitate': { ro: '/angajatori/eligibilitate', en: '/en/employers/eligibility', de: '/de/arbeitgeber/berechtigung', sr: '/sr/poslodavci/podobnost' },
-  '/angajatori/costuri': { ro: '/angajatori/costuri', en: '/en/employers/costs', de: '/de/arbeitgeber/kosten', sr: '/sr/poslodavci/troskovi' },
-  '/servicii': { ro: '/servicii', en: '/en/services', de: '/de/dienstleistungen', sr: '/sr/usluge' },
-  '/candidati': { ro: '/candidati', en: '/en/candidates', de: '/de/kandidaten', sr: '/sr/kandidati' },
-  '/blog': { ro: '/blog', en: '/en/blog', de: '/de/blog', sr: '/sr/blog' },
-  '/contact': { ro: '/contact', en: '/en/contact', de: '/de/kontakt', sr: '/sr/kontakt' },
-  '/politica-confidentialitate': { 
-    ro: '/politica-confidentialitate', 
-    en: '/en/privacy-policy', 
-    de: '/de/datenschutz', 
-    sr: '/sr/politika-privatnosti' 
-  },
+  '/': { ro: '/', en: '/en', ne: '/ne', bn: '/bn', hi: '/hi', si: '/si' },
+  '/despre-noi': { ro: '/despre-noi', en: '/en/about-us', ne: '/ne/about-us', bn: '/bn/about-us', hi: '/hi/about-us', si: '/si/about-us' },
+  '/angajatori': { ro: '/angajatori', en: '/en/employers', ne: '/ne/employers', bn: '/bn/employers', hi: '/hi/employers', si: '/si/employers' },
+  '/servicii': { ro: '/servicii', en: '/en/services', ne: '/ne/services', bn: '/bn/services', hi: '/hi/services', si: '/si/services' },
+  '/candidati': { ro: '/candidati', en: '/en/candidates', ne: '/ne/candidates', bn: '/bn/candidates', hi: '/hi/candidates', si: '/si/candidates' },
+  '/blog': { ro: '/blog', en: '/en/blog', ne: '/ne/blog', bn: '/bn/blog', hi: '/hi/blog', si: '/si/blog' },
+  '/contact': { ro: '/contact', en: '/en/contact', ne: '/ne/contact', bn: '/bn/contact', hi: '/hi/contact', si: '/si/contact' },
+  '/solicita-muncitori': { ro: '/solicita-muncitori', en: '/en/request-workers', ne: '/ne/request-workers', bn: '/bn/request-workers', hi: '/hi/request-workers', si: '/si/request-workers' },
+  '/cum-functioneaza': { ro: '/cum-functioneaza', en: '/en/how-it-works', ne: '/ne/how-it-works', bn: '/bn/how-it-works', hi: '/hi/how-it-works', si: '/si/how-it-works' },
   '/formular-angajator': { 
     ro: '/formular-angajator', 
     en: '/en/employer-form', 
-    de: '/de/arbeitgeber-formular', 
-    sr: '/sr/formular-poslodavac' 
+    ne: '/ne/employer-form',
+    bn: '/bn/employer-form',
+    hi: '/hi/employer-form',
+    si: '/si/employer-form'
   }
 };
 
@@ -33,15 +31,16 @@ export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
     // Check localStorage first
     const saved = localStorage.getItem('gjc-language');
-    if (saved && ['ro', 'en', 'de', 'sr'].includes(saved)) {
+    if (saved && SUPPORTED_LANGUAGES.includes(saved)) {
       return saved;
     }
     // Check browser language
     const browserLang = navigator.language.split('-')[0];
-    if (browserLang === 'en') return 'en';
-    if (browserLang === 'de') return 'de';
-    if (browserLang === 'sr') return 'sr';
-    return 'ro';
+    if (SUPPORTED_LANGUAGES.includes(browserLang)) {
+      return browserLang;
+    }
+    // Default to English for international accessibility
+    return 'en';
   });
 
   useEffect(() => {
