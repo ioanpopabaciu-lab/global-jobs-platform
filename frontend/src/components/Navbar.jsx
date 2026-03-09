@@ -343,8 +343,12 @@ export default function Navbar() {
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
               alt="Global Jobs Consulting" 
-              className="h-[40px] md:h-[52px] lg:h-[60px] w-auto transition-all duration-300 object-contain"
-              style={{ minWidth: '160px' }}
+              className={`w-auto transition-all duration-300 object-contain ${
+                isScrolled 
+                  ? "h-[40px] md:h-[48px] lg:h-[56px]" 
+                  : "h-[48px] md:h-[56px] lg:h-[64px]"
+              }`}
+              style={{ minWidth: isScrolled ? '140px' : '160px' }}
             />
           </Link>
 
