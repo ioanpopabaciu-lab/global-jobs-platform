@@ -140,21 +140,25 @@ async def query_primary_api(cui_int: int, query_date: str) -> Optional[Dict[str,
             
             logger.info(f"[ANAF_RESPONSE] Status: {response.status_code}")
             
-            if response.status_code == 200:
-                data = response.json()
-                
-                # Company found
-                if data and "found" in data and len(data["found"]) > 0:
-                    company = data["found"][0]
-                    logger.info(f"[ANAF_SUCCESS] Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
-                    return parse_anaf_response(company)
-                
-                # Company explicitly not found in registry (ANAF uses camelCase "notFound")
-                if data and "notFound" in data and len(data["notFound"]) > 0:
-                    logger.info(f"[ANAF_NOT_FOUND] CUI {cui_int} not in registry")
-                    return {"not_found": True, "source": "anaf_registry"}
+            # ANAF API returns 200 for found, but may return 404 with valid JSON for not found
+            if response.status_code in [200, 404]:
+                try:
+                    data = response.json()
+                    
+                    # Company found
+                    if data and "found" in data and len(data["found"]) > 0:
+                        company = data["found"][0]
+                        logger.info(f"[ANAF_SUCCESS] Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
+                        return parse_anaf_response(company)
+                    
+                    # Company explicitly not found in registry (ANAF uses camelCase "notFound")
+                    if data and "notFound" in data and len(data["notFound"]) > 0:
+                        logger.info(f"[ANAF_NOT_FOUND] CUI {cui_int} not in registry")
+                        return {"not_found": True, "source": "anaf_registry"}
+                except Exception as json_error:
+                    logger.error(f"[ANAF_JSON_ERROR] Could not parse response: {json_error}")
             
-            # API returned error
+            # API returned unexpected error
             logger.warning(f"[ANAF_ERROR] Unexpected status: {response.status_code}")
             return None
             
