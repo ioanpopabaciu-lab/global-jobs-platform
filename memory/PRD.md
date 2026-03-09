@@ -3,13 +3,56 @@
 ## Project Overview
 **Platform:** Global Jobs Consulting (GJC) SaaS Platform  
 **Purpose:** Full recruitment and immigration management for Non-EU workers in Romania, Austria, and Serbia  
-**Last Updated:** 2026-03-06
+**Last Updated:** 2026-03-09
 
 ---
 
-## Recent Changes (2026-03-06)
+## Recent Changes (2026-03-09)
 
-### ✅ Design System Conflict Resolution - COMPLETE
+### ✅ Major Navigation & Homepage Redesign - COMPLETE
+
+**Implementation Summary:**
+Complete redesign of main navigation and homepage structure to improve UX, SEO and lead generation.
+
+**New Header Structure:**
+- **Left:** Company Logo
+- **Center:** Home | Employers | Candidates | Industries (dropdown) | How It Works | About Us | Blog | Contact
+- **Right:** Login | My Account | **Request Workers** (Primary CTA - red button)
+
+**New Pages Created:**
+1. `/solicita-muncitori` (Request Workers) - Lead capture form for employers
+2. `/cum-functioneaza` (How It Works) - 5-step process explanation
+3. `/industrii/:industry` - Industry-specific landing pages:
+   - `/industrii/constructii` (Construction)
+   - `/industrii/horeca` (HoReCa/Hospitality)
+   - `/industrii/agricultura` (Agriculture)
+   - `/industrii/productie` (Manufacturing)
+   - `/industrii/logistica` (Logistics)
+
+**Homepage Slider Optimizations:**
+- Reduced from 6 slides to 3 slides
+- Clear headlines and CTAs per slide
+- Mobile: Static images instead of video
+- Slide 1: "Muncitori Internaționali pentru Companii Românești" → CTA: "Solicită Muncitori"
+- Slide 2: "Soluții de Forță de Muncă pentru Multiple Industrii" → CTA: "Explorează Industriile"
+- Slide 3: "Partenerul Tău de Încredere în Recrutare" → CTA: "Programează Consultația"
+
+**Backend:**
+- New endpoint: `POST /api/leads/request-workers` - Captures employer leads
+- Email notification on new lead submission
+
+**Files Modified/Created:**
+- `/app/frontend/src/components/Navbar.jsx` - Complete rewrite
+- `/app/frontend/src/components/HeroSlider.jsx` - Optimized to 3 slides
+- `/app/frontend/src/pages/RequestWorkersPage.jsx` - NEW
+- `/app/frontend/src/pages/HowItWorksPage.jsx` - NEW
+- `/app/frontend/src/pages/IndustryPage.jsx` - NEW
+- `/app/frontend/src/pages/CandidateRegisterPage.jsx` - Simplified (fixed babel error)
+- `/app/backend/server.py` - Added leads endpoints
+
+---
+
+### ✅ Design System Conflict Resolution (2026-03-06) - COMPLETE
 **Issue:** Previous agent made conflicting design changes - first updated global styles, then created separate homepage styles without reverting global changes.
 
 **Resolution (Opțiunea B implementată):**
