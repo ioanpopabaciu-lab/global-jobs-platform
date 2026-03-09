@@ -222,6 +222,9 @@ function AppContent() {
           <Route path="/sr/kontakt" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
           <Route path="/sr/politika-privatnosti" element={<LanguageRoute><PrivacyPolicyPage /></LanguageRoute>} />
           <Route path="/sr/formular-poslodavac" element={<LanguageRoute><FormularAngajatorPage /></LanguageRoute>} />
+          <Route path="/sr/zatrazite-radnike" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/sr/kako-funkcionise" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/sr/industrije/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
           
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
