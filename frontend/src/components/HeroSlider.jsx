@@ -4,100 +4,104 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ArrowRight, Play, Pause } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-// Video URL - new promotional video from user
+// Video URLs
 const VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/v1pulfhw_Design%20f%C4%83r%C4%83%20titlu.mp4";
-
-// Video for Agriculture slide
-const AGRICULTURE_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/bztmgx84_download.mp4";
-
-// Video for Construction slide - NEW
 const CONSTRUCTION_VIDEO_URL = "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/jx861bq7_lucratori%20in%20constructii.mp4";
 
-// Video for Logistics/Warehouse slide
-const LOGISTICS_VIDEO_URL = "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3f3l7wav_video%20depozite.mp4";
-
-// Uploaded images
+// Static images for mobile fallback
 const UPLOADED_IMAGES = {
-  workers_airport_1: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/aangudct_IMG-20250921-WA0000.jpg",
-  workers_airport_2: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/o0zrw3gc_IMG-20250921-WA0016.jpg",
-  workers_departures: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/hlb5r7g0_IMG-20250926-WA0015%281%29.jpg",
-  workers_waiting: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/4gkomm4p_IMG-20251014-WA0037.jpg",
-  design_1: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png",
-  design_2: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/uko86kal_Design%20f%C4%83r%C4%83%20titlu%20%282%29.png",
-  design_3: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/w1d2nuuo_Design%20f%C4%83r%C4%83%20titlu%20%283%29.png"
+  slide1_poster: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png",
+  slide2_poster: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/aangudct_IMG-20250921-WA0000.jpg",
+  slide3_poster: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/uko86kal_Design%20f%C4%83r%C4%83%20titlu%20%282%29.png"
 };
 
+// Optimized 3 slides as per requirements
 const slides = [
   {
     id: 0,
     type: "video",
     video: VIDEO_URL,
-    poster: UPLOADED_IMAGES.design_1,
-    category: "Nave de Croazieră",
-    titleKey: "cruise_title",
-    subtitleKey: "cruise_subtitle",
-    descriptionKey: "cruise_description"
+    poster: UPLOADED_IMAGES.slide1_poster,
+    mobileImage: UPLOADED_IMAGES.slide1_poster,
+    ctaKey: "cta_request_workers",
+    ctaLink: "request-workers"
   },
   {
     id: 1,
     type: "video",
     video: CONSTRUCTION_VIDEO_URL,
-    poster: UPLOADED_IMAGES.workers_airport_1,
-    category: "Construcții",
-    titleKey: "construction_title",
-    subtitleKey: "construction_subtitle",
-    descriptionKey: "construction_description"
+    poster: UPLOADED_IMAGES.slide2_poster,
+    mobileImage: UPLOADED_IMAGES.slide2_poster,
+    ctaKey: "cta_explore_industries",
+    ctaLink: "industries"
   },
   {
     id: 2,
     type: "image",
-    image: UPLOADED_IMAGES.workers_airport_2,
-    category: "HoReCa",
-    titleKey: "horeca_title",
-    subtitleKey: "horeca_subtitle",
-    descriptionKey: "horeca_description"
-  },
-  {
-    id: 3,
-    type: "video",
-    video: AGRICULTURE_VIDEO_URL,
-    poster: UPLOADED_IMAGES.workers_departures,
-    category: "Agricultură",
-    titleKey: "agriculture_title",
-    subtitleKey: "agriculture_subtitle",
-    descriptionKey: "agriculture_description"
-  },
-  {
-    id: 4,
-    type: "image",
-    image: UPLOADED_IMAGES.design_2,
-    category: "Producție",
-    titleKey: "production_title",
-    subtitleKey: "production_subtitle",
-    descriptionKey: "production_description"
-  },
-  {
-    id: 5,
-    type: "video",
-    video: LOGISTICS_VIDEO_URL,
-    poster: UPLOADED_IMAGES.workers_waiting,
-    category: "Logistică",
-    titleKey: "logistics_title",
-    subtitleKey: "logistics_subtitle",
-    descriptionKey: "logistics_description"
+    image: UPLOADED_IMAGES.slide3_poster,
+    mobileImage: UPLOADED_IMAGES.slide3_poster,
+    ctaKey: "cta_schedule_consultation",
+    ctaLink: "contact"
   }
 ];
 
 const slideContent = {
   ro: {
-    headline: "Soluții Globale pentru Deficitul de Forță de Muncă",
-    differentiator: "Specialiști în Recrutare Legală Non-UE, Proceduri IGI și Soluții Complete de Imigrare pentru Companii și Persoane Fizice.",
-    cruise_title: "Personal calificat în HoReCa și pe Vase de Croazieră",
-    cruise_subtitle: "Pentru Industria Maritimă și Ospitalitate",
-    cruise_description: "Bone, Menajere și asistente sociale personale pentru familii și nave de croazieră internaționale.",
-    construction_title: "Muncitori Calificați și Necalificați în Construcții",
-    construction_subtitle: "Pentru Proiecte de Succes",
-    construction_description: "Recrutăm muncitori experimentați din Asia și Africa pentru sectorul construcțiilor din România, Austria și Serbia.",
+    // Slide 1
+    slide1_headline: "Muncitori Internaționali pentru Companii Românești",
+    slide1_subtitle: "Soluții de recrutare legală din Asia și Africa",
+    cta_request_workers: "Solicită Muncitori",
+    
+    // Slide 2
+    slide2_headline: "Soluții de Forță de Muncă pentru Multiple Industrii",
+    slide2_subtitle: "Construcții • HoReCa • Agricultură • Producție • Logistică",
+    cta_explore_industries: "Explorează Industriile",
+    
+    // Slide 3
+    slide3_headline: "Partenerul Tău de Încredere în Recrutare",
+    slide3_subtitle: "Peste 4 ani de experiență în plasarea forței de muncă internaționale",
+    cta_schedule_consultation: "Programează Consultația"
+  },
+  en: {
+    slide1_headline: "International Workers for Romanian Companies",
+    slide1_subtitle: "Legal recruitment solutions from Asia and Africa",
+    cta_request_workers: "Request Workers",
+    
+    slide2_headline: "Workforce Solutions for Multiple Industries",
+    slide2_subtitle: "Construction • HoReCa • Agriculture • Manufacturing • Logistics",
+    cta_explore_industries: "Explore Industries",
+    
+    slide3_headline: "Your Trusted Recruitment Partner",
+    slide3_subtitle: "Over 4 years of experience in international workforce placement",
+    cta_schedule_consultation: "Schedule Consultation"
+  },
+  de: {
+    slide1_headline: "Internationale Arbeiter für Rumänische Unternehmen",
+    slide1_subtitle: "Legale Rekrutierungslösungen aus Asien und Afrika",
+    cta_request_workers: "Arbeiter Anfordern",
+    
+    slide2_headline: "Arbeitskräftelösungen für Mehrere Branchen",
+    slide2_subtitle: "Bauwesen • Gastgewerbe • Landwirtschaft • Produktion • Logistik",
+    cta_explore_industries: "Branchen Erkunden",
+    
+    slide3_headline: "Ihr Vertrauenswürdiger Rekrutierungspartner",
+    slide3_subtitle: "Über 4 Jahre Erfahrung in der internationalen Arbeitsvermittlung",
+    cta_schedule_consultation: "Beratung Vereinbaren"
+  },
+  sr: {
+    slide1_headline: "Međunarodni Radnici za Rumunske Kompanije",
+    slide1_subtitle: "Legalna rešenja za regrutaciju iz Azije i Afrike",
+    cta_request_workers: "Zatražite Radnike",
+    
+    slide2_headline: "Rešenja za Radnu Snagu za Više Industrija",
+    slide2_subtitle: "Građevinarstvo • Ugostiteljstvo • Poljoprivreda • Proizvodnja • Logistika",
+    cta_explore_industries: "Istražite Industrije",
+    
+    slide3_headline: "Vaš Pouzdani Partner za Regrutaciju",
+    slide3_subtitle: "Preko 4 godine iskustva u međunarodnom zapošljavanju",
+    cta_schedule_consultation: "Zakažite Konsultaciju"
+  }
+};
     horeca_title: "Bone, Menajere și Asistente Sociale",
     horeca_subtitle: "Dedicat și Profesionist",
     horeca_description: "Personal de îngrijire pentru familii, persoane în vârstă și copii din întreaga regiune.",
