@@ -149,8 +149,8 @@ async def query_primary_api(cui_int: int, query_date: str) -> Optional[Dict[str,
                     logger.info(f"[ANAF_SUCCESS] Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
                     return parse_anaf_response(company)
                 
-                # Company explicitly not found in registry
-                if data and "notfound" in data and len(data["notfound"]) > 0:
+                # Company explicitly not found in registry (ANAF uses camelCase "notFound")
+                if data and "notFound" in data and len(data["notFound"]) > 0:
                     logger.info(f"[ANAF_NOT_FOUND] CUI {cui_int} not in registry")
                     return {"not_found": True, "source": "anaf_registry"}
             
