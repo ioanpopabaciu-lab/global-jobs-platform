@@ -336,19 +336,14 @@ export default function Navbar() {
       </div>
 
       {/* Main Nav */}
-      <nav className="container mx-auto px-4 py-4">
+      <nav className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* LEFT: Logo */}
-          <Link to="/" className="flex items-center flex-shrink-0 mr-10" data-testid="logo-link">
+          <Link to="/" className="flex items-center flex-shrink-0 mr-8" data-testid="logo-link">
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
               alt="Global Jobs Consulting" 
-              className={`w-auto transition-all duration-300 object-contain ${
-                isScrolled 
-                  ? "h-[40px] md:h-[48px] lg:h-[56px]" 
-                  : "h-[48px] md:h-[56px] lg:h-[64px]"
-              }`}
-              style={{ minWidth: isScrolled ? '140px' : '160px' }}
+              className="h-[50px] md:h-[60px] lg:h-[70px] w-auto transition-all duration-300 object-contain"
             />
           </Link>
 
