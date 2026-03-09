@@ -62,6 +62,44 @@ const menuTranslations = {
     manufacturing: "Manufacturing",
     logistics: "Logistics"
   },
+  de: {
+    home: "Startseite",
+    employers: "Arbeitgeber",
+    candidates: "Kandidaten",
+    industries: "Branchen",
+    howItWorks: "So funktioniert's",
+    aboutUs: "Über Uns",
+    blog: "Blog",
+    contact: "Kontakt",
+    login: "Anmelden",
+    myAccount: "Mein Konto",
+    requestWorkers: "Arbeiter Anfordern",
+    // Industries dropdown
+    construction: "Bauwesen",
+    hospitality: "Gastgewerbe (HoReCa)",
+    agriculture: "Landwirtschaft",
+    manufacturing: "Produktion",
+    logistics: "Logistik"
+  },
+  sr: {
+    home: "Početna",
+    employers: "Poslodavci",
+    candidates: "Kandidati",
+    industries: "Industrije",
+    howItWorks: "Kako Funkcioniše",
+    aboutUs: "O Nama",
+    blog: "Blog",
+    contact: "Kontakt",
+    login: "Prijava",
+    myAccount: "Moj Nalog",
+    requestWorkers: "Zatražite Radnike",
+    // Industries dropdown
+    construction: "Građevinarstvo",
+    hospitality: "Ugostiteljstvo (HoReCa)",
+    agriculture: "Poljoprivreda",
+    manufacturing: "Proizvodnja",
+    logistics: "Logistika"
+  },
   ne: {
     home: "गृहपृष्ठ",
     employers: "रोजगारदाता",
@@ -142,19 +180,19 @@ const menuTranslations = {
 
 // Route paths for localization
 const routePathsMap = {
-  '/': { ro: '/', en: '/en', ne: '/ne', bn: '/bn', hi: '/hi', si: '/si' },
-  '/employers': { ro: '/angajatori', en: '/en/employers', ne: '/ne/employers', bn: '/bn/employers', hi: '/hi/employers', si: '/si/employers' },
-  '/candidates': { ro: '/candidati', en: '/en/candidates', ne: '/ne/candidates', bn: '/bn/candidates', hi: '/hi/candidates', si: '/si/candidates' },
-  '/industries/construction': { ro: '/industrii/constructii', en: '/en/industries/construction', ne: '/ne/industries/construction', bn: '/bn/industries/construction', hi: '/hi/industries/construction', si: '/si/industries/construction' },
-  '/industries/hospitality': { ro: '/industrii/horeca', en: '/en/industries/hospitality', ne: '/ne/industries/hospitality', bn: '/bn/industries/hospitality', hi: '/hi/industries/hospitality', si: '/si/industries/hospitality' },
-  '/industries/agriculture': { ro: '/industrii/agricultura', en: '/en/industries/agriculture', ne: '/ne/industries/agriculture', bn: '/bn/industries/agriculture', hi: '/hi/industries/agriculture', si: '/si/industries/agriculture' },
-  '/industries/manufacturing': { ro: '/industrii/productie', en: '/en/industries/manufacturing', ne: '/ne/industries/manufacturing', bn: '/bn/industries/manufacturing', hi: '/hi/industries/manufacturing', si: '/si/industries/manufacturing' },
-  '/industries/logistics': { ro: '/industrii/logistica', en: '/en/industries/logistics', ne: '/ne/industries/logistics', bn: '/bn/industries/logistics', hi: '/hi/industries/logistics', si: '/si/industries/logistics' },
-  '/how-it-works': { ro: '/cum-functioneaza', en: '/en/how-it-works', ne: '/ne/how-it-works', bn: '/bn/how-it-works', hi: '/hi/how-it-works', si: '/si/how-it-works' },
-  '/about-us': { ro: '/despre-noi', en: '/en/about-us', ne: '/ne/about-us', bn: '/bn/about-us', hi: '/hi/about-us', si: '/si/about-us' },
-  '/blog': { ro: '/blog', en: '/en/blog', ne: '/ne/blog', bn: '/bn/blog', hi: '/hi/blog', si: '/si/blog' },
-  '/contact': { ro: '/contact', en: '/en/contact', ne: '/ne/contact', bn: '/bn/contact', hi: '/hi/contact', si: '/si/contact' },
-  '/request-workers': { ro: '/solicita-muncitori', en: '/en/request-workers', ne: '/ne/request-workers', bn: '/bn/request-workers', hi: '/hi/request-workers', si: '/si/request-workers' }
+  '/': { ro: '/', en: '/en', de: '/de', sr: '/sr', ne: '/ne', bn: '/bn', hi: '/hi', si: '/si' },
+  '/employers': { ro: '/angajatori', en: '/en/employers', de: '/de/arbeitgeber', sr: '/sr/poslodavci', ne: '/ne/employers', bn: '/bn/employers', hi: '/hi/employers', si: '/si/employers' },
+  '/candidates': { ro: '/candidati', en: '/en/candidates', de: '/de/kandidaten', sr: '/sr/kandidati', ne: '/ne/candidates', bn: '/bn/candidates', hi: '/hi/candidates', si: '/si/candidates' },
+  '/industries/construction': { ro: '/industrii/constructii', en: '/en/industries/construction', de: '/de/branchen/bauwesen', sr: '/sr/industrije/gradjevinarstvo', ne: '/ne/industries/construction', bn: '/bn/industries/construction', hi: '/hi/industries/construction', si: '/si/industries/construction' },
+  '/industries/hospitality': { ro: '/industrii/horeca', en: '/en/industries/hospitality', de: '/de/branchen/gastgewerbe', sr: '/sr/industrije/ugostiteljstvo', ne: '/ne/industries/hospitality', bn: '/bn/industries/hospitality', hi: '/hi/industries/hospitality', si: '/si/industries/hospitality' },
+  '/industries/agriculture': { ro: '/industrii/agricultura', en: '/en/industries/agriculture', de: '/de/branchen/landwirtschaft', sr: '/sr/industrije/poljoprivreda', ne: '/ne/industries/agriculture', bn: '/bn/industries/agriculture', hi: '/hi/industries/agriculture', si: '/si/industries/agriculture' },
+  '/industries/manufacturing': { ro: '/industrii/productie', en: '/en/industries/manufacturing', de: '/de/branchen/produktion', sr: '/sr/industrije/proizvodnja', ne: '/ne/industries/manufacturing', bn: '/bn/industries/manufacturing', hi: '/hi/industries/manufacturing', si: '/si/industries/manufacturing' },
+  '/industries/logistics': { ro: '/industrii/logistica', en: '/en/industries/logistics', de: '/de/branchen/logistik', sr: '/sr/industrije/logistika', ne: '/ne/industries/logistics', bn: '/bn/industries/logistics', hi: '/hi/industries/logistics', si: '/si/industries/logistics' },
+  '/how-it-works': { ro: '/cum-functioneaza', en: '/en/how-it-works', de: '/de/so-funktioniert-es', sr: '/sr/kako-funkcionise', ne: '/ne/how-it-works', bn: '/bn/how-it-works', hi: '/hi/how-it-works', si: '/si/how-it-works' },
+  '/about-us': { ro: '/despre-noi', en: '/en/about-us', de: '/de/uber-uns', sr: '/sr/o-nama', ne: '/ne/about-us', bn: '/bn/about-us', hi: '/hi/about-us', si: '/si/about-us' },
+  '/blog': { ro: '/blog', en: '/en/blog', de: '/de/blog', sr: '/sr/blog', ne: '/ne/blog', bn: '/bn/blog', hi: '/hi/blog', si: '/si/blog' },
+  '/contact': { ro: '/contact', en: '/en/contact', de: '/de/kontakt', sr: '/sr/kontakt', ne: '/ne/contact', bn: '/bn/contact', hi: '/hi/contact', si: '/si/contact' },
+  '/request-workers': { ro: '/solicita-muncitori', en: '/en/request-workers', de: '/de/arbeiter-anfordern', sr: '/sr/zatrazite-radnike', ne: '/ne/request-workers', bn: '/bn/request-workers', hi: '/hi/request-workers', si: '/si/request-workers' }
 };
 
 // Desktop dropdown component
