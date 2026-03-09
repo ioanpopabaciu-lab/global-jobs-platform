@@ -1,10 +1,9 @@
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { 
-  FileText, Users, Plane, Building2, CheckCircle, 
+  FileText, Users, Plane, Building2, 
   ArrowRight, Clock, Shield, Headphones 
 } from 'lucide-react';
 
