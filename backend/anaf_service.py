@@ -206,11 +206,24 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     data_inceput_tva = ""
     if inreg_scope_tva:
         is_vat_payer = inreg_scope_tva.get("scpTVA", False)
-        data_inceput_tva = inreg_scope_tva.get("data_inceput_ScpTVA", "")
+        # Handle perioade_TVA which can be a list
+        perioade_tva = inreg_scope_tva.get("perioade_TVA", [])
+        if isinstance(perioade_tva, list) and len(perioade_tva) > 0:
+            data_inceput_tva = perioade_tva[0].get("data_inceput_ScpTVA", "")
+        elif isinstance(perioade_tva, dict):
+            data_inceput_tva = perioade_tva.get("data_inceput_ScpTVA", "")
     
     cod_caen = str(date_general.get("cod_CAEN", ""))
     denumire_caen = date_general.get("denumire_CAEN", "")
     is_caen_eligible = cod_caen in ELIGIBLE_CAEN_CODES
+    
+    # Extract city and county from address
+    adresa_sediu = company.get("adresa_sediu_social", {})
+    oras = adresa_sediu.get("sdenumire_Localitate", "")
+    judet = adresa_sediu.get("sdenumire_Judet", "")
+    strada = adresa_sediu.get("sdenumire_Strada", "")
+    numar_strada = adresa_sediu.get("snumar_Strada", "")
+    cod_postal_sediu = adresa_sediu.get("scod_Postal", "")
     
     return {
         "success": True,
@@ -221,9 +234,13 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
             "cui_numeric": str(cui_value),
             "denumire": denumire,
             "adresa": adresa,
+            "oras": oras,
+            "judet": judet,
+            "strada": strada,
+            "numar_strada": numar_strada,
             "numar_reg_com": numar_reg_com,
             "telefon": date_general.get("telefon", ""),
-            "cod_postal": date_general.get("codPostal", ""),
+            "cod_postal": cod_postal_sediu or date_general.get("codPostal", ""),
             "stare": stare,
             "is_active": is_active,
             "data_infiintare": data_infiintare,
