@@ -143,8 +143,8 @@ export default function IndustryPage() {
   return (
     <>
       <Helmet>
-        <title>{t.metaTitle}</title>
-        <meta name="description" content={t.metaDescription} />
+        <title>{t?.metaTitle || "Industrie | Global Jobs Consulting"}</title>
+        <meta name="description" content={t?.metaDescription || ""} />
       </Helmet>
 
       <div className="min-h-screen bg-white">
