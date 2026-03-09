@@ -191,17 +191,11 @@ const pageContent = {
 };
 
 export default function HowItWorksPage() {
-  const { language, getLocalizedPath } = useLanguage();
+  const { language } = useLanguage();
   const t = pageContent[language || 'ro'] || pageContent.ro;
 
   return (
-    <>
-      <Helmet>
-        <title>{t?.metaTitle || "Cum Funcționează | Global Jobs Consulting"}</title>
-        <meta name="description" content={t?.metaDescription || ""} />
-      </Helmet>
-
-      <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-navy-900 to-navy-800 text-white pt-32 pb-20">
           <div className="container mx-auto px-4 text-center">
