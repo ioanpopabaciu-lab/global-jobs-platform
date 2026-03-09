@@ -339,6 +339,8 @@ export default function Navbar() {
   const languageLabels = {
     ro: "🇷🇴 Română",
     en: "🇬🇧 English",
+    de: "🇦🇹 Deutsch",
+    sr: "🇷🇸 Srpski",
     ne: "🇳🇵 नेपाली",
     bn: "🇧🇩 বাংলা",
     hi: "🇮🇳 हिन्दी",
@@ -348,6 +350,8 @@ export default function Navbar() {
   const languageShortLabels = {
     ro: "🇷🇴 RO",
     en: "🇬🇧 EN",
+    de: "🇦🇹 DE",
+    sr: "🇷🇸 SR",
     ne: "🇳🇵 NE",
     bn: "🇧🇩 BN",
     hi: "🇮🇳 HI",
