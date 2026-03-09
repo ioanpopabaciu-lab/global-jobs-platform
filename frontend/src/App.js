@@ -153,6 +153,9 @@ function AppContent() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
           <Route path="/formular-angajator" element={<FormularAngajatorPage />} />
+          <Route path="/solicita-muncitori" element={<RequestWorkersPage />} />
+          <Route path="/cum-functioneaza" element={<HowItWorksPage />} />
+          <Route path="/industrii/:industry" element={<IndustryPage />} />
           
           {/* English routes */}
           <Route path="/en" element={<LanguageRoute><HomePage /></LanguageRoute>} />
