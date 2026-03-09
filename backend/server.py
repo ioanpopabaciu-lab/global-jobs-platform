@@ -381,6 +381,38 @@ async def submit_contact_form(data: ContactSubmissionCreate, background_tasks: B
     
     return submission
 
+# Request Workers Lead Routes
+@api_router.post("/leads/request-workers")
+async def submit_request_workers_lead(data: RequestWorkersLeadCreate, background_tasks: BackgroundTasks):
+    lead = RequestWorkersLead(**data.model_dump())
+    doc = lead.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    
+    await db.request_workers_leads.insert_one(doc)
+    
+    # Send email notification
+    admin_email = os.environ.get('ADMIN_EMAIL', 'office@gjc.ro')
+    html_content = f"""
+    <h2>Nouă Cerere de Muncitori</h2>
+    <table style="border-collapse: collapse; width: 100%;">
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Companie:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.companyName}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Persoană Contact:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.contactPerson}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Email:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.email}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Telefon:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.phone}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Muncitori Necesari:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.workersNeeded}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Industrie:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.industry}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Mesaj:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{data.message or '-'}</td></tr>
+    </table>
+    """
+    background_tasks.add_task(send_email_notification, admin_email, f"Cerere Muncitori: {data.companyName}", html_content)
+    
+    return {"success": True, "message": "Cererea a fost trimisă cu succes!", "id": lead.id}
+
+@api_router.get("/leads/request-workers")
+async def get_request_workers_leads():
+    leads = await db.request_workers_leads.find({}, {"_id": 0}).to_list(1000)
+    return leads
+
 # Blog Routes
 @api_router.get("/blog/posts", response_model=List[BlogPost])
 async def get_blog_posts():
