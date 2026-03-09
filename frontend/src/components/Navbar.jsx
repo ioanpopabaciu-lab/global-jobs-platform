@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Menu, Phone, Globe, ChevronDown, ChevronRight, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Menu, Phone, Globe, ChevronDown, ChevronRight, Facebook, Instagram, Linkedin, User, LogIn } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/i18n/LanguageContext";
 
+// Logo URLs
+const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
+const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
+
 // Social Media Links
 const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/globaljobsconsulting",
@@ -18,117 +22,105 @@ const SOCIAL_LINKS = {
   linkedin: "https://www.linkedin.com/company/global-jobs-consulting"
 };
 
-// Logo URLs
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
-const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_3ade7b65-825c-4505-b111-d566b5f264a1/artifacts/0h45ug4f_logo%20global.png";
-
-// Navigation structure with dropdowns - translations for menu labels
+// Menu translations for all languages
 const menuTranslations = {
   ro: {
     home: "Acasă",
-    aboutUs: "Despre Noi",
-    services: "Servicii",
-    internationalRecruitment: "Recrutare Internațională",
-    studentAdvisor: "Pachet STUDENT ADVISOR",
-    workCareer: "Pachet WORK & CAREER",
-    familyReunion: "Pachet FAMILY REUNION",
-    settlementCitizenship: "Pachet SETTLEMENT & CITIZENSHIP",
-    administrativeServices: "Servicii Administrative & Juridice",
     employers: "Angajatori",
-    procedureNonEU: "Procedură Recrutare Non-UE",
-    companyEligibility: "Eligibilitate Companie",
-    costsTimelines: "Costuri & Termene",
-    requestOffer: "🔴 Solicită Ofertă Personalizată",
+    candidates: "Candidați",
+    industries: "Industrii",
+    howItWorks: "Cum Funcționează",
+    aboutUs: "Despre Noi",
     blog: "Blog",
     contact: "Contact",
-    cta: "Solicită Ofertă",
-    myAccount: "MY ACCOUNT"
+    login: "Autentificare",
+    myAccount: "Contul Meu",
+    requestWorkers: "Solicită Muncitori",
+    // Industries dropdown
+    construction: "Construcții",
+    hospitality: "HoReCa",
+    agriculture: "Agricultură",
+    manufacturing: "Producție",
+    logistics: "Logistică"
   },
   en: {
     home: "Home",
-    aboutUs: "About Us",
-    services: "Services",
-    internationalRecruitment: "International Recruitment",
-    studentAdvisor: "STUDENT ADVISOR Package",
-    workCareer: "WORK & CAREER Package",
-    familyReunion: "FAMILY REUNION Package",
-    settlementCitizenship: "SETTLEMENT & CITIZENSHIP Package",
-    administrativeServices: "Administrative & Legal Services",
     employers: "Employers",
-    procedureNonEU: "Non-EU Recruitment Procedure",
-    companyEligibility: "Company Eligibility",
-    costsTimelines: "Costs & Timelines",
-    requestOffer: "🔴 Request Personalized Offer",
+    candidates: "Candidates",
+    industries: "Industries",
+    howItWorks: "How It Works",
+    aboutUs: "About Us",
     blog: "Blog",
     contact: "Contact",
-    cta: "Request Quote",
-    myAccount: "MY ACCOUNT"
+    login: "Login",
+    myAccount: "My Account",
+    requestWorkers: "Request Workers",
+    // Industries dropdown
+    construction: "Construction",
+    hospitality: "Hospitality (HoReCa)",
+    agriculture: "Agriculture",
+    manufacturing: "Manufacturing",
+    logistics: "Logistics"
   },
   de: {
     home: "Startseite",
-    aboutUs: "Über Uns",
-    services: "Dienstleistungen",
-    internationalRecruitment: "Internationale Rekrutierung",
-    studentAdvisor: "STUDENT ADVISOR Paket",
-    workCareer: "WORK & CAREER Paket",
-    familyReunion: "FAMILY REUNION Paket",
-    settlementCitizenship: "SETTLEMENT & CITIZENSHIP Paket",
-    administrativeServices: "Administrative & Rechtliche Dienste",
     employers: "Arbeitgeber",
-    procedureNonEU: "Nicht-EU-Rekrutierungsverfahren",
-    companyEligibility: "Firmenberechtigung",
-    costsTimelines: "Kosten & Fristen",
-    requestOffer: "🔴 Personalisiertes Angebot anfordern",
+    candidates: "Kandidaten",
+    industries: "Branchen",
+    howItWorks: "So funktioniert's",
+    aboutUs: "Über Uns",
     blog: "Blog",
     contact: "Kontakt",
-    cta: "Angebot anfordern",
-    myAccount: "MY ACCOUNT"
+    login: "Anmelden",
+    myAccount: "Mein Konto",
+    requestWorkers: "Arbeiter Anfordern",
+    // Industries dropdown
+    construction: "Bauwesen",
+    hospitality: "Gastgewerbe (HoReCa)",
+    agriculture: "Landwirtschaft",
+    manufacturing: "Produktion",
+    logistics: "Logistik"
   },
   sr: {
     home: "Početna",
-    aboutUs: "O Nama",
-    services: "Usluge",
-    internationalRecruitment: "Međunarodna Regrutacija",
-    studentAdvisor: "STUDENT ADVISOR Paket",
-    workCareer: "WORK & CAREER Paket",
-    familyReunion: "FAMILY REUNION Paket",
-    settlementCitizenship: "SETTLEMENT & CITIZENSHIP Paket",
-    administrativeServices: "Administrativne i Pravne Usluge",
     employers: "Poslodavci",
-    procedureNonEU: "Procedura regrutacije Non-EU",
-    companyEligibility: "Podobnost kompanije",
-    costsTimelines: "Troškovi i rokovi",
-    requestOffer: "🔴 Zatražite personalizovanu ponudu",
+    candidates: "Kandidati",
+    industries: "Industrije",
+    howItWorks: "Kako Funkcioniše",
+    aboutUs: "O Nama",
     blog: "Blog",
     contact: "Kontakt",
-    cta: "Zatražite ponudu",
-    myAccount: "MY ACCOUNT"
+    login: "Prijava",
+    myAccount: "Moj Nalog",
+    requestWorkers: "Zatražite Radnike",
+    // Industries dropdown
+    construction: "Građevinarstvo",
+    hospitality: "Ugostiteljstvo (HoReCa)",
+    agriculture: "Poljoprivreda",
+    manufacturing: "Proizvodnja",
+    logistics: "Logistika"
   }
 };
 
-// Route paths for all languages
+// Route paths for localization
 const routePathsMap = {
   '/': { ro: '/', en: '/en', de: '/de', sr: '/sr' },
-  '/despre-noi': { ro: '/despre-noi', en: '/en/about-us', de: '/de/uber-uns', sr: '/sr/o-nama' },
-  '/servicii': { ro: '/servicii', en: '/en/services', de: '/de/dienstleistungen', sr: '/sr/usluge' },
-  '/servicii/student-advisor': { ro: '/servicii/student-advisor', en: '/en/services/student-advisor', de: '/de/dienstleistungen/student-advisor', sr: '/sr/usluge/student-advisor' },
-  '/servicii/work-career': { ro: '/servicii/work-career', en: '/en/services/work-career', de: '/de/dienstleistungen/work-career', sr: '/sr/usluge/work-career' },
-  '/servicii/family-reunion': { ro: '/servicii/family-reunion', en: '/en/services/family-reunion', de: '/de/dienstleistungen/family-reunion', sr: '/sr/usluge/family-reunion' },
-  '/servicii/settlement-citizenship': { ro: '/servicii/settlement-citizenship', en: '/en/services/settlement-citizenship', de: '/de/dienstleistungen/settlement-citizenship', sr: '/sr/usluge/settlement-citizenship' },
-  '/servicii/administrative': { ro: '/servicii/administrative', en: '/en/services/administrative', de: '/de/dienstleistungen/administrative', sr: '/sr/usluge/administrative' },
-  '/angajatori': { ro: '/angajatori', en: '/en/employers', de: '/de/arbeitgeber', sr: '/sr/poslodavci' },
-  '/angajatori/procedura': { ro: '/angajatori/procedura', en: '/en/employers/procedure', de: '/de/arbeitgeber/verfahren', sr: '/sr/poslodavci/procedura' },
-  '/angajatori/eligibilitate': { ro: '/angajatori/eligibilitate', en: '/en/employers/eligibility', de: '/de/arbeitgeber/berechtigung', sr: '/sr/poslodavci/podobnost' },
-  '/angajatori/costuri': { ro: '/angajatori/costuri', en: '/en/employers/costs', de: '/de/arbeitgeber/kosten', sr: '/sr/poslodavci/troskovi' },
-  '/formular-angajator': { ro: '/formular-angajator', en: '/en/employer-form', de: '/de/arbeitgeber-formular', sr: '/sr/formular-poslodavac' },
-  '/candidati': { ro: '/candidati', en: '/en/candidates', de: '/de/kandidaten', sr: '/sr/kandidati' },
+  '/employers': { ro: '/angajatori', en: '/en/employers', de: '/de/arbeitgeber', sr: '/sr/poslodavci' },
+  '/candidates': { ro: '/candidati', en: '/en/candidates', de: '/de/kandidaten', sr: '/sr/kandidati' },
+  '/industries/construction': { ro: '/industrii/constructii', en: '/en/industries/construction', de: '/de/branchen/bauwesen', sr: '/sr/industrije/gradjevinarstvo' },
+  '/industries/hospitality': { ro: '/industrii/horeca', en: '/en/industries/hospitality', de: '/de/branchen/gastgewerbe', sr: '/sr/industrije/ugostiteljstvo' },
+  '/industries/agriculture': { ro: '/industrii/agricultura', en: '/en/industries/agriculture', de: '/de/branchen/landwirtschaft', sr: '/sr/industrije/poljoprivreda' },
+  '/industries/manufacturing': { ro: '/industrii/productie', en: '/en/industries/manufacturing', de: '/de/branchen/produktion', sr: '/sr/industrije/proizvodnja' },
+  '/industries/logistics': { ro: '/industrii/logistica', en: '/en/industries/logistics', de: '/de/branchen/logistik', sr: '/sr/industrije/logistika' },
+  '/how-it-works': { ro: '/cum-functioneaza', en: '/en/how-it-works', de: '/de/so-funktioniert-es', sr: '/sr/kako-funkcionise' },
+  '/about-us': { ro: '/despre-noi', en: '/en/about-us', de: '/de/uber-uns', sr: '/sr/o-nama' },
   '/blog': { ro: '/blog', en: '/en/blog', de: '/de/blog', sr: '/sr/blog' },
   '/contact': { ro: '/contact', en: '/en/contact', de: '/de/kontakt', sr: '/sr/kontakt' },
-  '/politica-confidentialitate': { ro: '/politica-confidentialitate', en: '/en/privacy-policy', de: '/de/datenschutz', sr: '/sr/politika-privatnosti' }
+  '/request-workers': { ro: '/solicita-muncitori', en: '/en/request-workers', de: '/de/arbeiter-anfordern', sr: '/sr/zatrazite-radnike' }
 };
 
 // Desktop dropdown component
-function NavDropdown({ label, items, isScrolled, language }) {
+function NavDropdown({ label, items, isScrolled }) {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef(null);
 
@@ -158,17 +150,13 @@ function NavDropdown({ label, items, isScrolled, language }) {
       </button>
       
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
+        <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
           {items.map((item, index) => (
             <Link
               key={index}
               to={item.href}
               onClick={() => setIsOpen(false)}
-              className={`block px-4 py-2.5 text-sm transition-colors ${
-                item.highlight 
-                  ? 'text-coral font-semibold hover:bg-coral/10' 
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-navy-900'
-              }`}
+              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors"
             >
               {item.label}
             </Link>
@@ -199,11 +187,7 @@ function MobileAccordion({ label, items, onClose }) {
               key={index}
               to={item.href}
               onClick={onClose}
-              className={`block py-2 text-base ${
-                item.highlight 
-                  ? 'text-coral font-semibold' 
-                  : 'text-gray-600 hover:text-navy-900'
-              }`}
+              className="block py-2 text-base text-gray-600 hover:text-navy-900"
             >
               {item.label}
             </Link>
@@ -219,9 +203,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { language, setLanguage, getLocalizedPath, routePaths } = useLanguage();
+  const { language, setLanguage, routePaths } = useLanguage();
 
-  const menuLabels = menuTranslations[language] || menuTranslations.ro;
+  const t = menuTranslations[language] || menuTranslations.ro;
 
   // Helper to get localized path
   const getPath = (basePath) => {
@@ -229,25 +213,13 @@ export default function Navbar() {
     return paths ? paths[language] : basePath;
   };
 
-  // Build menu structure
-  const homeSubmenu = [
-    { label: menuLabels.aboutUs, href: getPath('/despre-noi') }
-  ];
-
-  const servicesSubmenu = [
-    { label: menuLabels.internationalRecruitment, href: getPath('/servicii') },
-    { label: menuLabels.studentAdvisor, href: getPath('/servicii/student-advisor') },
-    { label: menuLabels.workCareer, href: getPath('/servicii/work-career') },
-    { label: menuLabels.familyReunion, href: getPath('/servicii/family-reunion') },
-    { label: menuLabels.settlementCitizenship, href: getPath('/servicii/settlement-citizenship') },
-    { label: menuLabels.administrativeServices, href: getPath('/servicii/administrative') }
-  ];
-
-  const employersSubmenu = [
-    { label: menuLabels.procedureNonEU, href: getPath('/angajatori/procedura') },
-    { label: menuLabels.companyEligibility, href: getPath('/angajatori/eligibilitate') },
-    { label: menuLabels.costsTimelines, href: getPath('/angajatori/costuri') },
-    { label: menuLabels.requestOffer, href: getPath('/formular-angajator'), highlight: true }
+  // Industries dropdown items
+  const industriesSubmenu = [
+    { label: t.construction, href: getPath('/industries/construction') },
+    { label: t.hospitality, href: getPath('/industries/hospitality') },
+    { label: t.agriculture, href: getPath('/industries/agriculture') },
+    { label: t.manufacturing, href: getPath('/industries/manufacturing') },
+    { label: t.logistics, href: getPath('/industries/logistics') }
   ];
 
   useEffect(() => {
@@ -260,7 +232,7 @@ export default function Navbar() {
 
   const isActive = (href) => {
     const currentPath = location.pathname;
-    const paths = routePaths[href];
+    const paths = routePathsMap[href];
     if (paths) {
       return Object.values(paths).some(p => currentPath === p || (p !== '/' && currentPath.startsWith(p)));
     }
@@ -273,14 +245,12 @@ export default function Navbar() {
     setLanguage(newLang);
     const currentPath = location.pathname;
     
-    // Find matching route and navigate to new language version
     for (const [basePath, translations] of Object.entries(routePathsMap)) {
       if (Object.values(translations).includes(currentPath)) {
         navigate(translations[newLang]);
         return;
       }
     }
-    // Check original routePaths too
     for (const [basePath, translations] of Object.entries(routePaths)) {
       if (Object.values(translations).includes(currentPath)) {
         navigate(translations[newLang]);
@@ -297,6 +267,20 @@ export default function Navbar() {
     sr: "🇷🇸 SR"
   };
 
+  // Navigation link component
+  const NavLink = ({ to, children }) => (
+    <Link
+      to={to}
+      className={`font-medium text-sm transition-colors hover:text-coral ${
+        isActive(to)
+          ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
+          : isScrolled ? "text-gray-700" : "text-white/90"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+
   return (
     <header
       data-testid="navbar"
@@ -306,7 +290,7 @@ export default function Navbar() {
           : "bg-navy-900/80 backdrop-blur-sm"
       }`}
     >
-      {/* Top Bar */}
+      {/* Top Bar - Only visible when not scrolled */}
       <div className={`py-2 px-4 text-sm transition-all ${isScrolled ? 'hidden' : 'bg-navy-900 text-white'}`}>
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -323,60 +307,30 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             {/* Social Media Icons */}
             <div className="flex items-center gap-2">
-              <a 
-                href={SOCIAL_LINKS.facebook} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-coral transition-colors"
-                aria-label="Facebook"
-                data-testid="header-social-facebook"
-              >
+              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors" aria-label="Facebook">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a 
-                href={SOCIAL_LINKS.instagram} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-coral transition-colors"
-                aria-label="Instagram"
-                data-testid="header-social-instagram"
-              >
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors" aria-label="Instagram">
                 <Instagram className="h-4 w-4" />
               </a>
-              <a 
-                href={SOCIAL_LINKS.linkedin} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-coral transition-colors"
-                aria-label="LinkedIn"
-                data-testid="header-social-linkedin"
-              >
+              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors" aria-label="LinkedIn">
                 <Linkedin className="h-4 w-4" />
               </a>
             </div>
             <span className="hidden sm:block text-white/50">|</span>
-            {/* Language Selector */}
+            {/* Language Selector - Only in top bar */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-1 hover:text-coral transition-colors cursor-pointer">
                 <Globe className="h-3 w-3" />
                 {languageLabels[language]}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">
-                  🇷🇴 Română
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">
-                  🇬🇧 English
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">
-                  🇦🇹 Deutsch
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">
-                  🇷🇸 Srpski
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">🇷🇴 Română</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">🇬🇧 English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">🇦🇹 Deutsch</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">🇷🇸 Srpski</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="font-medium">RO | AT | RS</span>
           </div>
         </div>
       </div>
@@ -384,115 +338,98 @@ export default function Navbar() {
       {/* Main Nav */}
       <nav className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center" data-testid="logo-link">
+          {/* LEFT: Logo */}
+          <Link to="/" className="flex items-center flex-shrink-0" data-testid="logo-link">
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
               alt="Global Jobs Consulting" 
-              className="h-40 md:h-44 w-auto transition-all duration-300"
+              className="h-16 md:h-20 w-auto transition-all duration-300"
             />
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-5">
-            {/* ACASĂ with dropdown */}
-            <NavDropdown 
-              label={menuLabels.home}
-              items={homeSubmenu}
-              isScrolled={isScrolled}
-              language={language}
-            />
-
-            {/* SERVICII with dropdown */}
-            <NavDropdown 
-              label={menuLabels.services}
-              items={servicesSubmenu}
-              isScrolled={isScrolled}
-              language={language}
-            />
-
-            {/* ANGAJATORI with dropdown */}
-            <NavDropdown 
-              label={menuLabels.employers}
-              items={employersSubmenu}
-              isScrolled={isScrolled}
-              language={language}
-            />
-
-            {/* BLOG - simple link */}
-            <Link
-              to={getPath('/blog')}
-              data-testid="nav-link-blog"
-              className={`font-medium text-sm transition-colors hover:text-coral ${
-                isActive('/blog')
-                  ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
-                  : isScrolled ? "text-gray-700" : "text-white/90"
-              }`}
-            >
-              {menuLabels.blog}
-            </Link>
-
-            {/* CONTACT - simple link */}
-            <Link
-              to={getPath('/contact')}
-              data-testid="nav-link-contact"
-              className={`font-medium text-sm transition-colors hover:text-coral ${
-                isActive('/contact')
-                  ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
-                  : isScrolled ? "text-gray-700" : "text-white/90"
-              }`}
-            >
-              {menuLabels.contact}
-            </Link>
+          {/* CENTER: Main Navigation */}
+          <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
+            <NavLink to={getPath('/')}>{t.home}</NavLink>
+            <NavLink to={getPath('/employers')}>{t.employers}</NavLink>
+            <NavLink to={getPath('/candidates')}>{t.candidates}</NavLink>
             
-            {/* Language Selector Desktop (when scrolled) */}
+            {/* Industries Dropdown */}
+            <NavDropdown 
+              label={t.industries}
+              items={industriesSubmenu}
+              isScrolled={isScrolled}
+            />
+            
+            <NavLink to={getPath('/how-it-works')}>{t.howItWorks}</NavLink>
+            <NavLink to={getPath('/about-us')}>{t.aboutUs}</NavLink>
+            <NavLink to={getPath('/blog')}>{t.blog}</NavLink>
+            <NavLink to={getPath('/contact')}>{t.contact}</NavLink>
+          </div>
+
+          {/* RIGHT: User Actions */}
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Language Selector when scrolled */}
             {isScrolled && (
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-coral transition-colors cursor-pointer">
+                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-coral transition-colors cursor-pointer text-sm">
                   <Globe className="h-4 w-4" />
                   {language.toUpperCase()}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">
-                    🇷🇴 Română
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">
-                    🇬🇧 English
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">
-                    🇦🇹 Deutsch
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">
-                    🇷🇸 Srpski
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">🇷🇴 Română</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">🇬🇧 English</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">🇦🇹 Deutsch</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">🇷🇸 Srpski</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
             
-            {/* MY ACCOUNT Button */}
+            {/* Login Button */}
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              data-testid="nav-login-button"
+              className={`font-medium ${
+                isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <Link to="/login" className="flex items-center gap-1">
+                <LogIn className="h-4 w-4" />
+                {t.login}
+              </Link>
+            </Button>
+
+            {/* My Account Button */}
             <Button
               asChild
               variant="outline"
+              size="sm"
               data-testid="nav-myaccount-button"
-              className={`rounded-full px-5 font-semibold ${
+              className={`rounded-full font-medium ${
                 isScrolled 
                   ? "border-navy-600 text-navy-600 hover:bg-navy-50" 
                   : "border-white text-white hover:bg-white/10"
               }`}
             >
-              <Link to="/my-account">{menuLabels.myAccount}</Link>
+              <Link to="/my-account" className="flex items-center gap-1">
+                <User className="h-4 w-4" />
+                {t.myAccount}
+              </Link>
             </Button>
             
+            {/* Primary CTA: Request Workers */}
             <Button
               asChild
+              size="sm"
               data-testid="nav-cta-button"
-              className="bg-coral hover:bg-red-600 text-white rounded-full px-6"
+              className="bg-coral hover:bg-red-600 text-white rounded-full px-5 font-semibold shadow-md"
             >
-              <Link to={getPath('/formular-angajator')}>{menuLabels.cta}</Link>
+              <Link to={getPath('/request-workers')}>{t.requestWorkers}</Link>
             </Button>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Button */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <Button 
@@ -500,8 +437,6 @@ export default function Navbar() {
                 size="icon" 
                 data-testid="mobile-menu-button"
                 aria-label="Open navigation menu"
-                aria-expanded={isOpen}
-                aria-controls="mobile-nav-menu"
               >
                 <Menu className={`h-6 w-6 ${isScrolled ? 'text-navy-900' : 'text-white'}`} />
               </Button>
@@ -510,23 +445,18 @@ export default function Navbar() {
               side="right" 
               className="w-[320px] overflow-y-auto" 
               data-testid="mobile-menu"
-              id="mobile-nav-menu"
-              role="dialog"
-              aria-label="Navigation menu"
             >
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <SheetDescription className="sr-only">Site navigation links</SheetDescription>
               <div className="flex flex-col gap-2 mt-6">
-                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-16 w-auto mb-4" />
+                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-14 w-auto mb-4" />
                 
                 {/* Mobile Language Selector */}
-                <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100" role="group" aria-label="Language selection">
+                <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
                   {['ro', 'en', 'de', 'sr'].map(lang => (
                     <button 
                       key={lang}
                       onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
-                      aria-label={`Switch to ${lang.toUpperCase()}`}
-                      aria-pressed={language === lang}
                       className={`px-3 py-1 rounded-full text-sm ${language === lang ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
                     >
                       {languageLabels[lang]}
@@ -534,67 +464,59 @@ export default function Navbar() {
                   ))}
                 </div>
                 
-                {/* ACASĂ with submenu */}
+                {/* Mobile Navigation Links */}
+                <Link to={getPath('/')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.home}
+                </Link>
+                <Link to={getPath('/employers')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.employers}
+                </Link>
+                <Link to={getPath('/candidates')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.candidates}
+                </Link>
+                
+                {/* Industries Accordion */}
                 <MobileAccordion 
-                  label={menuLabels.home}
-                  items={homeSubmenu}
+                  label={t.industries}
+                  items={industriesSubmenu}
                   onClose={() => setIsOpen(false)}
                 />
-
-                {/* SERVICII with submenu */}
-                <MobileAccordion 
-                  label={menuLabels.services}
-                  items={servicesSubmenu}
-                  onClose={() => setIsOpen(false)}
-                />
-
-                {/* ANGAJATORI with submenu */}
-                <MobileAccordion 
-                  label={menuLabels.employers}
-                  items={employersSubmenu}
-                  onClose={() => setIsOpen(false)}
-                />
-
-                {/* Simple links */}
-                <Link
-                  to={getPath('/blog')}
-                  onClick={() => setIsOpen(false)}
-                  data-testid="mobile-nav-link-blog"
-                  className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100"
-                >
-                  {menuLabels.blog}
+                
+                <Link to={getPath('/how-it-works')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.howItWorks}
+                </Link>
+                <Link to={getPath('/about-us')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.aboutUs}
+                </Link>
+                <Link to={getPath('/blog')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.blog}
+                </Link>
+                <Link to={getPath('/contact')} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
+                  {t.contact}
                 </Link>
 
-                <Link
-                  to={getPath('/contact')}
-                  onClick={() => setIsOpen(false)}
-                  data-testid="mobile-nav-link-contact"
-                  className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100"
-                >
-                  {menuLabels.contact}
-                </Link>
-
-                {/* MY ACCOUNT Button Mobile */}
-                <Button
-                  asChild
-                  variant="outline"
-                  className="mt-4 border-navy-600 text-navy-600 rounded-full font-semibold"
-                  data-testid="mobile-myaccount-button"
-                >
-                  <Link to="/my-account" onClick={() => setIsOpen(false)}>
-                    {menuLabels.myAccount}
-                  </Link>
-                </Button>
-
-                <Button
-                  asChild
-                  className="mt-2 bg-coral hover:bg-red-600 text-white rounded-full"
-                  data-testid="mobile-cta-button"
-                >
-                  <Link to={getPath('/formular-angajator')} onClick={() => setIsOpen(false)}>
-                    {menuLabels.cta}
-                  </Link>
-                </Button>
+                {/* Mobile Action Buttons */}
+                <div className="mt-4 space-y-3">
+                  <Button asChild variant="outline" className="w-full border-gray-300 text-gray-700 rounded-full">
+                    <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2">
+                      <LogIn className="h-4 w-4" />
+                      {t.login}
+                    </Link>
+                  </Button>
+                  
+                  <Button asChild variant="outline" className="w-full border-navy-600 text-navy-600 rounded-full">
+                    <Link to="/my-account" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2">
+                      <User className="h-4 w-4" />
+                      {t.myAccount}
+                    </Link>
+                  </Button>
+                  
+                  <Button asChild className="w-full bg-coral hover:bg-red-600 text-white rounded-full font-semibold">
+                    <Link to={getPath('/request-workers')} onClick={() => setIsOpen(false)}>
+                      {t.requestWorkers}
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
