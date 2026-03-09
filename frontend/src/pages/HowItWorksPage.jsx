@@ -198,8 +198,8 @@ export default function HowItWorksPage() {
   return (
     <>
       <Helmet>
-        <title>{t.metaTitle}</title>
-        <meta name="description" content={t.metaDescription} />
+        <title>{t?.metaTitle || "Cum Funcționează | Global Jobs Consulting"}</title>
+        <meta name="description" content={t?.metaDescription || ""} />
       </Helmet>
 
       <div className="min-h-screen bg-white">
