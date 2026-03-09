@@ -193,7 +193,7 @@ const pageContent = {
 
 export default function HowItWorksPage() {
   const { language, getLocalizedPath } = useLanguage();
-  const t = pageContent[language] || pageContent.ro;
+  const t = pageContent[language || 'ro'] || pageContent.ro;
 
   return (
     <>
