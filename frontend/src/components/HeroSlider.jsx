@@ -127,6 +127,78 @@ const slideContent = {
     stat_years: "Godina Iskustva",
     stat_continents: "Kontinenta",
     stat_markets: "Evropska Tržišta"
+  },
+  ne: {
+    slide1_headline: "रोमानियन कम्पनीहरूका लागि अन्तर्राष्ट्रिय कामदारहरू",
+    slide1_subtitle: "एशिया र अफ्रिकाबाट कानूनी भर्ती समाधानहरू",
+    cta_request_workers: "कामदार अनुरोध गर्नुहोस्",
+    
+    slide2_headline: "विभिन्न उद्योगहरूका लागि जनशक्ति समाधान",
+    slide2_subtitle: "निर्माण • होटल र रेस्टुरेन्ट • कृषि • उत्पादन • ढुवानी",
+    cta_explore_industries: "उद्योगहरू हेर्नुहोस्",
+    
+    slide3_headline: "तपाईंको विश्वसनीय भर्ती साझेदार",
+    slide3_subtitle: "अन्तर्राष्ट्रिय जनशक्ति प्लेसमेन्टमा ४ वर्ष भन्दा बढी अनुभव",
+    cta_schedule_consultation: "परामर्श तालिका बनाउनुहोस्",
+    
+    stat_partners: "एशिया र अफ्रिकामा साझेदारहरू",
+    stat_years: "वर्षको अनुभव",
+    stat_continents: "महाद्वीपहरू",
+    stat_markets: "युरोपेली बजारहरू"
+  },
+  bn: {
+    slide1_headline: "রোমানিয়ান কোম্পানির জন্য আন্তর্জাতিক কর্মী",
+    slide1_subtitle: "এশিয়া ও আফ্রিকা থেকে আইনি নিয়োগ সমাধান",
+    cta_request_workers: "কর্মী অনুরোধ করুন",
+    
+    slide2_headline: "একাধিক শিল্পের জন্য কর্মশক্তি সমাধান",
+    slide2_subtitle: "নির্মাণ • হোটেল ও রেস্তোরাঁ • কৃষি • উৎপাদন • পরিবহন",
+    cta_explore_industries: "শিল্প অন্বেষণ করুন",
+    
+    slide3_headline: "আপনার বিশ্বস্ত নিয়োগ অংশীদার",
+    slide3_subtitle: "আন্তর্জাতিক কর্মশক্তি নিয়োগে ৪ বছরেরও বেশি অভিজ্ঞতা",
+    cta_schedule_consultation: "পরামর্শ নির্ধারণ করুন",
+    
+    stat_partners: "এশিয়া ও আফ্রিকায় অংশীদার",
+    stat_years: "বছরের অভিজ্ঞতা",
+    stat_continents: "মহাদেশ",
+    stat_markets: "ইউরোপীয় বাজার"
+  },
+  hi: {
+    slide1_headline: "रोमानियाई कंपनियों के लिए अंतर्राष्ट्रीय कर्मचारी",
+    slide1_subtitle: "एशिया और अफ्रीका से कानूनी भर्ती समाधान",
+    cta_request_workers: "कर्मचारी अनुरोध करें",
+    
+    slide2_headline: "कई उद्योगों के लिए कार्यबल समाधान",
+    slide2_subtitle: "निर्माण • होटल और रेस्टोरेंट • कृषि • विनिर्माण • परिवहन",
+    cta_explore_industries: "उद्योग देखें",
+    
+    slide3_headline: "आपका विश्वसनीय भर्ती साझेदार",
+    slide3_subtitle: "अंतर्राष्ट्रीय कार्यबल प्लेसमेंट में 4 वर्ष से अधिक का अनुभव",
+    cta_schedule_consultation: "परामर्श शेड्यूल करें",
+    
+    stat_partners: "एशिया और अफ्रीका में भागीदार",
+    stat_years: "वर्षों का अनुभव",
+    stat_continents: "महाद्वीप",
+    stat_markets: "यूरोपीय बाज़ार"
+  },
+  si: {
+    slide1_headline: "රොමේනියානු සමාගම් සඳහා ජාත්‍යන්තර සේවකයින්",
+    slide1_subtitle: "ආසියාව සහ අප්‍රිකාවෙන් නීත්‍යානුකූල බඳවා ගැනීමේ විසඳුම්",
+    cta_request_workers: "සේවකයින් ඉල්ලන්න",
+    
+    slide2_headline: "කර්මාන්ත කිහිපයක් සඳහා ශ්‍රම බල විසඳුම්",
+    slide2_subtitle: "ඉදිකිරීම් • හෝටල් සහ ආපන ශාලා • කෘෂිකර්මය • නිෂ්පාදනය • ප්‍රවාහනය",
+    cta_explore_industries: "කර්මාන්ත ගවේෂණය කරන්න",
+    
+    slide3_headline: "ඔබේ විශ්වාසනීය බඳවා ගැනීමේ හවුල්කරු",
+    slide3_subtitle: "ජාත්‍යන්තර ශ්‍රම බල ස්ථානගත කිරීමේ වසර 4 කට වැඩි පළපුරුද්ද",
+    cta_schedule_consultation: "උපදේශනය උපලේඛනගත කරන්න",
+    
+    stat_partners: "ආසියාව සහ අප්‍රිකාවේ හවුල්කරුවන්",
+    stat_years: "වසරවල පළපුරුද්ද",
+    stat_continents: "මහාද්වීප",
+    stat_markets: "යුරෝපීය වෙළඳපොළ"
   }
 };
 
