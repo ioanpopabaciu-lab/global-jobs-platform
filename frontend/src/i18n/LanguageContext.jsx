@@ -31,7 +31,14 @@ const routePaths = {
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
-    // Check localStorage first
+    // Check URL parameter first (highest priority)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    if (urlLang && SUPPORTED_LANGUAGES.includes(urlLang)) {
+      return urlLang;
+    }
+    
+    // Check localStorage second
     const saved = localStorage.getItem('gjc-language');
     if (saved && SUPPORTED_LANGUAGES.includes(saved)) {
       return saved;
@@ -44,6 +51,24 @@ export function LanguageProvider({ children }) {
     // Default to English for international accessibility
     return 'en';
   });
+  
+  // Listen for URL changes and update language accordingly
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLang = urlParams.get('lang');
+      if (urlLang && SUPPORTED_LANGUAGES.includes(urlLang) && urlLang !== language) {
+        setLanguage(urlLang);
+      }
+    };
+    
+    // Check on mount
+    handleUrlChange();
+    
+    // Listen to popstate for browser back/forward
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
+  }, [language]);
 
   useEffect(() => {
     localStorage.setItem('gjc-language', language);
