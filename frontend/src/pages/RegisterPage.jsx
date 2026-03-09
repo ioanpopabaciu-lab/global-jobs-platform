@@ -93,12 +93,12 @@ export default function RegisterPage() {
         })
       });
 
+      const data = await response.json();
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Registration failed');
+        throw new Error(data.detail || 'Registration failed');
       }
 
-      const data = await response.json();
       toast.success('Account created successfully!');
       
       // Redirect based on account type
