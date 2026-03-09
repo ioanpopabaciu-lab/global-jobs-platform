@@ -506,13 +506,13 @@ export default function Navbar() {
                 
                 {/* Mobile Language Selector */}
                 <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
-                  {['ro', 'en', 'de', 'sr'].map(lang => (
+                  {['ro', 'en', 'ne', 'bn', 'hi', 'si'].map(lang => (
                     <button 
                       key={lang}
                       onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
-                      className={`px-3 py-1 rounded-full text-sm ${language === lang ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'}`}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${language === lang ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
                     >
-                      {languageLabels[lang]}
+                      {languageShortLabels[lang]}
                     </button>
                   ))}
                 </div>
