@@ -336,14 +336,15 @@ export default function Navbar() {
       </div>
 
       {/* Main Nav */}
-      <nav className="container mx-auto px-4 py-2">
+      <nav className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* LEFT: Logo */}
-          <Link to="/" className="flex items-center flex-shrink-0" data-testid="logo-link">
+          <Link to="/" className="flex items-center flex-shrink-0 mr-8" data-testid="logo-link">
             <img 
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE} 
               alt="Global Jobs Consulting" 
-              className="h-16 md:h-20 w-auto transition-all duration-300"
+              className="h-10 md:h-14 lg:h-[56px] w-auto transition-all duration-300"
+              style={{ minWidth: '140px', maxWidth: '200px' }}
             />
           </Link>
 
