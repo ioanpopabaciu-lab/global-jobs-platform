@@ -415,9 +415,11 @@ export default function Navbar() {
                 <Globe className="h-3 w-3" />
                 {languageShortLabels[language]}
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="min-w-[140px]">
+              <DropdownMenuContent className="min-w-[160px]">
                 <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">🇷🇴 Română</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">🇬🇧 English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">🇦🇹 Deutsch</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">🇷🇸 Srpski</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLanguageChange("ne")} className="cursor-pointer">🇳🇵 नेपाली (Nepali)</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLanguageChange("bn")} className="cursor-pointer">🇧🇩 বাংলা (Bengali)</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLanguageChange("hi")} className="cursor-pointer">🇮🇳 हिन्दी (Hindi)</DropdownMenuItem>
