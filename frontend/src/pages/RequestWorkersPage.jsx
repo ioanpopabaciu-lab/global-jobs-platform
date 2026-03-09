@@ -376,6 +376,6 @@ export default function RequestWorkersPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
