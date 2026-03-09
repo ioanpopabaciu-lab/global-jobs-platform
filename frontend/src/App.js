@@ -199,6 +199,9 @@ function AppContent() {
           <Route path="/de/kontakt" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
           <Route path="/de/datenschutz" element={<LanguageRoute><PrivacyPolicyPage /></LanguageRoute>} />
           <Route path="/de/arbeitgeber-formular" element={<LanguageRoute><FormularAngajatorPage /></LanguageRoute>} />
+          <Route path="/de/arbeiter-anfordern" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/de/so-funktioniert-es" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/de/branchen/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
           
           {/* Serbian routes */}
           <Route path="/sr" element={<LanguageRoute><HomePage /></LanguageRoute>} />
