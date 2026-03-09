@@ -424,13 +424,15 @@ export default function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-coral transition-colors cursor-pointer text-sm">
                   <Globe className="h-4 w-4" />
-                  {language.toUpperCase()}
+                  {languageShortLabels[language]}
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="min-w-[140px]">
                   <DropdownMenuItem onClick={() => handleLanguageChange("ro")} className="cursor-pointer">🇷🇴 Română</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="cursor-pointer">🇬🇧 English</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleLanguageChange("de")} className="cursor-pointer">🇦🇹 Deutsch</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleLanguageChange("sr")} className="cursor-pointer">🇷🇸 Srpski</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("ne")} className="cursor-pointer">🇳🇵 नेपाली (Nepali)</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("bn")} className="cursor-pointer">🇧🇩 বাংলা (Bengali)</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("hi")} className="cursor-pointer">🇮🇳 हिन्दी (Hindi)</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("si")} className="cursor-pointer">🇱🇰 සිංහල (Sinhala)</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
