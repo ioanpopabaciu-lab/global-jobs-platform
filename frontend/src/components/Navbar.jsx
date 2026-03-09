@@ -299,10 +299,21 @@ export default function Navbar() {
   };
 
   const languageLabels = {
+    ro: "🇷🇴 Română",
+    en: "🇬🇧 English",
+    ne: "🇳🇵 नेपाली",
+    bn: "🇧🇩 বাংলা",
+    hi: "🇮🇳 हिन्दी",
+    si: "🇱🇰 සිංහල"
+  };
+
+  const languageShortLabels = {
     ro: "🇷🇴 RO",
     en: "🇬🇧 EN",
-    de: "🇦🇹 DE",
-    sr: "🇷🇸 SR"
+    ne: "🇳🇵 NE",
+    bn: "🇧🇩 BN",
+    hi: "🇮🇳 HI",
+    si: "🇱🇰 SI"
   };
 
   // Navigation link component
