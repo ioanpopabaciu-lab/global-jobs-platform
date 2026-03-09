@@ -134,7 +134,7 @@ export default function IndustryPage() {
     );
   }
   
-  const t = data[language] || data.ro || data.en;
+  const t = data[language || 'ro'] || data.ro || data.en;
   
   const ctaPath = language === 'ro' ? '/solicita-muncitori' : 
                   language === 'en' ? '/en/request-workers' :
