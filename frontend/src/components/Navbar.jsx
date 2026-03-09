@@ -552,7 +552,7 @@ export default function Navbar() {
                 
                 {/* Mobile Language Selector */}
                 <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
-                  {['ro', 'en', 'ne', 'bn', 'hi', 'si'].map(lang => (
+                  {['ro', 'en', 'de', 'sr', 'ne', 'bn', 'hi', 'si'].map(lang => (
                     <button 
                       key={lang}
                       onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
