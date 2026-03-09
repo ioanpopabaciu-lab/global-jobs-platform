@@ -173,6 +173,7 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     """Parse ANAF API response - ONLY real data, NO placeholders"""
     date_general = company.get("date_generale", {})
     inreg_scope_tva = company.get("inregistrare_scop_Tva", {})
+    stare_inactiv = company.get("stare_inactiv", {})
     
     # Extract real data only
     cui_value = date_general.get("cui", "")
@@ -181,7 +182,16 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     numar_reg_com = date_general.get("nrRegCom", "")
     
     stare = date_general.get("stare_inregistrare", "")
-    is_active = stare.upper() in ["ACTIVA", "INREGISTRAT", "ÎNREGISTRAT"]
+    # Check if company is inactive based on statusInactivi field
+    is_inactive = stare_inactiv.get("statusInactivi", False)
+    # Also check if company has been deleted (radiated)
+    data_radiere = stare_inactiv.get("dataRadiere", "")
+    is_radiated = bool(data_radiere)
+    
+    # Company is active if: registered AND not inactive AND not radiated
+    stare_upper = stare.upper()
+    is_registered = "INREGISTRAT" in stare_upper or "ÎNREGISTRAT" in stare_upper or "ACTIVA" in stare_upper
+    is_active = is_registered and not is_inactive and not is_radiated
     
     data_infiintare = date_general.get("data_inregistrare", "")
     company_age_years = 0
