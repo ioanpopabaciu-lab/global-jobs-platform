@@ -202,8 +202,8 @@ export default function RequestWorkersPage() {
   return (
     <>
       <Helmet>
-        <title>{t.metaTitle}</title>
-        <meta name="description" content={t.metaDescription} />
+        <title>{t?.metaTitle || "Solicită Muncitori | Global Jobs Consulting"}</title>
+        <meta name="description" content={t?.metaDescription || ""} />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 pt-32 pb-16">
