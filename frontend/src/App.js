@@ -176,6 +176,9 @@ function AppContent() {
           <Route path="/en/contact" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
           <Route path="/en/privacy-policy" element={<LanguageRoute><PrivacyPolicyPage /></LanguageRoute>} />
           <Route path="/en/employer-form" element={<LanguageRoute><FormularAngajatorPage /></LanguageRoute>} />
+          <Route path="/en/request-workers" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/en/how-it-works" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/en/industries/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
           
           {/* German routes */}
           <Route path="/de" element={<LanguageRoute><HomePage /></LanguageRoute>} />
