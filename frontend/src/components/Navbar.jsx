@@ -449,7 +449,7 @@ export default function Navbar() {
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <SheetDescription className="sr-only">Site navigation links</SheetDescription>
               <div className="flex flex-col gap-2 mt-6">
-                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-14 w-auto mb-4" />
+                <img src={LOGO_COLORED} alt="Global Jobs Consulting" className="h-16 w-auto mb-4 object-contain" />
                 
                 {/* Mobile Language Selector */}
                 <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
