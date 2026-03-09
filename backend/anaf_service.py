@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 # File-based logging for failed lookups (for monitoring)
 FAILED_LOOKUPS_LOG = "/app/logs/failed_company_lookups.log"
 
-# Primary API endpoint - Official Romanian Government
-PRIMARY_API_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva"
+# Primary API endpoint - Official Romanian Government ANAF
+PRIMARY_API_URL = "https://webservicesp.anaf.ro/api/PlatitorTvaRest/api/v8/ws/tva"
 
 # API timeout in seconds
 API_TIMEOUT = 10
