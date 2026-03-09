@@ -24,6 +24,9 @@ import WorkCareerPage from "@/pages/WorkCareerPage";
 import FamilyReunionPage from "@/pages/FamilyReunionPage";
 import SettlementCitizenshipPage from "@/pages/SettlementCitizenshipPage";
 import AdministrativePage from "@/pages/AdministrativePage";
+import RequestWorkersPage from "@/pages/RequestWorkersPage";
+import HowItWorksPage from "@/pages/HowItWorksPage";
+import IndustryPage from "@/pages/IndustryPage";
 
 // Auth & Account Pages
 import LoginPage from "@/pages/LoginPage";
