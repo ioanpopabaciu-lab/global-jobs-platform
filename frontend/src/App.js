@@ -126,6 +126,14 @@ function AppContent() {
       setLanguage('de');
     } else if (path.startsWith('/sr')) {
       setLanguage('sr');
+    } else if (path.startsWith('/ne')) {
+      setLanguage('ne');
+    } else if (path.startsWith('/bn')) {
+      setLanguage('bn');
+    } else if (path.startsWith('/hi')) {
+      setLanguage('hi');
+    } else if (path.startsWith('/si')) {
+      setLanguage('si');
     }
   }, [location.pathname, setLanguage]);
 
