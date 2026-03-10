@@ -234,6 +234,54 @@ function AppContent() {
           <Route path="/sr/kako-funkcionise" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
           <Route path="/sr/industrije/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
           
+          {/* Nepali routes */}
+          <Route path="/ne" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/ne/about-us" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
+          <Route path="/ne/employers" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/ne/candidates" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
+          <Route path="/ne/services" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/ne/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
+          <Route path="/ne/contact" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
+          <Route path="/ne/request-workers" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/ne/how-it-works" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/ne/industries/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
+          
+          {/* Bengali routes */}
+          <Route path="/bn" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/bn/about-us" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
+          <Route path="/bn/employers" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/bn/candidates" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
+          <Route path="/bn/services" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/bn/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
+          <Route path="/bn/contact" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
+          <Route path="/bn/request-workers" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/bn/how-it-works" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/bn/industries/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
+          
+          {/* Hindi routes */}
+          <Route path="/hi" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/hi/about-us" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
+          <Route path="/hi/employers" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/hi/candidates" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
+          <Route path="/hi/services" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/hi/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
+          <Route path="/hi/contact" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
+          <Route path="/hi/request-workers" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/hi/how-it-works" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/hi/industries/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
+          
+          {/* Sinhala routes */}
+          <Route path="/si" element={<LanguageRoute><HomePage /></LanguageRoute>} />
+          <Route path="/si/about-us" element={<LanguageRoute><DespreNoiPage /></LanguageRoute>} />
+          <Route path="/si/employers" element={<LanguageRoute><EmployersPage /></LanguageRoute>} />
+          <Route path="/si/candidates" element={<LanguageRoute><CandidatesPage /></LanguageRoute>} />
+          <Route path="/si/services" element={<LanguageRoute><ServicesPage /></LanguageRoute>} />
+          <Route path="/si/blog" element={<LanguageRoute><BlogPage /></LanguageRoute>} />
+          <Route path="/si/contact" element={<LanguageRoute><ContactPage /></LanguageRoute>} />
+          <Route path="/si/request-workers" element={<LanguageRoute><RequestWorkersPage /></LanguageRoute>} />
+          <Route path="/si/how-it-works" element={<LanguageRoute><HowItWorksPage /></LanguageRoute>} />
+          <Route path="/si/industries/:industry" element={<LanguageRoute><IndustryPage /></LanguageRoute>} />
+          
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
