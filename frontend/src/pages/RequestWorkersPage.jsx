@@ -498,19 +498,19 @@ export default function RequestWorkersPage() {
                 <div>
                   <div className="text-3xl font-bold text-coral">11</div>
                   <div className="text-sm text-gray-300">
-                    {language === 'ro' ? 'Parteneri' : 'Partners'}
+                    {t.partners}
                   </div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-coral">4+</div>
                   <div className="text-sm text-gray-300">
-                    {language === 'ro' ? 'Ani Experiență' : 'Years Experience'}
+                    {t.yearsExp}
                   </div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-coral">3</div>
                   <div className="text-sm text-gray-300">
-                    {language === 'ro' ? 'Piețe' : 'Markets'}
+                    {t.markets}
                   </div>
                 </div>
               </div>
