@@ -96,7 +96,7 @@ function LanguageRedirect() {
   const { setLanguage } = useLanguage();
   
   useEffect(() => {
-    if (lang && ['en', 'de', 'sr'].includes(lang)) {
+    if (lang && ['en', 'de', 'sr', 'ne', 'bn', 'hi', 'si'].includes(lang)) {
       setLanguage(lang);
     }
   }, [lang, setLanguage]);
