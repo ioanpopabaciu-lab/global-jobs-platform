@@ -42,7 +42,10 @@ const pageContent = {
     ],
     success: "Cererea a fost trimisă cu succes! Vă vom contacta în curând.",
     error: "A apărut o eroare. Vă rugăm încercați din nou.",
-    whyChoose: "De ce să alegeți GJC?"
+    whyChoose: "De ce să alegeți GJC?",
+    partners: "Parteneri",
+    yearsExp: "Ani Experiență",
+    markets: "Piețe"
   },
   en: {
     title: "Request Workers",
@@ -74,7 +77,220 @@ const pageContent = {
     ],
     success: "Request submitted successfully! We'll contact you soon.",
     error: "An error occurred. Please try again.",
-    whyChoose: "Why choose GJC?"
+    whyChoose: "Why choose GJC?",
+    partners: "Partners",
+    yearsExp: "Years Experience",
+    markets: "Markets"
+  },
+  de: {
+    title: "Arbeitskräfte anfordern",
+    subtitle: "Füllen Sie das Formular aus und wir kontaktieren Sie innerhalb von 24 Stunden",
+    form: {
+      companyName: "Firmenname",
+      contactPerson: "Ansprechpartner",
+      email: "E-Mail",
+      phone: "Telefon",
+      workersNeeded: "Anzahl benötigter Arbeiter",
+      industry: "Branche",
+      message: "Zusätzliche Nachricht (optional)",
+      submit: "Anfrage senden",
+      submitting: "Wird gesendet..."
+    },
+    industries: {
+      construction: "Bauwesen",
+      hospitality: "HoReCa (Hotels, Restaurants)",
+      agriculture: "Landwirtschaft",
+      manufacturing: "Produktion",
+      logistics: "Logistik / Lager",
+      other: "Andere"
+    },
+    benefits: [
+      { title: "Verifizierte Arbeiter", desc: "Alle Kandidaten werden vorab geprüft" },
+      { title: "Schneller Prozess", desc: "Lieferung in 4-8 Wochen" },
+      { title: "Rechtliche Konformität", desc: "Wir kümmern uns um alle Dokumente" },
+      { title: "Volle Unterstützung", desc: "Betreuung während der gesamten Vertragsdauer" }
+    ],
+    success: "Anfrage erfolgreich gesendet! Wir werden Sie bald kontaktieren.",
+    error: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    whyChoose: "Warum GJC wählen?",
+    partners: "Partner",
+    yearsExp: "Jahre Erfahrung",
+    markets: "Märkte"
+  },
+  sr: {
+    title: "Zatražite radnike",
+    subtitle: "Popunite formular i kontaktiraćemo vas u roku od 24 sata",
+    form: {
+      companyName: "Naziv kompanije",
+      contactPerson: "Kontakt osoba",
+      email: "E-pošta",
+      phone: "Telefon",
+      workersNeeded: "Broj potrebnih radnika",
+      industry: "Industrija",
+      message: "Dodatna poruka (opciono)",
+      submit: "Pošalji zahtev",
+      submitting: "Slanje..."
+    },
+    industries: {
+      construction: "Građevinarstvo",
+      hospitality: "HoReCa (Hoteli, Restorani)",
+      agriculture: "Poljoprivreda",
+      manufacturing: "Proizvodnja",
+      logistics: "Logistika / Skladišta",
+      other: "Ostalo"
+    },
+    benefits: [
+      { title: "Verifikovani radnici", desc: "Svi kandidati su prethodno provereni" },
+      { title: "Brz proces", desc: "Isporuka za 4-8 nedelja" },
+      { title: "Pravna usklađenost", desc: "Brinemo o svim dokumentima" },
+      { title: "Puna podrška", desc: "Pomoć tokom celog ugovora" }
+    ],
+    success: "Zahtev uspešno poslat! Kontaktiraćemo vas uskoro.",
+    error: "Došlo je do greške. Molimo pokušajte ponovo.",
+    whyChoose: "Zašto izabrati GJC?",
+    partners: "Partneri",
+    yearsExp: "Godina iskustva",
+    markets: "Tržišta"
+  },
+  ne: {
+    title: "कामदारहरू अनुरोध गर्नुहोस्",
+    subtitle: "फारम भर्नुहोस् र हामी २४ घण्टामा सम्पर्क गर्नेछौं",
+    form: {
+      companyName: "कम्पनीको नाम",
+      contactPerson: "सम्पर्क व्यक्ति",
+      email: "इमेल",
+      phone: "फोन",
+      workersNeeded: "आवश्यक कामदारहरूको संख्या",
+      industry: "उद्योग",
+      message: "थप सन्देश (वैकल्पिक)",
+      submit: "अनुरोध पठाउनुहोस्",
+      submitting: "पठाउँदै..."
+    },
+    industries: {
+      construction: "निर्माण",
+      hospitality: "होटल र रेस्टुरेन्ट",
+      agriculture: "कृषि",
+      manufacturing: "उत्पादन",
+      logistics: "लजिस्टिक्स / गोदाम",
+      other: "अन्य"
+    },
+    benefits: [
+      { title: "प्रमाणित कामदारहरू", desc: "सबै उम्मेदवारहरू पूर्व-छानबिन गरिएका छन्" },
+      { title: "छिटो प्रक्रिया", desc: "४-८ हप्तामा डेलिभरी" },
+      { title: "कानूनी अनुपालन", desc: "हामी सबै कागजातहरू व्यवस्थापन गर्छौं" },
+      { title: "पूर्ण सहयोग", desc: "सम्पूर्ण अनुबंध अवधिमा सहायता" }
+    ],
+    success: "अनुरोध सफलतापूर्वक पठाइयो! हामी चाँडै सम्पर्क गर्नेछौं।",
+    error: "त्रुटि भयो। कृपया फेरि प्रयास गर्नुहोस्।",
+    whyChoose: "GJC किन छान्ने?",
+    partners: "साझेदारहरू",
+    yearsExp: "वर्षको अनुभव",
+    markets: "बजारहरू"
+  },
+  bn: {
+    title: "কর্মী অনুরোধ করুন",
+    subtitle: "ফর্মটি পূরণ করুন এবং আমরা ২৪ ঘণ্টার মধ্যে যোগাযোগ করব",
+    form: {
+      companyName: "কোম্পানির নাম",
+      contactPerson: "যোগাযোগ ব্যক্তি",
+      email: "ইমেইল",
+      phone: "ফোন",
+      workersNeeded: "প্রয়োজনীয় কর্মীর সংখ্যা",
+      industry: "শিল্প",
+      message: "অতিরিক্ত বার্তা (ঐচ্ছিক)",
+      submit: "অনুরোধ পাঠান",
+      submitting: "পাঠানো হচ্ছে..."
+    },
+    industries: {
+      construction: "নির্মাণ",
+      hospitality: "হোটেল ও রেস্তোরাঁ",
+      agriculture: "কৃষি",
+      manufacturing: "উৎপাদন",
+      logistics: "লজিস্টিক্স / গুদাম",
+      other: "অন্যান্য"
+    },
+    benefits: [
+      { title: "যাচাইকৃত কর্মী", desc: "সমস্ত প্রার্থী পূর্ব-স্ক্রিন করা হয়েছে" },
+      { title: "দ্রুত প্রক্রিয়া", desc: "৪-৮ সপ্তাহে ডেলিভারি" },
+      { title: "আইনি সম্মতি", desc: "আমরা সমস্ত নথি পরিচালনা করি" },
+      { title: "সম্পূর্ণ সহায়তা", desc: "পুরো চুক্তি জুড়ে সহায়তা" }
+    ],
+    success: "অনুরোধ সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই যোগাযোগ করব।",
+    error: "একটি ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    whyChoose: "কেন GJC বেছে নেবেন?",
+    partners: "অংশীদার",
+    yearsExp: "বছরের অভিজ্ঞতা",
+    markets: "বাজার"
+  },
+  hi: {
+    title: "कर्मचारियों का अनुरोध करें",
+    subtitle: "फॉर्म भरें और हम 24 घंटे में संपर्क करेंगे",
+    form: {
+      companyName: "कंपनी का नाम",
+      contactPerson: "संपर्क व्यक्ति",
+      email: "ईमेल",
+      phone: "फोन",
+      workersNeeded: "आवश्यक कर्मचारियों की संख्या",
+      industry: "उद्योग",
+      message: "अतिरिक्त संदेश (वैकल्पिक)",
+      submit: "अनुरोध भेजें",
+      submitting: "भेजा जा रहा है..."
+    },
+    industries: {
+      construction: "निर्माण",
+      hospitality: "होटल और रेस्टोरेंट",
+      agriculture: "कृषि",
+      manufacturing: "विनिर्माण",
+      logistics: "लॉजिस्टिक्स / गोदाम",
+      other: "अन्य"
+    },
+    benefits: [
+      { title: "सत्यापित कर्मचारी", desc: "सभी उम्मीदवारों की पूर्व-जांच की जाती है" },
+      { title: "तेज़ प्रक्रिया", desc: "4-8 सप्ताह में डिलीवरी" },
+      { title: "कानूनी अनुपालन", desc: "हम सभी दस्तावेज़ संभालते हैं" },
+      { title: "पूर्ण समर्थन", desc: "पूरे अनुबंध में सहायता" }
+    ],
+    success: "अनुरोध सफलतापूर्वक भेजा गया! हम जल्द संपर्क करेंगे।",
+    error: "एक त्रुटि हुई। कृपया पुनः प्रयास करें।",
+    whyChoose: "GJC क्यों चुनें?",
+    partners: "भागीदार",
+    yearsExp: "वर्षों का अनुभव",
+    markets: "बाज़ार"
+  },
+  si: {
+    title: "සේවකයින් ඉල්ලන්න",
+    subtitle: "ෆෝරමය පුරවන්න, අපි පැය 24ක් ඇතුළත සම්බන්ධ වෙමු",
+    form: {
+      companyName: "සමාගමේ නම",
+      contactPerson: "සම්බන්ධතා පුද්ගලයා",
+      email: "ඊමේල්",
+      phone: "දුරකථනය",
+      workersNeeded: "අවශ්‍ය සේවකයින් ගණන",
+      industry: "කර්මාන්තය",
+      message: "අමතර පණිවිඩය (විකල්ප)",
+      submit: "ඉල්ලීම යවන්න",
+      submitting: "යවමින්..."
+    },
+    industries: {
+      construction: "ඉදිකිරීම්",
+      hospitality: "හෝටල් සහ ආපන ශාලා",
+      agriculture: "කෘෂිකර්මය",
+      manufacturing: "නිෂ්පාදනය",
+      logistics: "ප්‍රවාහනය / ගබඩා",
+      other: "වෙනත්"
+    },
+    benefits: [
+      { title: "සත්‍යාපිත සේවකයින්", desc: "සියලුම අපේක්ෂකයින් පෙර-පරීක්ෂා කර ඇත" },
+      { title: "වේගවත් ක්‍රියාවලිය", desc: "සති 4-8 තුළ බෙදාහැරීම" },
+      { title: "නීත්‍යානුකූල අනුකූලතාව", desc: "අපි සියලු ලේඛන හසුරුවමු" },
+      { title: "සම්පූර්ණ සහාය", desc: "ගිවිසුම පුරාම සහාය" }
+    ],
+    success: "ඉල්ලීම සාර්ථකව යවන ලදී! අපි ඉක්මනින් සම්බන්ධ වෙමු.",
+    error: "දෝෂයක් සිදු විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+    whyChoose: "GJC තෝරන්නේ ඇයි?",
+    partners: "හවුල්කරුවන්",
+    yearsExp: "වසරවල පළපුරුද්ද",
+    markets: "වෙළඳපොළ"
   }
 };
 
