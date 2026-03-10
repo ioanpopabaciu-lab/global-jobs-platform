@@ -9,7 +9,11 @@ const privacyLinks = {
   ro: "Politică de Confidențialitate",
   en: "Privacy Policy",
   de: "Datenschutzrichtlinie",
-  sr: "Politika privatnosti"
+  sr: "Politika privatnosti",
+  ne: "गोपनीयता नीति",
+  bn: "গোপনীয়তা নীতি",
+  hi: "गोपनीयता नीति",
+  si: "පෞද්ගලිකත්ව ප්‍රතිපත්තිය"
 };
 
 export default function Footer() {
