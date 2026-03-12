@@ -42,9 +42,18 @@ export default function EmployerRegisterPage() {
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupError, setLookupError] = useState('');
   
+  // Manual entry mode (when ANAF is unavailable)
+  const [allowManualEntry, setAllowManualEntry] = useState(false);
+  const [isManualEntry, setIsManualEntry] = useState(false);
+  
   // Step 2-3: Company data from registry
   const [companyData, setCompanyData] = useState(null);
   const [eligibility, setEligibility] = useState(null);
+  
+  // Manual company data fields
+  const [manualCompanyName, setManualCompanyName] = useState('');
+  const [manualCompanyAddress, setManualCompanyAddress] = useState('');
+  const [manualRegCom, setManualRegCom] = useState('');
   
   // Step 5: Contact info
   const [contactName, setContactName] = useState('');
