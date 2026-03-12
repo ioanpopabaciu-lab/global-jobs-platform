@@ -168,3 +168,16 @@ function LoginForm() {
     </div>
   );
 }
+
+// Wrapper component with Suspense for useSearchParams
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-navy-900 to-navy-800">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}
