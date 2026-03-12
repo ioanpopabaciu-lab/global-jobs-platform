@@ -24,7 +24,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://immigration-saas-2.preview.emergentagent.com/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

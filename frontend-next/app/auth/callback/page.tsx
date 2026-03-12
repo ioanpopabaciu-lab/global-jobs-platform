@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth, getRedirectPath } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://immigration-saas-2.preview.emergentagent.com/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
