@@ -39,8 +39,8 @@ export default function middleware(request: NextRequest) {
     pathname.startsWith('/register') ||
     pathname.startsWith('/my-account');
 
-  // Get token from cookies
-  const token = request.cookies.get('access_token')?.value;
+  // Get token from cookies (backend uses session_token)
+  const token = request.cookies.get('session_token')?.value;
 
   // Protected routes - redirect to login if no token
   if (isProtectedRoute && !token) {
