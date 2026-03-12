@@ -9,18 +9,35 @@ const intlMiddleware = createMiddleware({
   localePrefix: 'as-needed', // No prefix for default locale (ro)
 });
 
+// Routes that should bypass intl middleware (auth and dashboard routes)
+const bypassIntlRoutes = [
+  '/login',
+  '/register',
+  '/my-account',
+  '/forgot-password',
+  '/portal',
+  '/admin',
+  '/auth',
+];
+
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Check if this route should bypass intl middleware
+  const shouldBypassIntl = bypassIntlRoutes.some(route => 
+    pathname === route || pathname.startsWith(route + '/')
+  );
+
   // Check if this is a protected route
   const isProtectedRoute = 
-    pathname.includes('/portal') || 
-    pathname.includes('/admin');
+    pathname.startsWith('/portal') || 
+    pathname.startsWith('/admin');
 
   // Check if this is an auth route
   const isAuthRoute = 
-    pathname.includes('/login') || 
-    pathname.includes('/register');
+    pathname.startsWith('/login') || 
+    pathname.startsWith('/register') ||
+    pathname.startsWith('/my-account');
 
   // Get token from cookies
   const token = request.cookies.get('access_token')?.value;
@@ -39,7 +56,12 @@ export default function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/my-account', request.url));
   }
 
-  // Run intl middleware for all other routes
+  // Bypass intl middleware for auth/dashboard routes
+  if (shouldBypassIntl) {
+    return NextResponse.next();
+  }
+
+  // Run intl middleware for public routes only
   return intlMiddleware(request);
 }
 
