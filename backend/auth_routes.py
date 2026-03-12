@@ -174,12 +174,16 @@ async def register_employer(data: EmployerRegisterRequest, response: Response):
     
     await db.users.insert_one(user_doc)
     
+    # Check if this is a manual entry (ANAF unavailable)
+    is_manual_entry = not data.cod_caen or data.company_name == ''
+    
     # Create employer profile with company data
     profile_id = f"emp_{uuid.uuid4().hex[:12]}"
     profile_doc = {
         "profile_id": profile_id,
         "user_id": user_id,
-        "status": "draft",
+        "status": "pending_verification" if is_manual_entry else "draft",
+        "verification_source": "manual" if is_manual_entry else "anaf",
         
         # Company data from ANAF
         "company_name": data.company_name,
