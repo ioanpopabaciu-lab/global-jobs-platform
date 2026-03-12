@@ -434,7 +434,7 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
                 "cui_searched": cui_clean
             }
     
-    # ANAF API unavailable - log and return error
+    # ANAF API unavailable - allow manual entry with pending verification
     log_failed_lookup(cui_clean, "API_UNAVAILABLE", {
         "api": "ANAF",
         "timestamp": datetime.now(timezone.utc).isoformat()
@@ -442,10 +442,12 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     
     return {
         "success": False,
-        "error": "Serviciul de verificare nu este disponibil momentan. Vă rugăm încercați din nou mai târziu.",
+        "error": "Serviciul ANAF nu este disponibil momentan.",
         "verified": False,
         "cui_searched": cui_clean,
-        "retry_after": 60  # Suggest retry after 60 seconds
+        "retry_after": 60,
+        "allow_manual_entry": True,
+        "manual_entry_message": "Puteți continua cu introducerea manuală a datelor companiei. Acestea vor fi verificate de echipa noastră în maxim 24 de ore."
     }
 
 
