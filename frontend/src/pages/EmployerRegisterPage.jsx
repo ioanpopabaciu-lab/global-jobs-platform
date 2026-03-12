@@ -593,7 +593,8 @@ export default function EmployerRegisterPage() {
         </div>
       </CardContent>
     </Card>
-  );
+    );
+  };
 
   // Render Step 3: Contact Information
   const renderStep3 = () => (
