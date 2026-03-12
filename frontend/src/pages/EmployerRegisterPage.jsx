@@ -305,7 +305,112 @@ export default function EmployerRegisterPage() {
   );
 
   // Render Step 2-3: Company Data Display
-  const renderStep2 = () => (
+  const renderStep2 = () => {
+    // Manual entry mode - show editable form
+    if (isManualEntry) {
+      return (
+        <Card className="w-full max-w-2xl mx-auto">
+          <CardHeader className="bg-amber-50 rounded-t-lg">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="h-8 w-8 text-amber-600" />
+              <div>
+                <CardTitle className="text-amber-800">
+                  Introducere Manuală — Verificare în așteptare
+                </CardTitle>
+                <CardDescription className="text-amber-600">
+                  Serviciul ANAF nu este disponibil. Completați manual datele companiei.
+                  Acestea vor fi verificate de echipa noastră în maxim 24 de ore.
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          
+          <CardContent className="pt-6 space-y-6">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="manual-company-name">Denumire Companie *</Label>
+                <Input
+                  id="manual-company-name"
+                  value={companyData?.denumire || ''}
+                  onChange={(e) => setCompanyData({...companyData, denumire: e.target.value})}
+                  placeholder="Ex: SC EXEMPLU SRL"
+                  className="h-12"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="manual-cui">CUI</Label>
+                  <Input
+                    id="manual-cui"
+                    value={companyData?.cui || ''}
+                    disabled
+                    className="h-12 bg-gray-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="manual-reg-com">Nr. Registru Comerțului</Label>
+                  <Input
+                    id="manual-reg-com"
+                    value={companyData?.numar_reg_com || ''}
+                    onChange={(e) => setCompanyData({...companyData, numar_reg_com: e.target.value})}
+                    placeholder="Ex: J12/1234/2020"
+                    className="h-12"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="manual-address">Adresa Sediu Social *</Label>
+                <Input
+                  id="manual-address"
+                  value={companyData?.adresa || ''}
+                  onChange={(e) => setCompanyData({...companyData, adresa: e.target.value})}
+                  placeholder="Ex: Str. Exemplu nr. 1, București"
+                  className="h-12"
+                />
+              </div>
+            </div>
+            
+            <Alert className="bg-amber-50 border-amber-200">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+              <AlertTitle className="text-amber-800">Verificare necesară</AlertTitle>
+              <AlertDescription className="text-amber-700">
+                Contul dvs. va fi creat cu status "În așteptarea verificării". 
+                Veți primi o notificare când datele sunt verificate.
+              </AlertDescription>
+            </Alert>
+            
+            {/* Actions */}
+            <div className="flex gap-3 pt-4 border-t">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setIsManualEntry(false);
+                  setCurrentStep(1);
+                }}
+                className="flex-1"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Înapoi
+              </Button>
+              
+              <Button 
+                onClick={() => setCurrentStep(3)}
+                className="flex-1 bg-amber-600 hover:bg-amber-700"
+                disabled={!companyData?.denumire || !companyData?.adresa}
+              >
+                Continuă cu verificare ulterioară
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+    
+    // Normal mode - display data from ANAF
+    return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className={`${eligibility?.is_eligible ? 'bg-green-50' : 'bg-red-50'} rounded-t-lg`}>
         <div className="flex items-center gap-3">
