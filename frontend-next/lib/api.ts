@@ -1,6 +1,6 @@
 // API client for FastAPI backend
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://global-jobs-hub-3.preview.emergentagent.com/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://immigration-saas-1.preview.emergentagent.com/api';
 
 interface FetchOptions extends RequestInit {
   token?: string;
