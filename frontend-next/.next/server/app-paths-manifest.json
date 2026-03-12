@@ -1,4 +1,11 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/[locale]/page": "app/[locale]/page.js"
+  "/[locale]/about/page": "app/[locale]/about/page.js",
+  "/[locale]/candidates/page": "app/[locale]/candidates/page.js",
+  "/[locale]/blog/page": "app/[locale]/blog/page.js",
+  "/[locale]/industries/page": "app/[locale]/industries/page.js",
+  "/[locale]/employers/page": "app/[locale]/employers/page.js",
+  "/[locale]/industries/[industry]/page": "app/[locale]/industries/[industry]/page.js",
+  "/[locale]/page": "app/[locale]/page.js",
+  "/[locale]/contact/page": "app/[locale]/contact/page.js"
 }
