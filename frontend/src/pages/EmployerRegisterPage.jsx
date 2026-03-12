@@ -78,6 +78,7 @@ export default function EmployerRegisterPage() {
     
     setLookupLoading(true);
     setLookupError('');
+    setAllowManualEntry(false);
     
     try {
       const response = await fetch(`${API_URL}/api/auth/lookup-company`, {
@@ -91,15 +92,23 @@ export default function EmployerRegisterPage() {
       if (data.success && data.verified !== false) {
         setCompanyData(data.company);
         setEligibility(data.eligibility);
+        setIsManualEntry(false);
         setCurrentStep(2);
       } else {
-        // Company not verified - BLOCK registration
-        const errorMsg = data.error || 'Compania nu a fost identificată în registrele oficiale.';
-        setLookupError(errorMsg);
-        
-        // Show specific message for unverified companies
-        if (data.verified === false) {
-          toast.error('Înregistrarea este permisă doar pentru companii verificate oficial.');
+        // Check if manual entry is allowed (ANAF unavailable)
+        if (data.allow_manual_entry) {
+          setAllowManualEntry(true);
+          setLookupError(data.manual_entry_message || 'Serviciul ANAF nu este disponibil. Puteți continua manual.');
+          toast.warning('Serviciul ANAF nu este disponibil momentan.');
+        } else {
+          // Company not verified - BLOCK registration
+          const errorMsg = data.error || 'Compania nu a fost identificată în registrele oficiale.';
+          setLookupError(errorMsg);
+          
+          // Show specific message for unverified companies
+          if (data.verified === false) {
+            toast.error('Înregistrarea este permisă doar pentru companii verificate oficial.');
+          }
         }
       }
     } catch (error) {
@@ -107,6 +116,34 @@ export default function EmployerRegisterPage() {
     } finally {
       setLookupLoading(false);
     }
+  };
+
+  // Handle manual entry mode
+  const handleManualEntry = () => {
+    setIsManualEntry(true);
+    // Create manual company data structure
+    setCompanyData({
+      cui: cui.trim(),
+      denumire: '',
+      adresa: '',
+      numar_reg_com: '',
+      cod_caen: '',
+      denumire_caen: '',
+      is_vat_payer: false,
+      data_infiintare: '',
+      is_active: true,
+      pending_verification: true
+    });
+    setEligibility({
+      is_active: true,
+      is_over_1_year: null,
+      is_caen_eligible: null,
+      is_eligible: null,
+      reasons: [
+        { check: "Verificare manuală", passed: null, detail: "Datele vor fi verificate de echipa noastră" }
+      ]
+    });
+    setCurrentStep(2);
   };
 
   // Toggle industry selection
