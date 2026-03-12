@@ -1,0 +1,25 @@
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+exports.id = "_rsc_i18n_dictionaries_en_json";
+exports.ids = ["_rsc_i18n_dictionaries_en_json"];
+exports.modules = {
+
+/***/ "(rsc)/./i18n/dictionaries/en.json":
+/*!***********************************!*\
+  !*** ./i18n/dictionaries/en.json ***!
+  \***********************************/
+/***/ ((module) => {
+
+module.exports = /*#__PURE__*/JSON.parse('{"metadata":{"title":"Global Jobs Consulting | International Recruitment","description":"International recruitment agency specializing in placing workforce from Asia and Africa in European markets. Complete staffing solutions for Romania, Austria, and Serbia.","keywords":"international recruitment, asian workers, african workers, staffing Romania, recruitment agency"},"nav":{"home":"Home","employers":"Employers","candidates":"Candidates","industries":"Industries","howItWorks":"How It Works","about":"About Us","blog":"Blog","contact":"Contact","login":"Login","register":"Register","myAccount":"My Account","dashboard":"Dashboard","logout":"Logout","requestWorkers":"Request Workers"},"hero":{"slide1":{"headline":"International Workers for Romanian Companies","subheadline":"Legal recruitment solutions from Asia and Africa","cta":"Request Workers"},"slide2":{"headline":"Complete Staffing Solutions","subheadline":"From selection to full integration","cta":"Learn More"},"slide3":{"headline":"11+ Partners in Asia and Africa","subheadline":"Access to thousands of verified candidates","cta":"Contact Us"}},"stats":{"partners":"Partners in Asia & Africa","experience":"Years of Experience","markets":"European Markets","candidates":"Candidates Placed"},"about":{"label":"About Us","title":"Connecting Global Talent with Local Opportunities","subtitle":"Global solutions for workforce shortage","text1":"Global Jobs Consulting is a full-service recruitment agency specializing in placing workforce from Asia and Africa in European markets. With a network of 11 partner agencies, we offer complete staffing solutions for employers in Romania, Austria, and Serbia.","text2":"We handle the entire process: from rigorous candidate selection, immigration documentation (visas and work permits), community integration, and long-term monitoring.","cta":"Discover Our Services"},"industries":{"label":"Industries","title":"Sectors Covered","construction":"Construction","horeca":"Hospitality","agriculture":"Agriculture","manufacturing":"Manufacturing","logistics":"Logistics"},"contact":{"label":"Contact","title":"Let\'s Talk","description":"Whether you\'re an employer looking for staff or a candidate seeking opportunities, we\'re here to help.","address":"Address","phone":"Phone","email":"Email","schedule":"Schedule","scheduleValue":"Monday - Friday: 09:00 - 18:00","form":{"name":"Full Name","email":"Email","phone":"Phone","subject":"Subject","message":"Message","privacy":"I accept the","privacyLink":"Privacy Policy","send":"Send Message","sending":"Sending..."}},"footer":{"description":"International recruitment agency in Romania, Austria and Serbia. 11 partners in Asia and Africa.","quickLinks":"Quick Links","industries":"Industries","contactInfo":"Contact","rights":"All rights reserved.","privacy":"Privacy Policy"},"cta":{"employer":"I\'m an Employer","candidate":"I\'m Looking for a Job"},"common":{"learnMore":"Learn More","getStarted":"Get Started","submit":"Submit","cancel":"Cancel","loading":"Loading...","error":"An error occurred","success":"Success!","required":"Required field"}}');
+
+/***/ })
+
+};
+;
