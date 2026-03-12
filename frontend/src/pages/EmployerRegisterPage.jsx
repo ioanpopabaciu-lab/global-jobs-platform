@@ -256,10 +256,21 @@ export default function EmployerRegisterPage() {
         </div>
         
         {lookupError && (
-          <Alert variant="destructive">
+          <Alert variant={allowManualEntry ? "warning" : "destructive"}>
             <XCircle className="h-4 w-4" />
             <AlertDescription>{lookupError}</AlertDescription>
           </Alert>
+        )}
+        
+        {allowManualEntry && (
+          <Button 
+            onClick={handleManualEntry}
+            variant="outline"
+            className="w-full h-12 text-lg border-amber-500 text-amber-700 hover:bg-amber-50"
+          >
+            <FileText className="mr-2 h-5 w-5" />
+            Continuă cu introducere manuală
+          </Button>
         )}
         
         <Button 
