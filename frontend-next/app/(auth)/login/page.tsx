@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth, getRedirectPath } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,8 +21,20 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Get redirect URL from query params or use default
+  const redirectUrl = searchParams.get("redirect") || null;
+
+  // If already logged in, redirect
+  useEffect(() => {
+    if (user) {
+      const path = redirectUrl || getRedirectPath(user.account_type);
+      router.replace(path);
+    }
+  }, [user, redirectUrl, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,9 +45,11 @@ export default function LoginPage() {
       const data = await login(email, password);
       toast.success("Autentificare reușită!");
 
-      // Redirect based on account_type
-      const redirectPath = getRedirectPath(data.user.account_type);
-      router.push(redirectPath);
+      // Use redirect from URL params or default based on account_type
+      const path = redirectUrl || getRedirectPath(data.user.account_type);
+      
+      // Use replace to avoid back-button issues
+      router.replace(path);
     } catch (err: any) {
       setError(err.message || "Autentificarea a eșuat");
     } finally {
