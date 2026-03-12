@@ -1,6 +1,6 @@
 "use client";
 
-import "../globals.css";
+import "@/app/globals.css";
 import { Providers } from "@/components/providers/Providers";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 

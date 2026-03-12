@@ -1,4 +1,4 @@
-import "../globals.css";
+import "@/app/globals.css";
 import { Providers } from "@/components/providers/Providers";
 
 export default function AuthCallbackLayout({ children }: { children: React.ReactNode }) {
