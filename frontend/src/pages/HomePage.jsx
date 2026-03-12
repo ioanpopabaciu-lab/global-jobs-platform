@@ -311,13 +311,24 @@ export default function HomePage() {
         <section className="py-20 bg-white" data-testid="about-section">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Image */}
+              {/* Image - Optimized with responsive srcset */}
               <div className="relative">
-                <img
-                  src="https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/zeb6mv7z_poza%20pt%20talente%20globale%20afaceri%20locale.png"
-                  alt="Global Jobs Consulting Team"
-                  className="rounded-2xl shadow-lg w-full"
-                />
+                <picture>
+                  <source
+                    media="(max-width: 640px)"
+                    srcSet={OPTIMIZED_IMAGES.ABOUT_TEAM_MOBILE}
+                    type="image/webp"
+                  />
+                  <img
+                    src={OPTIMIZED_IMAGES.ABOUT_TEAM}
+                    alt="Global Jobs Consulting Team"
+                    className="rounded-2xl shadow-lg w-full"
+                    width={1200}
+                    height={936}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
                 <div className="absolute -bottom-6 -right-6 bg-coral text-white p-6 rounded-2xl shadow-xl hidden md:block">
                   <div className="font-heading text-4xl font-bold">4</div>
                   <div className="text-white/80 text-sm">{t.about.years}</div>
