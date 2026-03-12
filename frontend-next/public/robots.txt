@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /portal/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login
+Disallow: /register
+Disallow: /my-account
+
+# Host
+Host: https://gjc.ro
+
+# Sitemaps
+Sitemap: https://gjc.ro/sitemap.xml
