@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Globe, Shield, Clock, Users } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import SEOHead from "@/components/SEOHead";
+import { OPTIMIZED_IMAGES } from "@/components/OptimizedImage";
 
 // Import new design system for homepage only
 import "@/styles/gjc-homepage-new.css";
