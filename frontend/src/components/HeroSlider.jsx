@@ -3,16 +3,20 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ArrowRight, Play, Pause } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { OPTIMIZED_IMAGES } from "@/components/OptimizedImage";
 
 // Video URLs
 const VIDEO_URL = "https://customer-assets.emergentagent.com/job_a9022c94-df7a-4b1a-903b-3a5a006d4a40/artifacts/v1pulfhw_Design%20f%C4%83r%C4%83%20titlu.mp4";
 const CONSTRUCTION_VIDEO_URL = "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/jx861bq7_lucratori%20in%20constructii.mp4";
 
-// Static images for mobile fallback and posters
+// Optimized static images for mobile fallback and posters
 const UPLOADED_IMAGES = {
-  slide1_poster: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/en2yk94c_Design%20f%C4%83r%C4%83%20titlu%20%281%29.png",
-  slide2_poster: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/aangudct_IMG-20250921-WA0000.jpg",
-  slide3_poster: "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/uko86kal_Design%20f%C4%83r%C4%83%20titlu%20%282%29.png"
+  slide1_poster: OPTIMIZED_IMAGES.HERO_POSTER_1,
+  slide1_poster_mobile: OPTIMIZED_IMAGES.HERO_POSTER_1_MOBILE,
+  slide2_poster: OPTIMIZED_IMAGES.HERO_POSTER_2,
+  slide2_poster_mobile: OPTIMIZED_IMAGES.HERO_POSTER_2_MOBILE,
+  slide3_poster: OPTIMIZED_IMAGES.HERO_POSTER_3,
+  slide3_poster_mobile: OPTIMIZED_IMAGES.HERO_POSTER_3_MOBILE
 };
 
 // Optimized 3 slides as per requirements
