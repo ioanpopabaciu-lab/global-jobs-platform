@@ -38,7 +38,7 @@ export default function ContactForm({ locale, translations }: ContactFormProps) 
     };
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://immigration-saas-1.preview.emergentagent.com/api";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://immigration-saas-2.preview.emergentagent.com/api";
       const response = await fetch(`${apiUrl}/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -31,7 +31,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://immigration-saas-1.preview.emergentagent.com/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://immigration-saas-2.preview.emergentagent.com/api";
 
 // Wizard steps
 const STEPS = [

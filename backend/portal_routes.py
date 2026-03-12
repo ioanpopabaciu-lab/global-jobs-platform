@@ -32,7 +32,7 @@ from document_ocr_service import (
 logger = logging.getLogger(__name__)
 
 # Platform URL for emails
-PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://immigration-saas-1.preview.emergentagent.com")
+PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://immigration-saas-2.preview.emergentagent.com")
 
 # Database will be injected
 db = None

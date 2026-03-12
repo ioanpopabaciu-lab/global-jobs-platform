@@ -20,7 +20,7 @@ from notification_service import (
 db = None
 
 # Platform URL for emails
-PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://immigration-saas-1.preview.emergentagent.com")
+PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://immigration-saas-2.preview.emergentagent.com")
 
 def set_database(database):
     global db
