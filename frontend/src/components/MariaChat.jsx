@@ -3,9 +3,10 @@ import { X, Send, Loader2, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { OPTIMIZED_IMAGES } from "@/components/OptimizedImage";
 
-// Chat AI image (woman on phone)
-const CHAT_AI_IMAGE = "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/2651v7rf_poza%20chat%20AI.png";
+// Chat AI image (optimized WebP)
+const CHAT_AI_IMAGE = OPTIMIZED_IMAGES.CHAT_AI;
 
 const translations = {
   ro: {
