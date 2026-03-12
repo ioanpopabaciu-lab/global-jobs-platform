@@ -32,13 +32,13 @@ export default function CandidateDashboard() {
   const quickActions = [
     {
       title: "Completează Profilul",
-      description: "Finalizează informațiile personale și profesionale",
+      description: "Finalizează informațiile personale și profesionale cu AI OCR",
       icon: User,
       href: "/portal/candidate/profile",
-      color: "bg-blue-500",
+      color: "bg-coral",
     },
     {
-      title: "Încarcă Documente",
+      title: "Gestionează Documente",
       description: "Adaugă pașaport, CV și alte documente necesare",
       icon: Upload,
       href: "/portal/candidate/documents",
