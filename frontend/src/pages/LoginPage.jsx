@@ -66,7 +66,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <Link to="/" className="inline-block mb-4">
             <img 
-              src="https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png" 
+              src="https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/99mub5h3_logo%20fundal%20transparent.png" 
               alt="GJC Logo" 
               className="h-16 mx-auto"
             />
