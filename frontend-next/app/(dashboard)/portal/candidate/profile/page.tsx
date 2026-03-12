@@ -279,7 +279,7 @@ export default function CandidateProfileWizard() {
     setIsSaving(true);
     try {
       const response = await fetch(`${API_URL}/portal/candidate/profile`, {
-        method: "PUT",
+        method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profileData),
