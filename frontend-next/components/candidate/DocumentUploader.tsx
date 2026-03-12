@@ -172,9 +172,9 @@ export default function DocumentUploader({
 
       let endpoint = "";
       if (documentType === "passport") {
-        endpoint = "/portal/candidate/passport/analyze";
+        endpoint = "/auth/candidate/ocr/passport";
       } else if (documentType === "cv") {
-        endpoint = "/portal/candidate/cv/analyze";
+        endpoint = "/auth/candidate/ocr/cv";
       }
 
       if (!endpoint) {
