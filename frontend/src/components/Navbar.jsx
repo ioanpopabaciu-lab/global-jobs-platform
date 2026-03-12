@@ -10,10 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { OPTIMIZED_IMAGES } from "@/components/OptimizedImage";
 
-// Logo URLs - Updated with new high-visibility logos
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/99mub5h3_logo%20fundal%20transparent.png";
-const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png";
+// Logo URLs - Optimized WebP versions
+const LOGO_WHITE = OPTIMIZED_IMAGES.LOGO_COLORED;  // Colored logo for dark backgrounds
+const LOGO_COLORED = OPTIMIZED_IMAGES.LOGO_WHITE;  // White logo for light backgrounds
 
 // Social Media Links
 const SOCIAL_LINKS = {
