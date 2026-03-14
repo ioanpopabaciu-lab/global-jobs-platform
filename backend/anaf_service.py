@@ -424,14 +424,16 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
             logger.info(f"[LOOKUP_SUCCESS] Company verified via ANAF")
             return anaf_result
         
-        # Company explicitly NOT in registry
+        # Company explicitly NOT in registry - allow manual entry
         if anaf_result.get("not_found"):
             log_failed_lookup(cui_clean, "NOT_IN_REGISTRY", {"source": "anaf"})
             return {
                 "success": False,
-                "error": "Compania nu a fost identificată în registrele oficiale.",
+                "error": "Compania nu a fost identificată în registrele ANAF. Acest lucru poate însemna că CUI-ul este incorect sau compania nu este încă înregistrată.",
                 "verified": False,
-                "cui_searched": cui_clean
+                "cui_searched": cui_clean,
+                "allow_manual_entry": True,
+                "manual_entry_message": "Puteți continua cu introducerea manuală a datelor companiei. Echipa noastră va verifica datele în maxim 24 de ore."
             }
     
     # ANAF API unavailable - allow manual entry with pending verification
