@@ -11,9 +11,6 @@ import logging
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime, timezone
 
-# OpenAI for embeddings - using Emergent LLM Key
-from openai import AsyncOpenAI
-
 # Database imports
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -47,28 +44,45 @@ class MatchingConfig:
 # =====================================================
 
 class EmbeddingService:
-    """Service for generating text embeddings using OpenAI"""
+    """Service for generating text embeddings using OpenAI via Emergent"""
     
     def __init__(self):
-        self.client: Optional[AsyncOpenAI] = None
+        self.client = None
         self._initialized = False
+        self._use_emergent = False
     
     async def init(self):
         """Initialize OpenAI client with Emergent LLM Key"""
         if self._initialized:
             return True
         
-        # Get API key from environment (Emergent LLM Key or OpenAI)
-        api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("EMERGENT_LLM_KEY")
+        # Get API key from environment
+        api_key = os.environ.get("EMERGENT_LLM_KEY") or os.environ.get("OPENAI_API_KEY")
         
         if not api_key:
             logger.warning("No OpenAI/Emergent API key found. Embedding service disabled.")
             return False
         
+        # Check if it's an Emergent key
+        if api_key.startswith("sk-emergent"):
+            self._use_emergent = True
+            try:
+                from emergentintegrations.llm.openai import get_openai_client
+                self.client = get_openai_client(api_key)
+                self._initialized = True
+                logger.info("✓ EmbeddingService initialized with Emergent OpenAI (text-embedding-3-small)")
+                return True
+            except ImportError as e:
+                logger.warning(f"Emergent integrations not available: {e}")
+                # Fall back to direct OpenAI
+                self._use_emergent = False
+        
+        # Direct OpenAI client
         try:
+            from openai import AsyncOpenAI
             self.client = AsyncOpenAI(api_key=api_key)
             self._initialized = True
-            logger.info("✓ EmbeddingService initialized with OpenAI text-embedding-3-small")
+            logger.info("✓ EmbeddingService initialized with OpenAI (text-embedding-3-small)")
             return True
         except Exception as e:
             logger.error(f"Failed to initialize OpenAI client: {e}")
@@ -92,11 +106,20 @@ class EmbeddingService:
             # Clean and truncate text (max ~8000 tokens)
             cleaned_text = " ".join(text.split())[:32000]
             
-            response = await self.client.embeddings.create(
-                model=MatchingConfig.EMBEDDING_MODEL,
-                input=cleaned_text,
-                dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
-            )
+            if self._use_emergent:
+                # Use Emergent's synchronous client
+                response = self.client.embeddings.create(
+                    model=MatchingConfig.EMBEDDING_MODEL,
+                    input=cleaned_text,
+                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
+                )
+            else:
+                # Use async OpenAI client
+                response = await self.client.embeddings.create(
+                    model=MatchingConfig.EMBEDDING_MODEL,
+                    input=cleaned_text,
+                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
+                )
             
             embedding = response.data[0].embedding
             logger.debug(f"Generated embedding with {len(embedding)} dimensions")
@@ -115,11 +138,18 @@ class EmbeddingService:
             # Clean texts
             cleaned_texts = [" ".join(t.split())[:32000] for t in texts if t]
             
-            response = await self.client.embeddings.create(
-                model=MatchingConfig.EMBEDDING_MODEL,
-                input=cleaned_texts,
-                dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
-            )
+            if self._use_emergent:
+                response = self.client.embeddings.create(
+                    model=MatchingConfig.EMBEDDING_MODEL,
+                    input=cleaned_texts,
+                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
+                )
+            else:
+                response = await self.client.embeddings.create(
+                    model=MatchingConfig.EMBEDDING_MODEL,
+                    input=cleaned_texts,
+                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
+                )
             return [item.embedding for item in response.data]
         except Exception as e:
             logger.error(f"Batch embedding generation failed: {e}")
