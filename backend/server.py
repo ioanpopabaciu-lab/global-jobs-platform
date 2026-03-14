@@ -760,14 +760,6 @@ app.include_router(portal_router, prefix="/api")
 app.include_router(admin_router, prefix="/api")
 app.include_router(notification_router, prefix="/api")
 
-# Include GJC Platform v1 routes (hybrid architecture)
-try:
-    from routes.gjc_platform_routes import gjc_router
-    app.include_router(gjc_router, prefix="/api")
-    logger.info("GJC Platform routes registered at /api/v1/gjc")
-except ImportError as e:
-    logger.warning(f"GJC Platform routes not available: {e}")
-
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -782,6 +774,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Include GJC Platform v1 routes (hybrid architecture)
+try:
+    from routes.gjc_platform_routes import gjc_router
+    app.include_router(gjc_router, prefix="/api")
+    logger.info("GJC Platform routes registered at /api/v1/gjc")
+except ImportError as e:
+    logger.warning(f"GJC Platform routes not available: {e}")
 
 @app.on_event("startup")
 async def startup_init():
