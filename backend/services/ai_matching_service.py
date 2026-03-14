@@ -37,6 +37,9 @@ class MatchingConfig:
     # Batch sizes
     EMBEDDING_BATCH_SIZE = 20
     SEARCH_LIMIT = 50
+    
+    # Emergent integration proxy URL
+    EMERGENT_PROXY_URL = "https://integrations.emergentagent.com/llm"
 
 
 # =====================================================
@@ -50,6 +53,7 @@ class EmbeddingService:
         self.client = None
         self._initialized = False
         self._use_emergent = False
+        self._api_key = None
     
     async def init(self):
         """Initialize OpenAI client with Emergent LLM Key"""
@@ -57,33 +61,33 @@ class EmbeddingService:
             return True
         
         # Get API key from environment
-        api_key = os.environ.get("EMERGENT_LLM_KEY") or os.environ.get("OPENAI_API_KEY")
+        self._api_key = os.environ.get("EMERGENT_LLM_KEY") or os.environ.get("OPENAI_API_KEY")
         
-        if not api_key:
+        if not self._api_key:
             logger.warning("No OpenAI/Emergent API key found. Embedding service disabled.")
             return False
         
         # Check if it's an Emergent key
-        if api_key.startswith("sk-emergent"):
-            self._use_emergent = True
-            try:
-                from emergentintegrations.llm.openai import get_openai_client
-                self.client = get_openai_client(api_key)
-                self._initialized = True
-                logger.info("✓ EmbeddingService initialized with Emergent OpenAI (text-embedding-3-small)")
-                return True
-            except ImportError as e:
-                logger.warning(f"Emergent integrations not available: {e}")
-                # Fall back to direct OpenAI
-                self._use_emergent = False
+        self._use_emergent = self._api_key.startswith("sk-emergent")
         
-        # Direct OpenAI client
         try:
-            from openai import AsyncOpenAI
-            self.client = AsyncOpenAI(api_key=api_key)
+            from openai import OpenAI
+            
+            if self._use_emergent:
+                # Use Emergent proxy for the API
+                self.client = OpenAI(
+                    api_key=self._api_key,
+                    base_url=MatchingConfig.EMERGENT_PROXY_URL
+                )
+                logger.info("✓ EmbeddingService initialized with Emergent Proxy (text-embedding-3-small)")
+            else:
+                # Direct OpenAI client
+                self.client = OpenAI(api_key=self._api_key)
+                logger.info("✓ EmbeddingService initialized with OpenAI (text-embedding-3-small)")
+            
             self._initialized = True
-            logger.info("✓ EmbeddingService initialized with OpenAI (text-embedding-3-small)")
             return True
+            
         except Exception as e:
             logger.error(f"Failed to initialize OpenAI client: {e}")
             return False
@@ -106,20 +110,12 @@ class EmbeddingService:
             # Clean and truncate text (max ~8000 tokens)
             cleaned_text = " ".join(text.split())[:32000]
             
-            if self._use_emergent:
-                # Use Emergent's synchronous client
-                response = self.client.embeddings.create(
-                    model=MatchingConfig.EMBEDDING_MODEL,
-                    input=cleaned_text,
-                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
-                )
-            else:
-                # Use async OpenAI client
-                response = await self.client.embeddings.create(
-                    model=MatchingConfig.EMBEDDING_MODEL,
-                    input=cleaned_text,
-                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
-                )
+            # Use synchronous client (OpenAI SDK v1 embeddings are sync by default)
+            response = self.client.embeddings.create(
+                model=MatchingConfig.EMBEDDING_MODEL,
+                input=cleaned_text,
+                dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
+            )
             
             embedding = response.data[0].embedding
             logger.debug(f"Generated embedding with {len(embedding)} dimensions")
@@ -138,18 +134,11 @@ class EmbeddingService:
             # Clean texts
             cleaned_texts = [" ".join(t.split())[:32000] for t in texts if t]
             
-            if self._use_emergent:
-                response = self.client.embeddings.create(
-                    model=MatchingConfig.EMBEDDING_MODEL,
-                    input=cleaned_texts,
-                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
-                )
-            else:
-                response = await self.client.embeddings.create(
-                    model=MatchingConfig.EMBEDDING_MODEL,
-                    input=cleaned_texts,
-                    dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
-                )
+            response = self.client.embeddings.create(
+                model=MatchingConfig.EMBEDDING_MODEL,
+                input=cleaned_texts,
+                dimensions=MatchingConfig.EMBEDDING_DIMENSIONS
+            )
             return [item.embedding for item in response.data]
         except Exception as e:
             logger.error(f"Batch embedding generation failed: {e}")
