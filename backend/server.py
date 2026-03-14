@@ -908,4 +908,12 @@ async def startup_init_blog_posts():
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    # Close MongoDB connection
     client.close()
+    
+    # Close GJC Platform database connections
+    try:
+        from database.db_config import db_manager
+        await db_manager.close()
+    except Exception:
+        pass
