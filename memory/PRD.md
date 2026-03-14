@@ -1,491 +1,189 @@
-# GJC Recruitment Platform - Product Requirements Document
+# GJC (Global Job Connect) Platform - Product Requirements Document
 
-## Project Overview
-**Platform:** Global Jobs Consulting (GJC) SaaS Platform  
-**Purpose:** Full recruitment and immigration management for Non-EU workers in Romania, Austria, and Serbia  
-**Last Updated:** 2026-03-12
+## Original Problem Statement
+Build a complex B2B and B2C recruitment and immigration ecosystem that connects companies, candidates, and partner agencies. The platform automates workflows like visa approvals and document processing using AI.
 
----
+## Architecture Overview
 
-## 🚀 CURRENT STATUS: Next.js 14 Migration - Phase 3 In Progress
+### Hybrid Database Model
+- **PostgreSQL 15** (+ pgvector extension): Transactional data - jobs, placements, visa processes, relocation tickets, invoices
+- **MongoDB**: Profile data - users, candidates, employers, documents, chat history
 
-### ✅ Completed (2026-03-12)
+### Backend: FastAPI (Python)
+- RESTful API with versioned endpoints (`/api/v1/gjc/*`)
+- Async database operations with `asyncpg` (PostgreSQL) and `motor` (MongoDB)
 
-**Phase 1: Foundation & Public SEO Pages** ✓
-1. **Project Setup** (`/app/frontend-next`)
-   - Next.js 14 with App Router
-   - TypeScript configuration
-   - TailwindCSS with custom theme (navy, coral colors)
-   - i18n middleware for 8 languages (ro, en, de, sr, ne, bn, hi, si)
-   - next-sitemap configuration
+### AI Matching Engine
+- **Model**: OpenAI `text-embedding-3-small`
+- **Vector Dimensions**: 1536
+- **Storage**: PostgreSQL with `pgvector` extension
+- **Similarity Metric**: Cosine distance
 
-2. **Core Components Created**
-   - `Navbar.tsx` - Responsive navbar with language selector, mobile menu
-   - `Footer.tsx` - Full footer with contact info, SEO schema markup
-   - `ContactForm.tsx` - Client-side form with API integration
+## User Personas & Portals
 
-3. **Public Pages Migrated (All with SSG & SEO Metadata)**
-   - ✅ Homepage (`/[locale]/page.tsx`) - Hero, stats, about, industries, CTA
-   - ✅ Employers Page (`/[locale]/employers/page.tsx`)
-   - ✅ Candidates Page (`/[locale]/candidates/page.tsx`)
-   - ✅ About Page (`/[locale]/about/page.tsx`)
-   - ✅ Contact Page (`/[locale]/contact/page.tsx`)
-   - ✅ Blog Page (`/[locale]/blog/page.tsx`)
-   - ✅ Industries Index (`/[locale]/industries/page.tsx`)
-   - ✅ Industry Detail Pages (`/[locale]/industries/[industry]/page.tsx`) - With `generateStaticParams`
+### 1. Company Portal
+- Create and manage job postings
+- View AI-matched candidates with match scores
+- Track placement pipeline (Kanban view)
+- Monitor visa and relocation progress
 
-4. **SEO Implementation**
-   - `generateMetadata` on all pages
-   - Alternates/hreflang for all 8 languages
-   - OpenGraph tags
-   - Canonical URLs
-   - Sitemap auto-generation
+### 2. Agency Portal  
+- Batch upload candidates
+- Browse available jobs
+- Apply candidates to jobs (single or bulk)
+- View performance metrics
 
-5. **Translation Dictionaries**
-   - All 8 languages: ro, en, de, sr, ne, bn, hi, si
-   - Located in `/app/frontend-next/i18n/dictionaries/`
+### 3. Candidate Portal
+- View matching jobs
+- Track application status in real-time
+- Receive status updates in Romanian
 
----
+### 4. Admin Portal (God View)
+- Global dashboard with platform metrics
+- Manual status transitions with audit logging
+- Visa and relocation management
+- Complete audit trail
 
-**Phase 2: Authentication & Dashboards** ✓ (Completed 2026-03-12)
+## Implemented Features (Phase P0) ✅
 
-1. **Authentication System**
-   - `AuthContext.tsx` - Auth provider with login, register, logout, Google OAuth
-   - `Providers.tsx` - Wrapper component with AuthProvider and Toaster
-   - JWT session management via HTTP-only cookies
-   - Google OAuth integration via Emergent Auth
+### Date: March 14, 2026
 
-2. **Auth Pages Created**
-   - ✅ Login Page (`/login`) - Email/password + Google login
-   - ✅ Register Page (`/register`) - With account type selection via query param
-   - ✅ My Account Page (`/my-account`) - Service selection hub (4 card types)
-   - ✅ Auth Callback (`/auth/callback`) - Google OAuth callback handler
+#### Database Layer (`db_config.py`)
+- [x] Dual database connection management (PostgreSQL + MongoDB)
+- [x] Connection pooling for PostgreSQL (asyncpg)
+- [x] Health check endpoints
+- [x] User/Company/Candidate sync utilities
 
-3. **Protected Dashboard Pages**
-   - ✅ Candidate Dashboard (`/portal/candidate`) - Profile progress, documents, applications
-   - ✅ Employer Dashboard (`/portal/employer`) - Company profile, job requests, candidates
-   - ✅ Student Dashboard (`/portal/student`) - Study application status
-   - ✅ Immigration Dashboard (`/portal/immigration`) - Immigration services status
-   - ✅ Admin Dashboard (`/admin`) - Platform management, user validation
+#### AI Matching Service (`ai_matching_service.py`)
+- [x] OpenAI embedding generation (text-embedding-3-small, 1536 dims)
+- [x] Candidate profile text builder
+- [x] Job description text builder
+- [x] pgvector storage and retrieval
+- [x] Semantic similarity search
+- [x] Match score calculation with levels (EXCELLENT/HIGH/GOOD/MODERATE/LOW)
 
-4. **Route Protection**
-   - `ProtectedLayout.tsx` - HOC for protected routes with role checking
-   - Middleware updated to bypass i18n for auth/dashboard routes
-   - Automatic redirect to login for unauthenticated users
-   - Role-based access control (admin routes restricted)
+#### Pipeline Service (`pipeline_service.py`)
+- [x] PlacementService: CRUD + status transitions
+- [x] JobService: Create, list, update jobs
+- [x] VisaProcessService: IGI submission, approval, embassy scheduling
+- [x] RelocationService: Flight booking, accommodation, arrival tracking
+- [x] Status validation with allowed transitions
+- [x] Audit logging for all changes
 
-5. **UI Components Added**
-   - Button, Input, Label, Card, Alert, Progress, Sheet, Dropdown Menu
+#### API Routes (`gjc_platform_routes.py`)
+- [x] Health endpoint: `GET /api/v1/gjc/health`
+- [x] Company Portal:
+  - `POST /api/v1/gjc/company/jobs` - Create job with embedding
+  - `GET /api/v1/gjc/company/jobs` - List company jobs
+  - `GET /api/v1/gjc/company/jobs/{id}` - Job details
+  - `GET /api/v1/gjc/company/jobs/{id}/candidates` - AI-matched candidates
+  - `GET /api/v1/gjc/company/pipeline` - Kanban view
+  - `GET /api/v1/gjc/company/tracking/{id}` - Placement tracking
+- [x] Agency Portal:
+  - `POST /api/v1/gjc/agency/candidates/batch` - Batch upload
+  - `GET /api/v1/gjc/agency/jobs/available` - Available jobs
+  - `POST /api/v1/gjc/agency/apply` - Single application
+  - `POST /api/v1/gjc/agency/apply/bulk` - Bulk applications
+  - `GET /api/v1/gjc/agency/performance` - Metrics
+- [x] Candidate Portal:
+  - `GET /api/v1/gjc/candidate/matching-jobs` - Matching jobs
+  - `GET /api/v1/gjc/candidate/status/{id}` - Application status
+- [x] Admin Portal:
+  - `GET /api/v1/gjc/admin/dashboard` - Global metrics
+  - `POST /api/v1/gjc/admin/placement/{id}/status` - Status transition
+  - `POST /api/v1/gjc/admin/visa/{id}/*` - Visa process management
+  - `POST /api/v1/gjc/admin/relocation/{id}/*` - Relocation management
+  - `GET /api/v1/gjc/admin/audit-log` - Audit trail
+- [x] Matching Utilities:
+  - `POST /api/v1/gjc/matching/generate-embedding` - Generate embedding
+  - `GET /api/v1/gjc/matching/score` - Calculate match score
 
----
+## API Testing Results
 
-**Phase 3: AI Candidate Registration** 🔄 (In Progress 2026-03-12)
+**Test Date**: March 14, 2026
+**Result**: 100% (20/20 tests passed)
+**Report**: `/app/test_reports/iteration_16.json`
 
-1. **Pages Created (Next.js)**
-   - ✅ Profile Wizard Page (`/portal/candidate/profile/page.tsx`) - 5-step wizard
-   - ✅ Documents Page (`/portal/candidate/documents/page.tsx`) - Document management
-   - ✅ Updated Dashboard (`/portal/candidate/page.tsx`) - Real API data
+## Database Schema
 
-2. **Components Created**
-   - ✅ `DocumentUploader.tsx` - File upload with OCR integration
+### PostgreSQL Tables
+- `users` - Platform users with roles
+- `companies` - Employer companies
+- `agencies` - Recruitment agencies
+- `candidates` - Worker candidates (with profile_embedding vector)
+- `jobs` - Job postings (with job_embedding vector)
+- `placements` - Job applications/placements
+- `visa_processes` - Visa application tracking
+- `relocation_tickets` - Relocation logistics
+- `status_audit_log` - Change history
+- `invoices` / `invoice_items` - Billing
 
-3. **Backend Verification**
-   - ✅ All OCR endpoints functional (`/api/auth/candidate/ocr/passport`, `/api/auth/candidate/ocr/cv`)
-   - ✅ Profile endpoints functional (`GET/POST /api/portal/candidate/profile`)
-   - ✅ Document upload endpoints functional (`POST /api/portal/candidate/documents/upload`)
-   - ✅ Dashboard endpoint functional (`GET /api/portal/candidate/dashboard`)
+### MongoDB Collections
+- `users` - User authentication
+- `candidate_profiles` - Detailed candidate data
+- `employer_profiles` - Employer profiles
+- `agency_profiles` - Agency profiles
+- `documents` - Uploaded documents
+- `chat_history` - Paula AI assistant conversations
 
-4. **Bug Fixes Applied**
-   - ✅ Fixed OCR endpoint paths in DocumentUploader.tsx (from `/portal/...` to `/auth/...`)
-   - ✅ Fixed profile save method (from PUT to POST)
-   - ✅ Updated logo URLs across login/register pages
+## Environment Configuration
 
-5. **Testing Status**
-   - ✅ Backend: 100% (13/13 tests passed)
-   - ✅ Frontend: 95% (login, dashboard, profile form functional)
-   - ⚠️ Minor: Logo visibility issue on white background (design asset issue)
-
----
-
-### 📋 Upcoming Tasks
-
-1. **Phase 3: Candidate Features** (Remaining)
-   - [ ] End-to-end OCR testing with actual passport/CV images
-   - [ ] Auto-save functionality in profile wizard
-   - [ ] Document expiry notifications
-
-2. **Phase 4: Full Migration**
-   - [ ] Switch production frontend from React to Next.js
-   - [ ] Set up redirects for old URLs
-   - [ ] Configure Supervisor to run Next.js instead of React
-
----
-
-## Legacy React App Status (Still Active)
-The original React SPA (`/app/frontend`) is still serving the live site on port 3000.
-
-## Recent Changes (2026-03-09)
-
-### ✅ Major Navigation & Homepage Redesign - COMPLETE
-
-**Implementation Summary:**
-Complete redesign of main navigation and homepage structure to improve UX, SEO and lead generation.
-
-**New Header Structure:**
-- **Left:** Company Logo
-- **Center:** Home | Employers | Candidates | Industries (dropdown) | How It Works | About Us | Blog | Contact
-- **Right:** Login | My Account | **Request Workers** (Primary CTA - red button)
-
-**New Pages Created:**
-1. `/solicita-muncitori` (Request Workers) - Lead capture form for employers
-2. `/cum-functioneaza` (How It Works) - 5-step process explanation
-3. `/industrii/:industry` - Industry-specific landing pages:
-   - `/industrii/constructii` (Construction)
-   - `/industrii/horeca` (HoReCa/Hospitality)
-   - `/industrii/agricultura` (Agriculture)
-   - `/industrii/productie` (Manufacturing)
-   - `/industrii/logistica` (Logistics)
-
-**Homepage Slider Optimizations:**
-- Reduced from 6 slides to 3 slides
-- Clear headlines and CTAs per slide
-- Mobile: Static images instead of video
-- Slide 1: "Muncitori Internaționali pentru Companii Românești" → CTA: "Solicită Muncitori"
-- Slide 2: "Soluții de Forță de Muncă pentru Multiple Industrii" → CTA: "Explorează Industriile"
-- Slide 3: "Partenerul Tău de Încredere în Recrutare" → CTA: "Programează Consultația"
-
-**Backend:**
-- New endpoint: `POST /api/leads/request-workers` - Captures employer leads
-- Email notification on new lead submission
-
-**Files Modified/Created:**
-- `/app/frontend/src/components/Navbar.jsx` - Complete rewrite
-- `/app/frontend/src/components/HeroSlider.jsx` - Optimized to 3 slides
-- `/app/frontend/src/pages/RequestWorkersPage.jsx` - NEW
-- `/app/frontend/src/pages/HowItWorksPage.jsx` - NEW
-- `/app/frontend/src/pages/IndustryPage.jsx` - NEW
-- `/app/frontend/src/pages/CandidateRegisterPage.jsx` - Simplified (fixed babel error)
-- `/app/backend/server.py` - Added leads endpoints
-
----
-
-### ✅ Design System Conflict Resolution (2026-03-06) - COMPLETE
-**Issue:** Previous agent made conflicting design changes - first updated global styles, then created separate homepage styles without reverting global changes.
-
-**Resolution (Opțiunea B implementată):**
-- ✅ Reverted `index.css` to original (Montserrat font, original navy variables)
-- ✅ Reverted `tailwind.config.js` to original configuration
-- ✅ Reverted `button.jsx` to original Shadcn/UI version
-- ✅ Preserved `/app/frontend/src/styles/gjc-homepage-new.css` intact
-- ✅ Imported `gjc-homepage-new.css` ONLY in `HomePage.jsx`
-- ✅ Verified all portals work correctly: `/login`, `/register`, `/admin`, `/portal/candidate`, `/portal/employer`
-- ✅ No CSS conflicts between global styles and `gjc-new-*` classes
-
----
-
-## Core Architecture
-
-### Multi-Portal Structure
-1. **Public Website** - Marketing and lead generation (existing)
-2. **Candidate Portal** - Profile creation, document upload, application tracking
-3. **Employer Portal** - Company profile, job requests, candidate matching
-4. **Admin Dashboard** - Full CRUD for all entities, validation workflow
-
-### Tech Stack
-- **Frontend:** React, TailwindCSS, Shadcn/UI
-- **Backend:** FastAPI, Python
-- **Database:** MongoDB
-- **Storage:** Emergent Object Storage (cloud)
-- **Auth:** JWT + Google OAuth (Emergent Auth)
-- **AI/OCR:** Claude Sonnet 4.5 (via Emergent LLM Key)
-
----
-
-## Phase Status
-
-### ✅ Phase 1 - Foundation (COMPLETE)
-- [x] JWT email/password authentication
-- [x] Google OAuth integration
-- [x] User access flow via `/my-account`
-- [x] Four account types: candidate, employer, student, immigration_client
-- [x] Role-based dashboards for all user types
-- [x] Admin panel foundation
-
-### ✅ Phase 2 - Complete Portals (COMPLETE - 2026-03-04)
-- [x] **Candidate Profile Form** - All 5 sections implemented:
-  - Section 1: Personal Information (name, DOB, gender, religion, citizenship)
-  - Section 2: Family (parents, spouse, children)
-  - Section 3: Professional Experience (profession, COR code, languages)
-  - Section 4: Documents (CV, passport, criminal record, photo, video)
-  - Section 5: Additional Info (salary, residence permits)
-- [x] **Employer Profile Form** - All 4 sections implemented:
-  - Section 1: Company Information (CUI, J number, address, administrator)
-  - Section 2: Contact Person
-  - Section 3: Documents (CUI certificate, administrator ID, criminal record)
-  - Section 4: IGI Eligibility Requirements (Romania only)
-- [x] **Cloud Storage Integration** - Emergent Object Storage for documents
-- [x] **Profile Validation Workflow** - draft → pending_validation → validated
-
-### ✅ Notification System (COMPLETE - 2026-03-04)
-- [x] **In-App Notifications**
-  - Bell icon with unread badge in portal header
-  - Dropdown panel with notification list
-  - Mark as read / Delete functionality
-  - 30-second polling for real-time updates
-- [x] **Email Notifications** (SMTP configured)
-  - HTML email templates for: candidate match, profile validated, profile rejected
-  - Automatic email on profile validation events
-- [x] **Advanced Matching Algorithm**
-  - Profession/COR code matching (30 pts)
-  - Experience years (20 pts)
-  - Language/English level (20 pts)
-  - Nationality preference (15 pts)
-  - Age range (10 pts)
-  - Gender preference (5 pts)
-  - Minimum 60% score to trigger match notification
-
-### ✅ Phase 2.5 - AI-Powered Candidate Registration (COMPLETE - 2026-03-06)
-- [x] **7-Step Registration Wizard** (`/register/candidate`)
-  - Step 1: Welcome screen with 3 icons
-  - Step 2: Document upload (passport, CV, diploma, criminal record)
-  - Step 3: AI processing animation
-  - Step 4: Confirm extracted data with status indicators
-  - Step 5: Fill missing fields (account, personal, professional)
-  - Step 6: Document checklist
-  - Step 7: Final confirmation with profile score
-- [x] **Claude AI OCR Integration**
-  - Passport extraction: name, DOB, citizenship, passport number, expiry, sex
-  - CV extraction: email, phone, profession, experience, employers, languages
-  - Field status indicators (green/yellow/red)
-- [x] **Auto-save** every 30 seconds with localStorage draft persistence
-- [x] **Profile Score Calculator** with improvement suggestions
-
-### 🔄 Phase 3 - Core Workflow (IN PROGRESS)
-- [x] **Job Request UI (Employer Portal)** ✅ COMPLETE - 2026-03-04
-  - Job list page (`/portal/employer/jobs`) with search functionality
-  - Create/Edit job form (`/portal/employer/jobs/new`, `/jobs/:jobId/edit`)
-  - All fields: title, COR code, positions, industry, location, experience, nationalities, languages, salary, benefits
-  - Delete/Cancel job with confirmation dialog
-  - Profile validation check before job creation
-- [ ] Candidate-to-Job matching UI (Admin Dashboard)
-- [ ] Automated contract PDF generation
-- [ ] Automated invoice PDF generation
-- [ ] Visual progress tracker for immigration stages
-- [x] **Admin Dashboard UI Pages** ✅ COMPLETE - 2026-03-05
-  - Admin Candidates page - listare, căutare, validare/respingere
-  - Admin Employers page - listare, detalii companie, eligibilitate IGI
-  - Admin Jobs page - statistici status, matching candidați, schimbare status
-  - Admin Projects page - pipeline vizual, actualizare stadii, note
-  - Admin Users page - listare toți utilizatorii, filtrare pe rol
-  - Admin Documents page - vizualizare toate documentele, download
-
-### ⏳ Phase 4 - Document Management & Expiry
-- [ ] Document expiry tracking and alerts
-- [ ] Document verification workflow in Admin
-- [ ] Bulk document operations
-- [ ] Background job for expiry alert emails
-
-### 📋 Backlog (P2)
-- [ ] Stripe payment integration
-- [x] ~~Full Admin CRUD for users/projects/jobs~~ ✅ COMPLETE - 2026-03-05
-- [ ] SEO landing pages (Construction, HoReCa, etc.)
-- [ ] reCAPTCHA on public forms
-- [ ] Testimonials section
-
----
-
-## Database Models
-
-### Users Collection
-```javascript
-{
-  user_id: "user_xxx",
-  email: "email@example.com",
-  name: "Full Name",
-  role: "candidate|employer|student|immigration_client|admin",
-  account_type: "candidate|employer|student|immigration_client|admin",
-  is_active: true,
-  is_verified: false,
-  created_at: ISODate()
-}
+### Backend (.env)
+```
+MONGO_URL=mongodb://...
+DB_NAME=...
+EMERGENT_LLM_KEY=sk-emergent-...
+OPENAI_API_KEY=sk-proj-...  # Direct OpenAI key for embeddings
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=gjc_platform
+POSTGRES_USER=gjc_admin
+POSTGRES_PASSWORD=gjc_secure_2024!
 ```
 
-### Candidate Profiles Collection
-```javascript
-{
-  profile_id: "cand_xxx",
-  user_id: "user_xxx",
-  // Section 1 - Personal
-  first_name, last_name, country_of_origin, date_of_birth,
-  gender, marital_status, religion, citizenship,
-  // Section 2 - Family
-  father_name, mother_name, spouse_name, children_count, children_ages,
-  // Section 3 - Professional
-  current_profession, target_position_cor, experience_years,
-  worked_abroad, countries_worked_in, languages_known, english_level,
-  // Section 4 - Documents (doc_ids)
-  cv_doc_id, passport_doc_id, criminal_record_doc_id, passport_photo_doc_id,
-  profile_photo_url, video_presentation_url, diploma_doc_ids,
-  // Section 5 - Additional
-  salary_expectation, existing_residence_permit,
-  // Status
-  status: "draft|pending_validation|validated|rejected",
-  validation_notes
-}
-```
+## Prioritized Backlog
 
-### Employer Profiles Collection
-```javascript
-{
-  profile_id: "emp_xxx",
-  user_id: "user_xxx",
-  // Company Info
-  company_name, company_cui, company_j_number, address, phone, email,
-  administrator_name, country, city, industry, employees_count,
-  // Contact
-  contact_person, contact_email, contact_phone,
-  // Documents (doc_ids)
-  cui_certificate_doc_id, administrator_id_doc_id, company_criminal_record_doc_id,
-  // IGI Eligibility (Romania)
-  has_no_debts, has_no_sanctions, has_min_employees, company_age_over_1_year,
-  // Status
-  status: "draft|pending_validation|validated|rejected"
-}
-```
+### P0 - Completed ✅
+- [x] Hybrid database setup
+- [x] AI matching with pgvector
+- [x] Core CRUD APIs
+- [x] Status transition pipeline
 
-### Documents Collection
-```javascript
-{
-  doc_id: "doc_xxx",
-  owner_id: "cand_xxx|emp_xxx",
-  owner_type: "candidate|employer|project",
-  filename, original_filename, file_type, file_size, storage_path,
-  document_type: "passport|cv|diploma|criminal_record|...",
-  status: "uploaded|verified|rejected|expired",
-  is_deleted: false
-}
-```
+### P1 - Next Priority
+- [ ] Complete visa process workflow (IGI -> Embassy -> Approval)
+- [ ] Relocation workflow (Flight -> Arrival -> Onboarding)
+- [ ] Document OCR integration (Claude Vision API)
+- [ ] MongoDB ↔ PostgreSQL profile sync automation
 
----
+### P2 - Future
+- [ ] Company Portal frontend
+- [ ] Agency Portal frontend
+- [ ] Candidate Portal frontend
+- [ ] Admin Dashboard frontend
+- [ ] Real-time notifications
+- [ ] Batch processing queue
 
-## API Endpoints
+### P3 - Enhancements
+- [ ] Payment/invoice generation
+- [ ] Performance analytics
+- [ ] Multi-language support
+- [ ] Mobile app
 
-### Authentication (`/api/auth`)
-- POST `/register` - New user registration
-- POST `/login` - Email/password login
-- GET `/me` - Get current user
-- POST `/logout` - End session
-- GET `/google/auth` - Start Google OAuth
-- GET `/google/callback` - Google OAuth callback
-- POST `/google/exchange` - Exchange session for token
-- POST `/candidate/ocr/passport` - Extract data from passport (AI OCR)
-- POST `/candidate/ocr/cv` - Extract data from CV (AI OCR)
-- POST `/candidate/register-with-profile` - Register candidate with pre-filled profile
+## Known Issues
 
-### Candidate Portal (`/api/portal/candidate`)
-- GET `/profile` - Get profile with documents
-- POST `/profile` - Create/update profile
-- POST `/profile/submit` - Submit for validation
-- POST `/documents/upload` - Upload document
-- GET `/documents` - List documents
-- DELETE `/documents/{doc_id}` - Delete document
-- GET `/dashboard` - Dashboard statistics
-- GET `/applications` - Job applications
-- GET `/notifications` - User notifications
+### Production Deployment (BLOCKED)
+- Production site `gjc.ro` still serves legacy React app
+- Requires Emergent Support intervention for supervisor config update
+- Does not affect development/API functionality
 
-### Employer Portal (`/api/portal/employer`)
-- GET `/profile` - Get company profile
-- POST `/profile` - Create/update profile
-- POST `/profile/submit` - Submit for validation
-- POST `/documents/upload` - Upload document
-- GET `/documents` - List documents
-- GET `/jobs` - Job requests
-- POST `/jobs` - Create job request
-- PUT `/jobs/{job_id}` - Update job
-- GET `/projects` - Active projects
-- GET `/dashboard` - Dashboard statistics
+## Technical Debt
+- None identified in Phase P0
 
-### Admin (`/api/admin`)
-- GET `/candidates/pending` - Candidates for validation
-- POST `/candidates/{id}/validate` - Approve candidate
-- POST `/candidates/{id}/reject` - Reject candidate
-- GET `/employers/pending` - Employers for validation
-- POST `/employers/{id}/validate` - Approve employer
-- POST `/employers/{id}/reject` - Reject employer
-
----
-
-## Test Credentials
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@gjc.ro | admin123 |
-| Test Candidate | test.candidate@example.com | test123 |
-| Test Employer | test.employer@example.com | test123 |
-
----
-
-## Key Integrations
-
-1. **Emergent Object Storage** - Document uploads (cloud)
-2. **Emergent Auth** - Google OAuth social login
-3. **Emergent LLM (GPT)** - Maria AI Chat Assistant
-4. **Claude Sonnet 4.5** - Document OCR extraction (passport, CV)
-
----
-
-## Notes
-
-- Profile validation workflow: draft → pending_validation → validated
-- IGI eligibility requirements apply only to Romanian employers
-- Document types mapped to specific profile fields
-- All file uploads limited to 50MB
-- Supported formats: PDF, JPG, PNG, WEBP, MP4, MOV
-- OCR extraction uses Claude AI via Emergent LLM Key
-- Candidate registration auto-saves every 30 seconds
-
----
-
-## ✅ PHASE 4 COMPLETE: Frontend Switchover to Next.js (2026-03-12)
-
-### Migration Results
-
-| Metric | React (Before) | Next.js (After) | Improvement |
-|--------|---------------|-----------------|-------------|
-| **TTFB** | 648ms | 240ms | **-63%** |
-| **FCP** | 1,844ms | 828ms | **-55%** |
-| **DOM Loaded** | 1,101ms | 462ms | **-58%** |
-| **Load Complete** | 2,144ms | 542ms | **-75%** |
-| **JavaScript Bundle** | 1.46 MB | 169.6 KB | **-88%** |
-| **CSS** | 99.8 KB | 9.0 KB | **-91%** |
-| **Images** | ~14 MB | 70.7 KB | **-99.5%** |
-
-### What Changed
-- Supervisor config updated: `/app/frontend` → `/app/frontend-next`
-- Next.js 14 now serves all traffic on port 3000
-- Middleware fixed: `session_token` cookie detection
-- Login page: Suspense wrapper for useSearchParams
-- All routes functional with automatic code splitting
-
-### Key Files Modified
-- `/etc/supervisor/conf.d/supervisord.conf` - Frontend directory changed
-- `/app/frontend-next/middleware.ts` - Cookie name fixed
-- `/app/frontend-next/app/(auth)/login/page.tsx` - Redirect logic improved
-
-### Architecture (Final)
-```
-/app/
-├── backend/              # FastAPI backend (unchanged)
-├── frontend/             # Legacy React app (DEPRECATED)
-└── frontend-next/        # ACTIVE: Next.js 14 production app
-    ├── .next/           # Production build
-    ├── app/             # App Router pages
-    ├── components/      # React components
-    ├── contexts/        # Auth context
-    └── public/          # Static assets
-```
-
-### Lighthouse Score (Estimated)
-- **Before (React):** ~52
-- **After (Next.js):** **~80-85** (+28-33 points)
-
+## Files of Reference
+- `/app/backend/database/db_config.py` - Database connections
+- `/app/backend/database/postgresql_schema.sql` - PostgreSQL schema
+- `/app/backend/services/ai_matching_service.py` - AI matching engine
+- `/app/backend/services/pipeline_service.py` - Business logic
+- `/app/backend/routes/gjc_platform_routes.py` - API endpoints
+- `/app/backend/server.py` - FastAPI main app
+- `/app/test_reports/iteration_16.json` - Test results
