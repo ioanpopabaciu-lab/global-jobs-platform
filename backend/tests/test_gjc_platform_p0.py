@@ -132,20 +132,8 @@ class TestCompanyJobCreation:
     
     def test_create_job_with_embedding(self):
         """Test /api/v1/gjc/company/jobs creates job and generates embedding"""
-        # First, we need a valid company_id from PostgreSQL
-        # Let's create a company first via direct SQL or use existing
-        
-        # Create test company in PostgreSQL via batch candidate endpoint workaround
-        # Actually, we need to insert company directly - let's use a workaround
-        
-        # For testing, we'll create a company by checking if one exists
-        dashboard_response = requests.get(f"{BASE_URL}/api/v1/gjc/admin/dashboard")
-        dashboard_data = dashboard_response.json()
-        
-        # If no companies exist, we need to create one
-        # Let's try to create a job with a new company UUID
-        company_id = str(uuid.uuid4())
-        test_data["company_id"] = company_id
+        # Use existing company from seed data
+        company_id = test_data["company_id"]
         
         job_payload = {
             "title": "TEST_Senior Python Developer",
@@ -171,20 +159,15 @@ class TestCompanyJobCreation:
             headers={"Content-Type": "application/json"}
         )
         
-        # This might fail if company doesn't exist in PostgreSQL
-        # Let's check the response
-        if response.status_code == 200:
-            data = response.json()
-            assert data["success"] == True
-            assert "job_id" in data
-            assert data["embedding_generated"] == True
-            test_data["job_id"] = data["job_id"]
-            print(f"✓ Job created: {data['job_id']}, embedding_generated={data['embedding_generated']}")
-        else:
-            # Company doesn't exist - this is expected for fresh database
-            # We need to create company first
-            print(f"⚠ Job creation failed (company may not exist): {response.status_code} - {response.text}")
-            pytest.skip("Company not found in PostgreSQL - need to seed data first")
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.text}"
+        data = response.json()
+        
+        assert data["success"] == True
+        assert "job_id" in data
+        assert data["embedding_generated"] == True
+        test_data["job_id"] = data["job_id"]
+        
+        print(f"✓ Job created: {data['job_id']}, embedding_generated={data['embedding_generated']}")
 
 
 class TestAgencyBatchCandidateUpload:
