@@ -360,14 +360,17 @@ export default async function HomePage({ params: { locale } }: HomePageProps) {
       <section className="py-20 bg-white" data-testid="about-section">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Image */}
+            {/* Image - Optimized WebP with lazy loading */}
             <div className="relative">
               <Image
-                src="https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/zeb6mv7z_poza%20pt%20talente%20globale%20afaceri%20locale.png"
+                src="/images/optimized/about_team.webp"
                 alt="Global Jobs Consulting Team"
                 width={600}
-                height={400}
+                height={468}
                 className="rounded-2xl shadow-lg w-full"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={80}
               />
               <div className="absolute -bottom-6 -right-6 bg-coral text-white p-6 rounded-2xl shadow-xl hidden md:block">
                 <div className="text-4xl font-bold">4</div>
