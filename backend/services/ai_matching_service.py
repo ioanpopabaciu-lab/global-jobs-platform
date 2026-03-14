@@ -28,7 +28,7 @@ logger.setLevel(logging.INFO)
 class MatchingConfig:
     """Configuration for AI matching"""
     EMBEDDING_MODEL = "text-embedding-3-small"
-    EMBEDDING_DIMENSIONS = 1536
+    EMBEDDING_DIMENSIONS = 1536  # Native dimension for text-embedding-3-small
     
     # Matching thresholds
     MIN_MATCH_SCORE = 0.70  # Minimum 70% similarity
@@ -37,9 +37,6 @@ class MatchingConfig:
     # Batch sizes
     EMBEDDING_BATCH_SIZE = 20
     SEARCH_LIMIT = 50
-    
-    # Emergent integration proxy URL
-    EMERGENT_PROXY_URL = "https://integrations.emergentagent.com/llm"
 
 
 # =====================================================
@@ -47,45 +44,34 @@ class MatchingConfig:
 # =====================================================
 
 class EmbeddingService:
-    """Service for generating text embeddings using OpenAI via Emergent"""
+    """Service for generating text embeddings using OpenAI API directly"""
     
     def __init__(self):
         self.client = None
         self._initialized = False
-        self._use_emergent = False
-        self._api_key = None
     
     async def init(self):
-        """Initialize OpenAI client with Emergent LLM Key"""
+        """Initialize OpenAI client with direct API key"""
         if self._initialized:
             return True
         
-        # Get API key from environment
-        self._api_key = os.environ.get("EMERGENT_LLM_KEY") or os.environ.get("OPENAI_API_KEY")
+        # Get direct OpenAI API key
+        api_key = os.environ.get("OPENAI_API_KEY")
         
-        if not self._api_key:
-            logger.warning("No OpenAI/Emergent API key found. Embedding service disabled.")
+        if not api_key:
+            logger.warning("No OPENAI_API_KEY found. Embedding service disabled.")
             return False
         
-        # Check if it's an Emergent key
-        self._use_emergent = self._api_key.startswith("sk-emergent")
+        # Skip Emergent keys - need direct OpenAI key for embeddings
+        if api_key.startswith("sk-emergent"):
+            logger.warning("Emergent key detected but embeddings require direct OpenAI API key.")
+            return False
         
         try:
             from openai import OpenAI
-            
-            if self._use_emergent:
-                # Use Emergent proxy for the API
-                self.client = OpenAI(
-                    api_key=self._api_key,
-                    base_url=MatchingConfig.EMERGENT_PROXY_URL
-                )
-                logger.info("✓ EmbeddingService initialized with Emergent Proxy (text-embedding-3-small)")
-            else:
-                # Direct OpenAI client
-                self.client = OpenAI(api_key=self._api_key)
-                logger.info("✓ EmbeddingService initialized with OpenAI (text-embedding-3-small)")
-            
+            self.client = OpenAI(api_key=api_key)
             self._initialized = True
+            logger.info(f"✓ EmbeddingService initialized with OpenAI {MatchingConfig.EMBEDDING_MODEL} ({MatchingConfig.EMBEDDING_DIMENSIONS} dims)")
             return True
             
         except Exception as e:
@@ -110,7 +96,6 @@ class EmbeddingService:
             # Clean and truncate text (max ~8000 tokens)
             cleaned_text = " ".join(text.split())[:32000]
             
-            # Use synchronous client (OpenAI SDK v1 embeddings are sync by default)
             response = self.client.embeddings.create(
                 model=MatchingConfig.EMBEDDING_MODEL,
                 input=cleaned_text,
