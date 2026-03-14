@@ -799,6 +799,21 @@ async def startup_init():
     except Exception as e:
         logger.warning(f"Cloud storage initialization failed (will retry on first use): {e}")
     
+    # Initialize GJC Platform hybrid database connections (PostgreSQL + MongoDB)
+    try:
+        from database.db_config import db_manager
+        from services.ai_matching_service import init_matching_engine
+        
+        # Initialize all database connections
+        await db_manager.init_all()
+        
+        # Initialize AI matching engine
+        await init_matching_engine()
+        
+        logger.info("GJC Platform hybrid database initialized")
+    except Exception as e:
+        logger.warning(f"GJC Platform initialization skipped: {e}")
+    
     # Create indexes for better performance
     await db.users.create_index("email", unique=True)
     await db.users.create_index("user_id", unique=True)
