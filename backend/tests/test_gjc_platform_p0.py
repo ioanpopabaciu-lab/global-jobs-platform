@@ -175,8 +175,8 @@ class TestAgencyBatchCandidateUpload:
     
     def test_batch_upload_candidates_with_embeddings(self):
         """Test /api/v1/gjc/agency/candidates/batch creates candidates with embeddings"""
-        agency_id = str(uuid.uuid4())
-        test_data["agency_id"] = agency_id
+        # Use existing agency from seed data
+        agency_id = test_data["agency_id"]
         
         candidates = [
             {
