@@ -286,14 +286,18 @@ export default async function HomePage({ params: { locale } }: HomePageProps) {
     <div data-testid="home-page">
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center bg-navy-900 overflow-hidden" data-testid="hero-section">
-        {/* Background Image */}
+        {/* Background Image - Optimized for LCP */}
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1974"
+            src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1920&auto=format"
             alt="International workers"
             fill
             className="object-cover opacity-30"
             priority
+            sizes="100vw"
+            quality={75}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDEQAEBQYSITEHQVFh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAZEQEAAgMAAAAAAAAAAAAAAAABAAIDESH/2gAMAwEAAhEDEEiQAAAAnsyPdFQ//9k="
           />
           <div className="absolute inset-0 hero-overlay"></div>
         </div>
