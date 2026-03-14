@@ -31,7 +31,7 @@ test_data = {
     "job_id": None,
     "candidate_ids": [],
     "placement_id": None,
-    "admin_user_id": str(uuid.uuid4())  # Admin user for audit
+    "admin_user_id": "93562225-737a-4b67-a836-c2115d6bf9b5"  # Existing admin@gjc.ro
 }
 
 
