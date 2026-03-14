@@ -24,13 +24,14 @@ import time
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
 
 # Test data storage for cross-test dependencies
+# Using existing seed data from PostgreSQL
 test_data = {
-    "company_id": None,
-    "agency_id": None,
+    "company_id": "6ccae79d-60bb-43a8-9713-6b622cccf047",  # Existing TechRo Solutions SRL
+    "agency_id": "e13efeb8-f57f-476c-826a-193f69681140",   # Existing Recruit Asia
     "job_id": None,
     "candidate_ids": [],
     "placement_id": None,
-    "admin_user_id": None
+    "admin_user_id": str(uuid.uuid4())  # Admin user for audit
 }
 
 
