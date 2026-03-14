@@ -66,26 +66,22 @@ class TestGJCHealth:
 
 
 class TestSetupTestData:
-    """Setup test data in PostgreSQL for subsequent tests"""
+    """Verify test data exists in PostgreSQL"""
     
-    def test_setup_company_and_agency(self):
-        """Create test company and agency in PostgreSQL"""
-        # We need to create test entities directly in PostgreSQL
-        # First, let's check if we can use the admin dashboard to see existing data
+    def test_verify_seed_data_exists(self):
+        """Verify existing company and agency in PostgreSQL"""
         response = requests.get(f"{BASE_URL}/api/v1/gjc/admin/dashboard")
         assert response.status_code == 200
         data = response.json()
         
-        # Store overview for reference
-        print(f"✓ Admin dashboard accessible: {data.get('overview', {})}")
+        # Verify we have companies and agencies
+        overview = data.get("overview", {})
+        assert overview.get("total_companies", 0) >= 1, "Need at least 1 company in database"
+        assert overview.get("total_agencies", 0) >= 1, "Need at least 1 agency in database"
         
-        # Generate UUIDs for test entities
-        test_data["company_id"] = str(uuid.uuid4())
-        test_data["agency_id"] = str(uuid.uuid4())
-        test_data["admin_user_id"] = str(uuid.uuid4())
-        
-        print(f"✓ Test data prepared: company_id={test_data['company_id'][:8]}..., "
-              f"agency_id={test_data['agency_id'][:8]}...")
+        print(f"✓ Seed data verified: companies={overview.get('total_companies', 0)}, "
+              f"agencies={overview.get('total_agencies', 0)}, "
+              f"candidates={overview.get('total_candidates', 0)}")
 
 
 class TestAIEmbedding:
