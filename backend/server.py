@@ -862,30 +862,35 @@ async def startup_init():
             startup_logger.info("✓ MongoDB indexes created")
         except Exception as e:
             startup_logger.warning(f"⚠ Index creation failed: {e}")
-    
-    # Create default admin user if not exists
-    admin_exists = await db.users.find_one({"role": "admin"})
-    if not admin_exists:
-        import hashlib
-        salt = os.environ.get('PASSWORD_SALT', 'gjc_default_salt_change_in_production')
-        admin_password = hashlib.sha256(f"admin123{salt}".encode()).hexdigest()
         
-        await db.users.insert_one({
-            "user_id": "user_admin001",
-            "email": "admin@gjc.ro",
-            "name": "GJC Admin",
-            "password_hash": admin_password,
-            "role": "admin",
-            "is_active": True,
-            "is_verified": True,
-            "auth_provider": "email",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc)
-        })
-        logger.info("Default admin user created: admin@gjc.ro / admin123")
+        # Create default admin user if not exists
+        try:
+            admin_exists = await db.users.find_one({"role": "admin"})
+            if not admin_exists:
+                import hashlib
+                salt = os.environ.get('PASSWORD_SALT', 'gjc_default_salt_change_in_production')
+                admin_password = hashlib.sha256(f"admin123{salt}".encode()).hexdigest()
+                
+                await db.users.insert_one({
+                    "user_id": "user_admin001",
+                    "email": "admin@gjc.ro",
+                    "name": "GJC Admin",
+                    "password_hash": admin_password,
+                    "role": "admin",
+                    "is_active": True,
+                    "is_verified": True,
+                    "auth_provider": "email",
+                    "created_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(timezone.utc)
+                })
+                startup_logger.info("✓ Default admin user created")
+        except Exception as e:
+            startup_logger.warning(f"⚠ Admin creation failed: {e}")
+        
+        # Initialize blog posts
+        await startup_init_blog_posts()
     
-    # Initialize blog posts
-    await startup_init_blog_posts()
+    startup_logger.info("=== Startup complete ===")
 
 async def startup_init_blog_posts():
     """Initialize blog posts"""
