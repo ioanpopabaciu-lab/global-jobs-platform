@@ -72,9 +72,14 @@ class DatabaseManager:
         if self._pg_pool is not None:
             return self._pg_pool
         
+        # Skip if PostgreSQL is not configured
+        if not DatabaseConfig.postgres_enabled():
+            logger.warning("⚠ PostgreSQL not configured - skipping (set POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD)")
+            return None
+        
         try:
             # Check if using Supabase (remote host)
-            is_remote = DatabaseConfig.POSTGRES_HOST != "localhost" and "supabase" in DatabaseConfig.POSTGRES_HOST
+            is_remote = DatabaseConfig.POSTGRES_HOST and "supabase" in DatabaseConfig.POSTGRES_HOST
             
             # For Supabase, we need SSL
             if is_remote:
