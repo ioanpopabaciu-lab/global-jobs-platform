@@ -25,10 +25,25 @@ from storage import init_storage
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# Configure logging FIRST
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+startup_logger = logging.getLogger("startup")
+startup_logger.info("=== GJC Backend Starting ===")
+
+# MongoDB connection with error handling
+try:
+    mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+    db_name = os.environ.get('DB_NAME', 'gjc_platform')
+    startup_logger.info(f"Connecting to MongoDB: {mongo_url[:30]}...")
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[db_name]
+    startup_logger.info(f"MongoDB database: {db_name}")
+except Exception as e:
+    startup_logger.error(f"MongoDB connection error: {e}")
+    raise
 
 # Create uploads directory
 UPLOAD_DIR = ROOT_DIR / "uploads"
