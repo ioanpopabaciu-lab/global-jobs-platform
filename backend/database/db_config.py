@@ -61,18 +61,38 @@ class DatabaseManager:
         return cls._instance
     
     async def init_postgres(self) -> Optional[asyncpg.Pool]:
-        """Initialize PostgreSQL connection pool"""
+        """Initialize PostgreSQL connection pool with SSL support for Supabase"""
         if self._pg_pool is not None:
             return self._pg_pool
         
         try:
-            self._pg_pool = await asyncpg.create_pool(
-                DatabaseConfig.postgres_dsn(),
-                min_size=2,
-                max_size=10,
-                command_timeout=60
-            )
-            logger.info("✓ PostgreSQL connection pool initialized")
+            # Check if using Supabase (remote host)
+            is_remote = DatabaseConfig.POSTGRES_HOST != "localhost" and "supabase" in DatabaseConfig.POSTGRES_HOST
+            
+            # For Supabase, we need SSL
+            if is_remote:
+                import ssl
+                ssl_context = ssl.create_default_context()
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+                
+                self._pg_pool = await asyncpg.create_pool(
+                    DatabaseConfig.postgres_dsn(),
+                    min_size=2,
+                    max_size=10,
+                    command_timeout=60,
+                    ssl=ssl_context
+                )
+                logger.info("✓ PostgreSQL connection pool initialized (Supabase SSL)")
+            else:
+                self._pg_pool = await asyncpg.create_pool(
+                    DatabaseConfig.postgres_dsn(),
+                    min_size=2,
+                    max_size=10,
+                    command_timeout=60
+                )
+                logger.info("✓ PostgreSQL connection pool initialized (local)")
+            
             return self._pg_pool
         except Exception as e:
             logger.error(f"✗ PostgreSQL connection failed: {e}")
