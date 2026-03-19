@@ -34,16 +34,24 @@ startup_logger = logging.getLogger("startup")
 startup_logger.info("=== GJC Backend Starting ===")
 
 # MongoDB connection with error handling
-try:
-    mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-    db_name = os.environ.get('DB_NAME', 'gjc_platform')
-    startup_logger.info(f"Connecting to MongoDB: {mongo_url[:30]}...")
-    client = AsyncIOMotorClient(mongo_url)
-    db = client[db_name]
-    startup_logger.info(f"MongoDB database: {db_name}")
-except Exception as e:
-    startup_logger.error(f"MongoDB connection error: {e}")
-    raise
+mongo_url = os.environ.get('MONGO_URL', '')
+db_name = os.environ.get('DB_NAME', 'gjc_platform')
+
+client = None
+db = None
+
+if mongo_url:
+    try:
+        startup_logger.info(f"Connecting to MongoDB...")
+        client = AsyncIOMotorClient(mongo_url)
+        db = client[db_name]
+        startup_logger.info(f"✓ MongoDB connected to: {db_name}")
+    except Exception as e:
+        startup_logger.error(f"MongoDB connection error: {e}")
+        client = None
+        db = None
+else:
+    startup_logger.warning("⚠ MONGO_URL not set - MongoDB disabled")
 
 # Create uploads directory
 UPLOAD_DIR = ROOT_DIR / "uploads"
