@@ -809,18 +809,24 @@ except ImportError as e:
 @app.on_event("startup")
 async def startup_init():
     """Initialize database connections and sample data"""
-    # Set database for route modules
-    set_auth_db(db)
-    set_portal_db(db)
-    set_admin_db(db)
-    set_notification_db(db)
+    startup_logger.info("Running startup initialization...")
+    
+    # Set database for route modules (may be None)
+    if db is not None:
+        set_auth_db(db)
+        set_portal_db(db)
+        set_admin_db(db)
+        set_notification_db(db)
+        startup_logger.info("✓ Route databases configured")
+    else:
+        startup_logger.warning("⚠ MongoDB not available - routes will have limited functionality")
     
     # Initialize cloud storage
     try:
         init_storage()
-        logger.info("Cloud storage initialized successfully")
+        startup_logger.info("✓ Cloud storage initialized")
     except Exception as e:
-        logger.warning(f"Cloud storage initialization failed (will retry on first use): {e}")
+        startup_logger.warning(f"⚠ Cloud storage initialization failed: {e}")
     
     # Initialize GJC Platform hybrid database connections (PostgreSQL + MongoDB)
     try:
@@ -833,24 +839,29 @@ async def startup_init():
         # Initialize AI matching engine
         await init_matching_engine()
         
-        logger.info("GJC Platform hybrid database initialized")
+        startup_logger.info("✓ GJC Platform hybrid database initialized")
     except Exception as e:
-        logger.warning(f"GJC Platform initialization skipped: {e}")
+        startup_logger.warning(f"⚠ GJC Platform initialization skipped: {e}")
     
-    # Create indexes for better performance
-    await db.users.create_index("email", unique=True)
-    await db.users.create_index("user_id", unique=True)
-    await db.user_sessions.create_index("session_token")
-    await db.user_sessions.create_index("user_id")
-    await db.candidate_profiles.create_index("user_id")
-    await db.candidate_profiles.create_index("profile_id", unique=True)
-    await db.employer_profiles.create_index("user_id")
-    await db.employer_profiles.create_index("profile_id", unique=True)
-    await db.job_requests.create_index("job_id", unique=True)
-    await db.job_requests.create_index("employer_id")
-    await db.projects.create_index("project_id", unique=True)
-    await db.documents.create_index("doc_id", unique=True)
-    await db.notifications.create_index("user_id")
+    # Create indexes for better performance (only if MongoDB available)
+    if db is not None:
+        try:
+            await db.users.create_index("email", unique=True)
+            await db.users.create_index("user_id", unique=True)
+            await db.user_sessions.create_index("session_token")
+            await db.user_sessions.create_index("user_id")
+            await db.candidate_profiles.create_index("user_id")
+            await db.candidate_profiles.create_index("profile_id", unique=True)
+            await db.employer_profiles.create_index("user_id")
+            await db.employer_profiles.create_index("profile_id", unique=True)
+            await db.job_requests.create_index("job_id", unique=True)
+            await db.job_requests.create_index("employer_id")
+            await db.projects.create_index("project_id", unique=True)
+            await db.documents.create_index("doc_id", unique=True)
+            await db.notifications.create_index("user_id")
+            startup_logger.info("✓ MongoDB indexes created")
+        except Exception as e:
+            startup_logger.warning(f"⚠ Index creation failed: {e}")
     
     # Create default admin user if not exists
     admin_exists = await db.users.find_one({"role": "admin"})
