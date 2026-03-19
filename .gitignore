@@ -30,19 +30,13 @@ next-env.d.ts
 dist/
 dist
 
-# Environment files (comprehensive coverage)
-.env
-.env.local
-.env.development
-.env.production
+# Environment files - ALLOW for deployment (Emergent auto-updates URLs)
+# Only exclude sensitive local development files
 .env.development.local
 .env.test.local
 .env.production.local
-*.env
-backend/.env
-frontend/.env
-frontend-next/.env
-frontend-next/.env.local
+
+# Keep .env.example files
 !.env.example
 !backend/.env.example
 !frontend/.env.example
