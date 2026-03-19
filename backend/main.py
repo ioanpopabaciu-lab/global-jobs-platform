@@ -1,25 +1,28 @@
-# main.py - Entry point for deployment
-# This file imports the app from server.py for compatibility
+"""
+GJC Backend - Minimal version for deployment health check
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import os
 
-import sys
-import logging
+app = FastAPI(title="GJC API", version="1.0.0")
 
-# Configure logging for startup debugging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-logger = logging.getLogger("main")
-logger.info("=== main.py loading ===")
 
-try:
-    from server import app
-    logger.info("✅ Successfully imported app from server.py")
-except Exception as e:
-    logger.error(f"❌ Failed to import app: {e}")
-    import traceback
-    traceback.print_exc()
-    raise
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
-# Export app for uvicorn
-__all__ = ["app"]
+@app.get("/api/health")
+async def api_health():
+    return {"status": "ok"}
+
+@app.get("/")
+async def root():
+    return {"message": "GJC API is running", "status": "ok"}
