@@ -27,19 +27,26 @@ logger.setLevel(logging.INFO)
 class DatabaseConfig:
     """Database configuration from environment variables"""
     
-    # PostgreSQL
-    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "localhost")
-    POSTGRES_PORT = int(os.environ.get("POSTGRES_PORT", 5432))
-    POSTGRES_DB = os.environ.get("POSTGRES_DB", "gjc_platform")
-    POSTGRES_USER = os.environ.get("POSTGRES_USER", "gjc_admin")
-    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "gjc_secure_2024!")
+    # PostgreSQL - completely optional for deployment
+    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "")
+    POSTGRES_PORT = int(os.environ.get("POSTGRES_PORT", "5432") or "5432")
+    POSTGRES_DB = os.environ.get("POSTGRES_DB", "postgres")
+    POSTGRES_USER = os.environ.get("POSTGRES_USER", "")
+    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "")
     
-    # MongoDB (existing)
+    # MongoDB (existing) - required
     MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
     MONGO_DB = os.environ.get("DB_NAME", "gjc_platform")
     
     @classmethod
+    def postgres_enabled(cls) -> bool:
+        """Check if PostgreSQL is configured"""
+        return bool(cls.POSTGRES_HOST and cls.POSTGRES_USER and cls.POSTGRES_PASSWORD)
+    
+    @classmethod
     def postgres_dsn(cls) -> str:
+        if not cls.postgres_enabled():
+            return ""
         return f"postgresql://{cls.POSTGRES_USER}:{cls.POSTGRES_PASSWORD}@{cls.POSTGRES_HOST}:{cls.POSTGRES_PORT}/{cls.POSTGRES_DB}"
 
 
