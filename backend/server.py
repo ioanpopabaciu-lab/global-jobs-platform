@@ -894,6 +894,10 @@ async def startup_init():
 
 async def startup_init_blog_posts():
     """Initialize blog posts"""
+    if db is None:
+        startup_logger.warning("⚠ Skipping blog posts init - no MongoDB")
+        return
+    
     try:
         # Check if we have the correct blog posts
         count = await db.blog_posts.count_documents({})
