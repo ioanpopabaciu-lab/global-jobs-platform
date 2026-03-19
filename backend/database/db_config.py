@@ -27,12 +27,12 @@ logger.setLevel(logging.INFO)
 class DatabaseConfig:
     """Database configuration from environment variables"""
     
-    # PostgreSQL
-    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "localhost")
+    # PostgreSQL (Supabase Default if not in ENV)
+    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "db.mxsgkgokjsgurlnprjff.supabase.co")
     POSTGRES_PORT = int(os.environ.get("POSTGRES_PORT", 5432))
-    POSTGRES_DB = os.environ.get("POSTGRES_DB", "gjc_platform")
-    POSTGRES_USER = os.environ.get("POSTGRES_USER", "gjc_admin")
-    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "gjc_secure_2024!")
+    POSTGRES_DB = os.environ.get("POSTGRES_DB", "postgres")
+    POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
+    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "your_supabase_password_here")
     
     # MongoDB (existing)
     MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
