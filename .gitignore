@@ -113,3 +113,5 @@ frontend-next/node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.no
 # Environment files
 *.env
 *.env.*
+frontend-react-old/node_modules/.cache/default-development/6.pack
+frontend-react-old/node_modules/.cache/default-development/2.pack
