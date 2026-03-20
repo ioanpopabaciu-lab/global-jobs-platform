@@ -1,28 +1,46 @@
 """
-GJC Backend - Minimal version for deployment health check
+GJC Backend - Entry point for deployment
+Imports the full app from server.py
 """
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import os
+import logging
+import sys
 
-app = FastAPI(title="GJC API", version="1.0.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+# Configure early logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
+logger = logging.getLogger("main")
+logger.info("=== main.py starting ===")
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+try:
+    # Import the full FastAPI app from server.py
+    from server import app
+    logger.info("✅ App imported successfully from server.py")
+except Exception as e:
+    logger.error(f"❌ Failed to import app: {e}")
+    import traceback
+    traceback.print_exc()
+    
+    # Fallback: create minimal app for health check
+    logger.warning("Creating fallback minimal app...")
+    from fastapi import FastAPI
+    from fastapi.middleware.cors import CORSMiddleware
+    
+    app = FastAPI(title="GJC API - Fallback", version="1.0.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
+    @app.get("/health")
+    @app.get("/api/health")
+    async def health():
+        return {"status": "ok", "mode": "fallback", "error": str(e)}
+    
+    logger.info("✅ Fallback app created")
 
-@app.get("/api/health")
-async def api_health():
-    return {"status": "ok"}
-
-@app.get("/")
-async def root():
-    return {"message": "GJC API is running", "status": "ok"}
+__all__ = ["app"]
