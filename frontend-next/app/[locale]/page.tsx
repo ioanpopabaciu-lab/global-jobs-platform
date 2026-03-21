@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Globe, Shield, Clock, Users, ArrowRight, FileText, Building2 } from "lucide-react";
 import { Locale, locales, defaultLocale, industries } from "@/types";
 import { getDictionary } from "@/i18n/config";
+import HeroSlider from "@/components/home/HeroSlider";
 
 // Generate static params for all locales
 export function generateStaticParams() {
@@ -284,53 +285,14 @@ export default async function HomePage({ params: { locale } }: HomePageProps) {
 
   return (
     <div data-testid="home-page">
-      {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center bg-navy-900 overflow-hidden" data-testid="hero-section">
-        {/* Background Image - Optimized for LCP */}
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1920&auto=format"
-            alt="International workers"
-            fill
-            className="object-cover opacity-30"
-            priority
-            sizes="100vw"
-            quality={75}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDEQAEBQYSITEHQVFh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAZEQEAAgMAAAAAAAAAAAAAAAABAAIDESH/2gAMAwEAAhEDEEiQAAAAnsyPdFQ//9k="
-          />
-          <div className="absolute inset-0 hero-overlay"></div>
-        </div>
-
-        {/* Content */}
-        <div className="container mx-auto px-4 relative z-10 text-white">
-          <div className="max-w-3xl animate-fade-in">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-shadow-hero leading-tight">
-              {t.hero.headline}
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-white/90">
-              {t.hero.subheadline}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href={getPath("/request-workers")}
-                className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg"
-                data-testid="hero-cta-primary"
-              >
-                {t.hero.cta1}
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                href={getPath("/about")}
-                className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors"
-                data-testid="hero-cta-secondary"
-              >
-                {t.hero.cta2}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section Slider */}
+      <HeroSlider 
+        headline={t.hero.headline}
+        subheadline={t.hero.subheadline}
+        cta1={t.hero.cta1}
+        cta2={t.hero.cta2}
+        locale={validLocale}
+      />
 
       {/* Stats Section */}
       <section className="py-12 bg-white border-b" data-testid="stats-section">
