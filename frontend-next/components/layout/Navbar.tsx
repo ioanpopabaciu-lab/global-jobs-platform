@@ -16,8 +16,8 @@ import { Menu, Phone, Globe, ChevronDown, ChevronRight, Facebook, Instagram, Lin
 import type { Locale } from "@/types";
 
 // Logo URLs
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/99mub5h3_logo%20fundal%20transparent.png";
-const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png";
+const LOGO_WHITE = "/images/optimized/logo_white.webp";
+const LOGO_COLORED = "/images/optimized/logo_colored.webp";
 
 // Social Media Links
 const SOCIAL_LINKS = {
@@ -136,13 +136,13 @@ export default function Navbar({ locale, dict }: NavbarProps) {
       <nav className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-8" data-testid="logo-link">
+          <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-auto lg:mr-8" data-testid="logo-link">
             <Image
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
               alt="Global Jobs Consulting"
-              width={180}
-              height={70}
-              className="h-[50px] md:h-[60px] lg:h-[70px] w-auto transition-all duration-300 object-contain"
+              width={240}
+              height={80}
+              className="h-[60px] md:h-[80px] lg:h-[90px] w-auto transition-all duration-300 object-contain"
               priority
             />
           </Link>

@@ -3,8 +3,8 @@ import Image from "next/image";
 import { MapPin, Phone, Mail, Globe, Facebook, Linkedin, Instagram } from "lucide-react";
 import type { Locale } from "@/types";
 
-// Logo URL - transparent white logo
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
+// Logo URL
+const LOGO_WHITE = "/images/optimized/logo_white.webp";
 
 interface FooterProps {
   locale: Locale;
@@ -63,9 +63,9 @@ export default function Footer({ locale, dict }: FooterProps) {
             <Image
               src={LOGO_WHITE}
               alt="Global Jobs Consulting"
-              width={180}
-              height={64}
-              className="h-16 w-auto mb-4"
+              width={260}
+              height={90}
+              className="h-[80px] md:h-[90px] w-auto mb-6 object-contain"
             />
             <p className="text-gray-300 text-sm leading-relaxed mb-4">
               {dict.footer.description}
