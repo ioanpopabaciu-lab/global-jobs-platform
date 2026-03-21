@@ -125,6 +125,18 @@ h1, h2, h3, h4, h5, h6 {
   .gjc-gradient-coral {
     background: linear-gradient(135deg, #FF6B6B 0%, #FA5252 100%);
   }
+
+  .gjc-new-account-btn {
+    border: 2px solid #1a2e4a !important;
+    color: #1a2e4a !important;
+    background-color: transparent !important;
+    transition: all 0.3s ease;
+  }
+  
+  .gjc-new-account-btn:hover {
+    background-color: #1a2e4a !important;
+    color: #ffffff !important;
+  }
 }
 
 /* Animation keyframes */

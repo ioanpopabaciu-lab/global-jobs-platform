@@ -257,7 +257,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
             {/* My Account Button */}
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
-              className={`rounded-full font-medium ${isScrolled ? "border-navy-600 text-navy-600 hover:bg-navy-50" : "border-white text-white hover:bg-white/10"}`}
+              className="gjc-new-account-btn rounded-full font-medium"
             >
               <Link href="/my-account" className="flex items-center gap-1">
                 <User className="h-4 w-4" />
@@ -350,7 +350,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
                     </Link>
                   </Button>
 
-                  <Button asChild variant="outline" className="w-full border-navy-600 text-navy-600 rounded-full">
+                  <Button asChild variant="outline" className="gjc-new-account-btn w-full rounded-full font-medium">
                     <Link href="/my-account" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2">
                       <User className="h-4 w-4" />
                       {dict.nav.myAccount}
