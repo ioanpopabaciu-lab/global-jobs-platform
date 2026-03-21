@@ -134,58 +134,61 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     >
       {/* Main Nav */}
       <nav className="container mx-auto px-4 xl:px-8 py-3 relative">
-        <div className="flex items-center w-full">
-          {/* Logo */}
-          <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-6 xl:mr-10" data-testid="logo-link">
-            <Image
-              src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
-              alt="Global Jobs Consulting"
-              width={160}
-              height={50}
-              className="transition-all duration-300 object-contain block"
-              priority
-            />
-          </Link>
+        <div className="flex items-center justify-between w-full">
+          {/* Left Side: Logo + Nav */}
+          <div className="flex items-center">
+            {/* Logo */}
+            <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-4 xl:mr-8" data-testid="logo-link">
+              <Image
+                src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
+                alt="Global Jobs Consulting"
+                width={160}
+                height={50}
+                className="transition-all duration-300 object-contain block"
+                priority
+              />
+            </Link>
 
-          {/* Center: Main Navigation */}
-          <div className="hidden lg:flex items-center gap-4 xl:gap-7 mr-auto">
-            <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
-            <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
-            <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
+            {/* Center: Main Navigation */}
+            <div className="hidden lg:flex items-center gap-3 xl:gap-5">
+              <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
+              <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
+              <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
 
-            {/* Industries Dropdown */}
-            <div className="relative" onMouseEnter={() => setIndustriesOpen(true)} onMouseLeave={() => setIndustriesOpen(false)}>
-              <button
-                className={`flex items-center gap-1 font-medium text-[15px] whitespace-nowrap transition-colors hover:text-coral ${
-                  isScrolled ? "text-gray-700" : "text-white/90"
-                }`}
-              >
-                {dict.nav.industries}
-                <ChevronDown className={`h-4 w-4 transition-transform ${industriesOpen ? "rotate-180" : ""}`} />
-              </button>
-              {industriesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
-                  {industriesSubmenu.map((item, index) => (
-                    <Link
-                      key={index}
-                      href={item.href}
-                      className="block px-4 py-2.5 text-[15px] text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
+              {/* Industries Dropdown */}
+              <div className="relative" onMouseEnter={() => setIndustriesOpen(true)} onMouseLeave={() => setIndustriesOpen(false)}>
+                <button
+                  className={`flex items-center gap-1 font-medium text-[15px] whitespace-nowrap transition-colors hover:text-coral ${
+                    isScrolled ? "text-gray-700" : "text-white/90"
+                  }`}
+                >
+                  {dict.nav.industries}
+                  <ChevronDown className={`h-4 w-4 transition-transform ${industriesOpen ? "rotate-180" : ""}`} />
+                </button>
+                {industriesOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
+                    {industriesSubmenu.map((item, index) => (
+                      <Link
+                        key={index}
+                        href={item.href}
+                        className="block px-4 py-2.5 text-[15px] text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <NavLink href={getPath("/how-it-works")}>{dict.nav.howItWorks}</NavLink>
+              <NavLink href={getPath("/about")}>{dict.nav.about}</NavLink>
+              <NavLink href={getPath("/blog")}>{dict.nav.blog}</NavLink>
+              <NavLink href={getPath("/contact")}>{dict.nav.contact}</NavLink>
             </div>
-
-            <NavLink href={getPath("/how-it-works")}>{dict.nav.howItWorks}</NavLink>
-            <NavLink href={getPath("/about")}>{dict.nav.about}</NavLink>
-            <NavLink href={getPath("/blog")}>{dict.nav.blog}</NavLink>
-            <NavLink href={getPath("/contact")}>{dict.nav.contact}</NavLink>
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden lg:flex items-center gap-3 xl:gap-4 pl-4 xl:pl-6 border-l border-gray-400/30">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 pl-4 border-l border-gray-400/30">
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
               className={`text-[15px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
@@ -210,20 +213,17 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-5 text-[15px] whitespace-nowrap font-semibold shadow-md ml-1">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
-          </div>
-          
-          {/* Language Selector (Top Right Absolute positioning as requested to keep it visually distinct and at the far edge) */}
-          <div className="hidden lg:block absolute right-4 xl:right-8 top-1">
+
+            {/* Language Selector (Text Only, No Flags) */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[13px] whitespace-nowrap font-semibold px-2 py-1 bg-black/10 rounded-b-lg border-x border-b border-white/10 ${isScrolled ? 'text-gray-700 bg-gray-100 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
-                <span className="text-base select-none">{languageLabels[locale].flag}</span>
-                <span>{languageLabels[locale].short}</span>
-                <ChevronDown className="h-3 w-3 opacity-60" />
+              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[14px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
+                {languageLabels[locale].short}
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[140px] z-[60]">
+              <DropdownMenuContent align="end" className="min-w-[120px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px]">
-                    <span className="text-base mr-2">{languageLabels[lang].flag}</span> {languageLabels[lang].full}
+                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium">
+                    {languageLabels[lang].full}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
