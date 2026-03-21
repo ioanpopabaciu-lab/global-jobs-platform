@@ -134,7 +134,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     >
       {/* Main Nav */}
       <nav className="container mx-auto px-4 xl:px-8 py-3 relative">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <Link href={getPath("/")} className="flex items-center flex-shrink-0" data-testid="logo-link">
             <Image
@@ -148,7 +148,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </Link>
 
           {/* Center: Main Navigation */}
-          <div className="hidden lg:flex items-center justify-center gap-3 xl:gap-5 flex-1 text-center truncate">
+          <div className="hidden lg:flex items-center justify-center gap-4 xl:gap-6 flex-shrink">
             <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
             <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
             <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
@@ -185,7 +185,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0 pl-2 lg:pl-4 border-l border-gray-400/30">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
               className={`text-[14px] xl:text-[15px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
@@ -198,7 +198,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
             {/* My Account Button */}
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
-              className="gjc-new-account-btn rounded-full text-[14px] xl:text-[15px] px-3 xl:px-4 whitespace-nowrap font-medium"
+              className="gjc-new-account-btn border-white/30 rounded-full text-[14px] xl:text-[15px] px-3 xl:px-4 whitespace-nowrap font-medium"
             >
               <Link href="/my-account" className="flex items-center gap-1.5">
                 <User className="h-4 w-4 hidden xl:block" />
@@ -211,18 +211,16 @@ export default function Navbar({ locale, dict }: NavbarProps) {
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
 
-            {/* Language Selector (With Flags restored) */}
+            {/* Language Selector (Text Only, No Flags) */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[14px] xl:text-[15px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 ml-1 xl:ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
-                <span className="text-base select-none">{languageLabels[locale].flag}</span>
+              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[14px] xl:text-[15px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 border-l border-white/20 pl-3 ml-1 xl:ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
                 {languageLabels[locale].short}
                 <ChevronDown className="h-3.5 w-3.5 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[130px] z-[60]">
+              <DropdownMenuContent align="end" className="min-w-[120px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium flex items-center gap-2">
-                    <span className="text-base">{languageLabels[lang].flag}</span>
-                    <span>{languageLabels[lang].full}</span>
+                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium">
+                    {languageLabels[lang].full}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
