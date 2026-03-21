@@ -8,19 +8,12 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    desktop: "/images/optimized/hero_poster1.webp",
-    tablet: "/images/optimized/hero_poster1_tablet.webp",
-    mobile: "/images/optimized/hero_poster1_mobile.webp",
+    type: "video",
+    src: "/images/optimized/constructii.mp4",
   },
   {
-    desktop: "/images/optimized/hero_poster2.webp",
-    tablet: "/images/optimized/hero_poster2_tablet.webp",
-    mobile: "/images/optimized/hero_poster2_mobile.webp",
-  },
-  {
-    desktop: "/images/optimized/hero_poster3.webp",
-    tablet: "/images/optimized/hero_poster3_tablet.webp",
-    mobile: "/images/optimized/hero_poster3_mobile.webp",
+    type: "video",
+    src: "/images/optimized/depozite.mp4",
   },
 ];
 
@@ -30,7 +23,7 @@ export default function HeroSlider({ headline, subheadline, cta1, cta2, locale }
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 8000); // Increased interval to 8s for better video pacing
     return () => clearInterval(timer);
   }, []);
 
@@ -44,7 +37,7 @@ export default function HeroSlider({ headline, subheadline, cta1, cta2, locale }
 
   return (
     <section className="relative min-h-[75vh] lg:min-h-[85vh] flex items-center bg-navy-900 overflow-hidden" data-testid="hero-section">
-      {/* Background Images with AnimatePresence */}
+      {/* Background Videos with AnimatePresence */}
       <div className="absolute inset-0">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -55,29 +48,13 @@ export default function HeroSlider({ headline, subheadline, cta1, cta2, locale }
             transition={{ duration: 1.2, ease: "easeInOut" }}
             className="absolute inset-0 z-0"
           >
-            <Image
-              src={slides[current].desktop}
-              alt={`Hero Background ${current + 1}`}
-              fill
-              className="object-cover hidden lg:block"
-              priority={true}
-              quality={85}
-            />
-            <Image
-              src={slides[current].tablet}
-              alt={`Hero Background ${current + 1} Tablet`}
-              fill
-              className="object-cover hidden md:block lg:hidden"
-              priority={true}
-              quality={80}
-            />
-            <Image
-              src={slides[current].mobile}
-              alt={`Hero Background ${current + 1} Mobile`}
-              fill
-              className="object-cover block md:hidden"
-              priority={true}
-              quality={80}
+            <video
+              src={slides[current].src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
             />
           </motion.div>
         </AnimatePresence>
