@@ -132,48 +132,6 @@ export default function Navbar({ locale, dict }: NavbarProps) {
         isScrolled ? "bg-white shadow-lg" : "bg-navy-900/80 backdrop-blur-sm"
       }`}
     >
-      {/* Top Bar */}
-      <div className={`py-2 px-4 text-sm transition-all ${isScrolled ? "hidden" : "bg-navy-900 text-white"}`}>
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <a href="tel:+40732403464" className="flex items-center gap-1 hover:text-coral transition-colors" data-testid="header-phone-link">
-              <Phone className="h-3 w-3" />
-              +40 732 403 464
-            </a>
-            <span className="hidden sm:block">office@gjc.ro</span>
-          </div>
-          <div className="flex items-center gap-4">
-            {/* Social Media Icons */}
-            <div className="flex items-center gap-2">
-              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors" aria-label="Facebook">
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors" aria-label="Instagram">
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors" aria-label="LinkedIn">
-                <Linkedin className="h-4 w-4" />
-              </a>
-            </div>
-            <span className="hidden sm:block text-white/50">|</span>
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 hover:text-coral transition-colors cursor-pointer">
-                <Globe className="h-3 w-3" />
-                {languageLabels[locale].flag} {languageLabels[locale].short}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="min-w-[160px]">
-                {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer">
-                    {languageLabels[lang].flag} {languageLabels[lang].full}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </div>
-
       {/* Main Nav */}
       <nav className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
@@ -228,22 +186,20 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
           {/* Right: User Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Language Selector when scrolled */}
-            {isScrolled && (
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-coral transition-colors cursor-pointer text-sm">
-                  <Globe className="h-4 w-4" />
-                  {languageLabels[locale].flag} {languageLabels[locale].short}
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="min-w-[160px]">
-                  {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                    <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer">
-                      {languageLabels[lang].flag} {languageLabels[lang].full}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-sm font-medium ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
+                <Globe className="h-4 w-4" />
+                {languageLabels[locale].flag} {languageLabels[locale].short}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="min-w-[160px]">
+                {(Object.keys(languageLabels) as Locale[]).map((lang) => (
+                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer">
+                    {languageLabels[lang].flag} {languageLabels[lang].full}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
@@ -284,18 +240,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
               <div className="flex flex-col gap-2 mt-6">
                 <Image src={LOGO_COLORED} alt="Global Jobs Consulting" width={180} height={64} className="h-16 w-auto mb-4 object-contain" />
 
-                {/* Mobile Language Selector */}
-                <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
-                  {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${locale === lang ? "bg-coral text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
-                    >
-                      {languageLabels[lang].flag} {languageLabels[lang].short}
-                    </button>
-                  ))}
-                </div>
+                  {/* Logo has been kept at the top */}
 
                 {/* Mobile Navigation Links */}
                 <Link href={getPath("/")} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
@@ -340,6 +285,19 @@ export default function Navbar({ locale, dict }: NavbarProps) {
                 <Link href={getPath("/contact")} onClick={() => setIsOpen(false)} className="py-3 text-lg font-medium text-gray-700 border-b border-gray-100">
                   {dict.nav.contact}
                 </Link>
+
+                {/* Mobile Language Selector */}
+                <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
+                  {(Object.keys(languageLabels) as Locale[]).map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${locale === lang ? "bg-coral text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                    >
+                      {languageLabels[lang].flag} {languageLabels[lang].short}
+                    </button>
+                  ))}
+                </div>
 
                 {/* Mobile Action Buttons */}
                 <div className="mt-4 space-y-3">
