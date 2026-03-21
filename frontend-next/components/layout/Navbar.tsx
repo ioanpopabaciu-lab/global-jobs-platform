@@ -211,16 +211,17 @@ export default function Navbar({ locale, dict }: NavbarProps) {
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
 
-            {/* Language Selector (Text Only, No Flags) */}
+            {/* Language Selector (With Flags Optimized for Windows/Mac) */}
             <DropdownMenu>
               <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[14px] xl:text-[15px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 border-l border-white/20 pl-3 ml-1 xl:ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
-                {languageLabels[locale].short}
-                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                <span className="text-xl leading-none">{languageLabels[locale].flag}</span>
+                <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[120px] z-[60]">
+              <DropdownMenuContent align="end" className="min-w-[140px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium">
-                    {languageLabels[lang].full}
+                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium flex items-center gap-2 py-1.5">
+                    <span className="text-xl leading-none">{languageLabels[lang].flag}</span>
+                    <span>{languageLabels[lang].full}</span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
