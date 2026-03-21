@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://nextjs-gjc-preview.preview.emergentagent.com/api";
 
 interface DocumentUploaderProps {
   documentType: string;

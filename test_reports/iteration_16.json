@@ -96,7 +96,7 @@
       "audit_log": "WORKING"
     }
   },
-  "api_base_url": "https://visa-relocation-hub.preview.emergentagent.com/api/v1/gjc",
+  "api_base_url": "https://nextjs-gjc-preview.preview.emergentagent.com/api/v1/gjc",
   "database_info": {
     "postgresql": {
       "host": "localhost",

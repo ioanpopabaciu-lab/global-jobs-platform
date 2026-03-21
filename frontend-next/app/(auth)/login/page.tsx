@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock, Chrome } from "lucide-react";
 import { toast } from "sonner";
 
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png";
+const LOGO_URL = "/images/optimized/logo_transparent.png";
 
 function LoginForm() {
   const [email, setEmail] = useState("");

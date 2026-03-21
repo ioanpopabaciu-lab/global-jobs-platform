@@ -169,12 +169,28 @@ POSTGRES_PASSWORD=gjc_secure_2024!
 - [ ] Multi-language support
 - [ ] Mobile app
 
+## Recent Updates
+
+### March 21, 2026 - Media Consolidation Complete ✅
+All media assets have been consolidated into `/app/frontend-next/public/images/optimized/`:
+- **20 image files** totaling ~19MB
+- All external URLs (customer-assets.emergentagent.com) replaced with local paths
+- Files updated: RegisterForm.tsx, login/page.tsx, my-account/page.tsx, about/page.tsx, Navbar.tsx, ProtectedLayout.tsx, Footer.tsx
+- Build verified: `yarn build` successful
+- Project ready for GitHub push
+
+### Newly Downloaded Assets:
+- `logo_transparent.png` - Main logo
+- `logo_fundal_transparent.png` - Navbar scroll logo
+- `logo_alb_transparent.png` - Footer white logo
+- `talente_globale_about.png` - About page image
+
 ## Known Issues
 
-### Production Deployment (BLOCKED)
-- Production site `gjc.ro` still serves legacy React app
-- Requires Emergent Support intervention for supervisor config update
-- Does not affect development/API functionality
+### Production Deployment - RESOLVED ✅
+- Production site `gjc.ro` now runs on **Vercel with Next.js 14**
+- User migrated deployment from Emergent to Vercel
+- Application fully functional
 
 ## Technical Debt
 - None identified in Phase P0

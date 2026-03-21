@@ -15,9 +15,9 @@ import {
 import { Menu, Phone, Globe, ChevronDown, ChevronRight, Facebook, Instagram, Linkedin, User, LogIn } from "lucide-react";
 import type { Locale } from "@/types";
 
-// Logo URLs
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/99mub5h3_logo%20fundal%20transparent.png";
-const LOGO_COLORED = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png";
+// Logo URLs - Local assets
+const LOGO_WHITE = "/images/optimized/logo_fundal_transparent.png";
+const LOGO_COLORED = "/images/optimized/logo_transparent.png";
 
 // Social Media Links
 const SOCIAL_LINKS = {

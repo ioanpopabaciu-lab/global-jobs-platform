@@ -22,7 +22,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://nextjs-gjc-preview.preview.emergentagent.com/api";
 
 interface Document {
   doc_id: string;

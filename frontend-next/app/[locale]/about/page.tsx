@@ -106,7 +106,7 @@ export default async function AboutPage({ params: { locale } }: { params: { loca
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Image
-                src="https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/zeb6mv7z_poza%20pt%20talente%20globale%20afaceri%20locale.png"
+                src="/images/optimized/talente_globale_about.png"
                 alt="GJC Team"
                 width={600}
                 height={400}

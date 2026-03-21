@@ -32,7 +32,7 @@ from document_ocr_service import (
 logger = logging.getLogger(__name__)
 
 # Platform URL for emails
-PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://visa-relocation-hub.preview.emergentagent.com")
+PLATFORM_URL = os.environ.get("PLATFORM_URL", "https://nextjs-gjc-preview.preview.emergentagent.com")
 
 # Database will be injected
 db = None

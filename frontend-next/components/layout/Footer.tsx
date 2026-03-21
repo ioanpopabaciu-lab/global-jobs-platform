@@ -3,8 +3,8 @@ import Image from "next/image";
 import { MapPin, Phone, Mail, Globe, Facebook, Linkedin, Instagram } from "lucide-react";
 import type { Locale } from "@/types";
 
-// Logo URL - transparent white logo
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_8604c03f-19f0-4831-97c4-2be3c85c8b29/artifacts/8oq3cjun_GJC%20alb%20transparent%20Logo.png";
+// Logo URL - transparent white logo (local asset)
+const LOGO_WHITE = "/images/optimized/logo_alb_transparent.png";
 
 interface FooterProps {
   locale: Locale;
