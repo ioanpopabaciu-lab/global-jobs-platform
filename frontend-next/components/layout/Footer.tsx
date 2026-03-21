@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail, Globe, Facebook, Linkedin, Instagram } from "lucid
 import type { Locale } from "@/types";
 
 // Logo URL
-const LOGO_WHITE = "/images/optimized/logo_white.webp";
+const LOGO_WHITE = "/images/optimized/logo_white_v2.webp";
 
 interface FooterProps {
   locale: Locale;

@@ -16,8 +16,8 @@ import { Menu, Phone, Globe, ChevronDown, ChevronRight, Facebook, Instagram, Lin
 import type { Locale } from "@/types";
 
 // Logo URLs
-const LOGO_WHITE = "/images/optimized/logo_white.webp";
-const LOGO_COLORED = "/images/optimized/logo_colored.webp";
+const LOGO_WHITE = "/images/optimized/logo_white_v2.webp";
+const LOGO_COLORED = "/images/optimized/logo_colored_v2.webp";
 
 // Social Media Links
 const SOCIAL_LINKS = {
