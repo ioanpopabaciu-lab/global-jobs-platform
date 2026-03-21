@@ -97,7 +97,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     return (
       <Link
         href={href}
-        className={`font-medium text-[13px] whitespace-nowrap transition-colors hover:text-coral ${
+        className={`font-medium text-[14px] lg:text-[13px] xl:text-[14px] whitespace-nowrap transition-colors hover:text-coral ${
           isActive
             ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
             : isScrolled ? "text-gray-700" : "text-white/90"
@@ -148,7 +148,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </Link>
 
           {/* Center: Main Navigation */}
-          <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-6 flex-1 justify-center">
             <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
             <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
             <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
@@ -156,7 +156,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             {/* Industries Dropdown */}
             <div className="relative" onMouseEnter={() => setIndustriesOpen(true)} onMouseLeave={() => setIndustriesOpen(false)}>
               <button
-                className={`flex items-center gap-1 font-medium text-[13px] whitespace-nowrap transition-colors hover:text-coral ${
+                className={`flex items-center gap-1 font-medium text-[14px] lg:text-[13px] xl:text-[14px] whitespace-nowrap transition-colors hover:text-coral ${
                   isScrolled ? "text-gray-700" : "text-white/90"
                 }`}
               >
@@ -185,12 +185,11 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden lg:flex items-center gap-4 ml-6 pl-4 border-l border-gray-400/30">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-4 ml-2 xl:ml-6 pl-4 border-l border-gray-400/30 pr-4 lg:pr-2 xl:pr-4">
             {/* Language Selector */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[13px] whitespace-nowrap font-medium ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
-                <Globe className="h-4 w-4" />
-                {languageLabels[locale].flag} {languageLabels[locale].short}
+              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[14px] lg:text-[13px] xl:text-[14px] whitespace-nowrap font-medium ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
+                {languageLabels[locale].short} <ChevronDown className="h-4 w-4 opacity-70" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="min-w-[160px]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
@@ -203,26 +202,26 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
-              className={`text-[13px] whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
+              className={`text-[14px] lg:text-[13px] xl:text-[14px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
             >
               <Link href="/login" className="flex items-center gap-1">
-                <LogIn className="h-4 w-4" />
+                <LogIn className="h-4 w-4 hidden xl:block" />
                 {dict.nav.login}
               </Link>
             </Button>
 
             {/* My Account Button */}
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
-              className="gjc-new-account-btn rounded-full text-[13px] whitespace-nowrap font-medium"
+              className="gjc-new-account-btn rounded-full text-[14px] lg:text-[13px] xl:text-[14px] px-3 xl:px-4 whitespace-nowrap font-medium"
             >
               <Link href="/my-account" className="flex items-center gap-1">
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4 hidden xl:block" />
                 {dict.nav.myAccount}
               </Link>
             </Button>
 
             {/* Primary CTA: Request Workers */}
-            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-5 text-[13px] whitespace-nowrap font-semibold shadow-md">
+            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-4 xl:px-5 text-[14px] lg:text-[13px] xl:text-[14px] whitespace-nowrap font-semibold shadow-md">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
           </div>
