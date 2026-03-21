@@ -140,9 +140,9 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             <Image
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
               alt="Global Jobs Consulting"
-              width={240}
-              height={80}
-              className="h-[60px] md:h-[80px] lg:h-[90px] w-auto transition-all duration-300 object-contain"
+              width={160}
+              height={50}
+              className="transition-all duration-300 object-contain block"
               priority
             />
           </Link>

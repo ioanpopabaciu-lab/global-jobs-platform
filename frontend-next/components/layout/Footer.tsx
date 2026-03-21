@@ -63,9 +63,9 @@ export default function Footer({ locale, dict }: FooterProps) {
             <Image
               src={LOGO_WHITE}
               alt="Global Jobs Consulting"
-              width={260}
-              height={90}
-              className="h-[80px] md:h-[90px] w-auto mb-6 object-contain"
+              width={180}
+              height={60}
+              className="mb-6 object-contain"
             />
             <p className="text-gray-300 text-sm leading-relaxed mb-4">
               {dict.footer.description}
