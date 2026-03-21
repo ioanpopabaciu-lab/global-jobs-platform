@@ -134,64 +134,61 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     >
       {/* Main Nav */}
       <nav className="container mx-auto px-4 xl:px-8 py-3 relative">
-        <div className="flex items-center justify-between w-full">
-          {/* Left Side: Logo + Nav */}
-          <div className="flex items-center">
-            {/* Logo */}
-            <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-4 xl:mr-8" data-testid="logo-link">
-              <Image
-                src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
-                alt="Global Jobs Consulting"
-                width={160}
-                height={50}
-                className="transition-all duration-300 object-contain block"
-                priority
-              />
-            </Link>
+        <div className="flex items-center justify-between w-full gap-4">
+          {/* Logo */}
+          <Link href={getPath("/")} className="flex items-center flex-shrink-0" data-testid="logo-link">
+            <Image
+              src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
+              alt="Global Jobs Consulting"
+              width={160}
+              height={50}
+              className="transition-all duration-300 object-contain block"
+              priority
+            />
+          </Link>
 
-            {/* Center: Main Navigation */}
-            <div className="hidden lg:flex items-center gap-3 xl:gap-5">
-              <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
-              <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
-              <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
+          {/* Center: Main Navigation */}
+          <div className="hidden lg:flex items-center justify-center gap-3 xl:gap-5 flex-1 text-center truncate">
+            <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
+            <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
+            <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
 
-              {/* Industries Dropdown */}
-              <div className="relative" onMouseEnter={() => setIndustriesOpen(true)} onMouseLeave={() => setIndustriesOpen(false)}>
-                <button
-                  className={`flex items-center gap-1 font-medium text-[15px] whitespace-nowrap transition-colors hover:text-coral ${
-                    isScrolled ? "text-gray-700" : "text-white/90"
-                  }`}
-                >
-                  {dict.nav.industries}
-                  <ChevronDown className={`h-4 w-4 transition-transform ${industriesOpen ? "rotate-180" : ""}`} />
-                </button>
-                {industriesOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
-                    {industriesSubmenu.map((item, index) => (
-                      <Link
-                        key={index}
-                        href={item.href}
-                        className="block px-4 py-2.5 text-[15px] text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <NavLink href={getPath("/how-it-works")}>{dict.nav.howItWorks}</NavLink>
-              <NavLink href={getPath("/about")}>{dict.nav.about}</NavLink>
-              <NavLink href={getPath("/blog")}>{dict.nav.blog}</NavLink>
-              <NavLink href={getPath("/contact")}>{dict.nav.contact}</NavLink>
+            {/* Industries Dropdown */}
+            <div className="relative" onMouseEnter={() => setIndustriesOpen(true)} onMouseLeave={() => setIndustriesOpen(false)}>
+              <button
+                className={`flex items-center gap-1 font-medium text-[14px] xl:text-[15px] whitespace-nowrap transition-colors hover:text-coral ${
+                  isScrolled ? "text-gray-700" : "text-white/90"
+                }`}
+              >
+                {dict.nav.industries}
+                <ChevronDown className={`h-4 w-4 transition-transform ${industriesOpen ? "rotate-180" : ""}`} />
+              </button>
+              {industriesOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50 text-left">
+                  {industriesSubmenu.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-[14px] xl:text-[15px] text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors whitespace-normal"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
+
+            <NavLink href={getPath("/how-it-works")}>{dict.nav.howItWorks}</NavLink>
+            <NavLink href={getPath("/about")}>{dict.nav.about}</NavLink>
+            <NavLink href={getPath("/blog")}>{dict.nav.blog}</NavLink>
+            <NavLink href={getPath("/contact")}>{dict.nav.contact}</NavLink>
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3 pl-4 border-l border-gray-400/30">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0 pl-2 lg:pl-4 border-l border-gray-400/30">
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
-              className={`text-[15px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
+              className={`text-[14px] xl:text-[15px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
             >
               <Link href="/login" className="flex items-center gap-1.5">
                 <LogIn className="h-4 w-4 hidden xl:block" />
@@ -201,7 +198,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
             {/* My Account Button */}
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
-              className="gjc-new-account-btn rounded-full text-[15px] px-3 xl:px-4 whitespace-nowrap font-medium"
+              className="gjc-new-account-btn rounded-full text-[14px] xl:text-[15px] px-3 xl:px-4 whitespace-nowrap font-medium"
             >
               <Link href="/my-account" className="flex items-center gap-1.5">
                 <User className="h-4 w-4 hidden xl:block" />
@@ -210,20 +207,22 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             </Button>
 
             {/* Primary CTA: Request Workers */}
-            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-5 text-[15px] whitespace-nowrap font-semibold shadow-md ml-1">
+            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-4 xl:px-5 text-[14px] xl:text-[15px] whitespace-nowrap font-semibold shadow-md ml-1">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
 
-            {/* Language Selector (Text Only, No Flags) */}
+            {/* Language Selector (With Flags restored) */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[14px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
+              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[14px] xl:text-[15px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 ml-1 xl:ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
+                <span className="text-base select-none">{languageLabels[locale].flag}</span>
                 {languageLabels[locale].short}
                 <ChevronDown className="h-3.5 w-3.5 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[120px] z-[60]">
+              <DropdownMenuContent align="end" className="min-w-[130px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium">
-                    {languageLabels[lang].full}
+                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium flex items-center gap-2">
+                    <span className="text-base">{languageLabels[lang].flag}</span>
+                    <span>{languageLabels[lang].full}</span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
