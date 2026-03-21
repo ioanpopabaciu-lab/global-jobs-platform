@@ -133,10 +133,10 @@ export default function Navbar({ locale, dict }: NavbarProps) {
       }`}
     >
       {/* Main Nav */}
-      <nav className="w-full xl:max-w-[1536px] mx-auto px-4 lg:px-6 xl:px-8 py-3">
-        <div className="flex items-center justify-between w-full">
+      <nav className="container mx-auto px-4 xl:px-8 py-3 relative">
+        <div className="flex items-center w-full">
           {/* Logo */}
-          <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-4 xl:mr-8" data-testid="logo-link">
+          <Link href={getPath("/")} className="flex items-center flex-shrink-0 mr-6 xl:mr-10" data-testid="logo-link">
             <Image
               src={isScrolled ? LOGO_COLORED : LOGO_WHITE}
               alt="Global Jobs Consulting"
@@ -148,7 +148,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </Link>
 
           {/* Center: Main Navigation */}
-          <div className="hidden lg:flex items-center gap-4 xl:gap-6 mr-auto">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-7 mr-auto">
             <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
             <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
             <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
@@ -185,12 +185,12 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden lg:flex items-center gap-3 xl:gap-4 pl-4 border-l border-gray-400/30">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-4 pl-4 xl:pl-6 border-l border-gray-400/30">
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
               className={`text-[15px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
             >
-              <Link href="/login" className="flex items-center gap-1">
+              <Link href="/login" className="flex items-center gap-1.5">
                 <LogIn className="h-4 w-4 hidden xl:block" />
                 {dict.nav.login}
               </Link>
@@ -200,27 +200,29 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
               className="gjc-new-account-btn rounded-full text-[15px] px-3 xl:px-4 whitespace-nowrap font-medium"
             >
-              <Link href="/my-account" className="flex items-center gap-1">
+              <Link href="/my-account" className="flex items-center gap-1.5">
                 <User className="h-4 w-4 hidden xl:block" />
                 {dict.nav.myAccount}
               </Link>
             </Button>
 
             {/* Primary CTA: Request Workers */}
-            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-4 xl:px-5 text-[15px] whitespace-nowrap font-semibold shadow-md mr-2">
+            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-5 text-[15px] whitespace-nowrap font-semibold shadow-md ml-1">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
-
-            {/* Language Selector (Far Right Top Corner) */}
+          </div>
+          
+          {/* Language Selector (Top Right Absolute positioning as requested to keep it visually distinct and at the far edge) */}
+          <div className="hidden lg:block absolute right-4 xl:right-8 top-1">
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[15px] whitespace-nowrap font-semibold tracking-wide bg-navy-800/20 px-3 py-1.5 rounded-md border border-gray-500/20 ${isScrolled ? 'text-navy-900 hover:bg-gray-100' : 'text-white hover:bg-white/10'}`}>
-                <span className="text-base">{languageLabels[locale].flag}</span>
-                {languageLabels[locale].short}
-                <ChevronDown className="h-4 w-4 opacity-70" />
+              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[13px] whitespace-nowrap font-semibold px-2 py-1 bg-black/10 rounded-b-lg border-x border-b border-white/10 ${isScrolled ? 'text-gray-700 bg-gray-100 hover:text-coral' : 'text-white/90 hover:text-white'}`}>
+                <span className="text-base select-none">{languageLabels[locale].flag}</span>
+                <span>{languageLabels[locale].short}</span>
+                <ChevronDown className="h-3 w-3 opacity-60" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[160px]">
+              <DropdownMenuContent align="end" className="min-w-[140px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[15px]">
+                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px]">
                     <span className="text-base mr-2">{languageLabels[lang].flag}</span> {languageLabels[lang].full}
                   </DropdownMenuItem>
                 ))}
