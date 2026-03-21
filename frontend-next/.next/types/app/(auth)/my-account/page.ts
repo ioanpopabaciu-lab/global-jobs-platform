@@ -1,4 +1,4 @@
-// File: /app/frontend-next/app/(auth)/my-account/page.tsx
+// File: C:\Users\ioanp\OneDrive\Desktop\web gjc.ro+ platforma\frontend-next\app\(auth)\my-account\page.tsx
 import * as entry from '../../../../../app/(auth)/my-account/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
