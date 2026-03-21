@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { Globe, Users, ShieldCheck, HeartPulse, Building2, Phone, Mail, MapPin, ArrowRight, Award, Target } from "lucide-react";
 import type { Metadata } from "next";
-import { ArrowRight, Users, Award, Globe, Target } from "lucide-react";
 import { Locale, locales, defaultLocale } from "@/types";
 import { getDictionary } from "@/i18n/config";
 
@@ -27,132 +27,160 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   };
 }
 
-const pageContent = {
-  ro: {
-    hero: {
-      title: "Conectăm Talente Globale cu Oportunități Locale",
-      subtitle: "Suntem o agenție de recrutare internațională specializată în plasarea forței de muncă din Asia și Africa în Europa"
-    },
-    story: {
-      title: "Povestea Noastră",
-      text1: "Global Jobs Consulting a fost fondată cu misiunea de a adresa deficitul cronic de forță de muncă din Europa, conectând angajatorii cu candidați motivați și calificați din Asia și Africa.",
-      text2: "Cu sediul în Oradea, România, și o rețea de 11 agenții partenere în întreaga lume, oferim soluții complete de recrutare pentru companii din România, Austria și Serbia.",
-      text3: "Ne mândrim cu o abordare etică și transparentă, asigurându-ne că atât angajatorii, cât și candidații beneficiază de pe urma colaborării cu noi."
-    },
-    values: {
-      title: "Valorile Noastre",
-      items: [
-        { icon: Users, title: "Oameni Mai Întâi", desc: "Punem oamenii în centrul a tot ceea ce facem" },
-        { icon: Award, title: "Excelență", desc: "Ne străduim pentru cele mai înalte standarde" },
-        { icon: Globe, title: "Diversitate", desc: "Celebrăm și promovăm diversitatea culturală" },
-        { icon: Target, title: "Integritate", desc: "Acționăm cu onestitate și transparență" }
-      ]
-    },
-    team: {
-      title: "Echipa Noastră",
-      desc: "O echipă dedicată de profesioniști cu experiență în recrutare internațională, imigrare și resurse umane."
-    }
-  },
-  en: {
-    hero: {
-      title: "Connecting Global Talent with Local Opportunities",
-      subtitle: "We are an international recruitment agency specialized in placing workforce from Asia and Africa in Europe"
-    },
-    story: {
-      title: "Our Story",
-      text1: "Global Jobs Consulting was founded with the mission to address Europe's chronic workforce shortage, connecting employers with motivated and qualified candidates from Asia and Africa.",
-      text2: "Based in Oradea, Romania, and with a network of 11 partner agencies worldwide, we provide comprehensive recruitment solutions for companies in Romania, Austria and Serbia.",
-      text3: "We pride ourselves on an ethical and transparent approach, ensuring both employers and candidates benefit from working with us."
-    },
-    values: {
-      title: "Our Values",
-      items: [
-        { icon: Users, title: "People First", desc: "We put people at the center of everything we do" },
-        { icon: Award, title: "Excellence", desc: "We strive for the highest standards" },
-        { icon: Globe, title: "Diversity", desc: "We celebrate and promote cultural diversity" },
-        { icon: Target, title: "Integrity", desc: "We act with honesty and transparency" }
-      ]
-    },
-    team: {
-      title: "Our Team",
-      desc: "A dedicated team of professionals with experience in international recruitment, immigration and human resources."
-    }
-  }
-};
-
 export default async function AboutPage({ params: { locale } }: { params: { locale: Locale } }) {
-  const validLocale = locales.includes(locale) ? locale : defaultLocale;
-  const t = pageContent[validLocale as keyof typeof pageContent] || pageContent.ro;
-  const dict = await getDictionary(validLocale);
-
-  const getPath = (path: string) => validLocale === "ro" ? path : `/${validLocale}${path}`;
+  // Helper to get locale-prefixed path
+  const getPath = (path: string) => {
+    if (locale === "ro") return path;
+    return `/${locale}${path}`;
+  };
 
   return (
-    <div data-testid="about-page">
-      {/* Hero */}
-      <section className="relative py-20 bg-navy-900 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070" alt="" fill className="object-cover" />
+    <main className="min-h-screen pt-24 pb-16 bg-white overflow-hidden" data-testid="about-page">
+      
+      {/* 1. Hero & Povestea Noastră */}
+      <section className="container mx-auto px-4 py-12 md:py-20 flex flex-col lg:flex-row items-center gap-12">
+        <div className="flex-1 text-center lg:text-left">
+          <span className="text-coral font-bold tracking-widest uppercase text-sm mb-4 block">Despre GJC</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-navy-900 mb-6 leading-tight">
+            Conectăm oameni cu <span className="text-coral">oportunități reale</span>
+          </h1>
+          <p className="text-lg text-gray-600 mb-6 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            Suntem o agenție de recrutare All-Inclusive, născută din dorința de a rezolva deficitul de forță de muncă din Europa cu profesioniști de top din Asia și Africa.
+          </p>
+          <p className="text-lg text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            De la selecția atentă a fiecărui candidat până la gestionarea completă a documentelor de imigrare și integrarea noilor angajați, acoperim cap-coadă întregul proces. Asigurăm astfel stabilitate pentru companiile europene (cu focus pe România, Austria și Serbia) și o șansă la un viitor mai bun pentru candidații noștri.
+          </p>
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+            <Link href={getPath("/contact")} className="bg-navy-900 hover:bg-navy-800 text-white px-8 py-4 rounded-full font-bold transition-all inline-flex items-center gap-2 shadow-lg">
+              Discută cu Noi <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">{t.hero.title}</h1>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">{t.hero.subtitle}</p>
+        <div className="flex-1 w-full relative">
+          {/* Decorative shapes */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-coral/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-navy-900/10 rounded-full blur-3xl -z-10"></div>
+          
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white max-w-lg mx-auto">
+            <Image 
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1400&auto=format" 
+              alt="Echipa GJC" 
+              width={800} 
+              height={600} 
+              className="object-cover w-full h-[500px]"
+              priority
+            />
+          </div>
         </div>
       </section>
 
-      {/* Story */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Image
-                src="https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/zeb6mv7z_poza%20pt%20talente%20globale%20afaceri%20locale.png"
-                alt="GJC Team"
-                width={600}
-                height={400}
-                className="rounded-2xl shadow-lg"
-              />
+      {/* 2. Misiunea noastră */}
+      <section className="bg-navy-50 py-24">
+        <div className="container mx-auto px-4 max-w-5xl text-center">
+          <div className="w-20 h-20 bg-coral text-white rounded-3xl mx-auto flex items-center justify-center mb-8 rotate-12 shadow-xl">
+            <Globe className="w-10 h-10 -rotate-12" />
+          </div>
+          <h2 className="text-3xl md:text-5xl font-bold text-navy-900 mb-10">Misiunea Noastră</h2>
+          <p className="text-xl md:text-3xl text-gray-700 leading-relaxed italic border-x-4 border-coral px-8 py-4">
+            "Să devenim partenerul numărul 1 al companiilor europene în gestionarea resurselor umane prin facilitarea accesului sigur, legal și etic la forță de muncă calificată din Asia și Africa."
+          </p>
+        </div>
+      </section>
+
+      {/* 3. Valorile Noastre (4 items) */}
+      <section className="py-24 container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold text-navy-900 mb-6">Valorile Care Ne Ghidează</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Nu facem compromisuri când vine vorba de calitatea și etica serviciilor pe care le oferim.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          <div className="bg-white border text-center border-gray-100 rounded-2xl p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="w-20 h-20 bg-blue-50 text-navy-900 rounded-2xl mx-auto flex items-center justify-center mb-6 group-hover:bg-coral group-hover:text-white transition-colors">
+              <ShieldCheck className="w-10 h-10" />
             </div>
-            <div>
-              <h2 className="text-3xl font-bold text-navy-900 mb-6">{t.story.title}</h2>
-              <p className="text-gray-600 mb-4">{t.story.text1}</p>
-              <p className="text-gray-600 mb-4">{t.story.text2}</p>
-              <p className="text-gray-600">{t.story.text3}</p>
+            <h3 className="text-2xl font-bold text-navy-900 mb-4">Integritate Legală</h3>
+            <p className="text-gray-600">Procese 100% transparente cu management la virgulă pentru procedurile de imigrare.</p>
+          </div>
+          
+          <div className="bg-white border text-center border-gray-100 rounded-2xl p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="w-20 h-20 bg-blue-50 text-navy-900 rounded-2xl mx-auto flex items-center justify-center mb-6 group-hover:bg-coral group-hover:text-white transition-colors">
+              <Target className="w-10 h-10" />
+            </div>
+            <h3 className="text-2xl font-bold text-navy-900 mb-4">Selecție Riguroasă</h3>
+            <p className="text-gray-600">Filtrare directă prin interviuri și verificări stricte de background la sursă.</p>
+          </div>
+          
+          <div className="bg-white border text-center border-gray-100 rounded-2xl p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="w-20 h-20 bg-blue-50 text-navy-900 rounded-2xl mx-auto flex items-center justify-center mb-6 group-hover:bg-coral group-hover:text-white transition-colors">
+              <HeartPulse className="w-10 h-10" />
+            </div>
+            <h3 className="text-2xl font-bold text-navy-900 mb-4">Empatie</h3>
+            <p className="text-gray-600">Ne pasă de bunăstarea candidaților. Tratamentul etic este esențial.</p>
+          </div>
+
+          <div className="bg-white border text-center border-gray-100 rounded-2xl p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="w-20 h-20 bg-blue-50 text-navy-900 rounded-2xl mx-auto flex items-center justify-center mb-6 group-hover:bg-coral group-hover:text-white transition-colors">
+              <Building2 className="w-10 h-10" />
+            </div>
+            <h3 className="text-2xl font-bold text-navy-900 mb-4">Parteneriate Solide</h3>
+            <p className="text-gray-600">Oferim suport continuu angajatorilor pentru a asigura succesul retenției.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Cifrele Noastre (Stats) */}
+      <section className="py-24 bg-navy-900 text-white relative flex items-center overflow-hidden">
+        {/* Abstract Background pattern */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
+        
+        <div className="container mx-auto px-4 relative z-10 max-w-6xl">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 divide-x-0 lg:divide-x divide-white/20 text-center">
+            <div className="px-4">
+              <div className="text-5xl md:text-7xl font-extrabold text-coral mb-4">11+</div>
+              <div className="text-lg font-medium text-white/90 uppercase tracking-widest">Agenții Partenere<br/><span className="text-sm opacity-75 capitalize">Asia & Africa</span></div>
+            </div>
+            <div className="px-4">
+              <div className="text-5xl md:text-7xl font-extrabold text-coral mb-4">4</div>
+              <div className="text-lg font-medium text-white/90 uppercase tracking-widest">Ani Experiență<br/><span className="text-sm opacity-75 capitalize">Recrutare globală</span></div>
+            </div>
+            <div className="px-4">
+              <div className="text-5xl md:text-7xl font-extrabold text-coral mb-4">3</div>
+              <div className="text-lg font-medium text-white/90 uppercase tracking-widest">Piețe Conectate<br/><span className="text-sm opacity-75 capitalize">RO, AT, SRB</span></div>
+            </div>
+            <div className="px-4">
+              <div className="text-5xl md:text-7xl font-extrabold text-coral mb-4">500+</div>
+              <div className="text-lg font-medium text-white/90 uppercase tracking-widest">Candidați<br/><span className="text-sm opacity-75 capitalize">Plasați cu succes</span></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-navy-900 text-center mb-12">{t.values.title}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {t.values.items.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="bg-white rounded-2xl p-6 text-center shadow-sm">
-                  <Icon className="h-12 w-12 text-coral mx-auto mb-4" />
-                  <h3 className="font-bold text-navy-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-sm">{item.desc}</p>
-                </div>
-              );
-            })}
+      {/* 5. Contact Rapid */}
+      <section className="py-24 bg-gray-50 relative">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="bg-coral rounded-3xl p-10 md:p-16 flex flex-col lg:flex-row items-center justify-between shadow-2xl relative overflow-hidden text-white">
+            <div className="absolute top-0 right-0 p-32 bg-red-600 rounded-full blur-3xl opacity-50 -mr-20 -mt-20"></div>
+            <div className="absolute bottom-0 left-0 p-32 bg-red-800 rounded-full blur-3xl opacity-30 -ml-20 -mb-20"></div>
+            
+            <div className="lg:w-1/2 mb-10 lg:mb-0 relative z-10 text-center lg:text-left">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">Începem recrutarea?</h2>
+              <p className="text-xl text-white/90">
+                Echipa GJC vă stă la dispoziție pentru o consultație imediată.
+              </p>
+            </div>
+            
+            <div className="lg:w-1/2 flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4 relative z-10 w-full lg:items-end justify-center">
+              <Link href="tel:+40700000000" className="flex items-center justify-center gap-3 bg-white text-coral px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg shrink-0">
+                <Phone className="w-5 h-5" /> Sunați Acum
+              </Link>
+              <Link href="mailto:office@gjc.ro" className="flex items-center justify-center gap-3 bg-navy-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-navy-800 transition shadow-lg shrink-0">
+                <Mail className="w-5 h-5" /> office@gjc.ro
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Team CTA */}
-      <section className="py-20 bg-navy-900 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">{t.team.title}</h2>
-          <p className="text-white/80 mb-8 max-w-2xl mx-auto">{t.team.desc}</p>
-          <Link href={getPath("/contact")} className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg">
-            {dict.nav.contact}
-            <ArrowRight className="h-5 w-5" />
-          </Link>
-        </div>
-      </section>
-    </div>
+    </main>
   );
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { Globe, Shield, Clock, Users, ArrowRight } from "lucide-react";
+import { Globe, Shield, Clock, Users, ArrowRight, FileText, Building2 } from "lucide-react";
 import { Locale, locales, defaultLocale, industries } from "@/types";
 import { getDictionary } from "@/i18n/config";
 
@@ -429,31 +429,24 @@ export default async function HomePage({ params: { locale } }: HomePageProps) {
 
       {/* Industries Section */}
       <section className="py-20 bg-gray-50" data-testid="industries-section">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 max-w-5xl">
           <div className="text-center mb-12">
-            <span className="text-coral font-semibold text-sm tracking-wider">
-              {dict.industries.label}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mt-2">
-              {dict.industries.title}
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900">Industrii</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {industries.slice(0, 5).map((industry) => (
-              <Link
-                key={industry.slug}
-                href={getPath(`/industries/${industry.slug}`)}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center hover:shadow-md hover:border-coral/30 transition-all group"
-                data-testid={`industry-${industry.slug}`}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {[ "Construcții", "Agricultură", "HoReCa", "Producție", "Transport", "Curățenie", "Logistică", "IT", "Sănătate" ].map((ind, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center hover:shadow-md hover:border-coral/30 transition-all flex flex-col items-center justify-center"
               >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-coral/10 flex items-center justify-center group-hover:bg-coral/20 transition-colors">
-                  <Globe className="h-8 w-8 text-coral" />
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-coral/10 flex items-center justify-center">
+                  <Building2 className="h-6 w-6 text-coral" />
                 </div>
-                <h3 className="font-semibold text-navy-900 group-hover:text-coral transition-colors">
-                  {industry.name[validLocale]}
+                <h3 className="font-semibold text-navy-900">
+                  {ind}
                 </h3>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -512,33 +505,25 @@ export default async function HomePage({ params: { locale } }: HomePageProps) {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-r from-navy-900 to-navy-800 relative overflow-hidden" data-testid="final-cta-section">
-        <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-white/10 to-transparent"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              {t.cta.title}
-            </h2>
-            <p className="text-navy-200 text-lg mb-8">
-              {t.cta.description}
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link
-                href={getPath("/employers")}
-                className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg"
-                data-testid="final-cta-employer"
-              >
-                {t.cta.employer}
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                href={getPath("/candidates")}
-                className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors"
-                data-testid="final-cta-candidate"
-              >
-                {t.cta.candidate}
-              </Link>
-            </div>
+      <section className="py-24 bg-navy-900 text-center relative overflow-hidden" data-testid="final-cta-section">
+        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1920&auto=format')] bg-cover bg-center"></div>
+        <div className="container mx-auto px-4 relative z-10 text-white">
+          <h2 className="text-3xl md:text-5xl font-bold mb-10">
+            Începe Colaborarea cu GJC Astăzi
+          </h2>
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link
+              href={getPath("/request-workers")}
+              className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-transform hover:scale-105 shadow-xl"
+            >
+              Solicită Muncitori
+            </Link>
+            <Link
+              href={getPath("/register")}
+              className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white text-navy-900 transition-colors shadow-lg"
+            >
+              Înregistrează-te Candidat
+            </Link>
           </div>
         </div>
       </section>
