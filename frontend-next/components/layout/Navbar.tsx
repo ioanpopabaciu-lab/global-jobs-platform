@@ -134,7 +134,28 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     >
       {/* Main Nav */}
       <nav className="w-full max-w-[1536px] mx-auto px-4 xl:px-6 py-3 relative">
-        <div className="flex items-center justify-between w-full">
+        {/* Language Selector in Top Right */}
+        <div className="absolute top-1 right-4 xl:right-6 z-[60]">
+          <DropdownMenu>
+            <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[11px] whitespace-nowrap font-medium px-1.5 py-0.5 rounded hover:bg-white/10 ${isScrolled ? 'text-gray-600 hover:text-coral' : 'text-white/80 hover:text-white'}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`https://flagcdn.com/w20/${languageLabels[locale].countryCode}.png`} alt={languageLabels[locale].short} className="w-4 rounded-[1px]" />
+              <span>{languageLabels[locale].short}</span>
+              <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[120px] z-[70]">
+              {(Object.keys(languageLabels) as Locale[]).map((lang) => (
+                <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[12px] font-medium flex items-center gap-2 py-1.5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`https://flagcdn.com/w20/${languageLabels[lang].countryCode}.png`} alt={languageLabels[lang].short} className="w-4 rounded-[1px]" />
+                  <span>{languageLabels[lang].full}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <div className="flex items-center justify-between w-full mt-1">
           {/* Logo */}
           <Link href={getPath("/")} className="flex items-center flex-shrink-0" data-testid="logo-link">
             <Image
@@ -205,25 +226,6 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-5 py-1.5 h-auto text-[13px] whitespace-nowrap font-bold shadow-md tracking-tight ml-1">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
-
-            {/* Language Selector in Navbar */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[13px] whitespace-nowrap font-bold px-3 py-1.5 h-auto rounded-md hover:bg-white/10 border-l border-white/20 pl-3 ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`https://flagcdn.com/w20/${languageLabels[locale].countryCode}.png`} alt={languageLabels[locale].short} className="w-5 rounded-[2px]" />
-                <span>{languageLabels[locale].short}</span>
-                <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-0.5" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[140px] z-[60]">
-                {(Object.keys(languageLabels) as Locale[]).map((lang) => (
-                  <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium flex items-center gap-2 py-1.5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://flagcdn.com/w20/${languageLabels[lang].countryCode}.png`} alt={languageLabels[lang].short} className="w-5 rounded-[2px]" />
-                    <span>{languageLabels[lang].full}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
 
           {/* Mobile Menu Button */}
