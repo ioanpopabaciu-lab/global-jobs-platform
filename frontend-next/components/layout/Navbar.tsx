@@ -148,7 +148,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </Link>
 
           {/* Center: Main Navigation */}
-          <div className="hidden xl:flex items-center justify-center gap-6 xl:gap-10 flex-1 shrink-0 px-4 translate-y-[1px]">
+          <div className="hidden xl:flex items-center justify-center gap-3 xl:gap-5 flex-1 shrink-0 px-2 translate-y-[1px]">
             <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
             <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
             <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
