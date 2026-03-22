@@ -38,8 +38,7 @@ export default function ContactForm({ locale, translations }: ContactFormProps) 
     };
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
-      const response = await fetch(`${apiUrl}/contact`, {
+      const response = await fetch(`https://global-jobs-platform-production.up.railway.app/api/contact/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

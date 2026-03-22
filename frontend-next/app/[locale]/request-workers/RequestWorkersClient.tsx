@@ -34,6 +34,7 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const countries = [
     dict.requestWorkers.section2.countries.any,
@@ -93,11 +94,45 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
     if (!formData.termsAccepted) return;
     
     setIsSubmitting(true);
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setSubmitError(null);
+
+    const activeConditions = Object.entries(formData.specialConditions)
+      .filter(([_, isChecked]) => isChecked)
+      .map(([key, _]) => key);
+
+    const payload = {
+      company_name: formData.companyName,
+      cui: formData.cui,
+      contact_person: formData.contactPerson,
+      email: formData.email,
+      phone: formData.phone,
+      job_title: formData.jobTitle,
+      workers_needed: formData.workersNeeded,
+      country_preference: formData.preferredCountry,
+      work_schedule: formData.workSchedule,
+      salary: formData.salary,
+      special_conditions: activeConditions,
+      message: formData.message
+    };
+
+    try {
+      const response = await fetch("https://global-jobs-platform-production.up.railway.app/api/employers/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) {
+        setIsSubmitted(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        setSubmitError("A apărut o eroare. Vă rugăm încercați din nou.");
+      }
+    } catch (error) {
+      setSubmitError("A apărut o eroare. Vă rugăm încercați din nou.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -311,6 +346,12 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
                   {dict.requestWorkers.submit.terms}
                 </span>
               </label>
+
+              {submitError && (
+                <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl w-full max-w-lg text-center font-medium">
+                  {submitError}
+                </div>
+              )}
 
               <button 
                 type="submit" 

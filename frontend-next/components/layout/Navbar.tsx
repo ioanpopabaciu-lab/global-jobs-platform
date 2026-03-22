@@ -123,7 +123,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     
     // Build new path
     const newPath = newLocale === "ro" ? pathWithoutLocale : `/${newLocale}${pathWithoutLocale}`;
-    document.cookie = NEXT_LOCALE=; path=/; max-age=31536000;
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
     router.push(newPath);
     router.refresh();
   };
