@@ -143,7 +143,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
               <span>{languageLabels[locale].short}</span>
               <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-[120px] z-[70]">
+            <DropdownMenuContent align="end" className="min-w-[120px] z-[120]">
               {(Object.keys(languageLabels) as Locale[]).map((lang) => (
                 <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[12px] font-medium flex items-center gap-2 py-1.5">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
