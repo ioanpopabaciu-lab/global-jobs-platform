@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   Building2, User, Mail, Phone, Briefcase, Users, Globe, Clock, Coins, CheckSquare, MessageSquare, Send, CheckCircle2, Loader2, Info
 } from "lucide-react";
 
 export default function RequestWorkersPage() {
+  const t = useTranslations("requestWorkers");
   const [formData, setFormData] = useState({
     companyName: "",
     cui: "",
@@ -15,8 +17,8 @@ export default function RequestWorkersPage() {
     phone: "",
     jobTitle: "",
     workersNeeded: "",
-    preferredCountry: "Orice țară",
-    workSchedule: "Full-time",
+    preferredCountry: t("section2.countries.any"),
+    workSchedule: t("section2.schedules.fullTime"),
     salary: "",
     specialConditions: {
       nightShifts: false,
@@ -35,8 +37,23 @@ export default function RequestWorkersPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const countries = ["Orice țară", "Asia", "Africa", "Nepal", "India", "Pakistan", "Bangladesh", "Altele"];
-  const schedules = ["Full-time", "Part-time", "Ture", "Noapte"];
+  const countries = [
+    t("section2.countries.any"),
+    t("section2.countries.asia"),
+    t("section2.countries.africa"),
+    t("section2.countries.nepal"),
+    t("section2.countries.india"),
+    t("section2.countries.pakistan"),
+    t("section2.countries.bangladesh"),
+    t("section2.countries.others")
+  ];
+  
+  const schedules = [
+    t("section2.schedules.fullTime"),
+    t("section2.schedules.partTime"),
+    t("section2.schedules.shifts"),
+    t("section2.schedules.night")
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
@@ -65,9 +82,9 @@ export default function RequestWorkersPage() {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       // Mock successfully verified
-      setCuiStatus("✅ Companie validată conform ANAF.");
+      setCuiStatus(t("section1.verifySuccess"));
     } catch {
-      setCuiStatus("❌ Eroare la verificare.");
+      setCuiStatus(t("section1.verifyError"));
     } finally {
       setIsVerifyingCui(false);
     }
@@ -96,15 +113,15 @@ export default function RequestWorkersPage() {
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-green-600" />
           </div>
-          <h1 className="text-3xl font-bold text-navy-900 mb-4">Cererea dvs. a fost primită!</h1>
+          <h1 className="text-3xl font-bold text-navy-900 mb-4">{t("success.title")}</h1>
           <p className="text-lg text-gray-600 mb-8">
-            Un consultant GJC va analiza detaliile și vă va contacta în maxim 24 de ore cu o propunere personalizată.
+            {t("success.message")}
           </p>
           <button 
             onClick={() => window.location.href = "/"}
             className="px-8 py-3 bg-navy-900 text-white rounded-xl font-semibold hover:bg-navy-800 transition-colors"
           >
-            Înapoi la pagina principală
+            {t("success.backToHome")}
           </button>
         </motion.div>
       </main>
@@ -120,7 +137,7 @@ export default function RequestWorkersPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold text-navy-900 mb-4"
           >
-            Solicită Muncitori Internaționali
+            {t("title")}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -128,7 +145,7 @@ export default function RequestWorkersPage() {
             transition={{ delay: 0.2 }}
             className="text-lg text-gray-600"
           >
-            Completați formularul și vă contactăm în 24 ore
+            {t("subtitle")}
           </motion.p>
         </div>
 
@@ -144,52 +161,52 @@ export default function RequestWorkersPage() {
             <div>
               <h2 className="text-xl font-bold text-navy-900 border-b border-gray-100 pb-2 mb-6 flex items-center gap-2">
                 <Building2 className="text-coral w-5 h-5" />
-                Date Companie & Contact
+                {t("section1.title")}
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Numele companiei *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section1.companyName")}</label>
                   <div className="relative">
                     <Building2 className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input required type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="ex. GJC SRL" />
+                    <input required type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section1.companyNamePlaceholder")} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">CUI companie *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section1.cui")}</label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <input required type="text" name="cui" value={formData.cui} onChange={handleInputChange} className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="ex. RO12345678" />
+                      <input required type="text" name="cui" value={formData.cui} onChange={handleInputChange} className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section1.cuiPlaceholder")} />
                     </div>
                     <button type="button" onClick={handleVerifyCui} disabled={isVerifyingCui || !formData.cui} className="px-5 py-3 bg-navy-100 text-navy-900 font-semibold rounded-xl hover:bg-navy-200 transition-colors disabled:opacity-50 flex items-center gap-2">
-                      {isVerifyingCui ? <Loader2 className="w-4 h-4 animate-spin" /> : "Verifică"}
+                      {isVerifyingCui ? <Loader2 className="w-4 h-4 animate-spin" /> : t("section1.verify")}
                     </button>
                   </div>
                   {cuiStatus && <p className="mt-2 text-sm text-green-600 font-medium">{cuiStatus}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Persoană de contact *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section1.contactPerson")}</label>
                   <div className="relative">
                     <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input required type="text" name="contactPerson" value={formData.contactPerson} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="Nume Prenume" />
+                    <input required type="text" name="contactPerson" value={formData.contactPerson} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section1.contactPersonPlaceholder")} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Telefon *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section1.phone")}</label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="+40 700 000 000" />
+                    <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section1.phonePlaceholder")} />
                   </div>
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section1.email")}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="office@companie.ro" />
+                    <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section1.emailPlaceholder")} />
                   </div>
                 </div>
               </div>
@@ -199,28 +216,28 @@ export default function RequestWorkersPage() {
             <div>
               <h2 className="text-xl font-bold text-navy-900 border-b border-gray-100 pb-2 mb-6 flex items-center gap-2 mt-4">
                 <Briefcase className="text-coral w-5 h-5" />
-                Informații Loc de Muncă
+                {t("section2.title")}
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Meseria dorită *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section2.jobTitle")}</label>
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input required type="text" name="jobTitle" value={formData.jobTitle} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="ex. Zidar, Sudor, Bucătar..." />
+                    <input required type="text" name="jobTitle" value={formData.jobTitle} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section2.jobTitlePlaceholder")} />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Număr muncitori necesari *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section2.workersNeeded")}</label>
                   <div className="relative">
                     <Users className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input required type="number" min="1" name="workersNeeded" value={formData.workersNeeded} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="ex. 5" />
+                    <input required type="number" min="1" name="workersNeeded" value={formData.workersNeeded} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section2.workersNeededPlaceholder")} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Țara preferată pentru candidați</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section2.preferredCountry")}</label>
                   <div className="relative">
                     <Globe className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                     <select name="preferredCountry" value={formData.preferredCountry} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none appearance-none cursor-pointer">
@@ -230,7 +247,7 @@ export default function RequestWorkersPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Program de lucru</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section2.workSchedule")}</label>
                   <div className="relative">
                     <Clock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                     <select name="workSchedule" value={formData.workSchedule} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none appearance-none cursor-pointer">
@@ -240,10 +257,10 @@ export default function RequestWorkersPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Salariu oferit (RON/lună net) - opțional dar recomandat</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section2.salary")}</label>
                   <div className="relative">
                     <Coins className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                    <input type="text" name="salary" value={formData.salary} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="ex. 3500 RON" />
+                    <input type="text" name="salary" value={formData.salary} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder={t("section2.salaryPlaceholder")} />
                   </div>
                 </div>
               </div>
@@ -253,37 +270,37 @@ export default function RequestWorkersPage() {
             <div>
               <h2 className="text-xl font-bold text-navy-900 border-b border-gray-100 pb-2 mb-6 flex items-center gap-2 mt-4">
                 <CheckSquare className="text-coral w-5 h-5" />
-                Condiții Speciale & Extra
+                {t("section3.title")}
               </h2>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
                   <input type="checkbox" name="nightShifts" checked={formData.specialConditions.nightShifts} onChange={handleInputChange} className="w-5 h-5 text-coral rounded border-gray-300 focus:ring-coral" />
-                  <span className="text-sm font-medium text-gray-700">Ture de noapte</span>
+                  <span className="text-sm font-medium text-gray-700">{t("section3.conditions.nightShifts")}</span>
                 </label>
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
                   <input type="checkbox" name="extremeTemps" checked={formData.specialConditions.extremeTemps} onChange={handleInputChange} className="w-5 h-5 text-coral rounded border-gray-300 focus:ring-coral" />
-                  <span className="text-sm font-medium text-gray-700">Temperaturi extreme</span>
+                  <span className="text-sm font-medium text-gray-700">{t("section3.conditions.extremeTemps")}</span>
                 </label>
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
                   <input type="checkbox" name="heights" checked={formData.specialConditions.heights} onChange={handleInputChange} className="w-5 h-5 text-coral rounded border-gray-300 focus:ring-coral" />
-                  <span className="text-sm font-medium text-gray-700">Lucru la înălțime</span>
+                  <span className="text-sm font-medium text-gray-700">{t("section3.conditions.heights")}</span>
                 </label>
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
                   <input type="checkbox" name="heavyLabor" checked={formData.specialConditions.heavyLabor} onChange={handleInputChange} className="w-5 h-5 text-coral rounded border-gray-300 focus:ring-coral" />
-                  <span className="text-sm font-medium text-gray-700">Muncă fizică grea</span>
+                  <span className="text-sm font-medium text-gray-700">{t("section3.conditions.heavyLabor")}</span>
                 </label>
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
                   <input type="checkbox" name="driversLicense" checked={formData.specialConditions.driversLicense} onChange={handleInputChange} className="w-5 h-5 text-coral rounded border-gray-300 focus:ring-coral" />
-                  <span className="text-sm font-medium text-gray-700">Permis conducere</span>
+                  <span className="text-sm font-medium text-gray-700">{t("section3.conditions.driversLicense")}</span>
                 </label>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Mesaj suplimentar (opțional)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">{t("section3.message")}</label>
                 <div className="relative">
                   <MessageSquare className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                  <textarea name="message" value={formData.message} onChange={handleInputChange} rows={4} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none resize-none" placeholder="Alte detalii importante despre cerințele dvs..." />
+                  <textarea name="message" value={formData.message} onChange={handleInputChange} rows={4} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none resize-none" placeholder={t("section3.messagePlaceholder")} />
                 </div>
               </div>
             </div>
@@ -293,7 +310,7 @@ export default function RequestWorkersPage() {
               <label className="flex items-start gap-3 mb-8 cursor-pointer max-w-lg mx-auto">
                 <input required type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleInputChange} className="w-5 h-5 mt-0.5 text-coral rounded border-gray-300 focus:ring-coral" />
                 <span className="text-sm text-gray-600">
-                  Sunt de acord cu Termenii GJC și Politica de Confidențialitate. Sunt de acord ca datele mele să fie procesate în scopul recrutării de personal. *
+                  {t("submit.terms")}
                 </span>
               </label>
 
@@ -305,11 +322,11 @@ export default function RequestWorkersPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Se trimite...
+                    {t("submit.sending")}
                   </>
                 ) : (
                   <>
-                    Trimite Cererea
+                    {t("submit.button")}
                     <Send className="w-5 h-5" />
                   </>
                 )}

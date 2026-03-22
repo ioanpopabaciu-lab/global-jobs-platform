@@ -8,46 +8,50 @@ import {
   PhoneCall, Scale, FileSignature, Landmark, ShieldCheck, FileCheck
 } from "lucide-react";
 
-const tabsData = [
+import { useTranslations } from "next-intl";
+
+const getTabsData = (t: any) => [
   {
     id: "companii",
-    label: "Pentru Companii",
+    label: t("tabs.companies"),
     steps: [
-      { id: 1, title: "Înregistrare și verificare CUI", icon: Building2 },
-      { id: 2, title: "Postezi cerința de muncitori", icon: FileText },
-      { id: 3, title: "Primești candidați selectați de GJC", icon: Users },
-      { id: 4, title: "Interviu și selecție finală", icon: MessageSquare },
-      { id: 5, title: "GJC gestionează dosarul IGI", icon: FolderCheck },
-      { id: 6, title: "Muncitorul ajunge la tine ✅", icon: CheckCircle2 },
+      { id: 1, title: t("steps.companies.step1"), icon: Building2 },
+      { id: 2, title: t("steps.companies.step2"), icon: FileText },
+      { id: 3, title: t("steps.companies.step3"), icon: Users },
+      { id: 4, title: t("steps.companies.step4"), icon: MessageSquare },
+      { id: 5, title: t("steps.companies.step5"), icon: FolderCheck },
+      { id: 6, title: t("steps.companies.step6"), icon: CheckCircle2 },
     ]
   },
   {
     id: "candidati",
-    label: "Pentru Candidați",
+    label: t("tabs.candidates"),
     steps: [
-      { id: 1, title: "Înregistrare și completare profil", icon: UserPlus },
-      { id: 2, title: "Upload documente (pașaport, diplome)", icon: Upload },
-      { id: 3, title: "Matching cu joburi potrivite", icon: Briefcase },
-      { id: 4, title: "Interviu cu angajatorul", icon: Mic },
-      { id: 5, title: "GJC gestionează viza și permisul", icon: FileDigit },
-      { id: 6, title: "Pleci spre noul loc de muncă ✅", icon: PlaneTakeoff },
+      { id: 1, title: t("steps.candidates.step1"), icon: UserPlus },
+      { id: 2, title: t("steps.candidates.step2"), icon: Upload },
+      { id: 3, title: t("steps.candidates.step3"), icon: Briefcase },
+      { id: 4, title: t("steps.candidates.step4"), icon: Mic },
+      { id: 5, title: t("steps.candidates.step5"), icon: FileDigit },
+      { id: 6, title: t("steps.candidates.step6"), icon: PlaneTakeoff },
     ]
   },
   {
     id: "imigrare",
-    label: "Servicii Imigrare",
+    label: t("tabs.immigration"),
     steps: [
-      { id: 1, title: "Consultație gratuită cu GJC", icon: PhoneCall },
-      { id: 2, title: "Evaluare dosar și eligibilitate", icon: Scale },
-      { id: 3, title: "Pregătire documente necesare", icon: FileSignature },
-      { id: 4, title: "Depunere dosar la autorități", icon: Landmark },
-      { id: 5, title: "Urmărire și reprezentare GJC", icon: ShieldCheck },
-      { id: 6, title: "Obții documentul solicitat ✅", icon: FileCheck },
+      { id: 1, title: t("steps.immigration.step1"), icon: PhoneCall },
+      { id: 2, title: t("steps.immigration.step2"), icon: Scale },
+      { id: 3, title: t("steps.immigration.step3"), icon: FileSignature },
+      { id: 4, title: t("steps.immigration.step4"), icon: Landmark },
+      { id: 5, title: t("steps.immigration.step5"), icon: ShieldCheck },
+      { id: 6, title: t("steps.immigration.step6"), icon: FileCheck },
     ]
   }
 ];
 
 export default function HowItWorksPage() {
+  const t = useTranslations("howItWorks");
+  const tabsData = getTabsData(t);
   const [activeTab, setActiveTab] = useState(tabsData[0].id);
 
   const activeSteps = tabsData.find(t => t.id === activeTab)?.steps || [];
@@ -61,7 +65,7 @@ export default function HowItWorksPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-5xl font-bold text-navy-900 mb-6"
         >
-          Cum Funcționează Procesul GJC
+          {t("title")}
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
@@ -69,8 +73,7 @@ export default function HowItWorksPage() {
           transition={{ delay: 0.2 }}
           className="text-lg text-gray-600 max-w-2xl mx-auto"
         >
-          Descoperiți pașii simpli pe care îi parcurgem împreună pentru a asigura
-          cel mai bun rezultat pentru compania sau cariera dumneavoastră.
+          {t("subtitle")}
         </motion.p>
       </div>
 
