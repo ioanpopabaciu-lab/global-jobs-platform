@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Building2, User, Mail, Phone, Briefcase, Users, Globe, Clock, Coins, CheckSquare, MessageSquare, Send, CheckCircle2, Loader2, Info
+  Building2, User, Mail, Phone, Briefcase, Users, Globe, Clock, Coins, CheckSquare, MessageSquare, Send, CheckCircle2, Loader2, Info, MapPin
 } from "lucide-react";
 
 export default function RequestWorkersClient({ dict }: { dict: any }) {
     const [formData, setFormData] = useState({
     companyName: "",
+    address: "",
+    county: "",
     cui: "",
+    companyStatus: "",
     contactPerson: "",
     email: "",
     phone: "",
@@ -76,14 +79,34 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
     
     setIsVerifyingCui(true);
     setCuiStatus(null);
+    setSubmitError(null);
     
-    // Simulate API Call to ANAF
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // Mock successfully verified
-      setCuiStatus(dict.requestWorkers.section1.verifySuccess);
+      const response = await fetch("https://global-jobs-platform-production.up.railway.app/api/auth/lookup-company", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cui: formData.cui }),
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.success && data.company) {
+        setFormData(prev => ({
+          ...prev,
+          companyName: data.company.denumire || prev.companyName,
+          address: data.company.adresa || prev.address,
+          county: data.company.judet || prev.county,
+          companyStatus: data.company.stare || "VERIFICAT",
+        }));
+        
+        setCuiStatus(`Verificat cu succes (${data.source || 'Sursă oficială'}) - ${data.company.stare || 'Activ'}`);
+      } else {
+        // Fallback explicit error from API
+        setCuiStatus(null);
+        setSubmitError(data.error || "Verificare automată indisponibilă. Introduceți manual datele companiei.");
+      }
     } catch {
-      setCuiStatus(dict.requestWorkers.section1.verifyError);
+      setCuiStatus(null);
+      setSubmitError("Verificare automată indisponibilă. Introduceți manual datele companiei.");
     } finally {
       setIsVerifyingCui(false);
     }
@@ -216,7 +239,23 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
                       {isVerifyingCui ? <Loader2 className="w-4 h-4 animate-spin" /> : dict.requestWorkers.section1.verify}
                     </button>
                   </div>
-                  {cuiStatus && <p className="mt-2 text-sm text-green-600 font-medium">{cuiStatus}</p>}
+                  {cuiStatus && <p className={`mt-2 text-sm font-medium ${cuiStatus.includes('Activ') || cuiStatus.includes('Verificat') ? 'text-green-600' : 'text-red-500'}`}>{cuiStatus}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Adresă companie (opțional)</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                    <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="Ex: Str. Exemplului, București" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Județ (opțional)</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                    <input type="text" name="county" value={formData.county} onChange={handleInputChange} className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-coral/20 focus:border-coral transition-colors outline-none" placeholder="Ex: Ilfov" />
+                  </div>
                 </div>
 
                 <div>
