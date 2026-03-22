@@ -52,15 +52,15 @@ interface NavbarProps {
   };
 }
 
-const languageLabels: Record<Locale, { short: string; full: string; flag: string }> = {
-  ro: { short: "RO", full: "Română", flag: "🇷🇴" },
-  en: { short: "EN", full: "English", flag: "🇬🇧" },
-  de: { short: "DE", full: "Deutsch", flag: "🇦🇹" },
-  sr: { short: "SR", full: "Srpski", flag: "🇷🇸" },
-  ne: { short: "NE", full: "नेपाली", flag: "🇳🇵" },
-  bn: { short: "BN", full: "বাংলা", flag: "🇧🇩" },
-  hi: { short: "HI", full: "हिन्दी", flag: "🇮🇳" },
-  si: { short: "SI", full: "සිංහල", flag: "🇱🇰" },
+const languageLabels: Record<Locale, { short: string; full: string; countryCode: string }> = {
+  ro: { short: "RO", full: "Română", countryCode: "ro" },
+  en: { short: "EN", full: "English", countryCode: "gb" },
+  de: { short: "DE", full: "Deutsch", countryCode: "at" },
+  sr: { short: "SR", full: "Srpski", countryCode: "rs" },
+  ne: { short: "NE", full: "नेपाली", countryCode: "np" },
+  bn: { short: "BN", full: "বাংলা", countryCode: "bd" },
+  hi: { short: "HI", full: "हिन्दी", countryCode: "in" },
+  si: { short: "SI", full: "සිංහල", countryCode: "lk" },
 };
 
 export default function Navbar({ locale, dict }: NavbarProps) {
@@ -97,9 +97,9 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     return (
       <Link
         href={href}
-        className={`font-medium text-[14px] lg:text-[13px] xl:text-[14px] whitespace-nowrap transition-colors hover:text-coral ${
+        className={`font-medium text-[12px] whitespace-nowrap transition-colors hover:text-coral tracking-tight ${
           isActive
-            ? isScrolled ? "text-navy-900 font-semibold" : "text-white font-semibold"
+            ? isScrolled ? "text-navy-900 font-bold" : "text-white font-bold"
             : isScrolled ? "text-gray-700" : "text-white/90"
         }`}
       >
@@ -128,12 +128,12 @@ export default function Navbar({ locale, dict }: NavbarProps) {
   return (
     <header
       data-testid="navbar"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
         isScrolled ? "bg-white shadow-lg" : "bg-navy-900/80 backdrop-blur-sm"
       }`}
     >
       {/* Main Nav */}
-      <nav className="container mx-auto px-4 xl:px-8 py-3 relative">
+      <nav className="w-full max-w-[1440px] mx-auto px-2 xl:px-4 py-3 relative">
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <Link href={getPath("/")} className="flex items-center flex-shrink-0" data-testid="logo-link">
@@ -148,7 +148,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </Link>
 
           {/* Center: Main Navigation */}
-          <div className="hidden lg:flex items-center justify-center gap-4 xl:gap-6 flex-shrink">
+          <div className="hidden xl:flex items-center justify-center gap-1.5 flex-shrink">
             <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
             <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
             <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
@@ -185,10 +185,10 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-1.5 flex-shrink-0">
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
-              className={`text-[14px] xl:text-[15px] px-2 xl:px-3 whitespace-nowrap font-medium ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
+              className={`text-[12px] px-2 whitespace-nowrap font-medium tracking-tight ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
             >
               <Link href="/login" className="flex items-center gap-1.5">
                 <LogIn className="h-4 w-4 hidden xl:block" />
@@ -198,7 +198,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
             {/* My Account Button */}
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
-              className="gjc-new-account-btn border-white/30 rounded-full text-[14px] xl:text-[15px] px-3 xl:px-4 whitespace-nowrap font-medium"
+              className="gjc-new-account-btn border-white/30 rounded-full text-[12px] px-3 whitespace-nowrap font-medium tracking-tight"
             >
               <Link href="/my-account" className="flex items-center gap-1.5">
                 <User className="h-4 w-4 hidden xl:block" />
@@ -207,20 +207,23 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             </Button>
 
             {/* Primary CTA: Request Workers */}
-            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-4 xl:px-5 text-[14px] xl:text-[15px] whitespace-nowrap font-semibold shadow-md ml-1">
+            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-4 py-1 h-8 text-[12px] whitespace-nowrap font-bold shadow-md tracking-tight ml-0.5">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
 
-            {/* Language Selector (With Flags Optimized for Windows/Mac) */}
+            {/* Language Selector in Navbar */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[14px] xl:text-[15px] whitespace-nowrap font-semibold px-2 py-1.5 rounded-md hover:bg-white/10 border-l border-white/20 pl-3 ml-1 xl:ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
-                <span className="text-xl leading-none">{languageLabels[locale].flag}</span>
+              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[12px] whitespace-nowrap font-bold px-2 py-1 h-8 rounded-md hover:bg-white/10 border-l border-white/20 pl-2 ml-1 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`https://flagcdn.com/w20/${languageLabels[locale].countryCode}.png`} alt={languageLabels[locale].short} className="w-5 rounded-[2px]" />
+                <span>{languageLabels[locale].short}</span>
                 <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[140px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
                   <DropdownMenuItem key={lang} onClick={() => handleLanguageChange(lang)} className="cursor-pointer text-[14px] font-medium flex items-center gap-2 py-1.5">
-                    <span className="text-xl leading-none">{languageLabels[lang].flag}</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`https://flagcdn.com/w20/${languageLabels[lang].countryCode}.png`} alt={languageLabels[lang].short} className="w-5 rounded-[2px]" />
                     <span>{languageLabels[lang].full}</span>
                   </DropdownMenuItem>
                 ))}
@@ -230,7 +233,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
           {/* Mobile Menu Button */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="lg:hidden">
+            <SheetTrigger asChild className="xl:hidden">
               <Button variant="ghost" size="icon" data-testid="mobile-menu-button" aria-label="Open navigation menu">
                 <Menu className={`h-6 w-6 ${isScrolled ? "text-navy-900" : "text-white"}`} />
               </Button>
@@ -293,9 +296,11 @@ export default function Navbar({ locale, dict }: NavbarProps) {
                     <button
                       key={lang}
                       onClick={() => { handleLanguageChange(lang); setIsOpen(false); }}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${locale === lang ? "bg-coral text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${locale === lang ? "bg-coral text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
                     >
-                      {languageLabels[lang].flag} {languageLabels[lang].short}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`https://flagcdn.com/w20/${languageLabels[lang].countryCode}.png`} alt={languageLabels[lang].short} className="w-4 rounded-[2px]" />
+                      {languageLabels[lang].short}
                     </button>
                   ))}
                 </div>
