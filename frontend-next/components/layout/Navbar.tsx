@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import {
@@ -68,6 +68,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Helper to get locale-prefixed path
   const getPath = (path: string) => {
@@ -122,7 +123,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     
     // Build new path
     const newPath = newLocale === "ro" ? pathWithoutLocale : `/${newLocale}${pathWithoutLocale}`;
-    window.location.href = newPath;
+    router.push(newPath);
   };
 
   return (
