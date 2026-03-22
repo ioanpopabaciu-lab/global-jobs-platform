@@ -28,116 +28,14 @@ async def extract_passport_data(image_base64: str, mime_type: str = "image/jpeg"
         Dictionary with extracted data
     """
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+        # from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
         
-        api_key = os.environ.get("EMERGENT_LLM_KEY")
-        if not api_key:
-            logger.error("EMERGENT_LLM_KEY not configured")
-            return {"success": False, "error": "Serviciul OCR nu este configurat"}
+        # api_key = os.environ.get("EMERGENT_LLM_KEY")
+        # if not api_key:
+        #     logger.error("EMERGENT_LLM_KEY not configured")
+        #     return {"success": False, "error": "Serviciul OCR nu este configurat"}
         
-        # Initialize Claude chat
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"passport_ocr_{datetime.now().timestamp()}",
-            system_message="""You are an expert OCR system specialized in extracting data from international passports.
-            Extract all visible information accurately and return it in a structured JSON format.
-            Pay attention to the MRZ (Machine Readable Zone) at the bottom of the passport.
-            Be precise with dates (format: DD.MM.YYYY for display, YYYY-MM-DD for storage), names, and numbers.
-            If a field is not visible or unclear, set it to null.
-            Always respond ONLY with valid JSON, no other text."""
-        ).with_model("anthropic", "claude-sonnet-4-5-20250929")
-        
-        # Create image content
-        image_content = ImageContent(image_base64=image_base64)
-        
-        # Create the extraction prompt
-        extraction_prompt = """Analyze this passport image and extract the following information.
-        Return ONLY a JSON object with these exact fields:
-
-        {
-            "full_name": "complete name as shown on passport",
-            "first_name": "first name / given names",
-            "last_name": "surname / family name",
-            "date_of_birth": "date of birth in YYYY-MM-DD format",
-            "date_of_birth_display": "date of birth in DD.MM.YYYY format",
-            "citizenship": "nationality/citizenship country name",
-            "nationality": "nationality code (3 letters)",
-            "passport_number": "passport document number",
-            "issue_date": "passport issue date in YYYY-MM-DD format",
-            "issue_date_display": "passport issue date in DD.MM.YYYY format",
-            "expiry_date": "passport expiry date in YYYY-MM-DD format",
-            "expiry_date_display": "passport expiry date in DD.MM.YYYY format",
-            "sex": "M or F",
-            "issuing_country": "country that issued the passport",
-            "place_of_birth": "place of birth if visible",
-            "mrz_line1": "first line of MRZ if visible",
-            "mrz_line2": "second line of MRZ if visible",
-            "confidence": "HIGH, MEDIUM, or LOW based on image quality and data clarity"
-        }
-
-        IMPORTANT:
-        - For dates, always provide both formats (storage: YYYY-MM-DD and display: DD.MM.YYYY)
-        - If any field is not visible or unclear, set it to null
-        - Extract the full name exactly as written on the passport
-        - Respond ONLY with the JSON object, no explanations"""
-        
-        # Send message with image
-        user_message = UserMessage(
-            text=extraction_prompt,
-            file_contents=[image_content]
-        )
-        
-        response = await chat.send_message(user_message)
-        
-        # Parse the response
-        try:
-            # Clean response - remove any markdown code blocks
-            clean_response = response.strip()
-            if clean_response.startswith("```"):
-                clean_response = re.sub(r'^```\w*\n?', '', clean_response)
-                clean_response = re.sub(r'\n?```$', '', clean_response)
-            
-            extracted_data = json.loads(clean_response)
-            
-            # Validate key fields
-            key_fields = ["first_name", "last_name", "passport_number"]
-            missing_fields = [f for f in key_fields if not extracted_data.get(f)]
-            
-            # Build confidence indicators
-            field_status = {}
-            for field, value in extracted_data.items():
-                if field == "confidence":
-                    continue
-                if value is not None and value != "":
-                    field_status[field] = "green"  # Extracted with confidence
-                else:
-                    field_status[field] = "red"  # Not found
-            
-            # Mark some fields as yellow (needs verification) based on confidence
-            if extracted_data.get("confidence") == "MEDIUM":
-                for field in ["date_of_birth", "issue_date", "expiry_date"]:
-                    if field_status.get(field) == "green":
-                        field_status[field] = "yellow"
-            
-            return {
-                "success": True,
-                "data": extracted_data,
-                "field_status": field_status,
-                "missing_fields": missing_fields,
-                "source": "passport"
-            }
-            
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse passport OCR response: {e}")
-            return {
-                "success": False,
-                "error": "Nu am putut procesa răspunsul OCR",
-                "raw_response": response[:500]
-            }
-            
-    except ImportError:
-        logger.error("emergentintegrations library not installed")
-        return {"success": False, "error": "Librăria OCR nu este instalată"}
+        return {"success": False, "error": "Funcționalitatea OCR pașaport a fost dezactivată temporar."}
     except Exception as e:
         logger.error(f"Passport OCR extraction error: {str(e)}")
         return {"success": False, "error": f"Eroare la extragerea datelor: {str(e)}"}
@@ -155,120 +53,14 @@ async def extract_cv_data(file_base64: str, mime_type: str = "application/pdf") 
         Dictionary with extracted data
     """
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+        # from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
         
-        api_key = os.environ.get("EMERGENT_LLM_KEY")
-        if not api_key:
-            logger.error("EMERGENT_LLM_KEY not configured")
-            return {"success": False, "error": "Serviciul OCR nu este configurat"}
+        # api_key = os.environ.get("EMERGENT_LLM_KEY")
+        # if not api_key:
+        #     logger.error("EMERGENT_LLM_KEY not configured")
+        #     return {"success": False, "error": "Serviciul OCR nu este configurat"}
         
-        # Initialize Claude chat
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"cv_ocr_{datetime.now().timestamp()}",
-            system_message="""You are an expert CV/Resume analyzer.
-            Extract professional information from CVs and return it in a structured JSON format.
-            Be thorough in extracting work experience, skills, and contact information.
-            Calculate total years of experience based on work history.
-            If a field is not found, set it to null.
-            Always respond ONLY with valid JSON, no other text."""
-        ).with_model("anthropic", "claude-sonnet-4-5-20250929")
-        
-        # Create image content (Claude can process PDF as images)
-        image_content = ImageContent(image_base64=file_base64)
-        
-        # Create the extraction prompt
-        extraction_prompt = """Analyze this CV/Resume document and extract the following information.
-        Return ONLY a JSON object with these exact fields:
-
-        {
-            "email": "email address if found",
-            "phone": "phone number with international prefix if found (e.g., +977 123456789)",
-            "current_profession": "current job title or profession",
-            "target_position": "desired position if mentioned",
-            "experience_years": "total years of professional experience (number)",
-            "education_level": "highest education level (e.g., High School, Bachelor, Master, PhD)",
-            "employers": [
-                {
-                    "company": "company name",
-                    "position": "job title",
-                    "duration": "e.g., 2019-2022",
-                    "country": "country where worked"
-                }
-            ],
-            "countries_worked_in": ["list of countries where person has worked"],
-            "languages": [
-                {
-                    "language": "language name",
-                    "level": "level if specified"
-                }
-            ],
-            "skills": ["list of professional skills"],
-            "certifications": ["list of certifications if any"],
-            "summary": "brief professional summary if available",
-            "confidence": "HIGH, MEDIUM, or LOW based on document clarity"
-        }
-
-        IMPORTANT:
-        - Calculate experience_years by summing up all work periods
-        - Include phone number with country code if visible
-        - List ALL previous employers found in the CV
-        - Extract languages with their proficiency levels
-        - If any field is not found, set it to null
-        - Respond ONLY with the JSON object"""
-        
-        # Send message with document
-        user_message = UserMessage(
-            text=extraction_prompt,
-            file_contents=[image_content]
-        )
-        
-        response = await chat.send_message(user_message)
-        
-        # Parse the response
-        try:
-            clean_response = response.strip()
-            if clean_response.startswith("```"):
-                clean_response = re.sub(r'^```\w*\n?', '', clean_response)
-                clean_response = re.sub(r'\n?```$', '', clean_response)
-            
-            extracted_data = json.loads(clean_response)
-            
-            # Build field status
-            field_status = {}
-            important_fields = ["email", "phone", "current_profession", "experience_years", "languages"]
-            
-            for field in important_fields:
-                value = extracted_data.get(field)
-                if value is not None and value != "" and value != []:
-                    field_status[field] = "green"
-                else:
-                    field_status[field] = "red"
-            
-            # Mark some as yellow if medium confidence
-            if extracted_data.get("confidence") == "MEDIUM":
-                for field in ["experience_years", "phone"]:
-                    if field_status.get(field) == "green":
-                        field_status[field] = "yellow"
-            
-            return {
-                "success": True,
-                "data": extracted_data,
-                "field_status": field_status,
-                "source": "cv"
-            }
-            
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse CV OCR response: {e}")
-            return {
-                "success": False,
-                "error": "Nu am putut procesa CV-ul",
-                "raw_response": response[:500]
-            }
-            
-    except ImportError:
-        logger.error("emergentintegrations library not installed")
-        return {"success": False, "error": "Librăria OCR nu este instalată"}
+        return {"success": False, "error": "Funcționalitatea OCR CV a fost dezactivată temporar."}
     except Exception as e:
         logger.error(f"CV OCR extraction error: {str(e)}")
         return {"success": False, "error": f"Eroare la extragerea datelor: {str(e)}"}

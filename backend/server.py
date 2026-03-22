@@ -706,9 +706,9 @@ VAŽNO:
 async def maria_chat(chat_msg: ChatMessage):
     """AI Chat endpoint for Maria recruitment assistant"""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        from openai import AsyncOpenAI
         
-        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        api_key = os.environ.get('EMERGENT_LLM_KEY') or os.environ.get('OPENAI_API_KEY')
         if not api_key:
             raise HTTPException(status_code=500, detail="Chat service not configured")
         
@@ -717,17 +717,26 @@ async def maria_chat(chat_msg: ChatMessage):
         language = chat_msg.language if chat_msg.language in MARIA_SYSTEM_PROMPTS else "ro"
         
         if session_id not in chat_sessions:
-            chat_sessions[session_id] = LlmChat(
-                api_key=api_key,
-                session_id=session_id,
-                system_message=MARIA_SYSTEM_PROMPTS[language]
-            ).with_model("openai", "gpt-4o-mini")
+            chat_sessions[session_id] = [
+                {"role": "system", "content": MARIA_SYSTEM_PROMPTS[language]}
+            ]
         
-        chat = chat_sessions[session_id]
+        # Add user message
+        chat_sessions[session_id].append({"role": "user", "content": chat_msg.message})
         
-        # Send message and get response
-        user_message = UserMessage(text=chat_msg.message)
-        response = await chat.send_message(user_message)
+        client = AsyncOpenAI(api_key=api_key)
+        
+        completion = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=chat_sessions[session_id]
+        )
+        
+        response = completion.choices[0].message.content
+        chat_sessions[session_id].append({"role": "assistant", "content": response})
+        
+        # Keep only the last 20 messages to prevent token limits
+        if len(chat_sessions[session_id]) > 21:
+            chat_sessions[session_id] = [chat_sessions[session_id][0]] + chat_sessions[session_id][-20:]
         
         # Store in database for analytics
         await db.chat_messages.insert_one({

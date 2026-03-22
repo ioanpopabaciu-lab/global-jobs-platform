@@ -37,96 +37,14 @@ async def extract_id_card_data(image_base64: str, mime_type: str = "image/jpeg")
         Dictionary with extracted data or error
     """
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+        # from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
         
-        api_key = os.environ.get("EMERGENT_LLM_KEY")
-        if not api_key:
-            logger.error("EMERGENT_LLM_KEY not configured")
-            return {"success": False, "error": "Serviciul OCR nu este configurat"}
+        # api_key = os.environ.get("EMERGENT_LLM_KEY")
+        # if not api_key:
+        #     logger.error("EMERGENT_LLM_KEY not configured")
+        #     return {"success": False, "error": "Serviciul OCR nu este configurat"}
         
-        # Initialize Claude chat
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"ocr_{datetime.now().timestamp()}",
-            system_message="""You are an OCR specialist for Romanian identity documents (Carte de Identitate).
-            Extract all visible information from the ID card image and return it in a structured JSON format.
-            Be precise with dates (format: YYYY-MM-DD), names, and numbers.
-            If a field is not visible or unclear, set it to null.
-            Always respond ONLY with valid JSON, no other text."""
-        ).with_model("anthropic", "claude-sonnet-4-5-20250929")
-        
-        # Create image content
-        image_content = ImageContent(image_base64=image_base64)
-        
-        # Create the extraction prompt
-        extraction_prompt = """Analyze this Romanian ID card (Carte de Identitate) and extract the following information.
-        Return ONLY a JSON object with these exact fields:
-
-        {
-            "nume": "family name / surname",
-            "prenume": "first name(s)",
-            "cnp": "personal identification number (13 digits)",
-            "data_nasterii": "date of birth in YYYY-MM-DD format",
-            "loc_nastere": "place of birth",
-            "adresa": "full address from the ID",
-            "serie_ci": "ID series (2 letters)",
-            "numar_ci": "ID number (6 digits)",
-            "data_eliberare": "issue date in YYYY-MM-DD format",
-            "data_expirare": "expiry date in YYYY-MM-DD format",
-            "emitent": "issuing authority (e.g., SPCLEP Sector 1)",
-            "cetatenie": "citizenship (usually ROMÂNĂ)",
-            "sex": "M or F",
-            "inaltime": "height in cm if visible",
-            "confidence": "HIGH, MEDIUM, or LOW based on image quality"
-        }
-
-        If any field is not visible or unclear, set it to null.
-        Respond ONLY with the JSON object, no explanations."""
-        
-        # Send message with image
-        user_message = UserMessage(
-            text=extraction_prompt,
-            file_contents=[image_content]
-        )
-        
-        response = await chat.send_message(user_message)
-        
-        # Parse the response
-        try:
-            # Clean response - remove any markdown code blocks
-            clean_response = response.strip()
-            if clean_response.startswith("```"):
-                clean_response = re.sub(r'^```\w*\n?', '', clean_response)
-                clean_response = re.sub(r'\n?```$', '', clean_response)
-            
-            import json
-            extracted_data = json.loads(clean_response)
-            
-            # Validate required fields
-            required_fields = ["nume", "prenume", "cnp", "serie_ci", "numar_ci"]
-            missing_fields = [f for f in required_fields if not extracted_data.get(f)]
-            
-            if missing_fields:
-                logger.warning(f"OCR extraction missing fields: {missing_fields}")
-            
-            return {
-                "success": True,
-                "data": extracted_data,
-                "missing_fields": missing_fields
-            }
-            
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse OCR response: {e}")
-            logger.error(f"Response was: {response[:500]}")
-            return {
-                "success": False,
-                "error": "Nu am putut procesa răspunsul OCR",
-                "raw_response": response[:500]
-            }
-            
-    except ImportError:
-        logger.error("emergentintegrations library not installed")
-        return {"success": False, "error": "Librăria OCR nu este instalată"}
+        return {"success": False, "error": "Funcționalitatea OCR a fost dezactivată temporar."}
     except Exception as e:
         logger.error(f"OCR extraction error: {str(e)}")
         return {"success": False, "error": f"Eroare la extragerea datelor: {str(e)}"}
@@ -149,91 +67,13 @@ async def extract_document_expiry(
         Dictionary with extracted dates
     """
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+        # from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
         
-        api_key = os.environ.get("EMERGENT_LLM_KEY")
-        if not api_key:
-            return {"success": False, "error": "Serviciul OCR nu este configurat"}
+        # api_key = os.environ.get("EMERGENT_LLM_KEY")
+        # if not api_key:
+        #     return {"success": False, "error": "Serviciul OCR nu este configurat"}
         
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"doc_ocr_{datetime.now().timestamp()}",
-            system_message="""You are a document analyzer for Romanian official documents.
-            Extract dates and key information from documents.
-            Be precise with dates (format: YYYY-MM-DD).
-            Always respond ONLY with valid JSON."""
-        ).with_model("anthropic", "claude-sonnet-4-5-20250929")
-        
-        image_content = ImageContent(image_base64=image_base64)
-        
-        prompts = {
-            "cazier_judiciar": """Analyze this Romanian criminal record certificate (Cazier Judiciar).
-            Extract and return ONLY this JSON:
-            {
-                "data_eliberare": "issue date in YYYY-MM-DD format",
-                "numar_document": "document number if visible",
-                "institutia_emitenta": "issuing institution",
-                "rezultat": "content summary - has criminal record or not"
-            }""",
-            
-            "certificat_constatator": """Analyze this Romanian certificate (Certificat Constatator).
-            Extract and return ONLY this JSON:
-            {
-                "data_eliberare": "issue date in YYYY-MM-DD format",
-                "numar_document": "document number",
-                "institutia_emitenta": "issuing institution (ONRC/ORC)",
-                "societate": "company name mentioned"
-            }""",
-            
-            "default": """Analyze this document and extract any dates visible.
-            Return ONLY this JSON:
-            {
-                "data_eliberare": "issue date if visible (YYYY-MM-DD)",
-                "data_expirare": "expiry date if visible (YYYY-MM-DD)",
-                "numar_document": "document number if visible",
-                "tip_document": "type of document"
-            }"""
-        }
-        
-        prompt = prompts.get(document_type, prompts["default"])
-        
-        user_message = UserMessage(
-            text=prompt,
-            image_contents=[image_content]
-        )
-        
-        response = await chat.send_message(user_message)
-        
-        try:
-            clean_response = response.strip()
-            if clean_response.startswith("```"):
-                clean_response = re.sub(r'^```\w*\n?', '', clean_response)
-                clean_response = re.sub(r'\n?```$', '', clean_response)
-            
-            import json
-            extracted_data = json.loads(clean_response)
-            
-            # Calculate expiry date for documents with fixed validity
-            if document_type in DOCUMENT_VALIDITY and extracted_data.get("data_eliberare"):
-                try:
-                    issue_date = datetime.strptime(extracted_data["data_eliberare"], "%Y-%m-%d")
-                    validity_days = DOCUMENT_VALIDITY[document_type]
-                    expiry_date = issue_date + timedelta(days=validity_days)
-                    extracted_data["data_expirare"] = expiry_date.strftime("%Y-%m-%d")
-                    extracted_data["valabilitate_zile"] = validity_days
-                except ValueError:
-                    pass
-            
-            return {
-                "success": True,
-                "data": extracted_data
-            }
-            
-        except json.JSONDecodeError:
-            return {
-                "success": False,
-                "error": "Nu am putut extrage datele din document"
-            }
+        return {"success": False, "error": "Funcționalitatea OCR a fost dezactivată temporar."}
             
     except Exception as e:
         logger.error(f"Document OCR error: {str(e)}")
