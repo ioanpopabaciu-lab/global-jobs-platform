@@ -102,5 +102,109 @@
     "error": "Ein Fehler ist aufgetreten",
     "success": "Erfolg!",
     "required": "Pflichtfeld"
+  },
+  "howItWorks": {
+    "title": "How the GJC Process Works",
+    "subtitle": "Discover the simple steps we take together to ensure the best outcome for your company or career.",
+    "tabs": {
+      "companies": "For Companies",
+      "candidates": "For Candidates",
+      "immigration": "Immigration Services"
+    },
+    "steps": {
+      "companies": {
+        "step1": "Registration and VAT Check",
+        "step2": "Post worker requirements",
+        "step3": "Receive GJC-selected candidates",
+        "step4": "Interview and final selection",
+        "step5": "GJC handles the IGI file",
+        "step6": "The worker arrives to you ✅"
+      },
+      "candidates": {
+        "step1": "Registration and profile completion",
+        "step2": "Upload documents (passport, diplomas)",
+        "step3": "Matching with suitable jobs",
+        "step4": "Interview with the employer",
+        "step5": "GJC handles the visa and permit",
+        "step6": "You leave for your new job ✅"
+      },
+      "immigration": {
+        "step1": "Free consultation with GJC",
+        "step2": "File evaluation and eligibility",
+        "step3": "Preparation of required documents",
+        "step4": "Filing with local authorities",
+        "step5": "Tracking and GJC representation",
+        "step6": "You get the requested document ✅"
+      }
+    }
+  },
+  "requestWorkers": {
+    "title": "Request International Workers",
+    "subtitle": "Fill out the form and we will contact you in 24 hours",
+    "section1": {
+      "title": "Company Details & Contact",
+      "companyName": "Company Name *",
+      "companyNamePlaceholder": "e.g. GJC SRL",
+      "cui": "Company VAT Number (CUI) *",
+      "cuiPlaceholder": "e.g. RO12345678",
+      "verify": "Verify",
+      "verifySuccess": "✅ Company validated according to ANAF.",
+      "verifyError": "❌ Verification error.",
+      "contactPerson": "Contact Person *",
+      "contactPersonPlaceholder": "Full Name",
+      "phone": "Phone *",
+      "phonePlaceholder": "+40 700 000 000",
+      "email": "Email *",
+      "emailPlaceholder": "office@company.com"
+    },
+    "section2": {
+      "title": "Job Information",
+      "jobTitle": "Desired Position *",
+      "jobTitlePlaceholder": "e.g. Mason, Welder, Chef...",
+      "workersNeeded": "Number of Workers Needed *",
+      "workersNeededPlaceholder": "e.g. 5",
+      "preferredCountry": "Preferred Candidate Country",
+      "countries": {
+        "any": "Any Country",
+        "asia": "Asia",
+        "africa": "Africa",
+        "nepal": "Nepal",
+        "india": "India",
+        "pakistan": "Pakistan",
+        "bangladesh": "Bangladesh",
+        "others": "Others"
+      },
+      "workSchedule": "Work Schedule",
+      "schedules": {
+        "fullTime": "Full-time",
+        "partTime": "Part-time",
+        "shifts": "Shifts",
+        "night": "Night"
+      },
+      "salary": "Offered Salary (RON/month net) - optional but recommended",
+      "salaryPlaceholder": "e.g. 3500 RON"
+    },
+    "section3": {
+      "title": "Special Conditions & Extra",
+      "conditions": {
+        "nightShifts": "Night shifts",
+        "extremeTemps": "Extreme temperatures",
+        "heights": "Working at heights",
+        "heavyLabor": "Heavy physical labor",
+        "driversLicense": "Driver's license"
+      },
+      "message": "Additional Message (optional)",
+      "messagePlaceholder": "Other important details about your requirements..."
+    },
+    "submit": {
+      "terms": "I agree to the GJC Terms and Privacy Policy. I consent to my data being processed for recruitment purposes. *",
+      "button": "Submit Request",
+      "sending": "Sending..."
+    },
+    "success": {
+      "title": "Your request has been received!",
+      "message": "A GJC consultant will review the details and contact you within 24 hours with a personalized proposal.",
+      "backToHome": "Back to Homepage"
+    }
   }
 }
