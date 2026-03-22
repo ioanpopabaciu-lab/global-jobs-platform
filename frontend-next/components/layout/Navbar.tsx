@@ -97,7 +97,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
     return (
       <Link
         href={href}
-        className={`font-medium text-[12px] whitespace-nowrap transition-colors hover:text-coral tracking-tight ${
+        className={`font-medium text-[13px] xl:text-[14px] whitespace-nowrap transition-colors hover:text-coral tracking-tight ${
           isActive
             ? isScrolled ? "text-navy-900 font-bold" : "text-white font-bold"
             : isScrolled ? "text-gray-700" : "text-white/90"
@@ -133,7 +133,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
       }`}
     >
       {/* Main Nav */}
-      <nav className="w-full max-w-[1440px] mx-auto px-2 xl:px-4 py-3 relative">
+      <nav className="w-full max-w-[1536px] mx-auto px-4 xl:px-6 py-3 relative">
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <Link href={getPath("/")} className="flex items-center flex-shrink-0" data-testid="logo-link">
@@ -148,35 +148,30 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </Link>
 
           {/* Center: Main Navigation */}
-          <div className="hidden xl:flex items-center justify-center gap-1.5 flex-shrink">
+          <div className="hidden xl:flex items-center justify-center gap-6 xl:gap-10 flex-1 shrink-0 px-4 translate-y-[1px]">
             <NavLink href={getPath("/")}>{dict.nav.home}</NavLink>
             <NavLink href={getPath("/employers")}>{dict.nav.employers}</NavLink>
             <NavLink href={getPath("/candidates")}>{dict.nav.candidates}</NavLink>
 
             {/* Industries Dropdown */}
-            <div className="relative" onMouseEnter={() => setIndustriesOpen(true)} onMouseLeave={() => setIndustriesOpen(false)}>
-              <button
-                className={`flex items-center gap-1 font-medium text-[14px] xl:text-[15px] whitespace-nowrap transition-colors hover:text-coral ${
-                  isScrolled ? "text-gray-700" : "text-white/90"
-                }`}
-              >
+            <DropdownMenu>
+              <DropdownMenuTrigger className={`flex items-center gap-1 font-medium text-[13px] xl:text-[14px] whitespace-nowrap transition-colors hover:text-coral tracking-tight ${pathname.includes('/industries') ? (isScrolled ? 'text-navy-900 font-bold' : 'text-white font-bold') : (isScrolled ? 'text-gray-700' : 'text-white/90')}`}>
                 {dict.nav.industries}
-                <ChevronDown className={`h-4 w-4 transition-transform ${industriesOpen ? "rotate-180" : ""}`} />
-              </button>
-              {industriesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50 text-left">
-                  {industriesSubmenu.map((item, index) => (
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="min-w-[180px] z-[120] py-2">
+                {industriesSubmenu.map((item, index) => (
+                  <DropdownMenuItem key={index} asChild className="cursor-pointer">
                     <Link
-                      key={index}
                       href={item.href}
-                      className="block px-4 py-2.5 text-[14px] xl:text-[15px] text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors whitespace-normal"
+                      className="block px-4 py-2 text-[14px] xl:text-[15px] text-gray-700 hover:bg-gray-50 hover:text-navy-900 transition-colors whitespace-normal"
                     >
                       {item.label}
                     </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <NavLink href={getPath("/how-it-works")}>{dict.nav.howItWorks}</NavLink>
             <NavLink href={getPath("/about")}>{dict.nav.about}</NavLink>
@@ -185,10 +180,10 @@ export default function Navbar({ locale, dict }: NavbarProps) {
           </div>
 
           {/* Right: User Actions */}
-          <div className="hidden xl:flex items-center gap-1.5 flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-2 flex-shrink-0">
             {/* Login Button */}
             <Button asChild variant="ghost" size="sm" data-testid="nav-login-button"
-              className={`text-[12px] px-2 whitespace-nowrap font-medium tracking-tight ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
+              className={`text-[13px] px-2.5 whitespace-nowrap font-medium tracking-tight ${isScrolled ? "text-gray-700 hover:text-navy-900" : "text-white/90 hover:text-white hover:bg-white/10"}`}
             >
               <Link href="/login" className="flex items-center gap-1.5">
                 <LogIn className="h-4 w-4 hidden xl:block" />
@@ -198,7 +193,7 @@ export default function Navbar({ locale, dict }: NavbarProps) {
 
             {/* My Account Button */}
             <Button asChild variant="outline" size="sm" data-testid="nav-myaccount-button"
-              className="gjc-new-account-btn border-white/30 rounded-full text-[12px] px-3 whitespace-nowrap font-medium tracking-tight"
+              className="gjc-new-account-btn border-white/30 rounded-full text-[13px] px-4 whitespace-nowrap font-medium tracking-tight"
             >
               <Link href="/my-account" className="flex items-center gap-1.5">
                 <User className="h-4 w-4 hidden xl:block" />
@@ -207,17 +202,17 @@ export default function Navbar({ locale, dict }: NavbarProps) {
             </Button>
 
             {/* Primary CTA: Request Workers */}
-            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-4 py-1 h-8 text-[12px] whitespace-nowrap font-bold shadow-md tracking-tight ml-0.5">
+            <Button asChild size="sm" data-testid="nav-cta-button" className="bg-coral hover:bg-red-600 text-white rounded-full px-5 py-1.5 h-auto text-[13px] whitespace-nowrap font-bold shadow-md tracking-tight ml-1">
               <Link href={getPath("/request-workers")}>{dict.nav.requestWorkers}</Link>
             </Button>
 
             {/* Language Selector in Navbar */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors cursor-pointer text-[12px] whitespace-nowrap font-bold px-2 py-1 h-8 rounded-md hover:bg-white/10 border-l border-white/20 pl-2 ml-1 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
+              <DropdownMenuTrigger className={`flex items-center gap-1.5 transition-colors cursor-pointer text-[13px] whitespace-nowrap font-bold px-3 py-1.5 h-auto rounded-md hover:bg-white/10 border-l border-white/20 pl-3 ml-2 ${isScrolled ? 'text-gray-700 hover:text-coral border-gray-300' : 'text-white/90 hover:text-white'}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`https://flagcdn.com/w20/${languageLabels[locale].countryCode}.png`} alt={languageLabels[locale].short} className="w-5 rounded-[2px]" />
                 <span>{languageLabels[locale].short}</span>
-                <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
+                <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-0.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[140px] z-[60]">
                 {(Object.keys(languageLabels) as Locale[]).map((lang) => (
