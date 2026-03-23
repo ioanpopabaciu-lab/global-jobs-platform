@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Upload,
+  Mail,
   Loader2,
 } from "lucide-react";
 
@@ -138,6 +139,13 @@ export default function CandidateDashboard() {
       icon: Briefcase,
       href: "/portal/candidate/jobs",
       color: "bg-purple-500",
+    },
+    {
+      title: "Mesaje GJC",
+      description: "Verifică inbox-ul pentru notificări importante",
+      icon: Mail,
+      href: "/portal/candidate/messages",
+      color: "bg-blue-500",
     },
   ];
 
