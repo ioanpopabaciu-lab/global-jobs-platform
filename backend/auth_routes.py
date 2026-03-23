@@ -266,85 +266,95 @@ async def register_employer(data: EmployerRegisterRequest, response: Response):
 @auth_router.post("/register", response_model=TokenResponse)
 async def register(data: UserCreate, response: Response):
     """Register new user with email/password"""
-    # Check if email exists
-    existing = await db.users.find_one({"email": data.email}, {"_id": 0})
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    # Validate account_type
+    # Map account_type to role
     valid_types = ["candidate", "employer", "student", "immigration_client"]
     if data.account_type not in valid_types:
         raise HTTPException(status_code=400, detail=f"Invalid account type. Must be one of: {valid_types}")
-    
-    # Map account_type to role (for permissions)
+        
     role_mapping = {
-        "candidate": "candidate",
-        "employer": "employer",
-        "student": "student",
-        "immigration_client": "immigration_client"
+        "candidate": "candidate", "employer": "employer",
+        "student": "student", "immigration_client": "immigration_client"
     }
     role = role_mapping.get(data.account_type, "candidate")
-    
-    # Create user
     user_id = f"user_{uuid.uuid4().hex[:12]}"
-    user_doc = {
-        "user_id": user_id,
-        "email": data.email,
-        "name": data.name,
-        "password_hash": hash_password(data.password),
-        "role": role,
-        "account_type": data.account_type,
-        "picture": None,
-        "is_active": True,
-        "is_verified": False,
-        "auth_provider": "email",
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc)
-    }
     
-    await db.users.insert_one(user_doc)
-    
-    # Create session
+    # Check fallback DB
+    hashed_pw = hash_password(data.password)
     session_token = generate_session_token()
     expires_at = datetime.now(timezone.utc) + timedelta(days=7)
     
-    session_doc = {
-        "session_id": f"sess_{uuid.uuid4().hex}",
-        "user_id": user_id,
-        "session_token": session_token,
-        "expires_at": expires_at,
-        "created_at": datetime.now(timezone.utc)
-    }
-    
-    await db.user_sessions.insert_one(session_doc)
-    
-    # Set cookie
-    response.set_cookie(
-        key="session_token",
-        value=session_token,
-        httponly=True,
-        secure=True,
-        samesite="none",
-        path="/",
-        max_age=7 * 24 * 60 * 60  # 7 days
-    )
-    
-    # Return response
-    user_response = UserResponse(
-        user_id=user_id,
-        email=data.email,
-        name=data.name,
-        picture=None,
-        role=role,
-        account_type=data.account_type,
-        is_active=True,
-        is_verified=False,
-        created_at=user_doc["created_at"]
-    )
-    
+    if db is None:
+        try:
+            from database.db_config import execute_pg_write, execute_pg_one, db_manager
+            
+            # Setup pure postgres auth schema if missing
+            await execute_pg_write("""
+            ALTER TABLE users 
+            ADD COLUMN IF NOT EXISTS name VARCHAR(255),
+            ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255),
+            ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT false,
+            ADD COLUMN IF NOT EXISTS auth_provider VARCHAR(50) DEFAULT 'email',
+            ADD COLUMN IF NOT EXISTS account_type VARCHAR(50);
+            ALTER TABLE users ALTER COLUMN mongo_user_id DROP NOT NULL;
+            """)
+            await execute_pg_write("""
+            CREATE TABLE IF NOT EXISTS user_sessions (
+                id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+                session_token VARCHAR(255) UNIQUE NOT NULL,
+                expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+            );
+            """)
+
+            existing = await execute_pg_one("SELECT id FROM users WHERE email = $1", data.email)
+            if existing:
+                raise HTTPException(status_code=400, detail="Email already registered")
+                
+            pg_user_id = await execute_pg_one("""
+                INSERT INTO users (email, name, password_hash, role, account_type, is_active, is_verified)
+                VALUES ($1, $2, $3, $4::user_role, $5, $6, $7) RETURNING id
+            """, data.email, data.name, hashed_pw, role.upper(), data.account_type, True, False)
+            
+            await execute_pg_write("""
+                INSERT INTO user_sessions (user_id, session_token, expires_at)
+                VALUES ($1, $2, $3)
+            """, pg_user_id['id'], session_token, expires_at)
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Database fallback error: {str(e)}")
+            
+    else:
+        # Standard MongoDB Flow
+        existing = await db.users.find_one({"email": data.email}, {"_id": 0})
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already registered")
+            
+        user_doc = {
+            "user_id": user_id, "email": data.email, "name": data.name,
+            "password_hash": hashed_pw, "role": role, "account_type": data.account_type,
+            "picture": None, "is_active": True, "is_verified": False,
+            "auth_provider": "email", "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        }
+        await db.users.insert_one(user_doc)
+        
+        session_doc = {
+            "session_id": f"sess_{uuid.uuid4().hex}", "user_id": user_id,
+            "session_token": session_token, "expires_at": expires_at,
+            "created_at": datetime.now(timezone.utc)
+        }
+        await db.user_sessions.insert_one(session_doc)
+        
     return TokenResponse(
         access_token=session_token,
-        user=user_response
+        user=UserResponse(
+            user_id=user_id, email=data.email, name=data.name, picture=None,
+            role=role, account_type=data.account_type, is_active=True, is_verified=False,
+            created_at=datetime.now(timezone.utc)
+        )
     )
 
 # ==================== LOGIN ====================
@@ -352,11 +362,44 @@ async def register(data: UserCreate, response: Response):
 @auth_router.post("/login", response_model=TokenResponse)
 async def login(data: UserLogin, response: Response):
     """Login with email/password"""
-    # Find user
-    user_doc = await db.users.find_one(
-        {"email": data.email},
-        {"_id": 0}
-    )
+    if db is None:
+        try:
+            from database.db_config import execute_pg_one, execute_pg_write
+            pg_user = await execute_pg_one("""
+                SELECT id, email, name, password_hash, role, account_type, is_active, is_verified, created_at
+                FROM users WHERE email = $1
+            """, data.email)
+            if not pg_user:
+                raise HTTPException(status_code=401, detail="Invalid email or password")
+            if pg_user['password_hash'] != hash_password(data.password):
+                raise HTTPException(status_code=401, detail="Invalid email or password")
+            if not pg_user['is_active']:
+                raise HTTPException(status_code=401, detail="Account deactivated")
+                
+            session_token = generate_session_token()
+            expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+            
+            await execute_pg_write("""
+                INSERT INTO user_sessions (user_id, session_token, expires_at)
+                VALUES ($1, $2, $3)
+            """, pg_user['id'], session_token, expires_at)
+            
+            user_response = UserResponse(
+                user_id=str(pg_user['id']), email=pg_user['email'], name=pg_user['name'], picture=None,
+                role=pg_user['role'].lower(), account_type=pg_user['account_type'] or pg_user['role'].lower(),
+                is_active=pg_user['is_active'], is_verified=pg_user['is_verified'],
+                created_at=pg_user['created_at']
+            )
+            return TokenResponse(access_token=session_token, user=user_response)
+        except HTTPException:
+            raise
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"PostgreSQL login error: {e}")
+            
+    # Find user in MongoDB
+    user_doc = await db.users.find_one({"email": data.email}, {"_id": 0})
     
     if not user_doc:
         raise HTTPException(status_code=401, detail="Invalid email or password")
@@ -373,44 +416,21 @@ async def login(data: UserLogin, response: Response):
     expires_at = datetime.now(timezone.utc) + timedelta(days=7)
     
     session_doc = {
-        "session_id": f"sess_{uuid.uuid4().hex}",
-        "user_id": user_doc["user_id"],
-        "session_token": session_token,
-        "expires_at": expires_at,
+        "session_id": f"sess_{uuid.uuid4().hex}", "user_id": user_doc["user_id"],
+        "session_token": session_token, "expires_at": expires_at,
         "created_at": datetime.now(timezone.utc)
     }
     
     await db.user_sessions.insert_one(session_doc)
     
-    # Set cookie
-    response.set_cookie(
-        key="session_token",
-        value=session_token,
-        httponly=True,
-        secure=True,
-        samesite="none",
-        path="/",
-        max_age=7 * 24 * 60 * 60
-    )
-    
-    # Return response
     user_response = UserResponse(
-        user_id=user_doc["user_id"],
-        email=user_doc["email"],
-        name=user_doc["name"],
-        picture=user_doc.get("picture"),
-        role=user_doc["role"],
-        account_type=user_doc.get("account_type", user_doc["role"]),
-        is_active=user_doc.get("is_active", True),
-        is_verified=user_doc.get("is_verified", False),
-        created_at=user_doc["created_at"] if isinstance(user_doc["created_at"], datetime) 
-                   else datetime.fromisoformat(user_doc["created_at"])
+        user_id=user_doc["user_id"], email=user_doc["email"], name=user_doc["name"], picture=user_doc.get("picture"),
+        role=user_doc["role"], account_type=user_doc.get("account_type", user_doc["role"]),
+        is_active=user_doc.get("is_active", True), is_verified=user_doc.get("is_verified", False),
+        created_at=user_doc["created_at"] if isinstance(user_doc["created_at"], datetime) else datetime.fromisoformat(user_doc["created_at"])
     )
     
-    return TokenResponse(
-        access_token=session_token,
-        user=user_response
-    )
+    return TokenResponse(access_token=session_token, user=user_response)
 
 # ==================== GOOGLE OAUTH ====================
 
