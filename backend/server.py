@@ -27,7 +27,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
+client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=3000)
 db = client[os.environ['DB_NAME']]
 
 # Create uploads directory
@@ -837,44 +837,53 @@ async def startup_init():
     except Exception as e:
         logger.warning(f"GJC Platform initialization skipped: {e}")
     
-    # Create indexes for better performance
-    await db.users.create_index("email", unique=True)
-    await db.users.create_index("user_id", unique=True)
-    await db.user_sessions.create_index("session_token")
-    await db.user_sessions.create_index("user_id")
-    await db.candidate_profiles.create_index("user_id")
-    await db.candidate_profiles.create_index("profile_id", unique=True)
-    await db.employer_profiles.create_index("user_id")
-    await db.employer_profiles.create_index("profile_id", unique=True)
-    await db.job_requests.create_index("job_id", unique=True)
-    await db.job_requests.create_index("employer_id")
-    await db.projects.create_index("project_id", unique=True)
-    await db.documents.create_index("doc_id", unique=True)
-    await db.notifications.create_index("user_id")
-    
-    # Create default admin user if not exists
-    admin_exists = await db.users.find_one({"role": "admin"})
-    if not admin_exists:
-        import hashlib
-        salt = os.environ.get('PASSWORD_SALT', 'gjc_default_salt_change_in_production')
-        admin_password = hashlib.sha256(f"admin123{salt}".encode()).hexdigest()
+    try:
+        # Check if MongoDB is actually available
+        await client.admin.command('ping')
+        logger.info("MongoDB connected successfully. Initializing collections...")
         
-        await db.users.insert_one({
-            "user_id": "user_admin001",
-            "email": "admin@gjc.ro",
-            "name": "GJC Admin",
-            "password_hash": admin_password,
-            "role": "admin",
-            "is_active": True,
-            "is_verified": True,
-            "auth_provider": "email",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc)
-        })
-        logger.info("Default admin user created: admin@gjc.ro / admin123")
-    
-    # Initialize blog posts
-    await startup_init_blog_posts()
+        # Create indexes for better performance
+        await db.users.create_index("email", unique=True)
+        await db.users.create_index("user_id", unique=True)
+        await db.user_sessions.create_index("session_token")
+        await db.user_sessions.create_index("user_id")
+        await db.candidate_profiles.create_index("user_id")
+        await db.candidate_profiles.create_index("profile_id", unique=True)
+        await db.employer_profiles.create_index("user_id")
+        await db.employer_profiles.create_index("profile_id", unique=True)
+        await db.job_requests.create_index("job_id", unique=True)
+        await db.job_requests.create_index("employer_id")
+        await db.projects.create_index("project_id", unique=True)
+        await db.documents.create_index("doc_id", unique=True)
+        await db.notifications.create_index("user_id")
+        
+        # Create default admin user if not exists
+        admin_exists = await db.users.find_one({"role": "admin"})
+        if not admin_exists:
+            import hashlib
+            salt = os.environ.get('PASSWORD_SALT', 'gjc_default_salt_change_in_production')
+            admin_password = hashlib.sha256(f"admin123{salt}".encode()).hexdigest()
+            
+            await db.users.insert_one({
+                "user_id": "user_admin001",
+                "email": "admin@gjc.ro",
+                "name": "GJC Admin",
+                "password_hash": admin_password,
+                "role": "admin",
+                "is_active": True,
+                "is_verified": True,
+                "auth_provider": "email",
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc)
+            })
+            logger.info("Default admin user created: admin@gjc.ro / admin123")
+        
+        # Initialize blog posts
+        await startup_init_blog_posts()
+        
+    except Exception as e:
+        logger.error(f"MongoDB not available during startup: {e}")
+        logger.warning("Running WITHOUT MongoDB. Endpoints requiring DB will fail gracefully.")
 
 async def startup_init_blog_posts():
     """Initialize blog posts"""
