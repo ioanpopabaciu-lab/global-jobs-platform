@@ -85,7 +85,10 @@ class DatabaseManager:
             return self._mongo_client
         
         try:
-            self._mongo_client = AsyncIOMotorClient(DatabaseConfig.MONGO_URL)
+            self._mongo_client = AsyncIOMotorClient(
+                DatabaseConfig.MONGO_URL,
+                serverSelectionTimeoutMS=2000
+            )
             # Test connection
             await self._mongo_client.admin.command('ping')
             logger.info("✓ MongoDB connection initialized")
