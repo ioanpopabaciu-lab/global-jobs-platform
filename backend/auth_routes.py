@@ -283,9 +283,13 @@ async def register(data: UserCreate, response: Response):
     session_token = generate_session_token()
     expires_at = datetime.now(timezone.utc) + timedelta(days=7)
     
-    if db is None:
-        try:
-            from database.db_config import execute_pg_write, execute_pg_one, db_manager
+    # Check fallback DB
+    try:
+        from database.db_config import execute_pg_write, execute_pg_one, db_manager
+        
+        # Determine if we should use fallback
+        if not db_manager.mongo_available:
+            # Fallback to pure PostgreSQL authentication
             
             # Setup pure postgres auth schema if missing
             await execute_pg_write("""
@@ -295,8 +299,13 @@ async def register(data: UserCreate, response: Response):
             ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT false,
             ADD COLUMN IF NOT EXISTS auth_provider VARCHAR(50) DEFAULT 'email',
             ADD COLUMN IF NOT EXISTS account_type VARCHAR(50);
-            ALTER TABLE users ALTER COLUMN mongo_user_id DROP NOT NULL;
             """)
+            
+            try:
+                await execute_pg_write("ALTER TABLE users ALTER COLUMN mongo_user_id DROP NOT NULL")
+            except Exception:
+                pass # Ignore if constraint doesn't exist or already dropped
+                
             await execute_pg_write("""
             CREATE TABLE IF NOT EXISTS user_sessions (
                 id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -320,34 +329,45 @@ async def register(data: UserCreate, response: Response):
                 INSERT INTO user_sessions (user_id, session_token, expires_at)
                 VALUES ($1, $2, $3)
             """, pg_user_id['id'], session_token, expires_at)
+            
+            # Return token and exit immediately (DO NOT flow to Mongo)
+            return TokenResponse(
+                access_token=session_token,
+                user=UserResponse(
+                    user_id=str(pg_user_id['id']), email=data.email, name=data.name, picture=None,
+                    role=role, account_type=data.account_type, is_active=True, is_verified=False,
+                    created_at=datetime.now(timezone.utc)
+                )
+            )
 
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            raise HTTPException(status_code=500, detail=f"Database fallback error: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Database fallback error: {str(e)}")
             
-    else:
-        # Standard MongoDB Flow
-        existing = await db.users.find_one({"email": data.email}, {"_id": 0})
-        if existing:
-            raise HTTPException(status_code=400, detail="Email already registered")
-            
-        user_doc = {
-            "user_id": user_id, "email": data.email, "name": data.name,
-            "password_hash": hashed_pw, "role": role, "account_type": data.account_type,
-            "picture": None, "is_active": True, "is_verified": False,
-            "auth_provider": "email", "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc)
-        }
-        await db.users.insert_one(user_doc)
+    # Standard MongoDB Flow (Only runs if mongo_available is True AND the if block was skipped)
+    existing = await db.users.find_one({"email": data.email}, {"_id": 0})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
         
-        session_doc = {
-            "session_id": f"sess_{uuid.uuid4().hex}", "user_id": user_id,
-            "session_token": session_token, "expires_at": expires_at,
-            "created_at": datetime.now(timezone.utc)
-        }
-        await db.user_sessions.insert_one(session_doc)
-        
+    user_doc = {
+        "user_id": user_id, "email": data.email, "name": data.name,
+        "password_hash": hashed_pw, "role": role, "account_type": data.account_type,
+        "picture": None, "is_active": True, "is_verified": False,
+        "auth_provider": "email", "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    await db.users.insert_one(user_doc)
+    
+    session_doc = {
+        "session_id": f"sess_{uuid.uuid4().hex}", "user_id": user_id,
+        "session_token": session_token, "expires_at": expires_at,
+        "created_at": datetime.now(timezone.utc)
+    }
+    await db.user_sessions.insert_one(session_doc)
+    
     return TokenResponse(
         access_token=session_token,
         user=UserResponse(
@@ -362,9 +382,13 @@ async def register(data: UserCreate, response: Response):
 @auth_router.post("/login", response_model=TokenResponse)
 async def login(data: UserLogin, response: Response):
     """Login with email/password"""
-    if db is None:
-        try:
-            from database.db_config import execute_pg_one, execute_pg_write
+    
+    # Global fallback safety
+    try:
+        from database.db_config import execute_pg_one, execute_pg_write, db_manager
+        use_fallback = not db_manager.mongo_available
+        
+        if use_fallback:
             pg_user = await execute_pg_one("""
                 SELECT id, email, name, password_hash, role, account_type, is_active, is_verified, created_at
                 FROM users WHERE email = $1
@@ -391,14 +415,15 @@ async def login(data: UserLogin, response: Response):
                 created_at=pg_user['created_at']
             )
             return TokenResponse(access_token=session_token, user=user_response)
-        except HTTPException:
-            raise
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            raise HTTPException(status_code=500, detail=f"PostgreSQL login error: {e}")
-            
-    # Find user in MongoDB
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"PostgreSQL login error: {e}")
+        
+    # Standard MongoDB Flow (Only runs if mongo_available is True)
     user_doc = await db.users.find_one({"email": data.email}, {"_id": 0})
     
     if not user_doc:
