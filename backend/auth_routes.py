@@ -52,17 +52,19 @@ async def get_current_user(request: Request) -> dict:
     if not session_token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    from database.db_config import execute_pg_one, execute_pg_write
+    
     # Find session
-    session_doc = await db.user_sessions.find_one(
-        {"session_token": session_token},
-        {"_id": 0}
+    session_row = await execute_pg_one(
+        "SELECT user_id, expires_at FROM user_sessions WHERE session_token = $1",
+        session_token
     )
     
-    if not session_doc:
+    if not session_row:
         raise HTTPException(status_code=401, detail="Invalid session")
     
     # Check expiry
-    expires_at = session_doc["expires_at"]
+    expires_at = session_row["expires_at"]
     if isinstance(expires_at, str):
         expires_at = datetime.fromisoformat(expires_at)
     if expires_at.tzinfo is None:
@@ -70,22 +72,29 @@ async def get_current_user(request: Request) -> dict:
     
     if expires_at < datetime.now(timezone.utc):
         # Delete expired session
-        await db.user_sessions.delete_one({"session_token": session_token})
+        await execute_pg_write("DELETE FROM user_sessions WHERE session_token = $1", session_token)
         raise HTTPException(status_code=401, detail="Session expired")
     
     # Get user
-    user_doc = await db.users.find_one(
-        {"user_id": session_doc["user_id"]},
-        {"_id": 0, "password_hash": 0}
+    user_row = await execute_pg_one(
+        "SELECT id, email, name, role, account_type, is_active FROM users WHERE id = $1",
+        session_row["user_id"]
     )
     
-    if not user_doc:
+    if not user_row:
         raise HTTPException(status_code=401, detail="User not found")
     
-    if not user_doc.get("is_active", True):
+    if not user_row.get("is_active", True):
         raise HTTPException(status_code=401, detail="Account deactivated")
     
-    return user_doc
+    return {
+        "user_id": str(user_row["id"]),
+        "email": user_row["email"],
+        "name": user_row["name"],
+        "role": user_row["role"].lower() if user_row["role"] else "candidate",
+        "account_type": user_row["account_type"] or (user_row["role"].lower() if user_row["role"] else "candidate"),
+        "is_active": user_row["is_active"]
+    }
 
 def require_role(allowed_roles: list):
     """Dependency to check user role"""
@@ -604,7 +613,8 @@ async def logout(request: Request, response: Response):
             session_token = auth_header.split(" ")[1]
     
     if session_token:
-        await db.user_sessions.delete_one({"session_token": session_token})
+        from database.db_config import execute_pg_write
+        await execute_pg_write("DELETE FROM user_sessions WHERE session_token = $1", session_token)
     
     response.delete_cookie(key="session_token", path="/")
     
@@ -615,7 +625,8 @@ async def logout(request: Request, response: Response):
 @auth_router.post("/password/reset-request")
 async def request_password_reset(data: PasswordResetRequest):
     """Request password reset email"""
-    user = await db.users.find_one({"email": data.email}, {"_id": 0})
+    from database.db_config import execute_pg_one, execute_pg_write
+    user = await execute_pg_one("SELECT id FROM users WHERE email = $1", data.email)
     
     # Always return success (don't reveal if email exists)
     if not user:
@@ -625,13 +636,10 @@ async def request_password_reset(data: PasswordResetRequest):
     reset_token = secrets.token_urlsafe(32)
     expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
     
-    await db.password_resets.insert_one({
-        "token": reset_token,
-        "user_id": user["user_id"],
-        "expires_at": expires_at,
-        "used": False,
-        "created_at": datetime.now(timezone.utc)
-    })
+    await execute_pg_write("""
+        INSERT INTO password_resets (user_id, token, expires_at, used)
+        VALUES ($1, $2, $3, $4)
+    """, str(user["id"]), reset_token, expires_at, False)
     
     # TODO: Send email with reset link
     # For now, just return success
