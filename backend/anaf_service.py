@@ -239,8 +239,10 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
             "denumire": denumire,
             "company_name": denumire,
             "adresa": adresa,
+            "address": adresa,
             "oras": oras,
             "judet": judet,
+            "county": judet,
             "strada": strada,
             "numar_strada": numar_strada,
             "numar_reg_com": numar_reg_com,
@@ -294,7 +296,8 @@ VERIFIED_COMPANIES = {
     # GJC - Owner company (verified)
     "48270947": {
         "denumire": "GLOBAL JOBS CONSULTING S.R.L.",
-        "adresa": "România",
+        "adresa": "Str. Parcul Traian nr. 1, Oradea",
+        "judet": "Bihor",
         "numar_reg_com": "J2023001458054",
         "cod_caen": "7810",
         "denumire_caen": "Activități ale agențiilor de plasare a forței de muncă",
@@ -340,6 +343,9 @@ def get_verified_company(cui: str) -> Optional[Dict[str, Any]]:
             "denumire": company["denumire"],
             "company_name": company["denumire"],
             "adresa": company["adresa"],
+            "address": company["adresa"],
+            "judet": company.get("judet", ""),
+            "county": company.get("judet", ""),
             "numar_reg_com": company["numar_reg_com"],
             "telefon": "",
             "cod_postal": "",
@@ -393,7 +399,9 @@ async def query_openapi(cui: str) -> Optional[Dict[str, Any]]:
                         "denumire": data.get("nume", ""),
                         "company_name": data.get("nume", ""),
                         "adresa": data.get("adresa", ""),
+                        "address": data.get("adresa", ""),
                         "judet": data.get("judet", ""),
+                        "county": data.get("judet", ""),
                         "stare": data.get("stare", "ACTIVA"),
                     }
                 }
@@ -418,7 +426,9 @@ async def query_termene(cui: str) -> Optional[Dict[str, Any]]:
                         "denumire": data.get("nume", "") or data.get("denumire", ""),
                         "company_name": data.get("nume", "") or data.get("denumire", ""),
                         "adresa": data.get("adresa", ""),
+                        "address": data.get("adresa", ""),
                         "judet": data.get("judet", ""),
+                        "county": data.get("judet", ""),
                         "stare": "ACTIVA",
                     }
                 }
@@ -456,7 +466,9 @@ async def query_listafirme(cui: str) -> Optional[Dict[str, Any]]:
                             "denumire": denumire,
                             "company_name": denumire,
                             "adresa": adresa,
+                            "address": adresa,
                             "judet": judet,
+                            "county": judet,
                             "stare": "ACTIVA",
                         }
                     }
