@@ -21,6 +21,7 @@ class UserBase(BaseModel):
     email: EmailStr
     name: str
     picture: Optional[str] = None
+    device_token: Optional[str] = None  # FCM/APNs push token
     role: UserRole = "candidate"
     account_type: AccountType = "candidate"
     is_active: bool = True

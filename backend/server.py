@@ -20,6 +20,7 @@ from auth_routes import auth_router, set_database as set_auth_db
 from portal_routes import portal_router, set_database as set_portal_db
 from admin_routes import admin_router, set_database as set_admin_db
 from notification_routes import notification_router, set_database as set_notification_db
+from api_v2_routes import v2_router, set_database as set_v2_db
 from storage import init_storage
 
 ROOT_DIR = Path(__file__).parent
@@ -782,6 +783,7 @@ app.include_router(auth_router, prefix="/api")
 app.include_router(portal_router, prefix="/api")
 app.include_router(admin_router, prefix="/api")
 app.include_router(notification_router, prefix="/api")
+app.include_router(v2_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -814,6 +816,7 @@ async def startup_init():
     set_portal_db(db)
     set_admin_db(db)
     set_notification_db(db)
+    set_v2_db(db)
     
     # Initialize cloud storage
     try:
