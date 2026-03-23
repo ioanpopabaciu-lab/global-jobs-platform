@@ -126,10 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const loginWithGoogle = () => {
-    if (typeof window !== "undefined") {
-      const redirectUrl = window.location.origin + "/auth/callback";
-      window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
-    }
+    alert("Google login coming soon");
   };
 
   const logout = async () => {
