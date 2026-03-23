@@ -28,10 +28,10 @@ class DatabaseConfig:
     """Database configuration from environment variables"""
     
     # PostgreSQL (Supabase Default if not in ENV)
-    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "db.mxsgkgokjsgurlnprjff.supabase.co")
-    POSTGRES_PORT = int(os.environ.get("POSTGRES_PORT", 5432))
+    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "aws-0-eu-west-1.pooler.supabase.com")
+    POSTGRES_PORT = int(os.environ.get("POSTGRES_PORT", 6543))
     POSTGRES_DB = os.environ.get("POSTGRES_DB", "postgres")
-    POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
+    POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres.mxsgkgokjsgurlnprjff")
     POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "your_supabase_password_here")
     
     # MongoDB (existing)
