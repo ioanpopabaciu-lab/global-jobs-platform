@@ -118,6 +118,11 @@ class DatabaseManager:
         return self._pg_pool is not None
     
     @property
+    def mongo_available(self) -> bool:
+        """Check if MongoDB is available"""
+        return self._mongo_client is not None
+    
+    @property
     def mongo(self) -> Optional[AsyncIOMotorClient]:
         """Get MongoDB client"""
         return self._mongo_client
