@@ -14,15 +14,30 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    // Check content type before parsing
+    const contentType = response.headers.get("content-type");
+    let data;
     
-    // Return original data and status code back to client
+    if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+    } else {
+        const rawText = await response.text();
+        console.error("!!! RAW NON-JSON RESPONSE FROM BACKEND !!!", rawText);
+        data = { detail: "RAW ERROR: " + rawText.substring(0, 300) };
+    }
+    
+    // Explicitly log backend errors so they are visible in Node console or Browser
+    if (!response.ok) {
+        console.error("!!! SUPABASE/BACKEND ERROR !!! :", JSON.stringify(data, null, 2));
+    }
+    
+    // Return the EXACT same status and data to the Next.js client
     return NextResponse.json(data, { status: response.status });
     
   } catch (error) {
     console.error("Login proxy error:", error);
     return NextResponse.json(
-      { success: false, message: "Eroare internă de server (Proxy)", error: String(error) },
+      { detail: "PROXY ERROR: " + String(error) },
       { status: 500 }
     );
   }
