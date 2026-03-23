@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
 from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
@@ -38,6 +38,20 @@ app = FastAPI(
     title="Global Jobs Consulting API",
     description="API pentru recrutare și plasare forță de muncă din Asia și Africa",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://gjc.ro",
+        "https://www.gjc.ro",
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "*"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 api_router = APIRouter(prefix="/api")
