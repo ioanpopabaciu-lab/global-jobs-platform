@@ -23,7 +23,7 @@ FAILED_LOOKUPS_LOG = "/app/logs/failed_company_lookups.log"
 PRIMARY_API_URL = "https://webservicesp.anaf.ro/api/PlatitorTvaRest/v9/tva"
 
 # API timeout in seconds
-API_TIMEOUT = 10
+API_TIMEOUT = 3
 
 # CAEN codes eligible for international workforce recruitment
 ELIGIBLE_CAEN_CODES = {
@@ -366,6 +366,100 @@ def get_verified_company(cui: str) -> Optional[Dict[str, Any]]:
     }
 
 
+# ==================== FALLBACK APIs ====================
+
+async def query_openapi(cui: str) -> Optional[Dict[str, Any]]:
+    """Fallback 1 - OpenAPI.ro"""
+    try:
+        import os
+        api_key = os.getenv("OPENAPI_KEY", "")
+        # Even without key, attempt request case user wants to test
+        headers = {"x-api-key": api_key} if api_key else {}
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            response = await client.get(
+                f"https://api.openapi.ro/api/companies/{cui}",
+                headers=headers
+            )
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "success": True,
+                    "source": "openapi.ro",
+                    "verified": True,
+                    "company": {
+                        "cui_numeric": cui,
+                        "denumire": data.get("nume", ""),
+                        "adresa": data.get("adresa", ""),
+                        "judet": data.get("judet", ""),
+                        "stare": data.get("stare", "ACTIVA"),
+                    }
+                }
+    except Exception as e:
+        logger.error(f"[OPENAPI_ERROR] {e}")
+    return None
+
+
+async def query_termene(cui: str) -> Optional[Dict[str, Any]]:
+    """Fallback 2 - Termene.ro"""
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            response = await client.get(f"https://termene.ro/api/v1/firmaDate?cui={cui}")
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "success": True,
+                    "source": "termene.ro",
+                    "verified": True,
+                    "company": {
+                        "cui_numeric": cui,
+                        "denumire": data.get("nume", "") or data.get("denumire", ""),
+                        "adresa": data.get("adresa", ""),
+                        "judet": data.get("judet", ""),
+                        "stare": "ACTIVA",
+                    }
+                }
+    except Exception as e:
+        logger.error(f"[TERMENE_ERROR] {e}")
+    return None
+
+
+async def query_listafirme(cui: str) -> Optional[Dict[str, Any]]:
+    """Fallback 3 - listafirme.ro HTML Scraping"""
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            response = await client.get(f"https://www.listafirme.ro/firma/{cui}", follow_redirects=True)
+            if response.status_code == 200:
+                html = response.text
+                
+                title_match = re.search(r'<title>(.*?)\s*-', html)
+                denumire = title_match.group(1).strip() if title_match else ""
+                
+                adresa_match = re.search(r'Adresa(?:.*?)</(?:th|td)>(?:.*?)<(?:td|div)[^>]*>(.*?)</(?:td|div)>', html, re.IGNORECASE | re.DOTALL)
+                adresa = adresa_match.group(1).strip() if adresa_match else ""
+                adresa = re.sub(r'<[^>]+>', '', adresa).strip()
+                
+                judet_match = re.search(r'Jude(?:&#539;|ț|t)(?:.*?)</(?:th|td)>(?:.*?)<(?:td|div)[^>]*>(.*?)</(?:td|div)>', html, re.IGNORECASE | re.DOTALL)
+                judet = judet_match.group(1).strip() if judet_match else ""
+                judet = re.sub(r'<[^>]+>', '', judet).strip()
+                
+                if denumire:
+                    return {
+                        "success": True,
+                        "source": "listafirme.ro",
+                        "verified": True,
+                        "company": {
+                            "cui_numeric": cui,
+                            "denumire": denumire,
+                            "adresa": adresa,
+                            "judet": judet,
+                            "stare": "ACTIVA",
+                        }
+                    }
+    except Exception as e:
+        logger.error(f"[LISTAFIRME_ERROR] {e}")
+    return None
+
+
 async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
     """
     SECURE company lookup - NO mock data, NO generated data.
@@ -436,20 +530,35 @@ async def lookup_company_anaf(cui: str) -> Dict[str, Any]:
                 "manual_entry_message": "Puteți continua cu introducerea manuală a datelor companiei. Echipa noastră va verifica datele în maxim 24 de ore."
             }
     
-    # ANAF API unavailable - allow manual entry with pending verification
-    log_failed_lookup(cui_clean, "API_UNAVAILABLE", {
-        "api": "ANAF",
+    # Fallback 1: OpenAPI
+    openapi_result = await query_openapi(cui_clean)
+    if openapi_result:
+        logger.info(f"[LOOKUP_SUCCESS] Company verified via OpenAPI")
+        return openapi_result
+        
+    # Fallback 2: Termene
+    termene_result = await query_termene(cui_clean)
+    if termene_result:
+        logger.info(f"[LOOKUP_SUCCESS] Company verified via Termene")
+        return termene_result
+        
+    # Fallback 3: ListaFirme
+    listafirme_result = await query_listafirme(cui_clean)
+    if listafirme_result:
+        logger.info(f"[LOOKUP_SUCCESS] Company verified via listafirme.ro")
+        return listafirme_result
+    
+    # All sources failed
+    log_failed_lookup(cui_clean, "ALL_SOURCES_FAILED", {
         "timestamp": datetime.now(timezone.utc).isoformat()
     })
     
     return {
         "success": False,
-        "error": "Serviciul ANAF nu este disponibil momentan.",
+        "error": "Verificare automată indisponibilă. Introduceți manual datele companiei.",
         "verified": False,
         "cui_searched": cui_clean,
-        "retry_after": 60,
-        "allow_manual_entry": True,
-        "manual_entry_message": "Puteți continua cu introducerea manuală a datelor companiei. Acestea vor fi verificate de echipa noastră în maxim 24 de ore."
+        "allow_manual_entry": True
     }
 
 
