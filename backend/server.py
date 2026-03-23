@@ -50,8 +50,8 @@ app.add_middleware(
         "*"
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["*", "Content-Type", "Authorization", "Access-Control-Allow-Origin"],
 )
 
 api_router = APIRouter(prefix="/api")
