@@ -39,8 +39,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("gjc_token") : null;
+      
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+      
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        // No token, cannot check auth
+        setUser(null);
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(`${API_URL}/auth/me`, {
-        credentials: "include",
+        headers,
       });
 
       if (response.ok) {
@@ -50,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setUser(null);
         setIsAuthenticated(false);
+        if (typeof window !== "undefined") localStorage.removeItem("gjc_token");
       }
     } catch (error) {
       console.error("Auth check failed:", error);
@@ -65,10 +82,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [checkAuth]);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      credentials: "omit", // Better for proxies, handles cookies differently if needed
       body: JSON.stringify({ email, password }),
     });
 
@@ -78,16 +95,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(data.detail || "Login failed");
     }
 
+    if (typeof window !== "undefined" && data.access_token) {
+      localStorage.setItem("gjc_token", data.access_token);
+    }
     setUser(data.user);
     setIsAuthenticated(true);
     return data;
   };
 
   const register = async (name: string, email: string, password: string, accountType: string) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
+    const response = await fetch(`/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      credentials: "omit",
       body: JSON.stringify({ name, email, password, account_type: accountType }),
     });
 
@@ -97,6 +117,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(data.detail || "Registration failed");
     }
 
+    if (typeof window !== "undefined" && data.access_token) {
+      localStorage.setItem("gjc_token", data.access_token);
+    }
     setUser(data.user);
     setIsAuthenticated(true);
     return data;
@@ -111,9 +134,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
+      if (typeof window !== "undefined") localStorage.removeItem("gjc_token");
       await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
-        credentials: "include",
+        credentials: "omit",
       });
     } catch (error) {
       console.error("Logout error:", error);
