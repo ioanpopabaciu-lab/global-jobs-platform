@@ -237,6 +237,7 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
             "cui": f"RO{cui_value}" if cui_value else "",
             "cui_numeric": str(cui_value),
             "denumire": denumire,
+            "company_name": denumire,
             "adresa": adresa,
             "oras": oras,
             "judet": judet,
@@ -337,6 +338,7 @@ def get_verified_company(cui: str) -> Optional[Dict[str, Any]]:
             "cui": f"RO{cui}",
             "cui_numeric": cui,
             "denumire": company["denumire"],
+            "company_name": company["denumire"],
             "adresa": company["adresa"],
             "numar_reg_com": company["numar_reg_com"],
             "telefon": "",
@@ -389,6 +391,7 @@ async def query_openapi(cui: str) -> Optional[Dict[str, Any]]:
                     "company": {
                         "cui_numeric": cui,
                         "denumire": data.get("nume", ""),
+                        "company_name": data.get("nume", ""),
                         "adresa": data.get("adresa", ""),
                         "judet": data.get("judet", ""),
                         "stare": data.get("stare", "ACTIVA"),
@@ -413,6 +416,7 @@ async def query_termene(cui: str) -> Optional[Dict[str, Any]]:
                     "company": {
                         "cui_numeric": cui,
                         "denumire": data.get("nume", "") or data.get("denumire", ""),
+                        "company_name": data.get("nume", "") or data.get("denumire", ""),
                         "adresa": data.get("adresa", ""),
                         "judet": data.get("judet", ""),
                         "stare": "ACTIVA",
@@ -450,6 +454,7 @@ async def query_listafirme(cui: str) -> Optional[Dict[str, Any]]:
                         "company": {
                             "cui_numeric": cui,
                             "denumire": denumire,
+                            "company_name": denumire,
                             "adresa": adresa,
                             "judet": judet,
                             "stare": "ACTIVA",

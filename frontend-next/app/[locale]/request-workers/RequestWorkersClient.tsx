@@ -89,10 +89,16 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
       });
       const data = await response.json();
       
+      console.log('Calling API...')
+      console.log('Response status:', response.status)
+      console.log('Response data:', data)
+      console.log('Company name from API:', 
+        data.company?.company_name || data.company?.denumire || data.company_name || data.denumire || data.name)
+      
       if (response.ok && data.success && data.company) {
         setFormData(prev => ({
           ...prev,
-          companyName: data.company.denumire || prev.companyName,
+          companyName: data.company.company_name || data.company.denumire || prev.companyName,
           address: data.company.adresa || prev.address,
           county: data.company.judet || prev.county,
           companyStatus: data.company.stare || "VERIFICAT",
