@@ -82,7 +82,7 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
     setSubmitError(null);
     
     try {
-      const response = await fetch("https://global-jobs-platform-production.up.railway.app/api/auth/lookup-company", {
+      const response = await fetch("/api/verify-cui", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cui: formData.cui }),
