@@ -2,17 +2,24 @@ import asyncpg
 import os
 from contextlib import asynccontextmanager
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres.mxsgkgokjsgurlnprjff:your_supabase_password_here@aws-0-eu-west-1.pooler.supabase.com:6543/postgres")
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+def get_database_url() -> str:
+    database_url = os.environ.get("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError("DATABASE_URL environment variable is not set")
+    return database_url
 
 async def execute_pg_write(query, *args):
-    conn = await asyncpg.connect(DATABASE_URL)
+    conn = await asyncpg.connect(get_database_url())
     try:
         await conn.execute(query, *args)
     finally:
         await conn.close()
 
 async def execute_pg_one(query, *args):
-    conn = await asyncpg.connect(DATABASE_URL)
+    conn = await asyncpg.connect(get_database_url())
     try:
         return await conn.fetchrow(query, *args)
     finally:
@@ -20,7 +27,7 @@ async def execute_pg_one(query, *args):
 
 @asynccontextmanager
 async def get_pg_connection():
-    conn = await asyncpg.connect(DATABASE_URL)
+    conn = await asyncpg.connect(get_database_url())
     try:
         yield conn
     finally:
@@ -30,7 +37,7 @@ async def get_pg_connection():
 async def check_database_health():
     postgres_status = {"status": "unhealthy"}
     try:
-        conn = await asyncpg.connect(DATABASE_URL)
+        conn = await asyncpg.connect(get_database_url())
         try:
             await conn.execute("SELECT 1")
             postgres_status = {"status": "healthy"}
@@ -65,7 +72,7 @@ class DummyDBManager:
         
     async def init_all(self):
         try:
-            conn = await asyncpg.connect(DATABASE_URL)
+            conn = await asyncpg.connect(get_database_url())
             try:
                 await conn.execute("SELECT 1")
                 self._pg_available = True
