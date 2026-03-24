@@ -1,6 +1,8 @@
 import asyncpg
 import os
 from contextlib import asynccontextmanager
+from urllib.parse import urlparse
+import socket
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -9,6 +11,17 @@ def get_database_url() -> str:
     database_url = os.environ.get("DATABASE_URL")
     if not database_url:
         raise RuntimeError("DATABASE_URL environment variable is not set")
+
+    parsed = urlparse(database_url)
+    host = parsed.hostname
+    if not host:
+        raise RuntimeError("DATABASE_URL is invalid (missing hostname)")
+
+    try:
+        socket.getaddrinfo(host, None)
+    except socket.gaierror as e:
+        raise RuntimeError(f"DATABASE_URL hostname cannot be resolved: {host}") from e
+
     return database_url
 
 async def execute_pg_write(query, *args):
