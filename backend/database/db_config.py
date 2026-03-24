@@ -38,10 +38,20 @@ async def connect_pg():
     if not host or not user or password is None:
         raise RuntimeError("DATABASE_URL is invalid (missing user/password/hostname)")
 
+    ipv4 = None
     try:
-        ipv4 = socket.gethostbyname(host)
-    except OSError as e:
-        raise RuntimeError(f"DATABASE_URL hostname cannot be resolved to IPv4: {host}") from e
+        infos = socket.getaddrinfo(host, port, family=socket.AF_INET, type=socket.SOCK_STREAM)
+        if infos:
+            ipv4 = infos[0][4][0]
+    except socket.gaierror:
+        ipv4 = None
+
+    if not ipv4:
+        raise RuntimeError(
+            f"DATABASE_URL hostname has no IPv4 address: {host}. "
+            "Railway often lacks IPv6 egress; use the Supabase pooler hostname (aws-0-<region>.pooler.supabase.com) "
+            "or any IPv4-capable Postgres endpoint."
+        )
 
     return await asyncpg.connect(
         host=ipv4,
