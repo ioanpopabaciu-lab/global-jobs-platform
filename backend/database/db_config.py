@@ -24,15 +24,43 @@ def get_database_url() -> str:
 
     return database_url
 
+
+async def connect_pg():
+    database_url = get_database_url()
+    parsed = urlparse(database_url)
+
+    host = parsed.hostname
+    port = parsed.port or 5432
+    user = parsed.username
+    password = parsed.password
+    database = (parsed.path or "").lstrip("/") or "postgres"
+
+    if not host or not user or password is None:
+        raise RuntimeError("DATABASE_URL is invalid (missing user/password/hostname)")
+
+    try:
+        ipv4 = socket.gethostbyname(host)
+    except OSError as e:
+        raise RuntimeError(f"DATABASE_URL hostname cannot be resolved to IPv4: {host}") from e
+
+    return await asyncpg.connect(
+        host=ipv4,
+        port=port,
+        user=user,
+        password=password,
+        database=database,
+        ssl=True,
+    )
+
 async def execute_pg_write(query, *args):
-    conn = await asyncpg.connect(get_database_url())
+    conn = await connect_pg()
     try:
         await conn.execute(query, *args)
     finally:
         await conn.close()
 
 async def execute_pg_one(query, *args):
-    conn = await asyncpg.connect(get_database_url())
+    conn = await connect_pg()
     try:
         return await conn.fetchrow(query, *args)
     finally:
@@ -40,7 +68,7 @@ async def execute_pg_one(query, *args):
 
 @asynccontextmanager
 async def get_pg_connection():
-    conn = await asyncpg.connect(get_database_url())
+    conn = await connect_pg()
     try:
         yield conn
     finally:
@@ -50,7 +78,7 @@ async def get_pg_connection():
 async def check_database_health():
     postgres_status = {"status": "unhealthy"}
     try:
-        conn = await asyncpg.connect(get_database_url())
+        conn = await connect_pg()
         try:
             await conn.execute("SELECT 1")
             postgres_status = {"status": "healthy"}
@@ -85,7 +113,7 @@ class DummyDBManager:
         
     async def init_all(self):
         try:
-            conn = await asyncpg.connect(get_database_url())
+            conn = await connect_pg()
             try:
                 await conn.execute("SELECT 1")
                 self._pg_available = True
