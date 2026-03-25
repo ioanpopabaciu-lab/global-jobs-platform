@@ -54,7 +54,13 @@ async def connect_pg():
             "or any IPv4-capable Postgres endpoint."
         )
 
-    ssl_context = ssl.create_default_context(cafile=certifi.where())
+    pg_ssl_no_verify = os.environ.get("PG_SSL_NO_VERIFY", "").strip().lower() in {"1", "true", "yes", "on"}
+    if pg_ssl_no_verify:
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+    else:
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
 
     return await asyncpg.connect(
         host=host,
