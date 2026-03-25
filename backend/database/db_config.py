@@ -1,5 +1,6 @@
 import asyncpg
 import certifi
+import logging
 import os
 import socket
 import ssl
@@ -7,6 +8,8 @@ from contextlib import asynccontextmanager
 from urllib.parse import urlparse
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
+logger = logging.getLogger("db_config")
 
 
 def get_database_url() -> str:
@@ -54,7 +57,16 @@ async def connect_pg():
             "or any IPv4-capable Postgres endpoint."
         )
 
-    pg_ssl_no_verify = os.environ.get("PG_SSL_NO_VERIFY", "").strip().lower() in {"1", "true", "yes", "on"}
+    raw_pg_ssl_no_verify = os.environ.get("PG_SSL_NO_VERIFY", "")
+    pg_ssl_no_verify = raw_pg_ssl_no_verify.strip().lower() in {"1", "true", "yes", "on"}
+    logger.info(
+        "Postgres connect: host=%s port=%s db=%s ssl_no_verify=%s raw_PG_SSL_NO_VERIFY=%r",
+        host,
+        port,
+        database,
+        pg_ssl_no_verify,
+        raw_pg_ssl_no_verify,
+    )
     if pg_ssl_no_verify:
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         ssl_context.check_hostname = False
