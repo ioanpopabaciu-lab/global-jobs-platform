@@ -61,7 +61,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
+        const normalizedUser: User = {
+          id: userData.id || userData.user_id,
+          email: userData.email,
+          name: userData.name,
+          account_type: userData.account_type,
+          created_at: userData.created_at,
+          profile_completed: userData.profile_completed,
+        };
+        setUser(normalizedUser);
         setIsAuthenticated(true);
       } else {
         setUser(null);

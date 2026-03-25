@@ -105,6 +105,12 @@ def require_role(allowed_roles: list):
         return user
     return check_role
 
+
+@auth_router.get("/me")
+async def me(request: Request):
+    """Return current authenticated user"""
+    return await get_current_user(request)
+
 # ==================== ANAF COMPANY LOOKUP ====================
 
 class CUILookupRequest(BaseModel):

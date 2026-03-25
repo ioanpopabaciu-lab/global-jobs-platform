@@ -31,7 +31,26 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
+const API_URL = "/api";
+
+function buildAuthHeaders(): HeadersInit {
+  if (typeof window === "undefined") return { "Content-Type": "application/json" };
+  const token = localStorage.getItem("gjc_token");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+function splitFullName(fullName: string): { first_name: string; last_name: string } {
+  const cleaned = (fullName || "").trim().replace(/\s+/g, " ");
+  if (!cleaned) return { first_name: "", last_name: "" };
+  const parts = cleaned.split(" ");
+  if (parts.length === 1) return { first_name: parts[0], last_name: "" };
+  const last_name = parts[parts.length - 1];
+  const first_name = parts.slice(0, -1).join(" ");
+  return { first_name, last_name };
+}
 
 // Wizard steps
 const STEPS = [
@@ -119,6 +138,7 @@ export default function CandidateProfileWizard() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [fullName, setFullName] = useState("");
   const [profileData, setProfileData] = useState<ProfileData>({
     first_name: "",
     last_name: "",
@@ -152,41 +172,54 @@ export default function CandidateProfileWizard() {
   const loadProfile = async () => {
     try {
       const response = await fetch(`${API_URL}/portal/candidate/profile`, {
-        credentials: "include",
+        headers: buildAuthHeaders(),
       });
 
       if (response.ok) {
         const data = await response.json();
-        if (data && data.profile_id) {
+        const profile = data?.profile;
+
+        if (profile && profile.profile_id) {
+          const derivedFullName =
+            (profile.full_name as string) ||
+            `${profile.first_name || ""} ${profile.last_name || ""}`.trim();
+          setFullName(derivedFullName);
+
           setProfileData((prev) => ({
             ...prev,
-            first_name: data.first_name || "",
-            last_name: data.last_name || "",
-            date_of_birth: data.date_of_birth || "",
-            citizenship: data.citizenship || "",
-            phone: data.phone || "",
-            email: data.email || user?.email || "",
-            current_country: data.current_country || "",
-            current_city: data.current_city || "",
-            passport_number: data.passport_number || "",
-            passport_issue_date: data.passport_issue_date || "",
-            passport_expiry_date: data.passport_expiry_date || "",
-            preferred_industries: data.preferred_industries || [],
-            years_experience: data.years_experience || "",
-            education_level: data.education_level || "",
-            languages: data.languages || [],
-            skills: data.skills || "",
-            passport_doc_id: data.passport_doc_id || "",
-            cv_doc_id: data.cv_doc_id || "",
-            passport_photo_doc_id: data.passport_photo_doc_id || "",
-            video_presentation_url: data.video_presentation_url || "",
+            first_name: profile.first_name || "",
+            last_name: profile.last_name || "",
+            date_of_birth: profile.date_of_birth || "",
+            citizenship: profile.citizenship || "",
+            phone: profile.phone || "",
+            email: profile.email || user?.email || "",
+            current_country: profile.current_country || "",
+            current_city: profile.current_city || "",
+            passport_number: profile.passport_number || "",
+            passport_issue_date: profile.passport_issue_date || "",
+            passport_expiry_date: profile.passport_expiry_date || "",
+            preferred_industries: profile.preferred_industries || [],
+            years_experience: profile.years_experience || "",
+            education_level: profile.education_level || "",
+            languages: profile.languages || [],
+            skills: profile.skills || "",
+            passport_doc_id: profile.passport_doc_id || "",
+            cv_doc_id: profile.cv_doc_id || "",
+            passport_photo_doc_id: profile.passport_photo_doc_id || "",
+            video_presentation_url: profile.video_presentation_url || "",
           }));
+        } else {
+          setFullName(user?.name || "");
+          if (user?.name) {
+            const parts = splitFullName(user.name);
+            setProfileData((prev) => ({ ...prev, ...parts }));
+          }
         }
       }
 
       // Load existing documents
       const docsResponse = await fetch(`${API_URL}/portal/candidate/documents`, {
-        credentials: "include",
+        headers: buildAuthHeaders(),
       });
       if (docsResponse.ok) {
         const docsData = await docsResponse.json();
@@ -202,6 +235,15 @@ export default function CandidateProfileWizard() {
       console.error("Failed to load profile:", err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleFullNameChange = (value: string) => {
+    setFullName(value);
+    const parts = splitFullName(value);
+    setProfileData((prev) => ({ ...prev, ...parts }));
+    if (errors.full_name) {
+      setErrors((prev) => ({ ...prev, full_name: "" }));
     }
   };
 
@@ -252,8 +294,7 @@ export default function CandidateProfileWizard() {
     const newErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!profileData.first_name) newErrors.first_name = "Prenumele este obligatoriu";
-      if (!profileData.last_name) newErrors.last_name = "Numele de familie este obligatoriu";
+      if (!fullName.trim()) newErrors.full_name = "Numele complet este obligatoriu";
       if (!profileData.date_of_birth) newErrors.date_of_birth = "Data nașterii este obligatorie";
       if (!profileData.citizenship) newErrors.citizenship = "Cetățenia este obligatorie";
       if (!profileData.phone) newErrors.phone = "Telefonul este obligatoriu";
@@ -280,9 +321,11 @@ export default function CandidateProfileWizard() {
     try {
       const response = await fetch(`${API_URL}/portal/candidate/profile`, {
         method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profileData),
+        headers: buildAuthHeaders(),
+        body: JSON.stringify({
+          ...profileData,
+          ...splitFullName(fullName),
+        }),
       });
 
       if (!response.ok) {
@@ -323,7 +366,7 @@ export default function CandidateProfileWizard() {
     try {
       const response = await fetch(`${API_URL}/portal/candidate/profile/submit`, {
         method: "POST",
-        credentials: "include",
+        headers: buildAuthHeaders(),
       });
 
       if (!response.ok) {
@@ -419,29 +462,16 @@ export default function CandidateProfileWizard() {
           {/* Step 1: Personal Data */}
           {currentStep === 1 && (
             <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="first_name">Prenume *</Label>
-                  <Input
-                    id="first_name"
-                    value={profileData.first_name}
-                    onChange={(e) => handleInputChange("first_name", e.target.value)}
-                    placeholder="Ion"
-                    className={errors.first_name ? "border-red-500" : ""}
-                  />
-                  {errors.first_name && <p className="text-red-500 text-xs">{errors.first_name}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="last_name">Nume de Familie *</Label>
-                  <Input
-                    id="last_name"
-                    value={profileData.last_name}
-                    onChange={(e) => handleInputChange("last_name", e.target.value)}
-                    placeholder="Popescu"
-                    className={errors.last_name ? "border-red-500" : ""}
-                  />
-                  {errors.last_name && <p className="text-red-500 text-xs">{errors.last_name}</p>}
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="full_name">Nume complet *</Label>
+                <Input
+                  id="full_name"
+                  value={fullName}
+                  onChange={(e) => handleFullNameChange(e.target.value)}
+                  placeholder="Ion Popescu"
+                  className={errors.full_name ? "border-red-500" : ""}
+                />
+                {errors.full_name && <p className="text-red-500 text-xs">{errors.full_name}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
