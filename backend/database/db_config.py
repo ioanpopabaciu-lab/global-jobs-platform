@@ -1,8 +1,10 @@
 import asyncpg
+import certifi
 import os
+import socket
+import ssl
 from contextlib import asynccontextmanager
 from urllib.parse import urlparse
-import socket
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -38,28 +40,29 @@ async def connect_pg():
     if not host or not user or password is None:
         raise RuntimeError("DATABASE_URL is invalid (missing user/password/hostname)")
 
-    ipv4 = None
+    has_ipv4 = False
     try:
         infos = socket.getaddrinfo(host, port, family=socket.AF_INET, type=socket.SOCK_STREAM)
-        if infos:
-            ipv4 = infos[0][4][0]
+        has_ipv4 = bool(infos)
     except socket.gaierror:
-        ipv4 = None
+        has_ipv4 = False
 
-    if not ipv4:
+    if not has_ipv4:
         raise RuntimeError(
             f"DATABASE_URL hostname has no IPv4 address: {host}. "
             "Railway often lacks IPv6 egress; use the Supabase pooler hostname (aws-0-<region>.pooler.supabase.com) "
             "or any IPv4-capable Postgres endpoint."
         )
 
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+
     return await asyncpg.connect(
-        host=ipv4,
+        host=host,
         port=port,
         user=user,
         password=password,
         database=database,
-        ssl=True,
+        ssl=ssl_context,
     )
 
 async def execute_pg_write(query, *args):
