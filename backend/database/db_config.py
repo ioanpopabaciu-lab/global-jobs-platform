@@ -74,14 +74,25 @@ async def connect_pg():
     else:
         ssl_context = ssl.create_default_context(cafile=certifi.where())
 
-    return await asyncpg.connect(
-        host=host,
-        port=port,
-        user=user,
-        password=password,
-        database=database,
-        ssl=ssl_context,
-    )
+    try:
+        return await asyncpg.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database,
+            ssl=ssl_context,
+        )
+    except Exception as e:
+        logger.exception(
+            "Postgres connect failed: host=%s port=%s db=%s exc_type=%s exc=%r",
+            host,
+            port,
+            database,
+            type(e).__name__,
+            e,
+        )
+        raise
 
 async def execute_pg_write(query, *args):
     conn = await connect_pg()
