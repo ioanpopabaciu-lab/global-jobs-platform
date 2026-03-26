@@ -279,7 +279,7 @@ async def register_employer(data: EmployerRegisterRequest, response: Response):
 
 # ==================== REGISTRATION ====================
 
-@auth_router.post("/register", response_model=TokenResponse)
+@auth_router.post("/register", response_model=None)
 async def register(data: UserCreate, response: Response):
     """Register new user with email/password"""
     # Map account_type to role
