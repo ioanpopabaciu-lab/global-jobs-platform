@@ -11,6 +11,9 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 
 logger = logging.getLogger("db_config")
 
+# Pool global — inițializat o singură dată la startup
+_pool: asyncpg.Pool | None = None
+
 
 def get_database_url() -> str:
     database_url = os.environ.get("DATABASE_URL")
@@ -30,7 +33,23 @@ def get_database_url() -> str:
     return database_url
 
 
-async def connect_pg():
+def _build_ssl_context() -> ssl.SSLContext:
+    raw = os.environ.get("PG_SSL_NO_VERIFY", "")
+    no_verify = raw.strip().lower() in {"1", "true", "yes", "on"}
+    if no_verify:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+    else:
+        ctx = ssl.create_default_context(cafile=certifi.where())
+    return ctx
+
+
+async def init_pool() -> None:
+    """Creat pool-ul la startup. Apelat din DummyDBManager.init_all()."""
+    global _pool
+    if _pool is not None:
+        return
     database_url = get_database_url()
     parsed = urlparse(database_url)
 
@@ -57,75 +76,60 @@ async def connect_pg():
             "or any IPv4-capable Postgres endpoint."
         )
 
-    raw_pg_ssl_no_verify = os.environ.get("PG_SSL_NO_VERIFY", "")
-    pg_ssl_no_verify = raw_pg_ssl_no_verify.strip().lower() in {"1", "true", "yes", "on"}
     logger.info(
-        "Postgres connect: host=%s port=%s db=%s ssl_no_verify=%s raw_PG_SSL_NO_VERIFY=%r",
-        host,
-        port,
-        database,
-        pg_ssl_no_verify,
-        raw_pg_ssl_no_verify,
+        "Postgres create_pool: host=%s port=%s db=%s",
+        host, port, database,
     )
-    if pg_ssl_no_verify:
-        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-        ssl_context.check_hostname = False
-        ssl_context.verify_mode = ssl.CERT_NONE
-    else:
-        ssl_context = ssl.create_default_context(cafile=certifi.where())
+    ssl_context = _build_ssl_context()
 
     try:
-        return await asyncpg.connect(
+        _pool = await asyncpg.create_pool(
             host=host,
             port=port,
             user=user,
             password=password,
             database=database,
             ssl=ssl_context,
+            min_size=2,
+            max_size=10,
         )
+        logger.info("Postgres pool creat cu succes.")
     except Exception as e:
         logger.exception(
-            "Postgres connect failed: host=%s port=%s db=%s exc_type=%s exc=%r",
-            host,
-            port,
-            database,
-            type(e).__name__,
-            e,
+            "Postgres create_pool failed: host=%s port=%s db=%s exc_type=%s exc=%r",
+            host, port, database, type(e).__name__, e,
         )
         raise
 
+
+def get_pool() -> asyncpg.Pool:
+    if _pool is None:
+        raise RuntimeError("Pool-ul Postgres nu a fost inițializat. Apelează init_pool() la startup.")
+    return _pool
+
+
 async def execute_pg_write(query, *args):
-    conn = await connect_pg()
-    try:
+    async with get_pool().acquire() as conn:
         await conn.execute(query, *args)
-    finally:
-        await conn.close()
+
 
 async def execute_pg_one(query, *args):
-    conn = await connect_pg()
-    try:
+    async with get_pool().acquire() as conn:
         return await conn.fetchrow(query, *args)
-    finally:
-        await conn.close()
+
 
 @asynccontextmanager
 async def get_pg_connection():
-    conn = await connect_pg()
-    try:
+    async with get_pool().acquire() as conn:
         yield conn
-    finally:
-        await conn.close()
 
 
 async def check_database_health():
     postgres_status = {"status": "unhealthy"}
     try:
-        conn = await connect_pg()
-        try:
+        async with get_pool().acquire() as conn:
             await conn.execute("SELECT 1")
-            postgres_status = {"status": "healthy"}
-        finally:
-            await conn.close()
+        postgres_status = {"status": "healthy"}
     except Exception as e:
         postgres_status = {"status": "unhealthy", "error": str(e)}
 
@@ -140,6 +144,7 @@ async def check_database_health():
         "mongodb": mongodb_status,
     }
 
+
 # Provide a dummy db_manager with no mongo_available so legacy imports don't crash immediately
 class DummyDBManager:
     def __init__(self):
@@ -152,19 +157,19 @@ class DummyDBManager:
     @property
     def pg_available(self):
         return self._pg_available
-        
+
     async def init_all(self):
         try:
-            conn = await connect_pg()
-            try:
-                await conn.execute("SELECT 1")
-                self._pg_available = True
-            finally:
-                await conn.close()
+            await init_pool()
+            self._pg_available = True
         except Exception:
             self._pg_available = False
-        
+
     async def close(self):
-        pass
-        
+        global _pool
+        if _pool is not None:
+            await _pool.close()
+            _pool = None
+
+
 db_manager = DummyDBManager()
