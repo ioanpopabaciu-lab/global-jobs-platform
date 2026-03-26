@@ -92,6 +92,7 @@ async def init_pool() -> None:
             ssl=ssl_context,
             min_size=2,
             max_size=10,
+            statement_cache_size=0,
         )
         logger.info("Postgres pool creat cu succes.")
     except Exception as e:
