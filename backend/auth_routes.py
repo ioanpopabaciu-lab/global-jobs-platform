@@ -9,6 +9,7 @@ import httpx
 import hashlib
 import secrets
 import resend
+import asyncio
 import os
 import uuid
 from typing import Optional, List
@@ -25,6 +26,19 @@ db = None
 def set_database(database):
     global db
     db = database
+
+async def create_auth_tables():
+    from database.db_config import execute_pg_write
+    await execute_pg_write("""
+        CREATE TABLE IF NOT EXISTS email_verification_tokens (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+            token VARCHAR(64) UNIQUE NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+            expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+            used_at TIMESTAMP WITH TIME ZONE
+        )
+    """)
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -344,16 +358,6 @@ async def register(data: UserCreate, response: Response):
             # Creare token verificare email
             verification_token = secrets.token_urlsafe(32)
             await execute_pg_write("""
-                CREATE TABLE IF NOT EXISTS email_verification_tokens (
-                    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-                    token VARCHAR(64) UNIQUE NOT NULL,
-                    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-                    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-                    used_at TIMESTAMP WITH TIME ZONE
-                )
-            """)
-            await execute_pg_write("""
                 INSERT INTO email_verification_tokens (user_id, token, expires_at)
                 VALUES ($1, $2, NOW() + INTERVAL '24 hours')
             """, pg_user_id['id'], verification_token)
@@ -362,7 +366,7 @@ async def register(data: UserCreate, response: Response):
             frontend_url = os.getenv("FRONTEND_URL", "https://gjc.ro")
             resend.api_key = os.getenv("RESEND_API_KEY")
             verify_link = f"{frontend_url}/verify-email?token={verification_token}"
-            resend.Emails.send({
+            await asyncio.to_thread(resend.Emails.send, {
                 "from": "noreply@gjc.ro",
                 "to": data.email,
                 "subject": "Confirmă adresa de email — GJC",
@@ -455,7 +459,7 @@ async def verify_email(token: str):
 
     # Email de bun venit
     resend.api_key = os.getenv("RESEND_API_KEY")
-    resend.Emails.send({
+    await asyncio.to_thread(resend.Emails.send, {
         "from": "noreply@gjc.ro",
         "to": row['email'],
         "subject": "Email confirmat — Bun venit pe GJC!",

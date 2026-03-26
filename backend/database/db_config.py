@@ -90,7 +90,7 @@ async def init_pool() -> None:
             password=password,
             database=database,
             ssl=ssl_context,
-            min_size=2,
+            min_size=1,
             max_size=10,
             statement_cache_size=0,
         )
