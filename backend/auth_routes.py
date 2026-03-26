@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 import httpx
 import hashlib
 import secrets
+import resend
 import os
 import uuid
 from typing import Optional, List
@@ -339,21 +340,55 @@ async def register(data: UserCreate, response: Response):
                 INSERT INTO users (email, name, password_hash, role, account_type, is_active, is_verified)
                 VALUES ($1, $2, $3, $4::user_role, $5, $6, $7) RETURNING id
             """, data.email, data.name, hashed_pw, role.upper(), data.account_type, True, False)
-            
+
+            # Creare token verificare email
+            verification_token = secrets.token_urlsafe(32)
+            await execute_pg_write("""
+                CREATE TABLE IF NOT EXISTS email_verification_tokens (
+                    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+                    token VARCHAR(64) UNIQUE NOT NULL,
+                    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                    used_at TIMESTAMP WITH TIME ZONE
+                )
+            """)
+            await execute_pg_write("""
+                INSERT INTO email_verification_tokens (user_id, token, expires_at)
+                VALUES ($1, $2, NOW() + INTERVAL '24 hours')
+            """, pg_user_id['id'], verification_token)
+
+            # Trimite email de confirmare via Resend
+            frontend_url = os.getenv("FRONTEND_URL", "https://gjc.ro")
+            resend.api_key = os.getenv("RESEND_API_KEY")
+            verify_link = f"{frontend_url}/verify-email?token={verification_token}"
+            resend.Emails.send({
+                "from": "noreply@gjc.ro",
+                "to": data.email,
+                "subject": "Confirmă adresa de email — GJC",
+                "html": f"""
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;background:#f9f9f9;">
+                  <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                    <img src="https://gjc.ro/logo.png" alt="GJC" style="height:48px;margin-bottom:24px;" />
+                    <h2 style="color:#1a1a2e;margin:0 0 16px;">Bun venit la GJC!</h2>
+                    <p style="color:#444;font-size:16px;line-height:1.6;">
+                      Contul tău a fost creat cu succes. Apasă butonul de mai jos pentru a confirma adresa de email.
+                    </p>
+                    <a href="{verify_link}" style="display:inline-block;margin:24px 0;padding:14px 32px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">
+                      Confirmă Email
+                    </a>
+                    <p style="color:#888;font-size:13px;">Link-ul expiră în 24 de ore. Dacă nu ai creat acest cont, ignoră acest email.</p>
+                  </div>
+                </div>
+                """
+            })
+
             await execute_pg_write("""
                 INSERT INTO user_sessions (user_id, session_token, expires_at)
                 VALUES ($1, $2, $3)
             """, pg_user_id['id'], session_token, expires_at)
-            
-            # Return token and exit immediately (DO NOT flow to Mongo)
-            return TokenResponse(
-                access_token=session_token,
-                user=UserResponse(
-                    user_id=str(pg_user_id['id']), email=data.email, name=data.name, picture=None,
-                    role=role, account_type=data.account_type, is_active=True, is_verified=False,
-                    created_at=datetime.now(timezone.utc)
-                )
-            )
+
+            return {"message": "Cont creat cu succes. Verifică emailul pentru a activa contul."}
 
     except HTTPException:
         raise
@@ -391,6 +426,56 @@ async def register(data: UserCreate, response: Response):
             created_at=datetime.now(timezone.utc)
         )
     )
+
+# ==================== EMAIL VERIFICATION ====================
+
+@auth_router.get("/verify-email")
+async def verify_email(token: str):
+    from fastapi.responses import RedirectResponse
+    from database.db_config import execute_pg_one, execute_pg_write
+
+    row = await execute_pg_one("""
+        SELECT evt.user_id, evt.expires_at, evt.used_at, u.email, u.name
+        FROM email_verification_tokens evt
+        JOIN users u ON u.id = evt.user_id
+        WHERE evt.token = $1
+    """, token)
+
+    frontend_url = os.getenv("FRONTEND_URL", "https://gjc.ro")
+
+    if not row:
+        return RedirectResponse(url=f"{frontend_url}/login?error=token_invalid")
+    if row['used_at'] is not None:
+        return RedirectResponse(url=f"{frontend_url}/login?error=token_used")
+    if row['expires_at'] < datetime.now(timezone.utc):
+        return RedirectResponse(url=f"{frontend_url}/login?error=token_expired")
+
+    await execute_pg_write("UPDATE users SET is_verified=True WHERE id=$1", row['user_id'])
+    await execute_pg_write("UPDATE email_verification_tokens SET used_at=NOW() WHERE token=$1", token)
+
+    # Email de bun venit
+    resend.api_key = os.getenv("RESEND_API_KEY")
+    resend.Emails.send({
+        "from": "noreply@gjc.ro",
+        "to": row['email'],
+        "subject": "Email confirmat — Bun venit pe GJC!",
+        "html": f"""
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;background:#f9f9f9;">
+          <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <img src="https://gjc.ro/logo.png" alt="GJC" style="height:48px;margin-bottom:24px;" />
+            <h2 style="color:#1a1a2e;">Email confirmat cu succes! ✅</h2>
+            <p style="color:#444;font-size:16px;line-height:1.6;">
+              Bun venit pe platforma GJC, <strong>{row['name']}</strong>! Contul tău este acum activ.
+            </p>
+            <a href="{frontend_url}/dashboard" style="display:inline-block;margin:24px 0;padding:14px 32px;background:#16a34a;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">
+              Mergi la Dashboard
+            </a>
+          </div>
+        </div>
+        """
+    })
+
+    return RedirectResponse(url=f"{frontend_url}/login?verified=true")
 
 # ==================== LOGIN ====================
 
