@@ -15,7 +15,7 @@ from email.mime.multipart import MIMEMultipart
 import shutil
 
 # Import new routes
-from auth_routes import auth_router, set_database as set_auth_db
+from auth_routes import auth_router, set_database as set_auth_db, create_auth_tables
 from portal_routes import portal_router, set_database as set_portal_db
 from admin_routes import admin_router, set_database as set_admin_db
 from notification_routes import notification_router, set_database as set_notification_db
@@ -829,7 +829,10 @@ async def startup_init():
         
         # Initialize all database connections
         await db_manager.init_all()
-        
+
+        # Creare tabele auth la startup
+        await create_auth_tables()
+
         # Initialize AI matching engine
         await init_matching_engine()
         
