@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await fetch(`/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "omit", // Better for proxies, handles cookies differently if needed
+      credentials: "same-origin", // Enable cookie passing
       body: JSON.stringify({ email, password }),
     });
 
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await fetch(`/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "omit",
+      credentials: "same-origin",
       body: JSON.stringify({ name, email, password, account_type: accountType }),
     });
 
@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (typeof window !== "undefined") localStorage.removeItem("gjc_token");
       await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
-        credentials: "omit",
+        credentials: "same-origin",
       });
     } catch (error) {
       console.error("Logout error:", error);
