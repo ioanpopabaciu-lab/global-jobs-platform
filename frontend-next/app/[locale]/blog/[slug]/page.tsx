@@ -24,11 +24,13 @@ export default function BlogPostPage() {
         // Attempt to fetch from backend
         // Note: Production backend is mapped differently depending on Railway setup.
         // Usually, /api points to the backend on this stack. Let's try /api/v1/gjc/blog/posts...
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://global-jobs-platform-production.up.railway.app/api";
-        const res = await fetch(`${API_URL}/v1/gjc/blog/posts/${slug}`);
+        const envUrl = process.env.NEXT_PUBLIC_API_URL || "";
+        const baseUrl = envUrl.endsWith('/api') ? envUrl : (envUrl ? `${envUrl}/api` : "https://global-jobs-platform-production.up.railway.app/api");
+        
+        const res = await fetch(`${baseUrl}/v1/gjc/blog/posts/${slug}`);
         if (!res.ok) {
           // fallback to /api/blog/posts if the router is different
-          const res2 = await fetch(`${API_URL}/blog/posts/${slug}`);
+          const res2 = await fetch(`${baseUrl}/blog/posts/${slug}`);
           if (!res2.ok) throw new Error("Not found");
           const data = await res2.json();
           setPost(data);

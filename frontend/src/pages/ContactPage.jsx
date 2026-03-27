@@ -12,7 +12,7 @@ import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Loader2 } from "lucide-
 import { useLanguage } from "@/i18n/LanguageContext";
 import SEOHead from "@/components/SEOHead";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `/api`;
 
 const content = {
   ro: {
@@ -316,7 +316,7 @@ export default function ContactPage() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API}/contact/submit`, {
+      const response = await fetch(`${API}/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
