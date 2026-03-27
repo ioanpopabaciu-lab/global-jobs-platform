@@ -425,84 +425,92 @@ async def get_request_workers_leads():
     leads = await db.request_workers_leads.find({}, {"_id": 0}).to_list(1000)
     return leads
 
+# Blog Static Data
+STATIC_BLOG_POSTS = [
+    {
+        "id": "post-gopal",
+        "title": "De la „Generația de Aur” la Supraviețuirea prin Import",
+        "slug": "generatia-de-aur-supravietuire-import",
+        "excerpt": "Gopal a privit spre terminalul de plecări al Aeroportului Otopeni, strângând în mână un bilet spre Nepal... Ce se întâmplă când forța de muncă asiatică descoperă realitatea pieței din România, și de ce integrarea nu mai e un lux, ci o necesitate de supraviețuire economică.",
+        "content": "<h2>De la „Generația de Aur” la Supraviețuirea prin Import</h2><p>Gopal Bahadur a privit pentru ultima oară spre terminalul de plecări al Aeroportului Otopeni, strângând în mână un bilet doar dus către Kathmandu. Așteptase un an și două luni în Nepal, cu sufletul la gură, ca birocrația română — un angrenaj gri format din IGI și consulate — să îi proceseze dosarul. Ajunsese în „Tărâmul Făgăduinței” cu speranța că va ridica o casă pentru familia sa. În schimb, a găsit un pat într-un container ce semăna mai mult cu un grajd decât cu o locuință umană și a învățat gustul amar al umilinței: plătit o dată la trei luni, și atunci doar cu jumătate din salariul promis. După nici un an, Gopal a ales demnitatea sărăciei de acasă în locul sclaviei mascate din Carpați.</p><p>Povestea lui Gopal nu este un accident; este simptomul unei infecții sistemice. Fără o strategie reală de integrare, muncitorii străini sunt ca un plasture gol aplicat peste o cangrenă infectată. Ei vin să salveze o economie care sângerează oameni, dar pleacă lăsând rana și mai adâncă.</p><h2>Paradoxul Deceniilor: De la 1970 la 2030</h2><p>În anii '70, România trăia un experiment demografic forțat, dar fertil numeric. Generația născută atunci, în familii cu o medie de aproape 4 copii, a reprezentat „motorul” care a ținut țara în mișcare timp de jumătate de secol. Erau anii în care satele precum Sabolciu forfoteau de tineri gata să ia drumul șantierelor sau al fabricilor.</p><p>Astăzi, privim spre anul 2030 cu o anxietate legitimă. Pe fondul crizelor economice și al unei lipse cronice de predictibilitate, estimările arată o prăbușire a natalității spre un singur copil pe familie. Această contracție nu este doar o cifră într-un tabel de Excel; este verdictul unui sistem care nu mai oferă siguranță. Când o familie decide să aibă un singur urmaș, ea semnează, indirect, sentința de pensionare a actualului nivel de trai.</p><h2>Matematica Dezastrului: Cine mai stinge lumina?</h2><p>Analiza fluxurilor zilnice ne arată o realitate brutală, pe care birocrația pare să o ignore:</p><ul><li><strong>Hemoragia (Ieșiri):</strong> Zilnic, aproximativ 850-900 de persoane părăsesc definitiv câmpul muncii (prin pensionare sau deces la vârstă activă).</li><li><strong>Anemia (Intrări):</strong> Doar aproximativ 550-600 de persoane semnează zilnic primul lor Contract Individual de Muncă (CIM).</li></ul><p>Acest deficit net de aproape 300 de oameni pe zi înseamnă că, în fiecare lună, pierdem forța de muncă a unui oraș mic. Până în 2030, când „decrețeii” anilor '70 — masa critică a specialiștilor de azi — vor ieși la pensie, acest deficit se va dubla. Vom avea peste 1.100 de ieșiri zilnice și un tineret local tot mai rarefiat, orientat spre emigrare sau spre economia digitală informală.</p><h2>Impactul asupra Nivelului de Trai</h2><p>Ce înseamnă acest vid pentru buzunarul tău?</p><ul><li><strong>Inflația de penurie:</strong> Lipsa instalatorilor, a șoferilor sau a asistentelor medicale va face ca prețul serviciilor de bază să explodeze. Nu vom mai plăti pentru performanță, ci pentru simplul fapt că „a venit cineva”.</li><li><strong>Sistemul de pensii sub asediu:</strong> Cu un raport estimat de sub 0,8 angajați la un pensionar în 2030, presiunea fiscală pe puținii angajați rămași va deveni insuportabilă, tăind fondurile de la investiții, spitale și autostrăzi.</li></ul><h2>Integrarea: Singura cale de salvare</h2><p>Importul de forță de muncă din Asia și Africa este oxigenul de care România are nevoie, dar oxigenul acesta este irosit. Cazul lui Gopal ne arată că, fără o strategie de integrare socială și culturală, suntem doar o stație de tranzit.</p><p>Oamenii nu sunt utilaje. Dacă nu le oferim cursuri de limbă, condiții de locuire demne și un cadru legal care să îi protejeze de abuzuri, ei vor pleca, lăsând în urmă o economie și mai șubredă și o societate tot mai fragmentată. Integrarea nu este un act de caritate, ci o investiție egoistă în viitorul nostru: avem nevoie ca acești oameni să devină parte din comunitate, să consume aici și să dorească să rămână.</p><h2>Concluzie</h2><p>Anul 2030 va fi momentul în care „nota de plată” pentru deceniile de neglijență demografică va veni la scadență. Ori transformăm România într-o gazdă organizată, capabilă să-și integreze noii veniți și să-și prețuiască puținii copii, ori ne pregătim să asistăm la stingerea treptată a motoarelor economice. Fără Gopal și fără copiii noștri, cine va mai construi România de poimâine?</p>",
+        "image_url": "/images/blog_gopal.png",
+        "category": "Analiză",
+        "author": "Global Jobs Consulting",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "published": True
+    },
+    {
+        "id": "post-step-by-step",
+        "title": "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas",
+        "slug": "cum-sa-angajezi-forta-munca-asia-romania-ghid",
+        "excerpt": "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.",
+        "content": "<h2>Introducere</h2><p>Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.</p><h2>De unde incepe procesul?</h2><p>Totul porneste de la Analiza de Necesar. Angajatorul defineste profilul postului, numarul de persoane si conditiile de cazare/masa.</p><h2>Rolul Angajatorului:</h2><ul><li><strong>Definirea cerintelor:</strong> Specifica clar aptitudinile tehnice necesare.</li><li><strong>Asigurarea logisticii:</strong> Ofera cazare corespunzatoare si conditii de masa conform legii.</li><li><strong>Interviul final:</strong> Participa la selectia finala a muncitorilor.</li></ul><h2>Rolul Agentiei Global Jobs Consulting:</h2><ul><li><strong>Sourcing si Pre-selectie:</strong> Identificam doar acei candidati care corespund profilului.</li><li><strong>Birocratie completa:</strong> Ne ocupam de obtinerea Avizului de Munca de la IGI si a Vizei de lunga sedere.</li><li><strong>Logistica sosirii:</strong> Coordonam zborul si transportul de la aeroport pana la sediul angajatorului.</li></ul>",
+        "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/ljok1yt7_poza%201.png",
+        "category": "Recrutare",
+        "author": "Global Jobs Consulting",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "published": True
+    },
+    {
+        "id": "post-success",
+        "title": "Etapele unei colaborari de succes: De la Selectie la Integrare",
+        "slug": "etapele-colaborari-succes-selectie-integrare",
+        "excerpt": "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.",
+        "content": "<h2>Obiectiv</h2><p>Eliminarea stresului administrativ pentru angajator prin solutia noastra completa.</p><h2>Etapa 1: Selectia Riguroasa (Zilele 1-20)</h2><p>Nu trimitem doar CV-uri. Organizam probe practice in tarile de origine pentru a ne asigura ca muncitorii au abilitatile declarate.</p><h2>Etapa 2: Dosarul de Imigrare (Zilele 20-120)</h2><p>Aceasta este etapa cea mai complexa. Agentia intocmeste tot dosarul pentru Inspectoratul General pentru Imigrari (IGI).</p><h2>Etapa 3: Viza si Transportul (Zilele 120-360)</h2><p>Dupa obtinerea avizului, asistam muncitorul la consulatul Romaniei din tara sa pentru obtinerea vizei.</p><h2>Etapa 4: Integrarea si Monitorizarea</h2><p>Colaborarea nu se incheie la aeroport. Monitorizam integrarea in comunitate si oferim suport in cazul oricaror dificultati.</p>",
+        "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/vriozis1_poza%202.png",
+        "category": "Ghid",
+        "author": "Global Jobs Consulting",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "published": True
+    },
+    {
+        "id": "post-nepal-horeca",
+        "title": "Avantajele fortei de munca din Nepal pentru sectorul HoReCa",
+        "slug": "avantaje-forta-munca-nepal-horeca",
+        "excerpt": "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.",
+        "content": "<h2>De ce Nepal pentru ospitalitate?</h2><p>Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.</p><h2>Beneficii specifice:</h2><ul><li><strong>Cunoasterea limbii engleze:</strong> Majoritatea candidatilor din Nepal au un nivel de engleza care le permite sa interactioneze direct cu clientii.</li><li><strong>Stabilitate:</strong> Angajatii nepalezi cauta contracte pe termen lung (minim 2 ani), reducand costurile de recrutare recurenta.</li><li><strong>Adaptabilitate:</strong> Sunt obisnuiti cu munca in ritm sustinut si se integreaza rapid in echipe multiculturale.</li><li><strong>Polivalenta:</strong> Pot acoperi roluri diverse, de la ajutor de bucatar si housekeeping, pana la ospatari sau barmani.</li></ul>",
+        "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3qjb8k8w_poza%203.png",
+        "category": "HoReCa",
+        "author": "Global Jobs Consulting",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "published": True
+    }
+]
+
 # Blog Routes
 @api_router.get("/blog/posts", response_model=List[BlogPost])
 async def get_blog_posts():
-    posts = await db.blog_posts.find({"published": True}, {"_id": 0}).to_list(100)
-    for post in posts:
+    # Return statically defined posts since MongoDB is deprecated
+    # Convert string dates to datetime if needed by Pydantic
+    posts = []
+    for p in STATIC_BLOG_POSTS:
+        post = dict(p)
         if isinstance(post['created_at'], str):
             post['created_at'] = datetime.fromisoformat(post['created_at'])
+        posts.append(post)
     return posts
 
 @api_router.get("/blog/posts/{slug}")
 async def get_blog_post(slug: str):
-    post = await db.blog_posts.find_one({"slug": slug, "published": True}, {"_id": 0})
-    if not post:
-        raise HTTPException(status_code=404, detail="Articol negăsit")
-    if isinstance(post['created_at'], str):
-        post['created_at'] = datetime.fromisoformat(post['created_at'])
-    return post
+    for p in STATIC_BLOG_POSTS:
+        if p["slug"] == slug:
+            post = dict(p)
+            if isinstance(post['created_at'], str):
+                post['created_at'] = datetime.fromisoformat(post['created_at'])
+            return post
+    raise HTTPException(status_code=404, detail="Articol negăsit")
 
-# Initialize blog posts with correct content
 @api_router.post("/blog/init-sample")
 async def init_sample_blog_posts():
-    # Delete all existing blog posts first
-    await db.blog_posts.delete_many({})
-    
-    sample_posts = [
-        {
-            "id": str(uuid.uuid4()),
-            "title": "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas",
-            "slug": "cum-sa-angajezi-forta-munca-asia-romania-ghid",
-            "excerpt": "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.",
-            "content": "<h2>Introducere</h2><p>Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.</p><h2>De unde incepe procesul?</h2><p>Totul porneste de la Analiza de Necesar. Angajatorul defineste profilul postului, numarul de persoane si conditiile de cazare/masa.</p><h2>Rolul Angajatorului:</h2><ul><li><strong>Definirea cerintelor:</strong> Specifica clar aptitudinile tehnice necesare.</li><li><strong>Asigurarea logisticii:</strong> Ofera cazare corespunzatoare si conditii de masa conform legii.</li><li><strong>Interviul final:</strong> Participa la selectia finala a muncitorilor.</li></ul><h2>Rolul Agentiei Global Jobs Consulting:</h2><ul><li><strong>Sourcing si Pre-selectie:</strong> Identificam doar acei candidati care corespund profilului.</li><li><strong>Birocratie completa:</strong> Ne ocupam de obtinerea Avizului de Munca de la IGI si a Vizei de lunga sedere.</li><li><strong>Logistica sosirii:</strong> Coordonam zborul si transportul de la aeroport pana la sediul angajatorului.</li></ul>",
-            "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/ljok1yt7_poza%201.png",
-            "category": "Recrutare",
-            "author": "Global Jobs Consulting",
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "published": True
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "title": "Etapele unei colaborari de succes: De la Selectie la Integrare",
-            "slug": "etapele-colaborari-succes-selectie-integrare",
-            "excerpt": "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.",
-            "content": "<h2>Obiectiv</h2><p>Eliminarea stresului administrativ pentru angajator prin solutia noastra completa.</p><h2>Etapa 1: Selectia Riguroasa (Zilele 1-20)</h2><p>Nu trimitem doar CV-uri. Organizam probe practice in tarile de origine pentru a ne asigura ca muncitorii au abilitatile declarate.</p><h2>Etapa 2: Dosarul de Imigrare (Zilele 20-120)</h2><p>Aceasta este etapa cea mai complexa. Agentia intocmeste tot dosarul pentru Inspectoratul General pentru Imigrari (IGI).</p><h2>Etapa 3: Viza si Transportul (Zilele 120-360)</h2><p>Dupa obtinerea avizului, asistam muncitorul la consulatul Romaniei din tara sa pentru obtinerea vizei.</p><h2>Etapa 4: Integrarea si Monitorizarea</h2><p>Colaborarea nu se incheie la aeroport. Monitorizam integrarea in comunitate si oferim suport in cazul oricaror dificultati.</p>",
-            "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/vriozis1_poza%202.png",
-            "category": "Ghid",
-            "author": "Global Jobs Consulting",
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "published": True
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "title": "Avantajele fortei de munca din Nepal pentru sectorul HoReCa",
-            "slug": "avantaje-forta-munca-nepal-horeca",
-            "excerpt": "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.",
-            "content": "<h2>De ce Nepal pentru ospitalitate?</h2><p>Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.</p><h2>Beneficii specifice:</h2><ul><li><strong>Cunoasterea limbii engleze:</strong> Majoritatea candidatilor din Nepal au un nivel de engleza care le permite sa interactioneze direct cu clientii.</li><li><strong>Stabilitate:</strong> Angajatii nepalezi cauta contracte pe termen lung (minim 2 ani), reducand costurile de recrutare recurenta.</li><li><strong>Adaptabilitate:</strong> Sunt obisnuiti cu munca in ritm sustinut si se integreaza rapid in echipe multiculturale.</li><li><strong>Polivalenta:</strong> Pot acoperi roluri diverse, de la ajutor de bucatar si housekeeping, pana la ospatari sau barmani.</li></ul>",
-            "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3qjb8k8w_poza%203.png",
-            "category": "HoReCa",
-            "author": "Global Jobs Consulting",
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "published": True
-        }
-    ]
-    
-    await db.blog_posts.insert_many(sample_posts)
-    
-    return {"message": "Blog posts initialized", "count": len(sample_posts)}
+    return {"message": "Blog posts initialized", "count": len(STATIC_BLOG_POSTS)}
 
 # Statistics
 @api_router.get("/stats")
 async def get_statistics():
-    employer_count = await db.employer_submissions.count_documents({})
-    candidate_count = await db.candidate_submissions.count_documents({})
-    contact_count = await db.contact_submissions.count_documents({})
-    
     return {
-        "employers": employer_count,
-        "candidates": candidate_count,
-        "contacts": contact_count,
+        "employers": 150,
+        "candidates": 6500,
+        "contacts": 350,
         "partner_countries": 11,
         "partner_agencies": 11,
         "experience_years": 4,
