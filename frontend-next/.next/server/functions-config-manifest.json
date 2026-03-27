@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/[locale]/about":{},"/[locale]/blog":{},"/[locale]/candidates":{},"/[locale]/employers":{},"/[locale]/contact":{},"/[locale]/how-it-works":{},"/[locale]/industries/[industry]":{},"/[locale]/industries":{},"/[locale]/request-workers":{},"/[locale]":{}}}
+{"version":1,"functions":{"/verify-email":{},"/[locale]/about":{},"/[locale]/employers":{},"/[locale]/blog":{},"/[locale]/contact":{},"/[locale]/candidates":{},"/[locale]/industries/[industry]":{},"/[locale]/how-it-works":{},"/[locale]/request-workers":{},"/[locale]":{},"/[locale]/industries":{}}}

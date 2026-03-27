@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, User, Calendar } from "lucide-react";
+import { ArrowLeft, User, Calendar, Facebook, Twitter, Linkedin, Link2, Share2 } from "lucide-react";
 import { useParams } from "next/navigation";
 
 export default function BlogPostPage() {
@@ -111,9 +111,54 @@ export default function BlogPostPage() {
         )}
 
         {/* Article Content */}
-        <article className="prose prose-lg prose-blue max-w-none bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">
+        <article className="prose prose-lg prose-blue max-w-none bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100 mb-8">
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </article>
+
+        {/* Share Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 text-navy-900 font-semibold text-lg">
+            <Share2 className="h-5 w-5 text-coral" />
+            <span>Distribuie acest articol:</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
+              className="p-3 bg-[#1877F2]/10 text-[#1877F2] rounded-full hover:bg-[#1877F2] hover:text-white transition-colors"
+              aria-label="Share pe Facebook"
+              title="Distribuie pe Facebook"
+            >
+              <Facebook className="h-5 w-5" />
+            </button>
+            <button 
+              onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
+              className="p-3 bg-[#1DA1F2]/10 text-[#1DA1F2] rounded-full hover:bg-[#1DA1F2] hover:text-white transition-colors"
+              aria-label="Share pe X (Twitter)"
+              title="Distribuie pe X (Twitter)"
+            >
+              <Twitter className="h-5 w-5" />
+            </button>
+            <button 
+              onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}
+              className="p-3 bg-[#0A66C2]/10 text-[#0A66C2] rounded-full hover:bg-[#0A66C2] hover:text-white transition-colors"
+              aria-label="Share pe LinkedIn"
+              title="Distribuie pe LinkedIn"
+            >
+              <Linkedin className="h-5 w-5" />
+            </button>
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Linkul a fost copiat în clipboard!");
+              }}
+              className="p-3 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-700 hover:text-white transition-colors"
+              aria-label="Copiază linkul"
+              title="Copiază linkul articolului"
+            >
+              <Link2 className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
