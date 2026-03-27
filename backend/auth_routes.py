@@ -503,7 +503,9 @@ async def login(data: UserLogin, response: Response):
                 raise HTTPException(status_code=401, detail="Invalid email or password")
             if not pg_user['is_active']:
                 raise HTTPException(status_code=401, detail="Account deactivated")
-                
+            if not pg_user['is_verified']:
+                raise HTTPException(status_code=403, detail="Confirmă emailul înainte de a te autentifica")
+
             session_token = generate_session_token()
             expires_at = datetime.now(timezone.utc) + timedelta(days=7)
             
