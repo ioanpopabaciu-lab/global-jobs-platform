@@ -40,6 +40,13 @@ async def create_auth_tables():
         )
     """)
 
+async def send_email_safe(payload):
+    try:
+        result = await asyncio.to_thread(resend.Emails.send, payload)
+        logger.info(f"Email trimis cu succes: {result}")
+    except Exception as e:
+        logger.error(f"Eroare trimitere email Resend: {str(e)}")
+
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 # ==================== HELPERS ====================
@@ -366,7 +373,7 @@ async def register(data: UserCreate, response: Response):
             frontend_url = os.getenv("FRONTEND_URL", "https://gjc.ro")
             resend.api_key = os.getenv("RESEND_API_KEY")
             verify_link = f"{frontend_url}/verify-email?token={verification_token}"
-            await asyncio.to_thread(resend.Emails.send, {
+            await send_email_safe({
                 "from": "noreply@gjc.ro",
                 "to": data.email,
                 "subject": "Confirmă adresa de email — GJC",
@@ -459,7 +466,7 @@ async def verify_email(token: str):
 
     # Email de bun venit
     resend.api_key = os.getenv("RESEND_API_KEY")
-    await asyncio.to_thread(resend.Emails.send, {
+    await send_email_safe({
         "from": "noreply@gjc.ro",
         "to": row['email'],
         "subject": "Email confirmat — Bun venit pe GJC!",
