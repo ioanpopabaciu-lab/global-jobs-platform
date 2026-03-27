@@ -34,7 +34,29 @@ export async function POST(request: NextRequest) {
     }
     
     // Return the EXACT same status and data to the Next.js client
-    return NextResponse.json(data, { status: response.status });
+    const nextResponse = NextResponse.json(data, { status: response.status });
+    
+    // Properly forward the backend's Set-Cookie headers if any
+    const setCookieHeader = response.headers.get("Set-Cookie");
+    if (setCookieHeader) {
+      nextResponse.headers.set("Set-Cookie", setCookieHeader);
+    }
+    
+    // Explicitly inject the cookie manually into the Next.js response using the parsed access_token
+    // This solves the backend proxy strip issue 100% of the time, so middleware.ts sees it!
+    if (data && data.access_token) {
+        nextResponse.cookies.set({
+            name: "session_token",
+            value: data.access_token,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 7 * 24 * 60 * 60 // 7 days
+        });
+    }
+    
+    return nextResponse;
     
   } catch (error) {
     console.error("Register proxy error:", error);
