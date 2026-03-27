@@ -18,6 +18,7 @@ const bypassIntlRoutes = [
   '/portal',
   '/admin',
   '/auth',
+  '/verify-email',
 ];
 
 export default function middleware(request: NextRequest) {
