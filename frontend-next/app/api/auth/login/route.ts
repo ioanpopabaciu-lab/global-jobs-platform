@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,16 +35,10 @@ export async function POST(request: NextRequest) {
     // Return the EXACT same status and data to the Next.js client
     const nextResponse = NextResponse.json(data, { status: response.status });
     
-    // Properly forward the backend's Set-Cookie headers if any
-    const setCookieHeader = response.headers.get("Set-Cookie");
-    if (setCookieHeader) {
-      nextResponse.headers.set("Set-Cookie", setCookieHeader);
-    }
-    
     // Explicitly inject the cookie manually into the Next.js response using the parsed access_token
-    // This solves the backend proxy strip issue 100% of the time, so middleware.ts sees it!
+    // using Next.js safe server actions cookies() method which is guaranteed to set in the browser
     if (data && data.access_token) {
-        nextResponse.cookies.set({
+        cookies().set({
             name: "session_token",
             value: data.access_token,
             httpOnly: true,

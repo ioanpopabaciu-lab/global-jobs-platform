@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,10 +24,10 @@ export async function POST(request: NextRequest) {
         console.error("Logout fetch to backend failed, proceeding to clear cookie locally", e);
     }
     
-    // Create the response and wipe the Next.js cookie intentionally
+    // Create the response and wipe the Next.js cookie intentionally using the reliable headers api
     const nextResponse = NextResponse.json({ success: true, message: "Te-ai delogat cu succes" }, { status: 200 });
     
-    nextResponse.cookies.set({
+    cookies().set({
         name: "session_token",
         value: "",
         httpOnly: true,
