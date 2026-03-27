@@ -42,6 +42,12 @@ async def create_auth_tables():
             used_at TIMESTAMP WITH TIME ZONE
         )
     """)
+    
+    await execute_pg_write("""
+        ALTER TABLE users 
+        ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT FALSE,
+        ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE
+    """)
 
 async def send_email_safe(payload):
     try:
@@ -1069,3 +1075,37 @@ async def register_candidate_with_profile(data: CandidateRegisterWithProfileRequ
             created_at=user_doc["created_at"]
         )
     )
+
+@auth_router.get("/verify-email")
+async def verify_email(token: str):
+    """Validează adresa de email după înregistrare"""
+    from database.db_config import execute_pg_one, execute_pg_write
+    
+    # Caută token-ul
+    token_row = await execute_pg_one(
+        "SELECT user_id, expires_at, used_at FROM email_verification_tokens WHERE token = $1", 
+        token
+    )
+
+    if not token_row:
+        raise HTTPException(status_code=400, detail="Token-ul este invalid sau nu există.")
+        
+    if token_row.get("used_at"):
+        raise HTTPException(status_code=400, detail="Acest link a fost deja utilizat. Emailul tău este deja confirmat.")
+        
+    expires_at = token_row["expires_at"]
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+    if expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Acest link de verificare a expirat (24 de ore).")
+        
+    # Marchează token-ul ca utilizat
+    await execute_pg_write("UPDATE email_verification_tokens SET used_at = NOW() WHERE token = $1", token)
+    
+    # Activează contul utilizatorului (ambele coloane pt siguranță)
+    await execute_pg_write("UPDATE users SET is_verified = TRUE, email_verified = TRUE WHERE id = $1", token_row["user_id"])
+    
+    return {"success": True, "message": "Adresa de email a fost confirmată cu succes!"}
