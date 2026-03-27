@@ -28,16 +28,73 @@ async def extract_passport_data(image_base64: str, mime_type: str = "image/jpeg"
         Dictionary with extracted data
     """
     try:
-        # from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+        from passporteye import read_mrz
+        import tempfile
         
-        # api_key = os.environ.get("EMERGENT_LLM_KEY")
-        # if not api_key:
-        #     logger.error("EMERGENT_LLM_KEY not configured")
-        #     return {"success": False, "error": "Serviciul OCR nu este configurat"}
-        
-        return {"success": False, "error": "Funcționalitatea OCR pașaport a fost dezactivată temporar."}
+        # Save base64 to temp file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp_file:
+            tmp_file.write(base64.b64decode(image_base64))
+            tmp_path = tmp_file.name
+
+        try:
+            mrz = read_mrz(tmp_path)
+            
+            if not mrz:
+                return {"success": False, "error": "Nu s-a putut detecta banda MRZ pe document. Te rugăm să introduci datele manual."}
+                
+            mrz_data = mrz.to_dict()
+            
+            # Format dates from YYMMDD to YYYY-MM-DD
+            def format_mrz_date(date_str):
+                if not date_str or len(date_str) != 6: return None
+                # Basic heuristic: if year > 50 it's 1900s, else 2000s
+                try:
+                    year = int(date_str[0:2])
+                    full_year = 1900 + year if year > 50 else 2000 + year
+                    month = date_str[2:4]
+                    day = date_str[4:6]
+                    return f"{full_year}-{month}-{day}"
+                except:
+                    return None
+
+            dob = format_mrz_date(mrz_data.get('date_of_birth', ''))
+            exp = format_mrz_date(mrz_data.get('expiration_date', ''))
+            
+            extracted = {
+                "first_name": mrz_data.get('names', '').replace('<', ' ').strip().title(),
+                "last_name": mrz_data.get('surname', '').replace('<', ' ').strip().upper(),
+                "citizenship": mrz_data.get('country', ''),
+                "nationality": mrz_data.get('nationality', ''),
+                "passport_number": mrz_data.get('number', ''),
+                "issue_date": None,
+                "expiry_date": exp,
+                "expiry_date_display": exp,
+                "date_of_birth": dob,
+                "date_of_birth_display": dob,
+                "sex": mrz_data.get('sex', ''),
+                "issuing_country": mrz_data.get('country', '')
+            }
+            
+            # Set all successfully extracted fields to green validation status
+            field_status = {k: "green" for k in extracted.keys() if extracted[k]}
+            
+            return {
+                "success": True, 
+                "data": extracted,
+                "field_status": field_status
+            }
+            
+        finally:
+            if os.path.exists(tmp_path):
+                try:
+                    os.remove(tmp_path)
+                except:
+                    pass
+                
     except Exception as e:
         logger.error(f"Passport OCR extraction error: {str(e)}")
+        if "tesseract" in str(e).lower():
+            return {"success": False, "error": "Motorul Tesseract OCR nu este instalat pe server. Completează manual."}
         return {"success": False, "error": f"Eroare la extragerea datelor: {str(e)}"}
 
 

@@ -86,11 +86,15 @@ class CandidateProfile(BaseModel):
     profile_id: str = Field(default_factory=lambda: f"cand_{uuid.uuid4().hex[:12]}")
     user_id: str
     
+    # Category definition
+    candidate_category: Literal["abroad", "in_romania"] = "abroad"
+    
     # SECTION 1 - Personal Information (Informații personale)
     profile_photo_url: Optional[str] = None  # Poză profil (obligatoriu)
     first_name: str = ""  # Prenume
     last_name: str = ""  # Nume
-    country_of_origin: str = ""  # Țară de origine
+    country_of_origin: str = ""  # Țară de origine (Unde s-a născut)
+    current_country: str = ""  # Țară de reședință curentă (Unde locuiește/muncește acum)
     date_of_birth: Optional[str] = None  # Data nașterii (stored as string YYYY-MM-DD)
     gender: Literal["male", "female", "other"] = "male"  # Sex
     marital_status: Literal["single", "married", "divorced", "widowed"] = "single"  # Stare civilă
@@ -134,7 +138,6 @@ class CandidateProfile(BaseModel):
     # Legacy fields for backward compatibility
     full_name: Optional[str] = None
     nationality: Optional[str] = None
-    current_country: Optional[str] = None
     profession: Optional[str] = None
     other_languages: list[str] = []
     skills: list[str] = []
@@ -142,6 +145,10 @@ class CandidateProfile(BaseModel):
     preferred_industries: list[str] = []
     available_from: Optional[datetime] = None
     medical_certificate_doc_id: Optional[str] = None
+    
+    # Grace Period & Transfer Documents (Pentru candidații in_romania)
+    previous_job_end_date: Optional[str] = None  # Data încetării contractului anterior (YYYY-MM-DD)
+    resignation_doc_id: Optional[str] = None  # Decizia de încetare a contractului
     
     # Status
     status: Literal["draft", "pending_validation", "validated", "rejected"] = "draft"
@@ -155,16 +162,23 @@ class CandidateProfile(BaseModel):
 
 class CandidateProfileCreate(BaseModel):
     """Create/Update candidate profile - all fields optional for partial updates"""
+    candidate_category: Optional[Literal["abroad", "in_romania"]] = None
+    
     # Section 1 - Personal
     profile_photo_url: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     country_of_origin: Optional[str] = None
+    current_country: Optional[str] = None
     date_of_birth: Optional[str] = None
     gender: Optional[str] = None
     marital_status: Optional[str] = None
     religion: Optional[str] = None
     citizenship: Optional[str] = None
+    
+    # Transfer details
+    previous_job_end_date: Optional[str] = None
+    resignation_doc_id: Optional[str] = None
     
     # Section 2 - Family
     father_name: Optional[str] = None

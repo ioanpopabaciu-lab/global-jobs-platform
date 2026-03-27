@@ -61,19 +61,7 @@ const STEPS = [
   { id: 5, title: "Finalizare", icon: CheckCircle2, description: "Verificare și trimitere" },
 ];
 
-// Country codes for citizenship
-const COUNTRIES = [
-  { code: "NP", name: "Nepal", flag: "🇳🇵" },
-  { code: "BD", name: "Bangladesh", flag: "🇧🇩" },
-  { code: "IN", name: "India", flag: "🇮🇳" },
-  { code: "LK", name: "Sri Lanka", flag: "🇱🇰" },
-  { code: "PK", name: "Pakistan", flag: "🇵🇰" },
-  { code: "PH", name: "Philippines", flag: "🇵🇭" },
-  { code: "KE", name: "Kenya", flag: "🇰🇪" },
-  { code: "UG", name: "Uganda", flag: "🇺🇬" },
-  { code: "ET", name: "Ethiopia", flag: "🇪🇹" },
-  { code: "NG", name: "Nigeria", flag: "🇳🇬" },
-];
+import { COUNTRIES } from "@/lib/countries";
 
 // Industries
 const INDUSTRIES = [
@@ -103,14 +91,18 @@ const LANGUAGE_OPTIONS = [
 
 interface ProfileData {
   // Personal info
+  candidate_category: "abroad" | "in_romania" | "";
   first_name: string;
   last_name: string;
   date_of_birth: string;
-  citizenship: string;
+  country_of_origin: string;
+  current_country: string;
   phone: string;
   email: string;
-  current_country: string;
   current_city: string;
+  
+  // Transfer details (in_romania only)
+  previous_job_end_date: string;
   
   // Passport info (auto-filled from OCR)
   passport_number: string;
@@ -140,14 +132,16 @@ export default function CandidateProfileWizard() {
   const [isSaving, setIsSaving] = useState(false);
   const [fullName, setFullName] = useState("");
   const [profileData, setProfileData] = useState<ProfileData>({
+    candidate_category: "",
     first_name: "",
     last_name: "",
     date_of_birth: "",
-    citizenship: "",
+    country_of_origin: "",
+    current_country: "",
     phone: "",
     email: user?.email || "",
-    current_country: "",
     current_city: "",
+    previous_job_end_date: "",
     passport_number: "",
     passport_issue_date: "",
     passport_expiry_date: "",
@@ -187,14 +181,16 @@ export default function CandidateProfileWizard() {
 
           setProfileData((prev) => ({
             ...prev,
+            candidate_category: profile.candidate_category || "",
             first_name: profile.first_name || "",
             last_name: profile.last_name || "",
             date_of_birth: profile.date_of_birth || "",
-            citizenship: profile.citizenship || "",
+            country_of_origin: profile.country_of_origin || profile.citizenship || "",
+            current_country: profile.current_country || "",
             phone: profile.phone || "",
             email: profile.email || user?.email || "",
-            current_country: profile.current_country || "",
             current_city: profile.current_city || "",
+            previous_job_end_date: profile.previous_job_end_date || "",
             passport_number: profile.passport_number || "",
             passport_issue_date: profile.passport_issue_date || "",
             passport_expiry_date: profile.passport_expiry_date || "",
@@ -282,7 +278,7 @@ export default function CandidateProfileWizard() {
       first_name: data.first_name || prev.first_name,
       last_name: data.last_name || prev.last_name,
       date_of_birth: data.date_of_birth || prev.date_of_birth,
-      citizenship: data.citizenship || prev.citizenship,
+      country_of_origin: data.citizenship || prev.country_of_origin,
       passport_number: data.passport_number || prev.passport_number,
       passport_issue_date: data.issue_date || prev.passport_issue_date,
       passport_expiry_date: data.expiry_date || prev.passport_expiry_date,
@@ -294,9 +290,10 @@ export default function CandidateProfileWizard() {
     const newErrors: Record<string, string> = {};
 
     if (step === 1) {
+      if (!profileData.candidate_category) newErrors.candidate_category = "Selectează statutul tău curent (Străinătate / România)";
       if (!fullName.trim()) newErrors.full_name = "Numele complet este obligatoriu";
       if (!profileData.date_of_birth) newErrors.date_of_birth = "Data nașterii este obligatorie";
-      if (!profileData.citizenship) newErrors.citizenship = "Cetățenia este obligatorie";
+      if (!profileData.country_of_origin) newErrors.country_of_origin = "Țara de origine este obligatorie";
       if (!profileData.phone) newErrors.phone = "Telefonul este obligatoriu";
     }
 
@@ -387,7 +384,7 @@ export default function CandidateProfileWizard() {
     const total = 10;
 
     if (profileData.first_name && profileData.last_name) completed += 1;
-    if (profileData.date_of_birth && profileData.citizenship) completed += 1;
+    if (profileData.date_of_birth && profileData.country_of_origin) completed += 1;
     if (profileData.phone && profileData.email) completed += 1;
     if (profileData.passport_doc_id || existingDocuments.passport) completed += 2;
     if (profileData.preferred_industries.length > 0) completed += 1;
@@ -462,6 +459,70 @@ export default function CandidateProfileWizard() {
           {/* Step 1: Personal Data */}
           {currentStep === 1 && (
             <div className="space-y-6">
+              
+              {/* Category Selection */}
+              <div className="space-y-3 bg-blue-50/50 p-4 rounded-xl border border-blue-100 mb-6">
+                <Label className="text-base font-medium text-navy-900">Statut Curent *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange("candidate_category", "abroad")}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      profileData.candidate_category === "abroad"
+                        ? "border-coral bg-coral/5 shadow-md"
+                        : "border-gray-200 bg-white hover:border-coral/30"
+                    }`}
+                  >
+                    <div className="font-semibold mb-1">🌍 În străinătate</div>
+                    <div className="text-sm text-gray-600">Aplic pentru un loc de muncă din afara României</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange("candidate_category", "in_romania")}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      profileData.candidate_category === "in_romania"
+                        ? "border-coral bg-coral/5 shadow-md"
+                        : "border-gray-200 bg-white hover:border-coral/30"
+                    }`}
+                  >
+                    <div className="font-semibold mb-1">🇷🇴 În România</div>
+                    <div className="text-sm text-gray-600">Sunt deja în România și doresc să schimb angajatorul</div>
+                  </button>
+                </div>
+                {errors.candidate_category && <p className="text-red-500 text-xs font-medium">{errors.candidate_category}</p>}
+                
+                {profileData.candidate_category === "in_romania" && (
+                  <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg animate-in fade-in slide-in-from-top-4">
+                    <Label htmlFor="previous_job_end_date" className="text-orange-900 font-semibold mb-2 block">
+                      Data încetării ultimului contract (Opțional)
+                    </Label>
+                    <p className="text-sm text-orange-800 mb-3">
+                      Conform legii, ai la dispoziție <strong>90 de zile</strong> pentru a-ți găsi un nou angajator de la această dată.
+                    </p>
+                    <Input
+                      id="previous_job_end_date"
+                      type="date"
+                      value={profileData.previous_job_end_date}
+                      onChange={(e) => handleInputChange("previous_job_end_date", e.target.value)}
+                      className="max-w-[200px] border-orange-300 focus-visible:ring-orange-500 bg-white"
+                    />
+                    {profileData.previous_job_end_date && (() => {
+                      const endDate = new Date(profileData.previous_job_end_date);
+                      const today = new Date();
+                      const diffTime = endDate.getTime() + (90 * 24 * 60 * 60 * 1000) - today.getTime();
+                      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                      const isExpired = diffDays < 0;
+                      return (
+                        <div className={`mt-3 font-medium flex items-center gap-2 ${isExpired ? "text-red-600" : diffDays < 15 ? "text-orange-600" : "text-green-600"}`}>
+                          <AlertTriangle className="h-4 w-4" />
+                          {isExpired ? "Perioada legală de grație a expirat!" : `Au mai rămas ${diffDays} zile legale de ședere.`}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="full_name">Nume complet *</Label>
                 <Input
@@ -487,23 +548,23 @@ export default function CandidateProfileWizard() {
                   {errors.date_of_birth && <p className="text-red-500 text-xs">{errors.date_of_birth}</p>}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="citizenship">Cetățenie *</Label>
+                  <Label htmlFor="country_of_origin">Țara de Origine *</Label>
                   <select
-                    id="citizenship"
-                    value={profileData.citizenship}
-                    onChange={(e) => handleInputChange("citizenship", e.target.value)}
+                    id="country_of_origin"
+                    value={profileData.country_of_origin}
+                    onChange={(e) => handleInputChange("country_of_origin", e.target.value)}
                     className={`w-full h-10 px-3 rounded-md border ${
-                      errors.citizenship ? "border-red-500" : "border-input"
+                      errors.country_of_origin ? "border-red-500" : "border-input"
                     } bg-background`}
                   >
-                    <option value="">Selectează țara</option>
+                    <option value="">Selectează țara de naștere</option>
                     {COUNTRIES.map((country) => (
                       <option key={country.code} value={country.name}>
                         {country.flag} {country.name}
                       </option>
                     ))}
                   </select>
-                  {errors.citizenship && <p className="text-red-500 text-xs">{errors.citizenship}</p>}
+                  {errors.country_of_origin && <p className="text-red-500 text-xs">{errors.country_of_origin}</p>}
                 </div>
               </div>
 
@@ -534,13 +595,22 @@ export default function CandidateProfileWizard() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="current_country">Țara Curentă</Label>
-                  <Input
+                  <Label htmlFor="current_country">Țara Curentă (Unde locuiești acum)</Label>
+                  <select
                     id="current_country"
                     value={profileData.current_country}
                     onChange={(e) => handleInputChange("current_country", e.target.value)}
-                    placeholder="Nepal"
-                  />
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                  >
+                    <option value="">Selectează țara de reședință</option>
+                    <option value="Romania">🇷🇴 Romania</option>
+                    <option disabled>──────────</option>
+                    {COUNTRIES.map((country) => (
+                      <option key={`res_${country.code}`} value={country.name}>
+                        {country.flag} {country.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="current_city">Orașul Curent</Label>
@@ -752,9 +822,11 @@ export default function CandidateProfileWizard() {
                 <div className="space-y-4">
                   <h3 className="font-semibold text-navy-900">Date Personale</h3>
                   <div className="space-y-2 text-sm">
+                    <p><span className="text-gray-500">Statut Curent:</span> {profileData.candidate_category === "abroad" ? "În străinătate" : "În România"}</p>
                     <p><span className="text-gray-500">Nume:</span> {profileData.first_name} {profileData.last_name}</p>
                     <p><span className="text-gray-500">Data nașterii:</span> {profileData.date_of_birth}</p>
-                    <p><span className="text-gray-500">Cetățenie:</span> {profileData.citizenship}</p>
+                    <p><span className="text-gray-500">Țară de Origine:</span> {profileData.country_of_origin}</p>
+                    <p><span className="text-gray-500">Țară Curentă:</span> {profileData.current_country}</p>
                     <p><span className="text-gray-500">Telefon:</span> {profileData.phone}</p>
                     <p><span className="text-gray-500">Email:</span> {profileData.email}</p>
                   </div>
