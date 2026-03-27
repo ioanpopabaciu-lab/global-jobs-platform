@@ -41,7 +41,7 @@ const blogPosts = [
     },
     date: new Date().toISOString().split('T')[0],
     author: "Global Jobs Consulting",
-    image: "/images/blog_gopal.png"
+    image: "/images/blog_gopal.jpg"
   },
   {
     slug: "ghid-angajare-muncitori-straini",
