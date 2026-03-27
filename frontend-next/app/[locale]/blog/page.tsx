@@ -44,28 +44,46 @@ const blogPosts = [
     image: "/images/blog_gopal.jpg"
   },
   {
-    slug: "ghid-angajare-muncitori-straini",
-    title: { ro: "Ghid Complet: Angajarea Muncitorilor Străini în România", en: "Complete Guide: Hiring Foreign Workers in Romania" },
-    excerpt: { ro: "Tot ce trebuie să știți despre procesul de angajare a muncitorilor din țări terțe.", en: "Everything you need to know about hiring workers from third countries." },
+    slug: "cum-sa-angajezi-forta-munca-asia-romania-ghid",
+    title: { 
+      ro: "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas", 
+      en: "How to hire Asian workforce in Romania: Step by Step Guide" 
+    },
+    excerpt: { 
+      ro: "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti.", 
+      en: "In a booming economy, the staff shortage has become the main barrier to the growth of Romanian companies." 
+    },
     date: "2024-03-01",
-    author: "GJC Team",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070"
+    author: "Global Jobs Consulting",
+    image: "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/ljok1yt7_poza%201.png"
   },
   {
-    slug: "permise-munca-2024",
-    title: { ro: "Permise de Muncă 2024: Ce s-a schimbat?", en: "Work Permits 2024: What has changed?" },
-    excerpt: { ro: "Actualizările legislative privind permisele de muncă pentru străini.", en: "Legislative updates regarding work permits for foreigners." },
+    slug: "etapele-colaborari-succes-selectie-integrare",
+    title: { 
+      ro: "Etapele unei colaborari de succes: De la Selectie la Integrare", 
+      en: "Stages of a successful collaboration: From Selection to Integration" 
+    },
+    excerpt: { 
+      ro: "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.", 
+      en: "Eliminating administrative stress for the employer through our complete turnkey solution." 
+    },
     date: "2024-02-15",
-    author: "GJC Team",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070"
+    author: "Global Jobs Consulting",
+    image: "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/vriozis1_poza%202.png"
   },
   {
-    slug: "sectoare-deficit-forta-munca",
-    title: { ro: "Top 5 Sectoare cu Deficit de Forță de Muncă", en: "Top 5 Sectors with Workforce Shortage" },
-    excerpt: { ro: "Care sunt industriile care au cea mai mare nevoie de muncitori?", en: "Which industries have the greatest need for workers?" },
+    slug: "avantaje-forta-munca-nepal-horeca",
+    title: { 
+      ro: "Avantajele fortei de munca din Nepal pentru sectorul HoReCa", 
+      en: "Advantages of the workforce from Nepal for the HoReCa sector" 
+    },
+    excerpt: { 
+      ro: "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul...", 
+      en: "Workers from Nepal are globally recognized for their native friendliness and work ethic. In an industry where a smile..." 
+    },
     date: "2024-02-01",
-    author: "GJC Team",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070"
+    author: "Global Jobs Consulting",
+    image: "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3qjb8k8w_poza%203.png"
   }
 ];
 
