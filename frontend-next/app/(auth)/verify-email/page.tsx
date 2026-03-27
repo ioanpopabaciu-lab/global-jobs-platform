@@ -22,7 +22,9 @@ function VerifyContent() {
       return;
     }
 
-    fetch(`/api/auth/verify-email?token=${token}`, { redirect: "manual" })
+    const baseUrl = "https://global-jobs-platform-production.up.railway.app/api";
+    
+    fetch(`${baseUrl}/auth/verify-email?token=${token}`, { redirect: "manual" })
       .then((res) => {
         if (res.ok || res.status === 0 || res.type === "opaqueredirect") {
           setStatus("success");
