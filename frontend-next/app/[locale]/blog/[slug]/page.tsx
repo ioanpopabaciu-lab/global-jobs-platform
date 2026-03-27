@@ -21,11 +21,9 @@ export default function BlogPostPage() {
     // We fetch from the live API using the relative proxy or full backend URL
     const fetchPost = async () => {
       try {
-        // Attempt to fetch from backend
-        // Note: Production backend is mapped differently depending on Railway setup.
-        // Usually, /api points to the backend on this stack. Let's try /api/v1/gjc/blog/posts...
-        const envUrl = process.env.NEXT_PUBLIC_API_URL || "";
-        const baseUrl = envUrl.endsWith('/api') ? envUrl : (envUrl ? `${envUrl}/api` : "https://global-jobs-platform-production.up.railway.app/api");
+        // HARDCODED URL TO FORCE BYPASSING NEXT_PUBLIC_API_URL RELATIVE PATHS
+        // Because NEXT_PUBLIC_API_URL is configured as "/api" in Vercel, client side requests go to gjc.ro/api which 404s.
+        const baseUrl = "https://global-jobs-platform-production.up.railway.app/api";
         
         const res = await fetch(`${baseUrl}/v1/gjc/blog/posts/${slug}`);
         if (!res.ok) {
