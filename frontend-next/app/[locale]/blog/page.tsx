@@ -30,6 +30,20 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 // Sample blog posts
 const blogPosts = [
   {
+    slug: "generatia-de-aur-supravietuire-import",
+    title: { 
+      ro: "De la „Generația de Aur” la Supraviețuirea prin Import", 
+      en: "From the \"Golden Generation\" to Survival by Import" 
+    },
+    excerpt: { 
+      ro: "Gopal a privit spre terminalul de plecări al Aeroportului Otopeni, strângând un bilet dus către Kathmandu...", 
+      en: "Gopal looked toward the departures terminal holding a one-way ticket to Kathmandu..." 
+    },
+    date: new Date().toISOString().split('T')[0],
+    author: "Global Jobs Consulting",
+    image: "/images/blog_gopal.png"
+  },
+  {
     slug: "ghid-angajare-muncitori-straini",
     title: { ro: "Ghid Complet: Angajarea Muncitorilor Străini în România", en: "Complete Guide: Hiring Foreign Workers in Romania" },
     excerpt: { ro: "Tot ce trebuie să știți despre procesul de angajare a muncitorilor din țări terțe.", en: "Everything you need to know about hiring workers from third countries." },
