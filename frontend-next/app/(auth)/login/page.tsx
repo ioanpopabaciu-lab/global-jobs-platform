@@ -32,7 +32,8 @@ function LoginForm() {
   useEffect(() => {
     if (user) {
       const path = redirectUrl || getRedirectPath(user.account_type);
-      window.location.href = path;
+      const separator = path.includes("?") ? "&" : "?";
+      window.location.href = `${path}${separator}t=${Date.now()}`;
     }
   }, [user, redirectUrl]);
 
@@ -49,7 +50,9 @@ function LoginForm() {
       const path = redirectUrl || getRedirectPath(data.user.account_type);
       
       // Use hard navigation to ensure cookies are sent freshly and Next.js middleware gets the new state
-      window.location.href = path;
+      // We append a cache buster timestamp to prevent the browser from serving a previously cached 307 redirect
+      const separator = path.includes("?") ? "&" : "?";
+      window.location.href = `${path}${separator}t=${Date.now()}`;
     } catch (err: any) {
       setError(err.message || "Autentificarea a eșuat");
     } finally {
