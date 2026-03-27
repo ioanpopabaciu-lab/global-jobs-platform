@@ -22,11 +22,13 @@ interface ContactFormProps {
 export default function ContactForm({ locale, translations }: ContactFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setStatus("idle");
+    setErrorMessage("");
 
     const formData = new FormData(e.currentTarget);
     const data = {
@@ -38,19 +40,29 @@ export default function ContactForm({ locale, translations }: ContactFormProps) 
     };
 
     try {
-      const response = await fetch(`https://global-jobs-platform-production.up.railway.app/api/contact/submit`, {
+      const response = await fetch(`/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
+      const responseBody = await response.json().catch(() => ({} as any));
+
       if (response.ok) {
         setStatus("success");
         (e.target as HTMLFormElement).reset();
       } else {
+        setErrorMessage(
+          typeof responseBody?.error === "string"
+            ? responseBody.error
+            : typeof responseBody?.detail === "string"
+              ? responseBody.detail
+              : `Request failed (${response.status})`
+        );
         setStatus("error");
       }
     } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Network error");
       setStatus("error");
     } finally {
       setIsLoading(false);
@@ -136,7 +148,7 @@ export default function ContactForm({ locale, translations }: ContactFormProps) 
 
       {status === "error" && (
         <div className="p-4 bg-red-50 text-red-700 rounded-xl" data-testid="contact-error">
-          {translations.error}
+          {errorMessage || translations.error}
         </div>
       )}
 
