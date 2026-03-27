@@ -10,9 +10,12 @@ import hashlib
 import secrets
 import resend
 import asyncio
+import logging
 import os
 import uuid
 from typing import Optional, List
+
+logger = logging.getLogger(__name__)
 
 from models import (
     UserBase, UserCreate, UserLogin, UserResponse, UserSession,
