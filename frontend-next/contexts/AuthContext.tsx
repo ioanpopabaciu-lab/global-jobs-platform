@@ -105,6 +105,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (typeof window !== "undefined" && data.access_token) {
       localStorage.setItem("gjc_token", data.access_token);
+      
+      // Explicitly set the cookie purely on the client-side to bypass Vercel header strip issues
+      // This allows Next.js middleware.ts to see the cookie perfectly upon route transition
+      document.cookie = `session_token=${data.access_token}; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax${window.location.protocol === 'https:' ? '; secure' : ''}`;
     }
     setUser(data.user);
     setIsAuthenticated(true);
@@ -127,6 +131,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (typeof window !== "undefined" && data.access_token) {
       localStorage.setItem("gjc_token", data.access_token);
+      
+      // Explicitly sync cookie for middleware
+      document.cookie = `session_token=${data.access_token}; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax${window.location.protocol === 'https:' ? '; secure' : ''}`;
     }
     setUser(data.user);
     setIsAuthenticated(true);
@@ -139,7 +146,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      if (typeof window !== "undefined") localStorage.removeItem("gjc_token");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("gjc_token");
+        // Clear middleware cookie natively
+        document.cookie = "session_token=; path=/; max-age=0";
+      }
       await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
         credentials: "same-origin",
