@@ -86,12 +86,9 @@ export default function RegisterForm() {
     setLoading(true);
 
     try {
-      const data = await register(name, email, password, accountType);
-      toast.success("Cont creat cu succes!");
-
-      // Redirect based on account type
-      const redirectPath = getRedirectPath(data.user.account_type);
-      router.push(redirectPath);
+      await register(name, email, password, accountType);
+      toast.success("Verifică emailul pentru a activa contul!");
+      router.push("/login?registered=true");
     } catch (err: any) {
       setError(err.message || "Înregistrarea a eșuat");
     } finally {
