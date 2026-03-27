@@ -32,9 +32,9 @@ function LoginForm() {
   useEffect(() => {
     if (user) {
       const path = redirectUrl || getRedirectPath(user.account_type);
-      router.replace(path);
+      window.location.href = path;
     }
-  }, [user, redirectUrl, router]);
+  }, [user, redirectUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,8 +48,8 @@ function LoginForm() {
       // Use redirect from URL params or default based on account_type
       const path = redirectUrl || getRedirectPath(data.user.account_type);
       
-      // Use replace to avoid back-button issues
-      router.replace(path);
+      // Use hard navigation to ensure cookies are sent freshly and Next.js middleware gets the new state
+      window.location.href = path;
     } catch (err: any) {
       setError(err.message || "Autentificarea a eșuat");
     } finally {
