@@ -22,7 +22,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
+const API_URL = "/api";
 
 interface Document {
   doc_id: string;
@@ -66,17 +66,28 @@ export default function CandidateDocumentsPage() {
     loadDocuments();
   }, []);
 
+  const getAuthHeaders = (): HeadersInit => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("gjc_token") : null;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
   const loadDocuments = async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/portal/candidate/documents`, {
         credentials: "include",
+        headers: { ...getAuthHeaders() },
       });
 
       if (response.ok) {
         const data = await response.json();
+        // Normalize: backend returns "id", frontend expects "doc_id"
+        const normalized = (data.documents || []).map((doc: any) => ({
+          ...doc,
+          doc_id: doc.doc_id || doc.id,
+        }));
         // Filter out archived documents for display
-        setDocuments((data.documents || []).filter((doc: Document) => doc.status !== "archived"));
+        setDocuments(normalized.filter((doc: Document) => doc.status !== "archived"));
       }
     } catch (err) {
       console.error("Failed to load documents:", err);
@@ -93,6 +104,7 @@ export default function CandidateDocumentsPage() {
       const response = await fetch(`${API_URL}/portal/candidate/documents/${docId}`, {
         method: "DELETE",
         credentials: "include",
+        headers: { ...getAuthHeaders() },
       });
 
       if (response.ok) {
