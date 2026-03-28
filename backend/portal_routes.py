@@ -474,7 +474,8 @@ async def get_candidate_documents(request: Request, include_archived: bool = Fal
     """Get all documents for candidate"""
     user = await get_current_user(request)
 
-    if db is None:
+    from database.db_config import db_manager
+    if db is None or not db_manager.mongo_available:
         return {"documents": []}
 
     profile = await db.candidate_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
