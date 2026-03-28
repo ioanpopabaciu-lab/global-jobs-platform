@@ -10,6 +10,11 @@ import { toast } from "sonner";
 
 const API_URL = "/api";
 
+function getAuthHeaders(): HeadersInit {
+  const token = typeof window !== "undefined" ? localStorage.getItem("gjc_token") : null;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 /** Aliniat la ALLOWED_DOCUMENT_TYPES din backend (portal_routes). */
 const MIME_FOR_VIDEO = new Set(["video/mp4", "video/quicktime", "video/x-msvideo"]);
 const MIME_GENERAL = new Set([
@@ -145,7 +150,7 @@ export default function DocumentUploader({
       const sessionRes = await fetch(`${API_URL}/portal/candidate/documents/upload-session`, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify({
           document_type: documentType,
           filename: file.name,
@@ -194,7 +199,7 @@ export default function DocumentUploader({
       const regRes = await fetch(`${API_URL}/portal/candidate/documents/register`, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify({
           document_type: documentType,
           storage_path: storagePath,
@@ -265,7 +270,7 @@ export default function DocumentUploader({
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify(
           documentType === "cv"
             ? { file_base64: base64, mime_type: file.type || "application/pdf" }
