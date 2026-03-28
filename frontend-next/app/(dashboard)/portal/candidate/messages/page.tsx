@@ -20,7 +20,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://global-jobs-platform-production.up.railway.app/api";
+const API_URL = "/api";
 
 type NotificationType = "info" | "success" | "warning" | "error";
 

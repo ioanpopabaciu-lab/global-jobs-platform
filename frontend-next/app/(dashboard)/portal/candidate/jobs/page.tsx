@@ -21,8 +21,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-// API URL - respect environment or fallback to production
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://global-jobs-platform-production.up.railway.app/api";
+const API_URL = "/api";
 
 interface Job {
   id: string;

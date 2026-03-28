@@ -20,7 +20,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
+const API_URL = "/api";
 
 interface DashboardData {
   has_profile: boolean;
@@ -45,10 +45,16 @@ export default function CandidateDashboard() {
     loadDashboardData();
   }, []);
 
+  const getAuthHeaders = (): HeadersInit => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("gjc_token") : null;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
   const loadDashboardData = async () => {
     try {
       const response = await fetch(`${API_URL}/portal/candidate/dashboard`, {
         credentials: "include",
+        headers: { ...getAuthHeaders() },
       });
       
       if (response.ok) {
