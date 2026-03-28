@@ -51,7 +51,9 @@ const pageContent = {
     cta: {
       title: "Ești Gata Pentru O Nouă Carieră?",
       desc: "Înregistrează-te și echipa noastră te va contacta pentru a discuta oportunitățile disponibile.",
-      button: "Înregistrează-te Ca Candidat"
+      button: "Înregistrează-te Ca Candidat",
+      loginText: "Ai deja cont?",
+      loginButton: "Intră în cont"
     }
   },
   en: {
@@ -77,7 +79,9 @@ const pageContent = {
     cta: {
       title: "Ready For A New Career?",
       desc: "Register and our team will contact you to discuss available opportunities.",
-      button: "Register As Candidate"
+      button: "Register As Candidate",
+      loginText: "Already have an account?",
+      loginButton: "Log In"
     }
   }
 };
@@ -170,10 +174,19 @@ export default async function CandidatesPage({ params: { locale } }: { params: {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">{t.cta.title}</h2>
           <p className="text-white/80 mb-8 max-w-2xl mx-auto">{t.cta.desc}</p>
-          <Link href="/register" className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg">
-            {t.cta.button}
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/register?type=candidate" className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-full font-bold hover:bg-red-600 transition-colors shadow-lg">
+              {t.cta.button}
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            <div className="flex items-center gap-3">
+              <span className="text-white/60">{t.cta.loginText}</span>
+              <Link href="/login" className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white hover:text-navy-900 transition-colors">
+                {t.cta.loginButton}
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
