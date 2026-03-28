@@ -8,7 +8,33 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://visa-relocation-hub.preview.emergentagent.com/api";
+const API_URL = "/api";
+
+/** Aliniat la ALLOWED_DOCUMENT_TYPES din backend (portal_routes). */
+const MIME_FOR_VIDEO = new Set(["video/mp4", "video/quicktime", "video/x-msvideo"]);
+const MIME_GENERAL = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
+
+function isAllowedMime(documentType: string, mime: string): boolean {
+  const m = (mime || "").toLowerCase() || "application/octet-stream";
+  if (documentType === "video_presentation") return MIME_FOR_VIDEO.has(m);
+  return MIME_GENERAL.has(m);
+}
+
+function detailMessage(detail: unknown): string {
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) return detail.map((x) => JSON.stringify(x)).join("; ");
+  if (detail && typeof detail === "object" && "msg" in detail)
+    return String((detail as { msg: string }).msg);
+  return "Eroare necunoscută";
+}
 
 interface DocumentUploaderProps {
   documentType: string;
@@ -85,6 +111,14 @@ export default function DocumentUploader({
       return;
     }
 
+    const ct = file.type || "application/octet-stream";
+    if (!isAllowedMime(documentType, ct)) {
+      setError(
+        "Tip de fișier neacceptat. Folosiți PDF sau imagini (JPEG, PNG, WebP) sau, pentru video, MP4/MOV/AVI."
+      );
+      return;
+    }
+
     // Check if document already exists
     if (uploadedFile) {
       setPendingFile(file);
@@ -101,38 +135,82 @@ export default function DocumentUploader({
     setShowReplaceConfirm(false);
     setPendingFile(null);
 
+    const progressInterval = setInterval(() => {
+      setUploadProgress((prev) => Math.min(prev + 8, 85));
+    }, 250);
+
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("document_type", documentType);
-      formData.append("replace_existing", replaceExisting.toString());
+      const contentType = file.type || "application/octet-stream";
 
-      // Simulate progress
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => Math.min(prev + 10, 90));
-      }, 200);
-
-      const response = await fetch(`${API_URL}/portal/candidate/documents/upload`, {
+      const sessionRes = await fetch(`${API_URL}/portal/candidate/documents/upload-session`, {
         method: "POST",
         credentials: "include",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          document_type: documentType,
+          filename: file.name,
+          content_type: contentType,
+          replace_existing: replaceExisting,
+        }),
       });
+      const session = await sessionRes.json();
+
+      if (!sessionRes.ok) {
+        throw new Error(detailMessage(session.detail) || "Nu s-a putut porni încărcarea");
+      }
+
+      if (session.exists && !replaceExisting) {
+        clearInterval(progressInterval);
+        setPendingFile(file);
+        setShowReplaceConfirm(true);
+        setIsUploading(false);
+        setUploadProgress(0);
+        return;
+      }
+
+      const uploadUrl = session.upload_url as string;
+      const storagePath = session.storage_path as string;
+      if (!uploadUrl || !storagePath) {
+        throw new Error("Răspuns invalid de la server (lipsește upload_url)");
+      }
+
+      const putHeaders: Record<string, string> = {
+        "Content-Type": (session.content_type as string) || contentType,
+      };
+
+      const putRes = await fetch(uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: putHeaders,
+      });
+
+      if (!putRes.ok) {
+        const errText = await putRes.text().catch(() => "");
+        throw new Error(
+          `Stocare eșuată (${putRes.status}). ${errText ? errText.slice(0, 200) : "Verifică bucket-ul Supabase și CORS."}`
+        );
+      }
+
+      const regRes = await fetch(`${API_URL}/portal/candidate/documents/register`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          document_type: documentType,
+          storage_path: storagePath,
+          original_filename: file.name,
+          file_size: file.size,
+          file_type: contentType,
+          replace_existing: replaceExisting,
+        }),
+      });
+      const result = await regRes.json();
 
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.detail || "Upload failed");
-      }
-
-      // Check if backend asks for confirmation
-      if (result.exists && !replaceExisting) {
-        setPendingFile(file);
-        setShowReplaceConfirm(true);
-        setIsUploading(false);
-        return;
+      if (!regRes.ok) {
+        throw new Error(detailMessage(result.detail) || "Înregistrare document eșuată");
       }
 
       setUploadedFile({ name: file.name, doc_id: result.doc_id });
@@ -142,15 +220,17 @@ export default function DocumentUploader({
         onUploadComplete(result);
       }
 
-      // Process OCR if enabled and file is an image
       if (enableOCR && file.type.startsWith("image/")) {
         await processOCR(file);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      clearInterval(progressInterval);
       console.error("Upload error:", err);
-      setError(err.message || "A apărut o eroare la încărcare");
+      const msg = err instanceof Error ? err.message : "A apărut o eroare la încărcare";
+      setError(msg);
       toast.error("Eroare la încărcare");
     } finally {
+      clearInterval(progressInterval);
       setIsUploading(false);
     }
   };
@@ -186,10 +266,11 @@ export default function DocumentUploader({
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          image_base64: base64,
-          mime_type: file.type,
-        }),
+        body: JSON.stringify(
+          documentType === "cv"
+            ? { file_base64: base64, mime_type: file.type || "application/pdf" }
+            : { image_base64: base64, mime_type: file.type }
+        ),
       });
 
       const result = await response.json();

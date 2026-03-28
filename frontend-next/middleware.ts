@@ -24,21 +24,32 @@ const bypassIntlRoutes = [
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const segments = pathname.split('/').filter(Boolean);
+  const maybeLocale = segments[0];
+  const localeInPath = maybeLocale && locales.includes(maybeLocale as any) ? maybeLocale : null;
+  const pathnameWithoutLocale = localeInPath ? `/${segments.slice(1).join('/')}` || '/' : pathname;
+
   // Check if this route should bypass intl middleware
   const shouldBypassIntl = bypassIntlRoutes.some(route => 
-    pathname === route || pathname.startsWith(route + '/')
+    pathnameWithoutLocale === route || pathnameWithoutLocale.startsWith(route + '/')
   );
+
+  // These routes are not localized (they live outside app/[locale]),
+  // so if a locale prefix is present, redirect to the non-prefixed route.
+  if (localeInPath && shouldBypassIntl) {
+    return NextResponse.redirect(new URL(pathnameWithoutLocale, request.url));
+  }
 
   // Check if this is a protected route
   const isProtectedRoute = 
-    pathname.startsWith('/portal') || 
-    pathname.startsWith('/admin');
+    pathnameWithoutLocale.startsWith('/portal') || 
+    pathnameWithoutLocale.startsWith('/admin');
 
   // Check if this is an auth route
   const isAuthRoute = 
-    pathname.startsWith('/login') || 
-    pathname.startsWith('/register') ||
-    pathname.startsWith('/my-account');
+    pathnameWithoutLocale.startsWith('/login') || 
+    pathnameWithoutLocale.startsWith('/register') ||
+    pathnameWithoutLocale.startsWith('/my-account');
 
   // Get token from cookies (backend uses session_token)
   const token = request.cookies.get('session_token')?.value;
@@ -46,13 +57,17 @@ export default function middleware(request: NextRequest) {
   // Protected routes - redirect to login if no token
   if (isProtectedRoute && !token) {
     const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
+    loginUrl.searchParams.set('redirect', pathnameWithoutLocale);
     return NextResponse.redirect(loginUrl);
   }
 
   // Auth routes - redirect to dashboard if already logged in
   if (isAuthRoute && token) {
     // We'd need to decode the token to know the user type
+    // If we are already on my-account, let the client-side useEffect redirect to the correct dashboard
+    if (pathnameWithoutLocale.startsWith('/my-account')) {
+      return NextResponse.next();
+    }
     // For now, redirect to my-account
     return NextResponse.redirect(new URL('/my-account', request.url));
   }

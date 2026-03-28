@@ -31,13 +31,25 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 const blogPosts = [
   {
     slug: "generatia-de-aur-supravietuire-import",
-    title: { 
-      ro: "De la „Generația de Aur” la Supraviețuirea prin Import", 
-      en: "From the \"Golden Generation\" to Survival by Import" 
+    title: {
+      "ro": "De la „Generația de Aur” la Supraviețuirea prin Import",
+      "en": "From the 'Golden Generation' to Import Survival",
+      "de": "Von der „Goldenen Generation“ zum Import Survival",
+      "sr": "Од 'златне генерације' до увозног преживљавања",
+      "ne": "'गोल्डेन जेनेरेशन' देखि आयात अस्तित्व सम्म",
+      "bn": "'গোল্ডেন জেনারেশন' থেকে আমদানি টিকে থাকা পর্যন্ত",
+      "hi": "'स्वर्णिम पीढ़ी' से आयात अस्तित्व तक",
+      "si": "'රන් පරම්පරාවේ' සිට ආනයන පැවැත්ම දක්වා"
     },
-    excerpt: { 
-      ro: "Gopal a privit spre terminalul de plecări al Aeroportului Otopeni, strângând un bilet dus către Kathmandu...", 
-      en: "Gopal looked toward the departures terminal holding a one-way ticket to Kathmandu..." 
+    excerpt: {
+      "ro": "Gopal a privit spre terminalul de plecări al Aeroportului Otopeni, strângând în mână un bilet spre Nepal... Ce se întâmplă când forța de muncă asiatică descoperă realitatea pieței din România, și de ce integrarea nu mai e un lux, ci o necesitate de supraviețuire economică.",
+      "en": "Gopal looked towards the departure terminal of Otopeni Airport, clutching a ticket to Nepal... What happens when the Asian workforce discovers the reality of the Romanian market, and why integration is no longer a luxury, but a necessity for economic survival.",
+      "de": "Gopal blickte zum Abflugterminal des Flughafens Otopeni und hielt ein Ticket nach Nepal in der Hand ... Was passiert, wenn die asiatischen Arbeitskräfte die Realität des rumänischen Marktes entdecken und warum Integration kein Luxus mehr, sondern eine Notwendigkeit für das wirtschaftliche Überleben ist?",
+      "sr": "Гопал је погледао ка одлазном терминалу аеродрома Отопени, држећи карту за Непал... Шта се дешава када азијска радна снага открије реалност румунског тржишта и зашто интеграција више није луксуз, већ неопходност за економски опстанак.",
+      "ne": "गोपालले ओटोपेनी एयरपोर्टको प्रस्थान टर्मिनलतिर हेरे, नेपाल जाने टिकट लिएर... एसियाली कार्यबलले रोमानियाली बजारको वास्तविकता बुझेपछि के हुन्छ, र किन एकीकरण अब विलासिता होइन, आर्थिक बाँच्नको लागि आवश्यकता हो।",
+      "bn": "নেপালের টিকিট হাতে নিয়ে গোপাল ওটোপেনি বিমানবন্দরের ডিপার্চার টার্মিনালের দিকে তাকাল... এশিয়ান কর্মীবাহিনী যখন রোমানিয়ান বাজারের বাস্তবতা আবিষ্কার করে তখন কী ঘটে এবং কেন ইন্টিগ্রেশন আর বিলাসিতা নয়, বরং অর্থনৈতিক বেঁচে থাকার প্রয়োজন।",
+      "hi": "गोपाल ने ओटोपेनी हवाई अड्डे के प्रस्थान टर्मिनल की ओर देखा, हाथ में नेपाल का टिकट थामे हुए... क्या होता है जब एशियाई कार्यबल को रोमानियाई बाजार की वास्तविकता का पता चलता है, और क्यों एकीकरण अब एक विलासिता नहीं है, बल्कि आर्थिक अस्तित्व के लिए एक आवश्यकता है।",
+      "si": "ගෝපාල් නේපාලයට ටිකට් පතක් අල්ලාගෙන ඔටොපේනි ගුවන් තොටුපළේ පිටත්වීමේ පර්යන්තය දෙස බැලුවේය... ආසියානු ශ්‍රම බලකාය රුමේනියානු වෙළඳපොලේ යථාර්ථය සොයා ගත් විට කුමක් සිදුවේද, සහ ඒකාබද්ධ කිරීම තවදුරටත් සුඛෝපභෝගී දෙයක් නොව ආර්ථික පැවැත්ම සඳහා අවශ්‍යතාවයක් වන්නේ ඇයි?"
     },
     date: new Date().toISOString().split('T')[0],
     author: "Global Jobs Consulting",
@@ -45,13 +57,25 @@ const blogPosts = [
   },
   {
     slug: "cum-sa-angajezi-forta-munca-asia-romania-ghid",
-    title: { 
-      ro: "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas", 
-      en: "How to hire Asian workforce in Romania: Step by Step Guide" 
+    title: {
+      "ro": "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas",
+      "en": "How to hire labor from Asia in Romania: Step by Step Guide",
+      "de": "So stellen Sie Arbeitskräfte aus Asien in Rumänien ein: Schritt-für-Schritt-Anleitung",
+      "sr": "Како унајмити радну снагу из Азије у Румунији: Водич корак по корак",
+      "ne": "रोमानियामा एसियाबाट श्रमिक कसरी भाडामा लिने: चरणबद्ध गाइड",
+      "bn": "রোমানিয়াতে এশিয়া থেকে কীভাবে শ্রমিক নিয়োগ করবেন: ধাপে ধাপে নির্দেশিকা",
+      "hi": "रोमानिया में एशिया से श्रमिकों को कैसे नियुक्त करें: चरण दर चरण मार्गदर्शिका",
+      "si": "රුමේනියාවේ ආසියාවෙන් ශ්‍රමිකයන් බඳවා ගන්නේ කෙසේද: පියවරෙන් පියවර මාර්ගෝපදේශය"
     },
-    excerpt: { 
-      ro: "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti.", 
-      en: "In a booming economy, the staff shortage has become the main barrier to the growth of Romanian companies." 
+    excerpt: {
+      "ro": "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.",
+      "en": "In an expanding economy, the shortage of personnel has become the main barrier to the growth of Romanian companies. Recruiting from Asia is not just an alternative, but a long-term stability strategy.",
+      "de": "In einer expandierenden Wirtschaft ist der Personalmangel zum Haupthindernis für das Wachstum rumänischer Unternehmen geworden. Die Rekrutierung aus Asien ist nicht nur eine Alternative, sondern eine langfristige Stabilitätsstrategie.",
+      "sr": "У економији која се шири, недостатак особља је постао главна препрека расту румунских компанија. Регрутовање из Азије није само алтернатива, већ дугорочна стратегија стабилности.",
+      "ne": "विस्तार हुँदै गइरहेको अर्थतन्त्रमा, कर्मचारीको अभाव रोमानियाली कम्पनीहरूको बृद्धिको मुख्य बाधक बनेको छ। एसियाबाट भर्ती गर्नु वैकल्पिक मात्र होइन, दीर्घकालीन स्थिरता रणनीति हो।",
+      "bn": "ক্রমবর্ধমান অর্থনীতিতে, কর্মীদের ঘাটতি রোমানিয়ান কোম্পানিগুলির বৃদ্ধির প্রধান বাধা হয়ে দাঁড়িয়েছে। এশিয়া থেকে নিয়োগ শুধুমাত্র একটি বিকল্প নয়, একটি দীর্ঘমেয়াদী স্থিতিশীলতার কৌশল।",
+      "hi": "बढ़ती अर्थव्यवस्था में, कर्मियों की कमी रोमानियाई कंपनियों के विकास में मुख्य बाधा बन गई है। एशिया से भर्ती करना सिर्फ एक विकल्प नहीं है, बल्कि एक दीर्घकालिक स्थिरता रणनीति है।",
+      "si": "පුළුල් වන ආර්ථිකයක් තුළ, පිරිස් හිඟය රුමේනියානු සමාගම්වල වර්ධනයට ප්‍රධාන බාධකය වී ඇත. ආසියාවෙන් බඳවා ගැනීම විකල්පයක් පමණක් නොව, දිගුකාලීන ස්ථාවරත්ව උපාය මාර්ගයකි."
     },
     date: "2024-03-01",
     author: "Global Jobs Consulting",
@@ -59,13 +83,25 @@ const blogPosts = [
   },
   {
     slug: "etapele-colaborari-succes-selectie-integrare",
-    title: { 
-      ro: "Etapele unei colaborari de succes: De la Selectie la Integrare", 
-      en: "Stages of a successful collaboration: From Selection to Integration" 
+    title: {
+      "ro": "Etapele unei colaborari de succes: De la Selectie la Integrare",
+      "en": "Stages of a successful collaboration: From Selection to Integration",
+      "de": "Phasen einer erfolgreichen Zusammenarbeit: Von der Auswahl bis zur Integration",
+      "sr": "Фазе успешне сарадње: од селекције до интеграције",
+      "ne": "सफल सहयोगका चरणहरू: चयनदेखि एकीकरणसम्म",
+      "bn": "একটি সফল সহযোগিতার পর্যায়: নির্বাচন থেকে ইন্টিগ্রেশন পর্যন্ত",
+      "hi": "सफल सहयोग के चरण: चयन से एकीकरण तक",
+      "si": "සාර්ථක සහයෝගීතාවයේ අදියර: තේරීමේ සිට ඒකාබද්ධ කිරීම දක්වා"
     },
-    excerpt: { 
-      ro: "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.", 
-      en: "Eliminating administrative stress for the employer through our complete turnkey solution." 
+    excerpt: {
+      "ro": "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.",
+      "en": "Eliminating administrative stress for the employer through our complete turnkey solution.",
+      "de": "Eliminieren Sie den Verwaltungsaufwand für den Arbeitgeber durch unsere schlüsselfertige Komplettlösung.",
+      "sr": "Уклањање административног стреса за послодавца кроз наше комплетно решење по систему кључ у руке.",
+      "ne": "हाम्रो पूर्ण टर्नकी समाधान मार्फत रोजगारदाताको लागि प्रशासनिक तनाव हटाउँदै।",
+      "bn": "আমাদের সম্পূর্ণ টার্নকি সমাধানের মাধ্যমে নিয়োগকর্তার জন্য প্রশাসনিক চাপ দূর করা।",
+      "hi": "हमारे संपूर्ण टर्नकी समाधान के माध्यम से नियोक्ता के लिए प्रशासनिक तनाव को दूर करना।",
+      "si": "අපගේ සම්පූර්ණ පිරිවැටුම් විසඳුම හරහා සේවායෝජකයා සඳහා පරිපාලන ආතතිය ඉවත් කිරීම."
     },
     date: "2024-02-15",
     author: "Global Jobs Consulting",
@@ -73,13 +109,25 @@ const blogPosts = [
   },
   {
     slug: "avantaje-forta-munca-nepal-horeca",
-    title: { 
-      ro: "Avantajele fortei de munca din Nepal pentru sectorul HoReCa", 
-      en: "Advantages of the workforce from Nepal for the HoReCa sector" 
+    title: {
+      "ro": "Avantajele fortei de munca din Nepal pentru sectorul HoReCa",
+      "en": "Advantages of the Nepalese workforce for the HoReCa sector",
+      "de": "Vorteile der nepalesischen Arbeitskräfte für den HoReCa-Sektor",
+      "sr": "Предности непалске радне снаге за ХоРеЦа сектор",
+      "ne": "HoReCa क्षेत्रका लागि नेपाली कार्यबलका फाइदाहरू",
+      "bn": "HoReCa সেক্টরের জন্য নেপালি কর্মীবাহিনীর সুবিধা",
+      "hi": "HoReCa क्षेत्र के लिए नेपाली कार्यबल के लाभ",
+      "si": "HoReCa අංශය සඳහා නේපාල ශ්‍රම බලකායේ වාසි"
     },
-    excerpt: { 
-      ro: "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul...", 
-      en: "Workers from Nepal are globally recognized for their native friendliness and work ethic. In an industry where a smile..." 
+    excerpt: {
+      "ro": "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii. Intr-o industrie unde zambetul si rabdarea sunt esentiale, acesti candidati exceleaza.",
+      "en": "Nepali workers are globally recognized for their native kindness and work ethic. In an industry where a smile and patience are essential, these candidates excel.",
+      "de": "Nepalesische Arbeiter sind weltweit für ihre Freundlichkeit und Arbeitsmoral bekannt. In einer Branche, in der ein Lächeln und Geduld unerlässlich sind, zeichnen sich diese Kandidaten aus.",
+      "sr": "Непалски радници су глобално признати по својој љубазности и радној етици. У индустрији у којој су осмех и стрпљење неопходни, ови кандидати се истичу.",
+      "ne": "नेपाली कामदारहरू आफ्नो स्वदेशी दया र कार्य नैतिकताका लागि विश्वव्यापी रूपमा चिनिन्छन्। एक उद्योगमा जहाँ मुस्कान र धैर्य आवश्यक छ, यी उम्मेद्वारहरू उत्कृष्ट हुन्छन्।",
+      "bn": "নেপালি কর্মীরা তাদের স্থানীয় উদারতা এবং কাজের নীতির জন্য বিশ্বব্যাপী স্বীকৃত। একটি শিল্প যেখানে একটি হাসি এবং ধৈর্য অপরিহার্য, এই প্রার্থীরা শ্রেষ্ঠত্ব.",
+      "hi": "नेपाली श्रमिक अपनी मूल दयालुता और कार्य नैतिकता के लिए विश्व स्तर पर पहचाने जाते हैं। ऐसे उद्योग में जहां मुस्कुराहट और धैर्य आवश्यक है, ये उम्मीदवार उत्कृष्ट प्रदर्शन करते हैं।",
+      "si": "නේපාල කම්කරුවන් ඔවුන්ගේ ස්වදේශික කරුණාව සහ වැඩ ආචාර ධර්ම සඳහා ගෝලීය වශයෙන් පිළිගැනේ. සිනහව සහ ඉවසීම අත්‍යවශ්‍ය කර්මාන්තයක, මෙම අපේක්ෂකයින් විශිෂ්ටයි."
     },
     date: "2024-02-01",
     author: "Global Jobs Consulting",

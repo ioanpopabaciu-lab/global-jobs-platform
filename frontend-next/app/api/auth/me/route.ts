@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const API_URL = "https://global-jobs-platform-production.up.railway.app/api";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
 

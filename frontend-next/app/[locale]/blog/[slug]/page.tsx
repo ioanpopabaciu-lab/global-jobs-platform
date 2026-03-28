@@ -21,9 +21,7 @@ export default function BlogPostPage() {
     // We fetch from the live API using the relative proxy or full backend URL
     const fetchPost = async () => {
       try {
-        // HARDCODED URL TO FORCE BYPASSING NEXT_PUBLIC_API_URL RELATIVE PATHS
-        // Because NEXT_PUBLIC_API_URL is configured as "/api" in Vercel, client side requests go to gjc.ro/api which 404s.
-        const baseUrl = "https://global-jobs-platform-production.up.railway.app/api";
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
         
         const res = await fetch(`${baseUrl}/v1/gjc/blog/posts/${slug}`);
         if (!res.ok) {
@@ -70,6 +68,12 @@ export default function BlogPostPage() {
 
   const dateStr = post.created_at ? new Date(post.created_at).toLocaleDateString(locale) : new Date().toLocaleDateString(locale);
 
+  const getLoc = (field: any) => {
+    if (!field) return "";
+    if (typeof field === "string") return field;
+    return field[locale] || field.ro || Object.values(field)[0] || "";
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-20 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -84,7 +88,7 @@ export default function BlogPostPage() {
 
         {/* Article Header */}
         <header className="mb-10 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-navy-900 mb-6">{post.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold text-navy-900 mb-6">{getLoc(post.title)}</h1>
           <div className="flex items-center justify-center gap-6 text-gray-500 text-sm">
             <span className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
@@ -102,7 +106,7 @@ export default function BlogPostPage() {
           <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden shadow-lg mb-12">
             <Image 
               src={post.image_url} 
-              alt={post.title} 
+              alt={getLoc(post.title)} 
               fill 
               className="object-cover"
               priority
@@ -112,7 +116,7 @@ export default function BlogPostPage() {
 
         {/* Article Content */}
         <article className="prose prose-lg prose-blue max-w-none bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100 mb-8">
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div dangerouslySetInnerHTML={{ __html: getLoc(post.content) }} />
         </article>
 
         {/* Share Section */}
@@ -131,7 +135,7 @@ export default function BlogPostPage() {
               <Facebook className="h-5 w-5" />
             </button>
             <button 
-              onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
+              onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(getLoc(post.title))}`, '_blank')}
               className="p-3 bg-[#1DA1F2]/10 text-[#1DA1F2] rounded-full hover:bg-[#1DA1F2] hover:text-white transition-colors"
               aria-label="Share pe X (Twitter)"
               title="Distribuie pe X (Twitter)"

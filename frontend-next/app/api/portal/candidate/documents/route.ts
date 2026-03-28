@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_URL = "https://global-jobs-platform-production.up.railway.app/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     } else {
       const rawText = await response.text();
       console.error("!!! RAW NON-JSON RESPONSE FROM BACKEND !!!", rawText);
-      data = { detail: "RAW ERROR: " + rawText.substring(0, 300) };
+      data = { detail: "Eroare server: răspuns invalid de la backend.", documents: [] };
     }
 
     if (!response.ok) {

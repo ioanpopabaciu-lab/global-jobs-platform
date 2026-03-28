@@ -4,6 +4,7 @@ Extended with cloud storage document upload
 """
 from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Form, Response
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 import uuid
@@ -19,8 +20,14 @@ from models import (
     Project, Document, Notification
 )
 from auth_routes import get_current_user, require_role
-from storage import put_object, get_object, generate_storage_path, get_content_type, init_storage
+from storage import put_object, generate_storage_path, get_content_type, init_storage
 from notification_service import notify_admin_new_profile_pending
+from direct_upload_storage import (
+    build_candidate_object_path,
+    create_candidate_signed_upload,
+    fetch_document_bytes,
+    candidate_path_owned_by_user,
+)
 from document_ocr_service import (
     extract_id_card_data, 
     extract_document_expiry,
@@ -54,6 +61,26 @@ ALLOWED_DOCUMENT_TYPES = {
 }
 
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
+
+
+class CandidateUploadSessionBody(BaseModel):
+    document_type: str
+    filename: str = Field(..., max_length=512)
+    content_type: str
+    replace_existing: bool = False
+
+
+class CandidateDocumentRegisterBody(BaseModel):
+    document_type: str
+    storage_path: str = Field(..., max_length=1024)
+    original_filename: str = Field(..., max_length=512)
+    file_size: int = Field(..., ge=0, le=MAX_FILE_SIZE)
+    file_type: str
+    replace_existing: bool = False
+    document_number: Optional[str] = None
+    issue_date: Optional[str] = None
+    expiry_date: Optional[str] = None
+
 
 # Storage folder mapping
 DOCUMENT_FOLDERS = {
@@ -101,160 +128,183 @@ async def check_existing_candidate_document(
     return {"exists": False, "document": None}
 
 
-@portal_router.post("/candidate/documents/upload")
-async def upload_candidate_document(
-    request: Request,
-    file: UploadFile = File(...),
-    document_type: str = Form(...),
-    document_number: Optional[str] = Form(None),
-    issue_date: Optional[str] = Form(None),
-    expiry_date: Optional[str] = Form(None),
-    replace_existing: Optional[str] = Form("false")
-):
-    """Upload a document for candidate profile"""
+@portal_router.post("/candidate/documents/upload-session")
+async def candidate_document_upload_session(request: Request, body: CandidateUploadSessionBody):
+    """
+    Return a signed URL for direct upload to Supabase Storage (browser PUT).
+    Fișierul nu trece prin FastAPI.
+    """
     user = await get_current_user(request)
-    
+
     if user["role"] not in ["candidate", "admin"]:
         raise HTTPException(status_code=403, detail="Candidate access required")
-    
-    # Get or create candidate profile
+
+    if body.content_type not in ALLOWED_DOCUMENT_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File type not allowed: {body.content_type}",
+        )
+
     profile = await db.candidate_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
     if not profile:
-        # Create a basic profile first
         profile = CandidateProfile(user_id=user["user_id"]).model_dump()
         profile["created_at"] = profile["created_at"].isoformat()
         profile["updated_at"] = profile["updated_at"].isoformat()
         await db.candidate_profiles.insert_one(profile)
-    
+
     owner_id = profile["profile_id"]
-    
-    # Check for existing document of same type (except diplomas which can have multiple)
-    if document_type != "diploma":
+
+    if body.document_type != "diploma":
         existing_doc = await db.documents.find_one({
             "owner_id": owner_id,
             "owner_type": "candidate",
-            "document_type": document_type,
-            "status": {"$ne": "archived"}
+            "document_type": body.document_type,
+            "status": {"$ne": "archived"},
         })
-        
-        if existing_doc and replace_existing.lower() != "true":
-            # Return info that document exists - frontend should confirm replacement
+        if existing_doc and not body.replace_existing:
             return {
                 "exists": True,
                 "existing_document": {
                     "doc_id": existing_doc.get("doc_id"),
                     "original_filename": existing_doc.get("original_filename"),
-                    "document_type": document_type
+                    "document_type": body.document_type,
                 },
-                "message": f"Ai deja un document de tip '{document_type}' încărcat. Dorești să-l înlocuiești?"
+                "message": (
+                    f"Ai deja un document de tip '{body.document_type}' încărcat. "
+                    "Dorești să-l înlocuiești?"
+                ),
             }
-        
-        # Archive existing document if replacement confirmed
-        if existing_doc and replace_existing.lower() == "true":
-            await db.documents.update_one(
-                {"doc_id": existing_doc.get("doc_id")},
-                {"$set": {
-                    "status": "archived",
-                    "archived_at": datetime.now(timezone.utc).isoformat(),
-                    "archived_reason": "Replaced by newer document"
-                }}
-            )
-            logger.info(f"Archived document {existing_doc.get('doc_id')} - replaced by new upload")
-    
-    # Validate file
-    if file.content_type not in ALLOWED_DOCUMENT_TYPES:
-        raise HTTPException(status_code=400, detail=f"File type {file.content_type} not allowed")
-    
-    content = await file.read()
-    if len(content) > MAX_FILE_SIZE:
-        raise HTTPException(status_code=400, detail="File too large (max 50MB)")
-    
-    # Determine storage folder
-    if document_type == "profile_photo":
-        folder = "profile_photos"
-    elif document_type == "video_presentation":
-        folder = "video_presentations"
-    else:
-        folder = "candidate_documents"
-    
-    # Generate storage path
-    storage_path = generate_storage_path(folder, user["user_id"], file.filename)
-    
+
+    object_path = build_candidate_object_path(
+        user["user_id"], body.document_type, body.filename
+    )
     try:
-        # Upload to cloud storage
-        result = put_object(storage_path, content, file.content_type or "application/octet-stream")
-        actual_path = result.get("path", storage_path)
-        
-        # Create document record
+        signed = create_candidate_signed_upload(object_path)
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e)) from e
+
+    return {
+        "exists": False,
+        "upload_url": signed["upload_url"],
+        "storage_path": signed["storage_path"],
+        "token": signed.get("token"),
+        "bucket": signed.get("bucket"),
+        "upload_method": "PUT",
+        "content_type": body.content_type,
+        "max_bytes": MAX_FILE_SIZE,
+    }
+
+
+@portal_router.post("/candidate/documents/register")
+async def candidate_document_register(request: Request, body: CandidateDocumentRegisterBody):
+    """După PUT la Supabase: salvează metadata în Mongo (același model ca înainte)."""
+    user = await get_current_user(request)
+
+    if user["role"] not in ["candidate", "admin"]:
+        raise HTTPException(status_code=403, detail="Candidate access required")
+
+    if body.file_type not in ALLOWED_DOCUMENT_TYPES:
+        raise HTTPException(status_code=400, detail=f"File type not allowed: {body.file_type}")
+    if body.file_size > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="File too large (max 50MB)")
+
+    if not candidate_path_owned_by_user(body.storage_path, user["user_id"]):
+        raise HTTPException(status_code=403, detail="Invalid storage path for this user")
+
+    profile = await db.candidate_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Candidate profile not found")
+
+    owner_id = profile["profile_id"]
+    existing_doc = None
+    if body.document_type != "diploma":
+        existing_doc = await db.documents.find_one({
+            "owner_id": owner_id,
+            "owner_type": "candidate",
+            "document_type": body.document_type,
+            "status": {"$ne": "archived"},
+        })
+        if existing_doc and not body.replace_existing:
+            raise HTTPException(
+                status_code=409,
+                detail="Document already exists; confirm replacement or use upload-session with replace_existing.",
+            )
+
+    if existing_doc and body.replace_existing:
+        await db.documents.update_one(
+            {"doc_id": existing_doc.get("doc_id")},
+            {"$set": {
+                "status": "archived",
+                "archived_at": datetime.now(timezone.utc).isoformat(),
+                "archived_reason": "Replaced by newer document (direct upload)",
+            }},
+        )
+        logger.info("Archived document %s — direct upload replace", existing_doc.get("doc_id"))
+
+    try:
         doc = Document(
             owner_id=owner_id,
             owner_type="candidate",
-            filename=actual_path.split("/")[-1],
-            original_filename=file.filename,
-            file_type=file.content_type or "application/octet-stream",
-            file_size=len(content),
-            storage_path=actual_path,
-            document_type=document_type,
-            document_number=document_number,
-            issue_date=issue_date,
-            expiry_date=expiry_date,
-            uploaded_by=user["user_id"]
+            filename=body.storage_path.split("/")[-1],
+            original_filename=body.original_filename,
+            file_type=body.file_type,
+            file_size=body.file_size,
+            storage_path=body.storage_path,
+            document_type=body.document_type,
+            document_number=body.document_number,
+            issue_date=body.issue_date,
+            expiry_date=body.expiry_date,
+            uploaded_by=user["user_id"],
         )
-        
-        doc_dict = doc.model_dump()
-        doc_dict["created_at"] = doc_dict["created_at"].isoformat()
-        
-        await db.documents.insert_one(doc_dict)
-        
-        # Update profile with document reference
-        update_field = None
-        if document_type == "passport":
-            update_field = "passport_doc_id"
-        elif document_type == "cv":
-            update_field = "cv_doc_id"
-        elif document_type == "criminal_record":
-            update_field = "criminal_record_doc_id"
-        elif document_type == "passport_photo":
-            update_field = "passport_photo_doc_id"
-        elif document_type == "profile_photo":
-            update_field = "profile_photo_url"
-        elif document_type == "video_presentation":
-            update_field = "video_presentation_url"
-        elif document_type == "medical_certificate":
-            update_field = "medical_certificate_doc_id"
-        
-        if update_field:
-            value = doc.doc_id
-            # For photo/video, store the API URL to access it
-            if document_type in ["profile_photo", "video_presentation"]:
-                value = f"/api/portal/documents/{doc.doc_id}/download"
-            
-            await db.candidate_profiles.update_one(
-                {"profile_id": owner_id},
-                {"$set": {update_field: value, "updated_at": datetime.now(timezone.utc)}}
-            )
-        
-        # For diplomas, add to array
-        if document_type == "diploma":
-            await db.candidate_profiles.update_one(
-                {"profile_id": owner_id},
-                {
-                    "$push": {"diploma_doc_ids": doc.doc_id},
-                    "$set": {"updated_at": datetime.now(timezone.utc)}
-                }
-            )
-        
-        return {
-            "doc_id": doc.doc_id,
-            "filename": file.filename,
-            "storage_path": actual_path,
-            "size": len(content),
-            "message": "Document uploaded successfully"
-        }
-        
     except Exception as e:
-        logger.error(f"Failed to upload document: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to upload document: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Invalid document payload: {e}") from e
+
+    doc_dict = doc.model_dump()
+    doc_dict["created_at"] = doc_dict["created_at"].isoformat()
+
+    await db.documents.insert_one(doc_dict)
+
+    update_field = None
+    if body.document_type == "passport":
+        update_field = "passport_doc_id"
+    elif body.document_type == "cv":
+        update_field = "cv_doc_id"
+    elif body.document_type == "criminal_record":
+        update_field = "criminal_record_doc_id"
+    elif body.document_type == "passport_photo":
+        update_field = "passport_photo_doc_id"
+    elif body.document_type == "profile_photo":
+        update_field = "profile_photo_url"
+    elif body.document_type == "video_presentation":
+        update_field = "video_presentation_url"
+    elif body.document_type == "medical_certificate":
+        update_field = "medical_certificate_doc_id"
+
+    if update_field:
+        value = doc.doc_id
+        if body.document_type in ["profile_photo", "video_presentation"]:
+            value = f"/api/portal/documents/{doc.doc_id}/download"
+        await db.candidate_profiles.update_one(
+            {"profile_id": owner_id},
+            {"$set": {update_field: value, "updated_at": datetime.now(timezone.utc)}},
+        )
+
+    if body.document_type == "diploma":
+        await db.candidate_profiles.update_one(
+            {"profile_id": owner_id},
+            {
+                "$push": {"diploma_doc_ids": doc.doc_id},
+                "$set": {"updated_at": datetime.now(timezone.utc)},
+            },
+        )
+
+    return {
+        "doc_id": doc.doc_id,
+        "filename": body.original_filename,
+        "storage_path": body.storage_path,
+        "size": body.file_size,
+        "message": "Document registered successfully",
+    }
 
 @portal_router.get("/employer/documents/check-existing")
 async def check_existing_employer_document(
@@ -423,7 +473,10 @@ async def upload_employer_document(
 async def get_candidate_documents(request: Request, include_archived: bool = False):
     """Get all documents for candidate"""
     user = await get_current_user(request)
-    
+
+    if db is None:
+        return {"documents": []}
+
     profile = await db.candidate_profiles.find_one({"user_id": user["user_id"]}, {"_id": 0})
     if not profile:
         return {"documents": []}
@@ -494,9 +547,8 @@ async def download_document(doc_id: str, request: Request):
         raise HTTPException(status_code=403, detail="Access denied")
     
     try:
-        # Get from cloud storage
-        content, content_type = get_object(doc["storage_path"])
-        
+        content, content_type = fetch_document_bytes(doc["storage_path"])
+
         return Response(
             content=content,
             media_type=doc.get("file_type", content_type),

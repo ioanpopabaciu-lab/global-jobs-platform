@@ -29,7 +29,7 @@ MIME_TYPES = {
     "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 }
 
-def init_storage() -> str:
+def init_storage() -> Optional[str]:
     """Initialize storage and get session key. Call ONCE at startup."""
     global storage_key
     
@@ -38,7 +38,11 @@ def init_storage() -> str:
     
     emergent_key = os.environ.get("EMERGENT_LLM_KEY")
     if not emergent_key:
-        raise ValueError("EMERGENT_LLM_KEY not configured")
+        logger.warning(
+            "EMERGENT_LLM_KEY not configured — server-side storage (e.g. employer uploads) disabled. "
+            "Candidate documents use Supabase direct upload."
+        )
+        return None
     
     try:
         resp = requests.post(
@@ -54,7 +58,7 @@ def init_storage() -> str:
         logger.error(f"Failed to initialize storage: {e}")
         raise
 
-def get_storage_key() -> str:
+def get_storage_key() -> Optional[str]:
     """Get storage key, initializing if needed."""
     global storage_key
     if not storage_key:
@@ -63,16 +67,20 @@ def get_storage_key() -> str:
 
 def put_object(path: str, data: bytes, content_type: str) -> dict:
     """
-    Upload file to cloud storage.
+    Upload file to Emergent object storage (server-side; employer/legacy flows).
     Returns {"path": "...", "size": 123, "etag": "..."}
     """
     key = get_storage_key()
-    
+    if not key:
+        raise RuntimeError(
+            "Server-side object storage is not configured (set EMERGENT_LLM_KEY). "
+            "Candidate uploads use Supabase direct upload instead."
+        )
     resp = requests.put(
         f"{STORAGE_URL}/objects/{path}",
         headers={"X-Storage-Key": key, "Content-Type": content_type},
         data=data,
-        timeout=120
+        timeout=120,
     )
     resp.raise_for_status()
     return resp.json()
@@ -83,11 +91,14 @@ def get_object(path: str) -> Tuple[bytes, str]:
     Returns (content_bytes, content_type)
     """
     key = get_storage_key()
-    
+    if not key:
+        raise FileNotFoundError(
+            f"Cannot read object {path}: EMERGENT_LLM_KEY not set (no local disk fallback)."
+        )
     resp = requests.get(
         f"{STORAGE_URL}/objects/{path}",
         headers={"X-Storage-Key": key},
-        timeout=60
+        timeout=60,
     )
     resp.raise_for_status()
     return resp.content, resp.headers.get("Content-Type", "application/octet-stream")

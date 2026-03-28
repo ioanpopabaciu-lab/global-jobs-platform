@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
   try {
-    const API_URL = "https://global-jobs-platform-production.up.railway.app/api";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
     // Forward the logout to the backend server
     const token = request.cookies.get("session_token")?.value;

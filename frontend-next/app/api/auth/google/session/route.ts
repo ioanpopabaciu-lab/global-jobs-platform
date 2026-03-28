@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const API_URL = "https://global-jobs-platform-production.up.railway.app/api";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
     const response = await fetch(`${API_URL}/auth/google/session`, {
       method: "POST",

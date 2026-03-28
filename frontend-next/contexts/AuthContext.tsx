@@ -69,6 +69,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           created_at: userData.created_at,
           profile_completed: userData.profile_completed,
         };
+        
+        // CRITICAL SYNC: Ensure middleware sees the cookie on rapid subsequent route navigations
+        if (token && typeof window !== "undefined") {
+          document.cookie = `session_token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax${window.location.protocol === 'https:' ? '; secure' : ''}`;
+        }
+        
         setUser(normalizedUser);
         setIsAuthenticated(true);
       } else {

@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const { cui } = await request.json()
     
     const response = await fetch(
-      'https://global-jobs-platform-production.up.railway.app/api/auth/lookup-company',
+      `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/auth/lookup-company`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -5,7 +5,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const baseUrl = "https://global-jobs-platform-production.up.railway.app/api";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
   
   try {
     let post = null;
@@ -29,19 +29,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? (post.image_url.startsWith('http') ? post.image_url : `https://gjc.ro${post.image_url}`)
       : "https://gjc.ro/images/logo_gjc.png";
 
+    const getLoc = (field: any) => {
+      if (!field) return "";
+      if (typeof field === "string") return field;
+      return field[params.locale] || field.ro || Object.values(field)[0] || "";
+    };
+
     return {
-      title: `${post.title} | Global Jobs Consulting`,
-      description: post.excerpt,
+      title: `${getLoc(post.title)} | Global Jobs Consulting`,
+      description: getLoc(post.excerpt),
       openGraph: {
-        title: post.title,
-        description: post.excerpt,
+        title: getLoc(post.title),
+        description: getLoc(post.excerpt),
         url: `https://gjc.ro/${params.locale}/blog/${params.slug}`,
         images: [
           {
             url: imageUrl,
             width: 1200,
             height: 630,
-            alt: post.title,
+            alt: getLoc(post.title),
           },
         ],
         type: 'article',
@@ -50,8 +56,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: "summary_large_image",
-        title: post.title,
-        description: post.excerpt,
+        title: getLoc(post.title),
+        description: getLoc(post.excerpt),
         images: [imageUrl],
       }
     };

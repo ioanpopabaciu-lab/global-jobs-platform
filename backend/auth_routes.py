@@ -739,7 +739,7 @@ async def logout(request: Request, response: Response):
 async def request_password_reset(data: PasswordResetRequest):
     """Request password reset email"""
     from database.db_config import execute_pg_one, execute_pg_write
-    user = await execute_pg_one("SELECT id FROM users WHERE email = $1", data.email)
+    user = await execute_pg_one("SELECT id, name FROM users WHERE email = $1", data.email)
     
     # Always return success (don't reveal if email exists)
     if not user:
@@ -749,53 +749,96 @@ async def request_password_reset(data: PasswordResetRequest):
     reset_token = secrets.token_urlsafe(32)
     expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
     
+    # create table if not exists just to be safe
+    await execute_pg_write("""
+        CREATE TABLE IF NOT EXISTS password_resets (
+            id SERIAL PRIMARY KEY,
+            user_id UUID REFERENCES users(id),
+            token VARCHAR(255) UNIQUE NOT NULL,
+            expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+            used BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        )
+    """)
+    
     await execute_pg_write("""
         INSERT INTO password_resets (user_id, token, expires_at, used)
         VALUES ($1, $2, $3, $4)
     """, str(user["id"]), reset_token, expires_at, False)
     
-    # TODO: Send email with reset link
-    # For now, just return success
+    # Send email
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    reset_link = f"{frontend_url}/reset-password?token={reset_token}"
+    
+    await send_email_safe({
+        "from": "GJC <no-reply@gjc.ro>",
+        "to": [data.email],
+        "subject": "Recuperare parolă - Global Jobs Consulting",
+        "html": f"""
+        <div style="font-family: sans-serif; max-w-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2>Salut {user['name'] or 'Candidat'},</h2>
+            <p>Am primit o cerere de resetare a parolei pentru contul tău GJC.</p>
+            <p>Dacă nu ai cerut tu acest lucru, poți ignora acest mesaj automat.</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{reset_link}" style="background-color: #0f172a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+                    Setează o nouă parolă
+                </a>
+            </div>
+            <p style="color: #64748b; font-size: 14px;">Acest link este valabil doar 1 oră.</p>
+        </div>
+        """
+    })
     
     return {"message": "If email exists, reset instructions will be sent"}
 
 @auth_router.post("/password/reset")
 async def reset_password(data: PasswordReset, response: Response):
     """Reset password with token"""
-    reset_doc = await db.password_resets.find_one(
-        {"token": data.token, "used": False},
-        {"_id": 0}
-    )
+    from database.db_config import execute_pg_one, execute_pg_write
+    
+    reset_doc = await execute_pg_one("""
+        SELECT id, user_id, expires_at 
+        FROM password_resets 
+        WHERE token = $1 AND used = FALSE
+    """, data.token)
     
     if not reset_doc:
         raise HTTPException(status_code=400, detail="Invalid or expired reset token")
     
     expires_at = reset_doc["expires_at"]
-    if isinstance(expires_at, str):
-        expires_at = datetime.fromisoformat(expires_at)
     if expires_at.tzinfo is None:
         expires_at = expires_at.replace(tzinfo=timezone.utc)
     
     if expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Reset token expired")
     
-    # Update password
+    # Update password in postgres
+    hashed = hash_password(data.new_password)
+    user_id_str = str(reset_doc["user_id"])
+    
+    await execute_pg_write("""
+        UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2
+    """, hashed, user_id_str)
+    
+    # Also update in MongoDB to ensure sync compatibility while they are duplicated
     await db.users.update_one(
-        {"user_id": reset_doc["user_id"]},
+        {"user_id": user_id_str},
         {"$set": {
-            "password_hash": hash_password(data.new_password),
+            "password_hash": hashed,
             "updated_at": datetime.now(timezone.utc)
         }}
     )
     
     # Mark token as used
-    await db.password_resets.update_one(
-        {"token": data.token},
-        {"$set": {"used": True}}
-    )
+    await execute_pg_write("""
+        UPDATE password_resets SET used = TRUE WHERE id = $1
+    """, reset_doc["id"])
     
-    # Delete all existing sessions for this user
-    await db.user_sessions.delete_many({"user_id": reset_doc["user_id"]})
+    # Delete all existing Postgres sessions for this user
+    await execute_pg_write("DELETE FROM user_sessions WHERE user_id = $1", user_id_str)
+    
+    # And MongoDB sessions
+    await db.user_sessions.delete_many({"user_id": user_id_str})
     
     return {"message": "Password reset successfully. Please login again."}
 
