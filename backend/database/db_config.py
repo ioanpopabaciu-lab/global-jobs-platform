@@ -222,25 +222,14 @@ async def check_database_health():
     except Exception as e:
         postgres_status = {"status": "unhealthy", "error": str(e)}
 
-    mongodb_status = {"status": "unhealthy"}
-    try:
-        mongodb_status = {"status": "available" if db_manager.mongo_available else "unavailable"}
-    except Exception as e:
-        mongodb_status = {"status": "unhealthy", "error": str(e)}
-
     return {
         "postgres": postgres_status,
-        "mongodb": mongodb_status,
     }
 
 
-class DummyDBManager:
+class DBManager:
     def __init__(self):
         self._pg_available = True
-
-    @property
-    def mongo_available(self):
-        return False
 
     @property
     def pg_available(self):
@@ -257,4 +246,4 @@ class DummyDBManager:
             _pool = None
 
 
-db_manager = DummyDBManager()
+db_manager = DBManager()

@@ -42,54 +42,7 @@ async def get_admin_dashboard(request: Request):
     """Get admin dashboard overview"""
     await require_admin(request)
     
-    # User stats
-    total_users = await db.users.count_documents({})
-    candidates_count = await db.users.count_documents({"role": "candidate"})
-    employers_count = await db.users.count_documents({"role": "employer"})
-    
-    # Profile stats
-    pending_candidate_profiles = await db.candidate_profiles.count_documents({"status": "pending_validation"})
-    pending_employer_profiles = await db.employer_profiles.count_documents({"status": "pending_validation"})
-    validated_candidates = await db.candidate_profiles.count_documents({"status": "validated"})
-    validated_employers = await db.employer_profiles.count_documents({"status": "validated"})
-    
-    # Project stats
-    total_projects = await db.projects.count_documents({})
-    active_projects = await db.projects.count_documents({"current_stage": {"$ne": "completed"}})
-    completed_projects = await db.projects.count_documents({"current_stage": "completed"})
-    
-    # Job stats
-    open_jobs = await db.job_requests.count_documents({"status": "open"})
-    
-    # Projects by stage
-    pipeline = [
-        {"$group": {"_id": "$current_stage", "count": {"$sum": 1}}}
-    ]
-    stages_aggregation = await db.projects.aggregate(pipeline).to_list(30)
-    projects_by_stage = {item["_id"]: item["count"] for item in stages_aggregation}
-    
-    return {
-        "users": {
-            "total": total_users,
-            "candidates": candidates_count,
-            "employers": employers_count
-        },
-        "profiles": {
-            "pending_candidates": pending_candidate_profiles,
-            "pending_employers": pending_employer_profiles,
-            "validated_candidates": validated_candidates,
-            "validated_employers": validated_employers
-        },
-        "projects": {
-            "total": total_projects,
-            "active": active_projects,
-            "completed": completed_projects,
-            "by_stage": projects_by_stage
-        },
-        "jobs": {
-            "open": open_jobs
-        }
-    }
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 # ==================== CANDIDATE MANAGEMENT ====================
 
@@ -104,71 +57,14 @@ async def list_candidates(
     """List all candidate profiles"""
     await require_admin(request)
     
-    query = {}
-    if status:
-        query["status"] = status
-    if nationality:
-        query["nationality"] = nationality
-    
-    candidates = await db.candidate_profiles.find(
-        query,
-        {"_id": 0}
-    ).skip(skip).limit(limit).to_list(limit)
-    
-    total = await db.candidate_profiles.count_documents(query)
-    
-    # Enrich with user email
-    for candidate in candidates:
-        user = await db.users.find_one(
-            {"user_id": candidate["user_id"]},
-            {"_id": 0, "email": 1}
-        )
-        candidate["email"] = user.get("email") if user else None
-    
-    return {
-        "candidates": candidates,
-        "total": total,
-        "skip": skip,
-        "limit": limit
-    }
+    return {"candidates": [], "total": 0, "skip": skip, "limit": limit}  # TODO: implement in PostgreSQL
 
 @admin_router.get("/candidates/{profile_id}")
 async def get_candidate_detail(profile_id: str, request: Request):
     """Get detailed candidate info"""
     await require_admin(request)
     
-    candidate = await db.candidate_profiles.find_one(
-        {"profile_id": profile_id},
-        {"_id": 0}
-    )
-    
-    if not candidate:
-        raise HTTPException(status_code=404, detail="Candidate not found")
-    
-    # Get user info
-    user = await db.users.find_one(
-        {"user_id": candidate["user_id"]},
-        {"_id": 0, "password_hash": 0}
-    )
-    
-    # Get documents
-    documents = await db.documents.find(
-        {"owner_id": profile_id, "owner_type": "candidate"},
-        {"_id": 0}
-    ).to_list(50)
-    
-    # Get projects
-    projects = await db.projects.find(
-        {"candidate_id": profile_id},
-        {"_id": 0}
-    ).to_list(50)
-    
-    return {
-        "candidate": candidate,
-        "user": user,
-        "documents": documents,
-        "projects": projects
-    }
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 @admin_router.put("/candidates/{profile_id}/validate")
 async def validate_candidate(
@@ -180,60 +76,7 @@ async def validate_candidate(
     """Validate or reject candidate profile"""
     admin = await require_admin(request)
     
-    if status not in ["validated", "rejected"]:
-        raise HTTPException(status_code=400, detail="Status must be 'validated' or 'rejected'")
-    
-    # Get candidate before update
-    candidate = await db.candidate_profiles.find_one(
-        {"profile_id": profile_id},
-        {"_id": 0}
-    )
-    
-    if not candidate:
-        raise HTTPException(status_code=404, detail="Candidate not found")
-    
-    # Update status
-    result = await db.candidate_profiles.update_one(
-        {"profile_id": profile_id},
-        {"$set": {
-            "status": status,
-            "validation_notes": notes,
-            "validated_by": admin["user_id"],
-            "validated_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc)
-        }}
-    )
-    
-    # Get user info for notifications
-    user = await db.users.find_one(
-        {"user_id": candidate["user_id"]},
-        {"_id": 0, "email": 1, "name": 1}
-    )
-    
-    candidate_name = f"{candidate.get('first_name', '')} {candidate.get('last_name', '')}".strip()
-    if not candidate_name:
-        candidate_name = user.get("name", "Candidat")
-    
-    # Send notification with email
-    await notify_profile_validation(
-        user_id=candidate["user_id"],
-        user_name=candidate_name,
-        user_type="candidate",
-        is_validated=(status == "validated"),
-        rejection_reason=notes if status == "rejected" else None,
-        platform_url=PLATFORM_URL
-    )
-    
-    # If validated, trigger matching with open jobs and notify employers
-    if status == "validated":
-        # Refresh candidate data with full profile
-        updated_candidate = await db.candidate_profiles.find_one(
-            {"profile_id": profile_id},
-            {"_id": 0}
-        )
-        await notify_employers_of_new_candidate(updated_candidate, PLATFORM_URL)
-    
-    return {"message": f"Candidate profile {status}"}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 # ==================== EMPLOYER MANAGEMENT ====================
 
@@ -248,63 +91,14 @@ async def list_employers(
     """List all employer profiles"""
     await require_admin(request)
     
-    query = {}
-    if status:
-        query["status"] = status
-    if country:
-        query["country"] = country
-    
-    employers = await db.employer_profiles.find(
-        query,
-        {"_id": 0}
-    ).skip(skip).limit(limit).to_list(limit)
-    
-    total = await db.employer_profiles.count_documents(query)
-    
-    return {
-        "employers": employers,
-        "total": total,
-        "skip": skip,
-        "limit": limit
-    }
+    return {"employers": [], "total": 0, "skip": skip, "limit": limit}  # TODO: implement in PostgreSQL
 
 @admin_router.get("/employers/{profile_id}")
 async def get_employer_detail(profile_id: str, request: Request):
     """Get detailed employer info"""
     await require_admin(request)
     
-    employer = await db.employer_profiles.find_one(
-        {"profile_id": profile_id},
-        {"_id": 0}
-    )
-    
-    if not employer:
-        raise HTTPException(status_code=404, detail="Employer not found")
-    
-    # Get user info
-    user = await db.users.find_one(
-        {"user_id": employer["user_id"]},
-        {"_id": 0, "password_hash": 0}
-    )
-    
-    # Get job requests
-    jobs = await db.job_requests.find(
-        {"employer_id": profile_id},
-        {"_id": 0}
-    ).to_list(50)
-    
-    # Get projects
-    projects = await db.projects.find(
-        {"employer_id": profile_id},
-        {"_id": 0}
-    ).to_list(50)
-    
-    return {
-        "employer": employer,
-        "user": user,
-        "jobs": jobs,
-        "projects": projects
-    }
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 @admin_router.put("/employers/{profile_id}/validate")
 async def validate_employer(
@@ -316,49 +110,7 @@ async def validate_employer(
     """Validate or reject employer profile"""
     admin = await require_admin(request)
     
-    if status not in ["validated", "rejected"]:
-        raise HTTPException(status_code=400, detail="Status must be 'validated' or 'rejected'")
-    
-    # Get employer before update
-    employer = await db.employer_profiles.find_one(
-        {"profile_id": profile_id},
-        {"_id": 0}
-    )
-    
-    if not employer:
-        raise HTTPException(status_code=404, detail="Employer not found")
-    
-    # Update status
-    result = await db.employer_profiles.update_one(
-        {"profile_id": profile_id},
-        {"$set": {
-            "status": status,
-            "validation_notes": notes,
-            "validated_by": admin["user_id"],
-            "validated_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc)
-        }}
-    )
-    
-    # Get user info for notifications
-    user = await db.users.find_one(
-        {"user_id": employer["user_id"]},
-        {"_id": 0, "email": 1, "name": 1}
-    )
-    
-    company_name = employer.get("company_name") or user.get("name", "Companie")
-    
-    # Send notification with email
-    await notify_profile_validation(
-        user_id=employer["user_id"],
-        user_name=company_name,
-        user_type="employer",
-        is_validated=(status == "validated"),
-        rejection_reason=notes if status == "rejected" else None,
-        platform_url=PLATFORM_URL
-    )
-    
-    return {"message": f"Employer profile {status}"}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 # ==================== JOB MANAGEMENT ====================
 
@@ -372,31 +124,7 @@ async def list_all_jobs(
     """List all job requests"""
     await require_admin(request)
     
-    query = {}
-    if status:
-        query["status"] = status
-    
-    jobs = await db.job_requests.find(
-        query,
-        {"_id": 0}
-    ).skip(skip).limit(limit).to_list(limit)
-    
-    # Enrich with employer info
-    for job in jobs:
-        employer = await db.employer_profiles.find_one(
-            {"profile_id": job["employer_id"]},
-            {"_id": 0, "company_name": 1, "country": 1}
-        )
-        job["employer"] = employer
-    
-    total = await db.job_requests.count_documents(query)
-    
-    return {
-        "jobs": jobs,
-        "total": total,
-        "skip": skip,
-        "limit": limit
-    }
+    return {"jobs": [], "total": 0, "skip": skip, "limit": limit}  # TODO: implement in PostgreSQL
 
 @admin_router.put("/jobs/{job_id}/status")
 async def update_job_status(
@@ -407,18 +135,7 @@ async def update_job_status(
     """Update job request status"""
     await require_admin(request)
     
-    if status not in ["draft", "open", "in_progress", "filled", "cancelled"]:
-        raise HTTPException(status_code=400, detail="Invalid status")
-    
-    result = await db.job_requests.update_one(
-        {"job_id": job_id},
-        {"$set": {"status": status, "updated_at": datetime.now(timezone.utc)}}
-    )
-    
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    return {"message": f"Job status updated to {status}"}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 # ==================== PROJECT MANAGEMENT ====================
 
@@ -432,41 +149,7 @@ async def list_all_projects(
     """List all recruitment projects"""
     await require_admin(request)
     
-    query = {}
-    if stage:
-        query["current_stage"] = stage
-    
-    projects = await db.projects.find(
-        query,
-        {"_id": 0}
-    ).skip(skip).limit(limit).to_list(limit)
-    
-    # Enrich with candidate and employer info
-    for project in projects:
-        candidate = await db.candidate_profiles.find_one(
-            {"profile_id": project["candidate_id"]},
-            {"_id": 0, "full_name": 1, "nationality": 1}
-        )
-        employer = await db.employer_profiles.find_one(
-            {"profile_id": project["employer_id"]},
-            {"_id": 0, "company_name": 1}
-        )
-        job = await db.job_requests.find_one(
-            {"job_id": project["job_id"]},
-            {"_id": 0, "title": 1}
-        )
-        project["candidate"] = candidate
-        project["employer"] = employer
-        project["job"] = job
-    
-    total = await db.projects.count_documents(query)
-    
-    return {
-        "projects": projects,
-        "total": total,
-        "skip": skip,
-        "limit": limit
-    }
+    return {"projects": [], "total": 0, "skip": skip, "limit": limit}  # TODO: implement in PostgreSQL
 
 @admin_router.post("/projects")
 async def create_project(
@@ -479,127 +162,14 @@ async def create_project(
     """Create new recruitment project (match candidate to job)"""
     admin = await require_admin(request)
     
-    # Verify candidate exists and is validated
-    candidate = await db.candidate_profiles.find_one(
-        {"profile_id": candidate_id, "status": "validated"},
-        {"_id": 0}
-    )
-    if not candidate:
-        raise HTTPException(status_code=400, detail="Candidate not found or not validated")
-    
-    # Verify employer exists and is validated
-    employer = await db.employer_profiles.find_one(
-        {"profile_id": employer_id, "status": "validated"},
-        {"_id": 0}
-    )
-    if not employer:
-        raise HTTPException(status_code=400, detail="Employer not found or not validated")
-    
-    # Verify job exists
-    job = await db.job_requests.find_one(
-        {"job_id": job_id},
-        {"_id": 0}
-    )
-    if not job:
-        raise HTTPException(status_code=400, detail="Job not found")
-    
-    # Create project
-    project_id = f"proj_{uuid.uuid4().hex[:12]}"
-    project_doc = {
-        "project_id": project_id,
-        "candidate_id": candidate_id,
-        "employer_id": employer_id,
-        "job_id": job_id,
-        "current_stage": "candidate_matched",
-        "stage_history": [{
-            "stage": "candidate_matched",
-            "changed_at": datetime.now(timezone.utc).isoformat(),
-            "changed_by": admin["user_id"],
-            "notes": "Project created"
-        }],
-        "matching_score": matching_score,
-        "payment_status": "pending",
-        "notes": [],
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc)
-    }
-    
-    await db.projects.insert_one(project_doc)
-    
-    # Update job status
-    await db.job_requests.update_one(
-        {"job_id": job_id},
-        {"$set": {"status": "in_progress"}}
-    )
-    
-    # Notify candidate
-    await db.notifications.insert_one({
-        "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-        "user_id": candidate["user_id"],
-        "title": "Ai fost selectat pentru un job!",
-        "message": f"Ai fost potrivit pentru poziția {job['title']} la {employer['company_name']}.",
-        "type": "success",
-        "category": "project",
-        "related_entity_type": "project",
-        "related_entity_id": project_id,
-        "is_read": False,
-        "created_at": datetime.now(timezone.utc)
-    })
-    
-    # Notify employer
-    await db.notifications.insert_one({
-        "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-        "user_id": employer["user_id"],
-        "title": "Candidat potrivit găsit!",
-        "message": f"Am găsit un candidat potrivit pentru poziția {job['title']}: {candidate['full_name']}.",
-        "type": "success",
-        "category": "project",
-        "related_entity_type": "project",
-        "related_entity_id": project_id,
-        "is_read": False,
-        "created_at": datetime.now(timezone.utc)
-    })
-    
-    return {"project": project_doc, "message": "Project created"}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 @admin_router.get("/projects/{project_id}")
 async def get_project_detail_admin(project_id: str, request: Request):
     """Get full project details"""
     await require_admin(request)
     
-    project = await db.projects.find_one(
-        {"project_id": project_id},
-        {"_id": 0}
-    )
-    
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    
-    # Get all related data
-    candidate = await db.candidate_profiles.find_one(
-        {"profile_id": project["candidate_id"]},
-        {"_id": 0}
-    )
-    employer = await db.employer_profiles.find_one(
-        {"profile_id": project["employer_id"]},
-        {"_id": 0}
-    )
-    job = await db.job_requests.find_one(
-        {"job_id": project["job_id"]},
-        {"_id": 0}
-    )
-    documents = await db.documents.find(
-        {"owner_id": project_id, "owner_type": "project"},
-        {"_id": 0}
-    ).to_list(100)
-    
-    return {
-        "project": project,
-        "candidate": candidate,
-        "employer": employer,
-        "job": job,
-        "documents": documents
-    }
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 @admin_router.put("/projects/{project_id}/stage")
 async def update_project_stage(
@@ -611,94 +181,7 @@ async def update_project_stage(
     """Update project immigration stage"""
     admin = await require_admin(request)
     
-    # Validate stage
-    valid_stages = [
-        "candidate_registration", "candidate_validation", "employer_registration",
-        "employer_validation", "job_request_created", "candidate_matched",
-        "contract_generated", "contract_signed", "invoice_generated",
-        "payment_received", "documents_uploaded", "igi_work_permit_submitted",
-        "igi_work_permit_approved", "evisa_submitted", "embassy_interview",
-        "visa_issued", "candidate_travel", "arrival_romania",
-        "residence_permit_applied", "residence_permit_issued", "completed"
-    ]
-    
-    if new_stage not in valid_stages:
-        raise HTTPException(status_code=400, detail=f"Invalid stage. Must be one of: {valid_stages}")
-    
-    project = await db.projects.find_one(
-        {"project_id": project_id},
-        {"_id": 0}
-    )
-    
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    
-    # Add to stage history
-    stage_entry = {
-        "stage": new_stage,
-        "changed_at": datetime.now(timezone.utc).isoformat(),
-        "changed_by": admin["user_id"],
-        "notes": notes
-    }
-    
-    await db.projects.update_one(
-        {"project_id": project_id},
-        {
-            "$set": {
-                "current_stage": new_stage,
-                "updated_at": datetime.now(timezone.utc)
-            },
-            "$push": {"stage_history": stage_entry}
-        }
-    )
-    
-    # Get candidate and employer for notifications
-    candidate = await db.candidate_profiles.find_one(
-        {"profile_id": project["candidate_id"]},
-        {"_id": 0, "user_id": 1}
-    )
-    employer = await db.employer_profiles.find_one(
-        {"profile_id": project["employer_id"]},
-        {"_id": 0, "user_id": 1}
-    )
-    
-    # Stage names for notifications
-    stage_names = {
-        "contract_generated": "Contract generat",
-        "contract_signed": "Contract semnat",
-        "invoice_generated": "Factură emisă",
-        "payment_received": "Plată primită",
-        "documents_uploaded": "Documente încărcate",
-        "igi_work_permit_submitted": "Dosar IGI depus",
-        "igi_work_permit_approved": "Aviz muncă aprobat",
-        "evisa_submitted": "e-Visa depusă",
-        "embassy_interview": "Interviu ambasadă programat",
-        "visa_issued": "Viză emisă",
-        "candidate_travel": "Călătorie programată",
-        "arrival_romania": "Sosire în România",
-        "residence_permit_applied": "Permis ședere depus",
-        "residence_permit_issued": "Permis ședere emis",
-        "completed": "Proiect finalizat"
-    }
-    
-    stage_name = stage_names.get(new_stage, new_stage)
-    
-    # Notify both parties
-    for user_id in [candidate["user_id"], employer["user_id"]]:
-        await db.notifications.insert_one({
-            "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-            "user_id": user_id,
-            "title": f"Actualizare proiect: {stage_name}",
-            "message": notes or f"Proiectul a trecut în etapa: {stage_name}",
-            "type": "info",
-            "category": "project",
-            "related_entity_type": "project",
-            "related_entity_id": project_id,
-            "is_read": False,
-            "created_at": datetime.now(timezone.utc)
-        })
-    
-    return {"message": f"Project stage updated to {new_stage}"}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 @admin_router.post("/projects/{project_id}/notes")
 async def add_project_note(
@@ -709,21 +192,7 @@ async def add_project_note(
     """Add note to project"""
     admin = await require_admin(request)
     
-    note = {
-        "user_id": admin["user_id"],
-        "text": text,
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
-    
-    result = await db.projects.update_one(
-        {"project_id": project_id},
-        {"$push": {"notes": note}}
-    )
-    
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Project not found")
-    
-    return {"message": "Note added", "note": note}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 # ==================== MATCHING ENGINE ====================
 
@@ -732,37 +201,7 @@ async def find_matching_candidates(job_id: str, request: Request):
     """Find candidates matching a job request"""
     await require_admin(request)
     
-    job = await db.job_requests.find_one(
-        {"job_id": job_id},
-        {"_id": 0}
-    )
-    
-    if not job:
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    # Get validated candidates
-    candidates = await db.candidate_profiles.find(
-        {"status": "validated"},
-        {"_id": 0}
-    ).to_list(500)
-    
-    # Calculate matching scores
-    matched = []
-    for candidate in candidates:
-        score = calculate_matching_score(candidate, job)
-        if score > 0:
-            matched.append({
-                "candidate": candidate,
-                "score": score
-            })
-    
-    # Sort by score descending
-    matched.sort(key=lambda x: x["score"], reverse=True)
-    
-    return {
-        "job": job,
-        "matches": matched[:50]  # Top 50 matches
-    }
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 def calculate_matching_score(candidate: dict, job: dict) -> int:
     """Calculate compatibility score between candidate and job (0-100)"""
@@ -822,71 +261,7 @@ async def get_all_expiring_documents(
     """
     await require_admin(request)
     
-    # Get all employer documents with expiry dates
-    documents = await db.documents.find(
-        {
-            "owner_type": "employer",
-            "is_deleted": {"$ne": True},
-            "status": {"$ne": "archived"},
-            "expiry_date": {"$exists": True, "$ne": None}
-        },
-        {"_id": 0}
-    ).to_list(1000)
-    
-    # Add status info and employer details to each document
-    docs_with_status = []
-    summary = {"in_5_days": 0, "in_14_days": 0, "in_30_days": 0, "expired": 0}
-    
-    for doc in documents:
-        expiry_date = doc.get("expiry_date") or doc.get("data_expirare")
-        if not expiry_date:
-            continue
-        
-        status_info = calculate_expiry_status(expiry_date)
-        
-        # Get employer info
-        employer = await db.employer_profiles.find_one(
-            {"profile_id": doc["owner_id"]},
-            {"_id": 0, "company_name": 1, "phone": 1, "email": 1, "contact_name": 1}
-        )
-        
-        doc_info = {
-            **doc,
-            "expiry_status": status_info,
-            "employer": employer
-        }
-        
-        # Update summary
-        days_remaining = status_info.get("days_remaining", 9999)
-        if days_remaining <= 0:
-            summary["expired"] += 1
-        elif days_remaining <= 5:
-            summary["in_5_days"] += 1
-        elif days_remaining <= 14:
-            summary["in_14_days"] += 1
-        elif days_remaining <= 30:
-            summary["in_30_days"] += 1
-        
-        # Apply filter
-        if filter_status == "all":
-            docs_with_status.append(doc_info)
-        elif filter_status == "expired" and days_remaining <= 0:
-            docs_with_status.append(doc_info)
-        elif filter_status == "7days" and 0 < days_remaining <= 7:
-            docs_with_status.append(doc_info)
-        elif filter_status == "30days" and 0 < days_remaining <= 30:
-            docs_with_status.append(doc_info)
-    
-    # Sort by days remaining (most urgent first)
-    docs_with_status.sort(
-        key=lambda x: x.get("expiry_status", {}).get("days_remaining", 9999)
-    )
-    
-    return {
-        "documents": docs_with_status,
-        "summary": summary,
-        "total": len(docs_with_status)
-    }
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 
 
 @admin_router.put("/documents/{doc_id}/renew")
@@ -896,16 +271,5 @@ async def mark_document_renewed(doc_id: str, request: Request):
     """
     await require_admin(request)
     
-    result = await db.documents.update_one(
-        {"doc_id": doc_id},
-        {"$set": {
-            "renewed_at": datetime.now(timezone.utc).isoformat(),
-            "renewed_by": "admin"
-        }}
-    )
-    
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Document not found")
-    
-    return {"message": "Document marked as renewed"}
+    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
 

@@ -21,15 +21,12 @@ from email.mime.multipart import MIMEMultipart
 import shutil
 
 # Import new routes
-from auth_routes import auth_router, set_database as set_auth_db, create_auth_tables
-from portal_routes import portal_router, set_database as set_portal_db
-from admin_routes import admin_router, set_database as set_admin_db
-from notification_routes import notification_router, set_database as set_notification_db
-from api_v2_routes import v2_router, set_database as set_v2_db
+from auth_routes import auth_router, create_auth_tables
+from portal_routes import portal_router
+from admin_routes import admin_router
+from notification_routes import notification_router
+from api_v2_routes import v2_router
 from storage import init_storage
-
-# Postgres connection will be handled by db_config.py
-db = None
 
 # Create uploads directory
 UPLOAD_DIR = ROOT_DIR / "uploads"
@@ -317,22 +314,17 @@ async def submit_employer_form(data: EmployerSubmissionCreate, background_tasks:
     doc = submission.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     
-    await db.employer_submissions.insert_one(doc)
-    
+    # TODO: save to PostgreSQL
     # Send email in background
     admin_email = os.environ.get('ADMIN_EMAIL', 'office@gjc.ro')
     html_content = generate_employer_email(data)
     background_tasks.add_task(send_email_notification, admin_email, f"Nou Lead Angajator: {data.company_name}", html_content)
-    
+
     return submission
 
 @api_router.get("/employers/submissions", response_model=List[EmployerSubmission])
 async def get_employer_submissions():
-    submissions = await db.employer_submissions.find({}, {"_id": 0}).to_list(1000)
-    for sub in submissions:
-        if isinstance(sub['created_at'], str):
-            sub['created_at'] = datetime.fromisoformat(sub['created_at'])
-    return submissions
+    return []  # TODO: implement in PostgreSQL
 
 # Candidate Routes
 @api_router.post("/candidates/submit")
@@ -376,22 +368,17 @@ async def submit_candidate_form(
     doc = submission.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     
-    await db.candidate_submissions.insert_one(doc)
-    
+    # TODO: save to PostgreSQL
     # Send email in background
     admin_email = os.environ.get('ADMIN_EMAIL', 'office@gjc.ro')
     html_content = generate_candidate_email(data, cv_filename)
     background_tasks.add_task(send_email_notification, admin_email, f"Nou Candidat: {data.full_name}", html_content)
-    
+
     return {"success": True, "message": "Aplicația a fost trimisă cu succes!", "id": submission.id}
 
 @api_router.get("/candidates/submissions", response_model=List[CandidateSubmission])
 async def get_candidate_submissions():
-    submissions = await db.candidate_submissions.find({}, {"_id": 0}).to_list(1000)
-    for sub in submissions:
-        if isinstance(sub['created_at'], str):
-            sub['created_at'] = datetime.fromisoformat(sub['created_at'])
-    return submissions
+    return []  # TODO: implement in PostgreSQL
 
 # Contact Routes
 @api_router.post("/contact/submit", response_model=ContactSubmission)
@@ -400,13 +387,12 @@ async def submit_contact_form(data: ContactSubmissionCreate, background_tasks: B
     doc = submission.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     
-    await db.contact_submissions.insert_one(doc)
-    
+    # TODO: save to PostgreSQL
     # Send email in background
     admin_email = os.environ.get('ADMIN_EMAIL', 'office@gjc.ro')
     html_content = generate_contact_email(data)
     background_tasks.add_task(send_email_notification, admin_email, f"Contact: {data.subject}", html_content)
-    
+
     return submission
 
 # Request Workers Lead Routes
@@ -416,8 +402,7 @@ async def submit_request_workers_lead(data: RequestWorkersLeadCreate, background
     doc = lead.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     
-    await db.request_workers_leads.insert_one(doc)
-    
+    # TODO: save to PostgreSQL
     # Send email notification
     admin_email = os.environ.get('ADMIN_EMAIL', 'office@gjc.ro')
     html_content = f"""
@@ -438,8 +423,7 @@ async def submit_request_workers_lead(data: RequestWorkersLeadCreate, background
 
 @api_router.get("/leads/request-workers")
 async def get_request_workers_leads():
-    leads = await db.request_workers_leads.find({}, {"_id": 0}).to_list(1000)
-    return leads
+    return []  # TODO: implement in PostgreSQL
 
 # Blog Static Data
 STATIC_BLOG_POSTS = [
@@ -774,15 +758,8 @@ async def maria_chat(chat_msg: ChatMessage):
         if len(chat_sessions[session_id]) > 21:
             chat_sessions[session_id] = [chat_sessions[session_id][0]] + chat_sessions[session_id][-20:]
         
-        # Store in database for analytics
-        await db.chat_messages.insert_one({
-            "session_id": session_id,
-            "language": language,
-            "user_message": chat_msg.message,
-            "assistant_response": response,
-            "created_at": datetime.now(timezone.utc)
-        })
-        
+        # TODO: store chat analytics in PostgreSQL
+
         return {"response": response, "session_id": session_id}
         
     except Exception as e:
@@ -831,35 +808,14 @@ except ImportError as e:
 
 @app.on_event("startup")
 async def startup_init():
-    """Initialize database connections and sample data"""
-    global db
-    import motor.motor_asyncio
-    try:
-        mongo_url = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-        db_name = os.environ.get("DB_NAME", "testdb")
-        mongo_client = motor.motor_asyncio.AsyncIOMotorClient(mongo_url)
-        db = mongo_client[db_name]
-        logger.info(f"MongoDB initialized dynamically from MONGO_URL to '{db_name}'.")
-    except Exception as e:
-        logger.warning(f"MongoDB unavailable (running in pure PostgreSQL mode): {e}")
-
-    # Set database for route modules
-    if db is not None:
-        set_auth_db(db)
-        set_portal_db(db)
-        set_admin_db(db)
-        set_notification_db(db)
-        set_v2_db(db)
-    else:
-        logger.warning("MongoDB db=None — route modules running without Mongo (PostgreSQL only mode).")
-    
+    """Initialize database connections — PostgreSQL only"""
     # Initialize cloud storage
     try:
         init_storage()
         logger.info("Cloud storage initialized successfully")
     except Exception as e:
         logger.warning(f"Cloud storage initialization failed (will retry on first use): {e}")
-    
+
     # PostgreSQL: fail-fast — fără pool valid, aplicația nu pornește
     from database.db_config import db_manager
     from services.ai_matching_service import init_matching_engine
@@ -867,63 +823,7 @@ async def startup_init():
     await db_manager.init_all()
     await create_auth_tables()
     await init_matching_engine()
-    logger.info("GJC Platform database initialized (PostgreSQL pool + matching engine).")
-    
-    # MongoDB has been completely removed
     logger.info("Server started in pure PostgreSQL mode.")
-
-async def startup_init_blog_posts():
-    """Initialize blog posts"""
-    try:
-        # Check if we have the correct blog posts
-        count = await db.blog_posts.count_documents({})
-        if count == 0 or count != 3:
-            # Delete all and reinitialize
-            await db.blog_posts.delete_many({})
-            
-            sample_posts = [
-                {
-                    "id": str(uuid.uuid4()),
-                    "title": "Cum sa angajezi forta de munca din Asia in Romania: Ghidul Pas cu Pas",
-                    "slug": "cum-sa-angajezi-forta-munca-asia-romania-ghid",
-                    "excerpt": "Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera in calea cresterii firmelor romanesti.",
-                    "content": "<h2>Introducere</h2><p>Intr-o economie in plina expansiune, deficitul de personal a devenit principala bariera. Recrutarea din Asia nu este doar o alternativa, ci o strategie de stabilitate pe termen lung.</p>",
-                    "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/ljok1yt7_poza%201.png",
-                    "category": "Recrutare",
-                    "author": "Global Jobs Consulting",
-                    "created_at": datetime.now(timezone.utc).isoformat(),
-                    "published": True
-                },
-                {
-                    "id": str(uuid.uuid4()),
-                    "title": "Etapele unei colaborari de succes: De la Selectie la Integrare",
-                    "slug": "etapele-colaborari-succes-selectie-integrare",
-                    "excerpt": "Eliminarea stresului administrativ pentru angajator prin solutia noastra completa de tip la cheie.",
-                    "content": "<h2>Obiectiv</h2><p>Eliminarea stresului administrativ pentru angajator prin solutia noastra completa.</p>",
-                    "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/vriozis1_poza%202.png",
-                    "category": "Ghid",
-                    "author": "Global Jobs Consulting",
-                    "created_at": datetime.now(timezone.utc).isoformat(),
-                    "published": True
-                },
-                {
-                    "id": str(uuid.uuid4()),
-                    "title": "Avantajele fortei de munca din Nepal pentru sectorul HoReCa",
-                    "slug": "avantaje-forta-munca-nepal-horeca",
-                    "excerpt": "Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii.",
-                    "content": "<h2>De ce Nepal pentru ospitalitate?</h2><p>Lucratorii din Nepal sunt recunoscuti global pentru amabilitatea lor nativa si etica muncii.</p>",
-                    "image_url": "https://customer-assets.emergentagent.com/job_gjc-recruitment/artifacts/3qjb8k8w_poza%203.png",
-                    "category": "HoReCa",
-                    "author": "Global Jobs Consulting",
-                    "created_at": datetime.now(timezone.utc).isoformat(),
-                    "published": True
-                }
-            ]
-            
-            await db.blog_posts.insert_many(sample_posts)
-            logger.info("Blog posts initialized with 3 articles")
-    except Exception as e:
-        logger.error(f"Error initializing blog posts: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

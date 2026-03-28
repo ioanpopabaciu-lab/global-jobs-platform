@@ -111,26 +111,9 @@ async def get_candidate_messages(
         if user["role"] not in ["candidate", "admin"]:
             return build_response(False, error="Unauthorized", message="Candidate access required")
             
-        skip = (page - 1) * per_page
-        
-        # Count total
-        total = await db.notifications.count_documents({"user_id": user["user_id"]})
-        
-        # Fetch paginated
-        cursor = db.notifications.find(
-            {"user_id": user["user_id"]}, 
-            {"_id": 0}
-        ).sort("created_at", -1).skip(skip).limit(per_page)
-        
-        messages = await cursor.to_list(length=per_page)
-        
-        # Ensure image/media URLs are absolute if present in notifications (Architectural Requirement 6)
-        base_url = os.environ.get("NEXT_PUBLIC_API_URL", "https://global-jobs-platform-production.up.railway.app")
-        for msg in messages:
-            # Example: if message has an icon_url that is relative, make it absolute
-            if "icon_url" in msg and msg["icon_url"].startswith("/"):
-                msg["icon_url"] = f"{base_url}{msg['icon_url']}"
-                
+        # TODO: implement in PostgreSQL
+        total = 0
+        messages = []
         pagination_data = build_paginated_response(messages, total, page, per_page)
         return build_response(True, data=pagination_data, message="Messages retrieved successfully")
         

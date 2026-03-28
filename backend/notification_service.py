@@ -295,65 +295,24 @@ async def create_notification(
 ) -> dict:
     """Create an in-app notification and optionally send email"""
     
-    notification = {
-        "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-        "user_id": user_id,
-        "title": title,
-        "message": message,
-        "type": notification_type,  # info, success, warning, error
-        "category": category,  # general, profile, job, match, document
-        "related_entity_type": related_entity_type,
-        "related_entity_id": related_entity_id,
-        "action_url": action_url,
-        "is_read": False,
-        "created_at": datetime.now(timezone.utc)
-    }
-    
-    await db.notifications.insert_one(notification)
-    notification.pop("_id", None)
-    
-    # Send email if requested
-    if send_email and email_template and email_data:
-        # Get user email
-        user = await db.users.find_one({"user_id": user_id}, {"_id": 0, "email": 1})
-        if user and user.get("email"):
-            subject, html_body = get_email_template(email_template, email_data)
-            await send_email_async(user["email"], subject, html_body)
-    
-    return notification
+    # TODO: implement in PostgreSQL
+    return {}
 
 async def get_user_notifications(user_id: str, unread_only: bool = False, limit: int = 50) -> List[dict]:
     """Get notifications for a user"""
-    query = {"user_id": user_id}
-    if unread_only:
-        query["is_read"] = False
-    
-    notifications = await db.notifications.find(
-        query,
-        {"_id": 0}
-    ).sort("created_at", -1).limit(limit).to_list(limit)
-    
-    return notifications
+    return []  # TODO: implement in PostgreSQL
 
 async def mark_notification_read(notification_id: str, user_id: str) -> bool:
     """Mark a notification as read"""
-    result = await db.notifications.update_one(
-        {"notification_id": notification_id, "user_id": user_id},
-        {"$set": {"is_read": True, "read_at": datetime.now(timezone.utc)}}
-    )
-    return result.modified_count > 0
+    return False  # TODO: implement in PostgreSQL
 
 async def mark_all_notifications_read(user_id: str) -> int:
     """Mark all notifications as read for a user"""
-    result = await db.notifications.update_many(
-        {"user_id": user_id, "is_read": False},
-        {"$set": {"is_read": True, "read_at": datetime.now(timezone.utc)}}
-    )
-    return result.modified_count
+    return 0  # TODO: implement in PostgreSQL
 
 async def get_unread_count(user_id: str) -> int:
     """Get count of unread notifications"""
-    return await db.notifications.count_documents({"user_id": user_id, "is_read": False})
+    return 0  # TODO: implement in PostgreSQL
 
 # ==================== CANDIDATE-JOB MATCHING ====================
 
@@ -456,86 +415,13 @@ def calculate_match_score(candidate: dict, job: dict) -> int:
 
 async def find_matching_jobs_for_candidate(candidate_profile: dict, min_score: int = 50) -> List[dict]:
     """Find all open jobs that match a candidate"""
-    
-    # Get all open jobs
-    jobs = await db.job_requests.find(
-        {"status": "open"},
-        {"_id": 0}
-    ).to_list(100)
-    
-    matches = []
-    for job in jobs:
-        score = calculate_match_score(candidate_profile, job)
-        if score >= min_score:
-            # Get employer info
-            employer = await db.employer_profiles.find_one(
-                {"profile_id": job["employer_id"]},
-                {"_id": 0, "company_name": 1, "user_id": 1}
-            )
-            
-            matches.append({
-                "job": job,
-                "employer": employer,
-                "match_score": score
-            })
-    
-    # Sort by score descending
-    matches.sort(key=lambda x: x["match_score"], reverse=True)
-    return matches
+    return []  # TODO: implement in PostgreSQL
 
 async def notify_employers_of_new_candidate(candidate_profile: dict, platform_url: str = ""):
     """
     When a candidate is validated, notify all employers with matching open jobs
     """
-    matches = await find_matching_jobs_for_candidate(candidate_profile, min_score=60)
-    
-    candidate_name = f"{candidate_profile.get('first_name', '')} {candidate_profile.get('last_name', '')}".strip()
-    
-    for match in matches:
-        job = match["job"]
-        employer = match["employer"]
-        score = match["match_score"]
-        
-        if not employer:
-            continue
-        
-        # Get employer user for email
-        employer_user = await db.users.find_one(
-            {"user_id": employer.get("user_id")},
-            {"_id": 0, "email": 1, "name": 1}
-        )
-        
-        if not employer_user:
-            continue
-        
-        # Create in-app notification
-        await create_notification(
-            user_id=employer["user_id"],
-            title=f"🎯 Candidat nou potrivit: {candidate_name}",
-            message=f"Un candidat cu scor de potrivire {score}% pentru poziția '{job.get('title')}' este acum disponibil.",
-            notification_type="success",
-            category="match",
-            related_entity_type="candidate_profile",
-            related_entity_id=candidate_profile.get("profile_id"),
-            action_url=f"/portal/employer/jobs/{job.get('job_id')}",
-            send_email=True,
-            email_template="candidate_match",
-            email_data={
-                "employer_name": employer_user.get("name") or employer.get("company_name"),
-                "job_title": job.get("title"),
-                "cor_code": job.get("cor_code"),
-                "work_location": job.get("work_location"),
-                "candidate_name": candidate_name,
-                "candidate_nationality": candidate_profile.get("citizenship") or candidate_profile.get("country_of_origin"),
-                "candidate_profession": candidate_profile.get("current_profession"),
-                "candidate_experience": candidate_profile.get("experience_years", 0),
-                "candidate_english": candidate_profile.get("english_level", "N/A").title(),
-                "match_score": score,
-                "platform_url": platform_url
-            }
-        )
-        
-        logger.info(f"Notified employer {employer.get('company_name')} about candidate {candidate_name} (score: {score}%)")
+    pass  # TODO: implement in PostgreSQL
 
 async def notify_profile_validation(
     user_id: str, 
