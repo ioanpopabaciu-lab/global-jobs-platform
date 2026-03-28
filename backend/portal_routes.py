@@ -98,12 +98,31 @@ async def check_existing_candidate_document(
 ):
     """Check if candidate already has an active document of this type"""
     user = await get_current_user(request)
-    
+
     if user["role"] not in ["candidate", "admin"]:
         raise HTTPException(status_code=403, detail="Candidate access required")
-    
-    # TODO: implement in PostgreSQL
-    return {"exists": False, "document": None}
+
+    try:
+        from database.db_config import get_pg_connection
+        async with get_pg_connection() as conn:
+            row = await conn.fetchrow(
+                "SELECT id, document_type, original_filename, status, created_at FROM documents WHERE user_id = $1 AND document_type = $2 AND is_archived = FALSE ORDER BY created_at DESC LIMIT 1",
+                uuid.UUID(user["user_id"]), document_type
+            )
+        if row:
+            return {"exists": True, "document": {
+                "id": str(row["id"]),
+                "document_type": row["document_type"],
+                "original_filename": row["original_filename"],
+                "status": row["status"],
+                "created_at": row["created_at"].isoformat() if row["created_at"] else None,
+            }}
+        return {"exists": False, "document": None}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Error checking existing document: %s", e)
+        return {"exists": False, "document": None}
 
 
 @portal_router.post("/candidate/documents/upload-session")
@@ -149,7 +168,7 @@ async def candidate_document_upload_session(request: Request, body: CandidateUpl
 
 @portal_router.post("/candidate/documents/register")
 async def candidate_document_register(request: Request, body: CandidateDocumentRegisterBody):
-    """După PUT la Supabase: salvează metadata în Mongo (același model ca înainte)."""
+    """După upload la Supabase Storage: salvează informațiile documentului în baza de date."""
     user = await get_current_user(request)
 
     if user["role"] not in ["candidate", "admin"]:
@@ -163,8 +182,42 @@ async def candidate_document_register(request: Request, body: CandidateDocumentR
     if not candidate_path_owned_by_user(body.storage_path, user["user_id"]):
         raise HTTPException(status_code=403, detail="Invalid storage path for this user")
 
-    # TODO: implement in PostgreSQL
-    return {"doc_id": str(uuid.uuid4()), "message": "Document registered (TODO: save to PostgreSQL)"}
+    try:
+        from database.db_config import get_pg_connection
+        doc_id = uuid.uuid4()
+        user_uuid = uuid.UUID(user["user_id"])
+
+        issue_date_val = None
+        expiry_date_val = None
+        if body.issue_date:
+            from datetime import date as date_type
+            issue_date_val = date_type.fromisoformat(body.issue_date)
+        if body.expiry_date:
+            from datetime import date as date_type
+            expiry_date_val = date_type.fromisoformat(body.expiry_date)
+
+        # If replace_existing, archive old documents of same type
+        async with get_pg_connection() as conn:
+            if body.replace_existing:
+                await conn.execute(
+                    "UPDATE documents SET is_archived = TRUE, updated_at = NOW() WHERE user_id = $1 AND document_type = $2 AND is_archived = FALSE",
+                    user_uuid, body.document_type
+                )
+
+            await conn.execute(
+                """INSERT INTO documents (id, user_id, document_type, original_filename, file_type, file_size, storage_path, document_number, issue_date, expiry_date, status, owner_role)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'pending', 'candidate')""",
+                doc_id, user_uuid, body.document_type, body.original_filename,
+                body.file_type, body.file_size, body.storage_path,
+                body.document_number, issue_date_val, expiry_date_val
+            )
+
+        return {"success": True, "doc_id": str(doc_id), "status": "pending"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Error registering candidate document: %s", e)
+        raise HTTPException(status_code=500, detail="Could not save document information")
 
 @portal_router.get("/employer/documents/check-existing")
 async def check_existing_employer_document(
@@ -201,7 +254,50 @@ async def upload_employer_document(
 async def get_candidate_documents(request: Request, include_archived: bool = False):
     """Get all documents for candidate"""
     user = await get_current_user(request)
-    return {"documents": []}  # TODO: implement in PostgreSQL
+    if user["role"] not in ["candidate", "admin"]:
+        raise HTTPException(status_code=403, detail="Candidate access required")
+
+    try:
+        from database.db_config import get_pg_connection
+        async with get_pg_connection() as conn:
+            if include_archived:
+                rows = await conn.fetch(
+                    "SELECT * FROM documents WHERE user_id = $1 AND owner_role = 'candidate' ORDER BY created_at DESC",
+                    uuid.UUID(user["user_id"])
+                )
+            else:
+                rows = await conn.fetch(
+                    "SELECT * FROM documents WHERE user_id = $1 AND owner_role = 'candidate' AND is_archived = FALSE ORDER BY created_at DESC",
+                    uuid.UUID(user["user_id"])
+                )
+        documents = []
+        for r in rows:
+            documents.append({
+                "id": str(r["id"]),
+                "document_type": r["document_type"],
+                "original_filename": r["original_filename"],
+                "file_type": r["file_type"],
+                "file_size": r["file_size"],
+                "storage_path": r["storage_path"],
+                "document_number": r["document_number"],
+                "issue_date": str(r["issue_date"]) if r["issue_date"] else None,
+                "expiry_date": str(r["expiry_date"]) if r["expiry_date"] else None,
+                "status": r["status"],
+                "is_archived": r["is_archived"],
+                "created_at": r["created_at"].isoformat() if r["created_at"] else None,
+                "updated_at": r["updated_at"].isoformat() if r["updated_at"] else None,
+            })
+
+        required_types = ["passport", "cv"]
+        uploaded_types = {d["document_type"] for d in documents}
+        required_missing = [t for t in required_types if t not in uploaded_types]
+
+        return {"documents": documents, "required_missing": required_missing}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Error fetching candidate documents: %s", e)
+        return {"documents": [], "required_missing": ["passport", "cv"]}
 
 @portal_router.get("/employer/documents")
 async def get_employer_documents(request: Request, include_archived: bool = False):
@@ -219,7 +315,35 @@ async def download_document(doc_id: str, request: Request):
 async def delete_candidate_document(doc_id: str, request: Request):
     """Soft delete a candidate document"""
     user = await get_current_user(request)
-    raise HTTPException(status_code=501, detail="Not yet implemented in PostgreSQL mode")
+    if user["role"] not in ["candidate", "admin"]:
+        raise HTTPException(status_code=403, detail="Candidate access required")
+
+    try:
+        from database.db_config import get_pg_connection
+        doc_uuid = uuid.UUID(doc_id)
+        user_uuid = uuid.UUID(user["user_id"])
+
+        async with get_pg_connection() as conn:
+            row = await conn.fetchrow(
+                "SELECT id, user_id FROM documents WHERE id = $1 AND is_archived = FALSE",
+                doc_uuid
+            )
+            if not row:
+                raise HTTPException(status_code=404, detail="Document not found")
+            if str(row["user_id"]) != user["user_id"] and user["role"] != "admin":
+                raise HTTPException(status_code=403, detail="Not your document")
+
+            await conn.execute(
+                "UPDATE documents SET is_archived = TRUE, updated_at = NOW() WHERE id = $1",
+                doc_uuid
+            )
+
+        return {"success": True, "message": "Document deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Error deleting candidate document: %s", e)
+        raise HTTPException(status_code=500, detail="Could not delete document")
 
 @portal_router.delete("/employer/documents/{doc_id}")
 async def delete_employer_document(doc_id: str, request: Request):
