@@ -107,6 +107,27 @@ export default function MyAccountPage() {
           </p>
         </div>
 
+        {/* Login prompt - visible first */}
+        <div className="max-w-4xl mx-auto mb-10">
+          <Card className="bg-white/10 backdrop-blur border-white/20">
+            <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-5 px-6">
+              <div className="flex items-center gap-3">
+                <User className="h-6 w-6 text-white" />
+                <p className="text-white font-medium text-lg">Aveți deja un cont?</p>
+              </div>
+              <Link href="/login">
+                <Button
+                  className="bg-white text-navy-900 hover:bg-gray-100 font-bold px-8 py-3 text-base"
+                  data-testid="btn-login-top"
+                >
+                  Autentificați-vă în cont
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Service Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
           {serviceCards.map((service) => (
