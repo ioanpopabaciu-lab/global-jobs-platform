@@ -101,7 +101,7 @@ export default function CandidateDocumentsPage() {
     if (!confirm("Sigur dorești să ștergi acest document?")) return;
 
     try {
-      const response = await fetch(`${API_URL}/portal/candidate/documents/${docId}`, {
+      const response = await fetch(`${API_URL}/portal/candidate/documents?doc_id=${docId}`, {
         method: "DELETE",
         credentials: "include",
         headers: { ...getAuthHeaders() },
