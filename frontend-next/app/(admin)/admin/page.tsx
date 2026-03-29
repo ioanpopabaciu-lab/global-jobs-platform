@@ -1,216 +1,177 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "@/contexts/AuthContext";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Users,
-  Building2,
-  FileText,
-  Briefcase,
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
-  ArrowRight,
-  Shield,
-} from "lucide-react";
+import { adminApi } from "@/lib/adminApi";
+import { Loader2, Users, Building2, Globe, Briefcase, GitMerge, FileText, Plane, Clock, CheckCircle2, AlertTriangle, TrendingUp } from "lucide-react";
+
+interface Stats {
+  total_candidates: number;
+  pending_candidates: number;
+  total_employers: number;
+  pending_employers: number;
+  total_agencies: number;
+  active_jobs: number;
+  active_placements: number;
+  pending_documents: number;
+  open_migration_cases: number;
+  expiring_documents: number;
+}
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock stats - în producție ar veni de la API
-  const stats = {
-    pendingCandidates: 5,
-    pendingEmployers: 3,
-    activeJobs: 12,
-    totalDocuments: 45,
-    validatedProfiles: 28,
-    rejectedProfiles: 2,
-  };
+  useEffect(() => {
+    adminApi.dashboard()
+      .then(d => setStats(d))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
-  const adminActions = [
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
+  const cards = [
     {
-      title: "Candidați în Așteptare",
-      description: "Validați profilurile candidaților noi",
+      label: "Candidați",
+      value: stats?.total_candidates ?? 0,
+      sub: `${stats?.pending_candidates ?? 0} în așteptare`,
       icon: Users,
       href: "/admin/candidates",
-      count: stats.pendingCandidates,
       color: "bg-blue-500",
+      alert: (stats?.pending_candidates ?? 0) > 0,
     },
     {
-      title: "Angajatori în Așteptare",
-      description: "Verificați documentele companiilor",
+      label: "Angajatori",
+      value: stats?.total_employers ?? 0,
+      sub: `${stats?.pending_employers ?? 0} în așteptare`,
       icon: Building2,
       href: "/admin/employers",
-      count: stats.pendingEmployers,
-      color: "bg-green-500",
+      color: "bg-teal-500",
+      alert: (stats?.pending_employers ?? 0) > 0,
     },
     {
-      title: "Cereri de Recrutare",
-      description: "Gestionați cererile de muncitori",
+      label: "Agenții",
+      value: stats?.total_agencies ?? 0,
+      sub: "partenere active",
+      icon: Globe,
+      href: "/admin/agencies",
+      color: "bg-indigo-500",
+      alert: false,
+    },
+    {
+      label: "Cereri Recrutare",
+      value: stats?.active_jobs ?? 0,
+      sub: "cereri active",
       icon: Briefcase,
       href: "/admin/jobs",
-      count: stats.activeJobs,
       color: "bg-purple-500",
+      alert: false,
     },
     {
-      title: "Documente",
-      description: "Verificați și validați documentele",
+      label: "Plasamente",
+      value: stats?.active_placements ?? 0,
+      sub: "în derulare",
+      icon: GitMerge,
+      href: "/admin/placements",
+      color: "bg-coral",
+      alert: false,
+    },
+    {
+      label: "Documente",
+      value: stats?.pending_documents ?? 0,
+      sub: "în verificare",
       icon: FileText,
       href: "/admin/documents",
-      count: stats.totalDocuments,
-      color: "bg-coral",
+      color: "bg-amber-500",
+      alert: (stats?.pending_documents ?? 0) > 0,
+    },
+    {
+      label: "Dosare Migrație",
+      value: stats?.open_migration_cases ?? 0,
+      sub: "dosare deschise",
+      icon: Plane,
+      href: "/admin/migration",
+      color: "bg-sky-500",
+      alert: false,
+    },
+    {
+      label: "Documente Expirând",
+      value: stats?.expiring_documents ?? 0,
+      sub: "în 30 de zile",
+      icon: AlertTriangle,
+      href: "/admin/documents",
+      color: "bg-red-500",
+      alert: (stats?.expiring_documents ?? 0) > 0,
     },
   ];
 
+  const pending = (stats?.pending_candidates ?? 0) + (stats?.pending_employers ?? 0) + (stats?.pending_documents ?? 0);
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Welcome Section */}
-      <div className="mb-8 flex items-center gap-4">
-        <div className="w-12 h-12 bg-navy-900 rounded-xl flex items-center justify-center">
-          <Shield className="h-6 w-6 text-white" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-navy-900">
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Bine ai venit, {user?.name || "Administrator"}. Gestionează platforma GJC.
-          </p>
-        </div>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="border-l-4 border-l-amber-500">
-          <CardHeader className="pb-2">
-            <CardDescription>În Așteptare</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-navy-900">
-                {stats.pendingCandidates + stats.pendingEmployers}
-              </span>
-              <Clock className="h-6 w-6 text-amber-500" />
-            </div>
-            <p className="text-sm text-gray-500 mt-1">Profile de validat</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-green-500">
-          <CardHeader className="pb-2">
-            <CardDescription>Validate</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-navy-900">{stats.validatedProfiles}</span>
-              <CheckCircle2 className="h-6 w-6 text-green-500" />
-            </div>
-            <p className="text-sm text-gray-500 mt-1">Profile active</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-red-500">
-          <CardHeader className="pb-2">
-            <CardDescription>Respinse</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-navy-900">{stats.rejectedProfiles}</span>
-              <AlertTriangle className="h-6 w-6 text-red-500" />
-            </div>
-            <p className="text-sm text-gray-500 mt-1">Necesită atenție</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-blue-500">
-          <CardHeader className="pb-2">
-            <CardDescription>Cereri Active</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-navy-900">{stats.activeJobs}</span>
-              <Briefcase className="h-6 w-6 text-blue-500" />
-            </div>
-            <p className="text-sm text-gray-500 mt-1">Joburi în procesare</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Admin Actions */}
+    <div>
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-navy-900 mb-4">Acțiuni Administrative</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {adminActions.map((action, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-10 h-10 ${action.color} rounded-lg flex items-center justify-center`}>
-                    <action.icon className="h-5 w-5 text-white" />
-                  </div>
-                  {action.count > 0 && (
-                    <span className="px-2 py-1 bg-red-100 text-red-600 text-xs font-bold rounded-full">
-                      {action.count}
-                    </span>
-                  )}
-                </div>
-                <CardTitle className="text-base">{action.title}</CardTitle>
-                <CardDescription className="text-sm">{action.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href={action.href}>
-                  <Button variant="outline" size="sm" className="w-full group">
-                    Deschide
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
+        <h1 className="text-2xl font-bold text-navy-900">Dashboard Admin</h1>
+        <p className="text-gray-500 text-sm">Vizualizare generală platformă GJC</p>
+      </div>
+
+      {/* Summary row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4">
+          <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+            <Clock className="h-6 w-6 text-amber-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-navy-900">{pending}</p>
+            <p className="text-sm text-gray-500">Acțiuni necesare</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4">
+          <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <CheckCircle2 className="h-6 w-6 text-green-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-navy-900">{stats?.active_placements ?? 0}</p>
+            <p className="text-sm text-gray-500">Plasamente active</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4">
+          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <TrendingUp className="h-6 w-6 text-blue-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-navy-900">{stats?.active_jobs ?? 0}</p>
+            <p className="text-sm text-gray-500">Cereri active</p>
+          </div>
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Activitate Recentă</CardTitle>
-          <CardDescription>Ultimele acțiuni pe platformă</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <Users className="h-4 w-4 text-green-600" />
+      {/* Main grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {cards.map(card => (
+          <Link key={card.href + card.label} href={card.href}>
+            <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow cursor-pointer group">
+              <div className="flex items-center justify-between mb-3">
+                <div className={`w-10 h-10 ${card.color} rounded-lg flex items-center justify-center`}>
+                  <card.icon className="h-5 w-5 text-white" />
+                </div>
+                {card.alert && (
+                  <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
+                )}
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">Candidat nou înregistrat</p>
-                <p className="text-xs text-gray-500">Ion Popescu - acum 5 minute</p>
-              </div>
+              <p className="text-3xl font-bold text-navy-900 mb-1">{card.value}</p>
+              <p className="text-sm font-medium text-navy-900">{card.label}</p>
+              <p className="text-xs text-gray-500">{card.sub}</p>
             </div>
-
-            <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <Building2 className="h-4 w-4 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">Companie nouă înregistrată</p>
-                <p className="text-xs text-gray-500">SC Example SRL - acum 15 minute</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                <FileText className="h-4 w-4 text-purple-600" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">Document încărcat</p>
-                <p className="text-xs text-gray-500">Pașaport - Maria Ionescu - acum 30 minute</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
