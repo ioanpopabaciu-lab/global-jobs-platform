@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,8 +29,25 @@ const nav = [
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user, loading, isAuthenticated, logout } = useAuth();
   const router = useRouter();
+
+  // Auth guard — redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.push("/login?redirect=" + pathname);
+    }
+  }, [loading, isAuthenticated, pathname, router]);
+
+  // Role guard — must be admin (check both role and account_type)
+  useEffect(() => {
+    if (!loading && isAuthenticated && user) {
+      const r = (user.role || user.account_type || "").toLowerCase();
+      if (r !== "admin") {
+        router.push("/my-account");
+      }
+    }
+  }, [loading, isAuthenticated, user, router]);
 
   const handleLogout = async () => {
     await logout();
@@ -98,6 +116,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       </div>
     </aside>
   );
+
+  if (loading || !isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="h-10 w-10 animate-spin text-navy-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
