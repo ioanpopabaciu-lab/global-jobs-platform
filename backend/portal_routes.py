@@ -1064,3 +1064,165 @@ async def ocr_passport(request: Request, file: UploadFile = File(...)):
     except Exception as e:
         logger.error("OCR passport error: %s", e)
         raise HTTPException(status_code=500, detail="OCR eșuat.")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CANDIDATE DOCUMENTS — rute specifice (compatibilitate frontend existent)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@portal_router.get("/candidate/documents/check-existing")
+async def check_existing_candidate_document(request: Request, document_type: str):
+    user = await _require_role(request, "candidate", "admin")
+    try:
+        async with get_pg_connection() as conn:
+            row = await conn.fetchrow(
+                "SELECT id, document_type, original_filename, status, created_at FROM documents WHERE user_id=$1 AND document_type=$2 AND is_archived=FALSE ORDER BY created_at DESC LIMIT 1",
+                uuid.UUID(user["id"]), document_type
+            )
+        if row:
+            return {"exists": True, "document": {"id": str(row["id"]), "document_type": row["document_type"], "original_filename": row["original_filename"], "status": row["status"], "created_at": row["created_at"].isoformat() if row["created_at"] else None}}
+        return {"exists": False, "document": None}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("check-existing error: %s", e)
+        return {"exists": False, "document": None}
+
+
+@portal_router.post("/candidate/documents/upload-session")
+async def candidate_upload_session(request: Request):
+    user = await _require_role(request, "candidate", "admin")
+    body = await request.json()
+    document_type = body.get("document_type", "other")
+    filename = body.get("filename", "document")
+    content_type = body.get("content_type", "application/pdf")
+
+    if content_type not in ALLOWED_MIME_TYPES:
+        raise HTTPException(status_code=400, detail="Tip de fișier neacceptat.")
+
+    try:
+        from direct_upload_storage import create_candidate_signed_upload, build_candidate_object_path
+        object_path = build_candidate_object_path(user["id"], document_type, filename)
+        signed = create_candidate_signed_upload(object_path)
+        return {
+            "exists": False,
+            "upload_url": signed["upload_url"],
+            "storage_path": signed["storage_path"],
+            "token": signed.get("token"),
+            "bucket": signed.get("bucket"),
+            "upload_method": "PUT",
+            "content_type": content_type,
+            "max_bytes": MAX_FILE_SIZE,
+        }
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        logger.error("candidate upload-session error: %s", e)
+        raise HTTPException(status_code=500, detail="Nu s-a putut crea sesiunea de upload.")
+
+
+@portal_router.post("/candidate/documents/register")
+async def candidate_register_document(request: Request):
+    user = await _require_role(request, "candidate", "admin")
+    body = await request.json()
+
+    document_type = body.get("document_type", "other")
+    storage_path = body.get("storage_path", "")
+    original_filename = body.get("original_filename", "document")
+    file_size = body.get("file_size", 0)
+    file_type = body.get("file_type", "application/pdf")
+    replace_existing = body.get("replace_existing", False)
+    document_number = body.get("document_number")
+    issue_date = body.get("issue_date")
+    expiry_date = body.get("expiry_date")
+
+    if not storage_path:
+        raise HTTPException(status_code=400, detail="storage_path lipsește")
+
+    try:
+        doc_id = uuid.uuid4()
+        user_uuid = uuid.UUID(user["id"])
+
+        issue_date_val = date.fromisoformat(issue_date) if issue_date else None
+        expiry_date_val = date.fromisoformat(expiry_date) if expiry_date else None
+
+        async with get_pg_connection() as conn:
+            if replace_existing:
+                await conn.execute(
+                    "UPDATE documents SET is_archived=TRUE, updated_at=NOW() WHERE user_id=$1 AND document_type=$2 AND is_archived=FALSE",
+                    user_uuid, document_type
+                )
+            await conn.execute(
+                """INSERT INTO documents (id, user_id, document_type, original_filename, file_type, file_size, storage_path, document_number, issue_date, expiry_date, status, owner_role)
+                   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'pending','candidate')""",
+                doc_id, user_uuid, document_type, original_filename, file_type, file_size,
+                storage_path, document_number, issue_date_val, expiry_date_val
+            )
+        return {"success": True, "doc_id": str(doc_id), "status": "pending"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("candidate register error: %s", e)
+        raise HTTPException(status_code=500, detail="Nu s-a putut salva documentul.")
+
+
+@portal_router.get("/candidate/documents")
+async def get_candidate_documents(request: Request):
+    user = await _require_role(request, "candidate", "admin")
+    try:
+        async with get_pg_connection() as conn:
+            rows = await conn.fetch(
+                "SELECT * FROM documents WHERE user_id=$1 AND owner_role='candidate' AND is_archived=FALSE ORDER BY created_at DESC",
+                uuid.UUID(user["id"])
+            )
+        documents = []
+        for r in rows:
+            documents.append({
+                "id": str(r["id"]),
+                "document_type": r["document_type"],
+                "original_filename": r["original_filename"],
+                "file_type": r.get("file_type"),
+                "file_size": r.get("file_size", 0),
+                "storage_path": r.get("storage_path"),
+                "document_number": r.get("document_number"),
+                "issue_date": str(r["issue_date"]) if r.get("issue_date") else None,
+                "expiry_date": str(r["expiry_date"]) if r.get("expiry_date") else None,
+                "status": r["status"],
+                "is_archived": r.get("is_archived", False),
+                "created_at": r["created_at"].isoformat() if r.get("created_at") else None,
+                "updated_at": r["updated_at"].isoformat() if r.get("updated_at") else None,
+            })
+        required_types = ["passport", "cv"]
+        uploaded_types = {d["document_type"] for d in documents}
+        required_missing = [t for t in required_types if t not in uploaded_types]
+        return {"documents": documents, "required_missing": required_missing}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("get candidate documents error: %s", e)
+        return {"documents": [], "required_missing": ["passport", "cv"]}
+
+
+@portal_router.delete("/candidate/documents/{doc_id}")
+async def delete_candidate_document(doc_id: str, request: Request):
+    user = await _require_role(request, "candidate", "admin")
+    try:
+        doc_uuid = uuid.UUID(doc_id)
+        user_uuid = uuid.UUID(user["id"])
+        async with get_pg_connection() as conn:
+            row = await conn.fetchrow(
+                "SELECT id, user_id FROM documents WHERE id=$1 AND is_archived=FALSE", doc_uuid
+            )
+            if not row:
+                raise HTTPException(status_code=404, detail="Document negăsit.")
+            if str(row["user_id"]) != user["id"] and user.get("role") != "admin":
+                raise HTTPException(status_code=403, detail="Nu este documentul tău.")
+            await conn.execute(
+                "UPDATE documents SET is_archived=TRUE, updated_at=NOW() WHERE id=$1", doc_uuid
+            )
+        return {"success": True, "message": "Document șters."}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("delete candidate document error: %s", e)
+        raise HTTPException(status_code=500, detail="Nu s-a putut șterge documentul.")
