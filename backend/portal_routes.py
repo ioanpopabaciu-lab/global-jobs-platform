@@ -48,6 +48,7 @@ ALLOWED_MIME_TYPES = {
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
 
 @portal_router.post("/documents/upload-session")
+@portal_router.post("/candidate/documents/upload-session")
 async def create_upload_session(request: Request):
     """
     Generează URL semnat pentru upload direct în Supabase Storage.
@@ -73,6 +74,7 @@ async def create_upload_session(request: Request):
 
 
 @portal_router.post("/documents/register")
+@portal_router.post("/candidate/documents/register")
 async def register_document(request: Request):
     """
     Înregistrează metadatele unui document după ce fișierul a fost încărcat în Supabase.
