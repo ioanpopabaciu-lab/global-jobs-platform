@@ -153,6 +153,13 @@ export default function CandidateDashboard() {
       href: "/portal/candidate/messages",
       color: "bg-blue-500",
     },
+    {
+      title: "Plasamentele Mele",
+      description: "Urmărește statusul și etapele procesului de angajare",
+      icon: Briefcase,
+      href: "/portal/candidate/placements",
+      color: "bg-navy-900",
+    },
   ];
 
   if (isLoading) {
