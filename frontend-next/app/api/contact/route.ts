@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+const BACKEND = process.env.NEXT_PUBLIC_API_URL || "https://global-jobs-platform-production.up.railway.app/api";
+
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => null);
@@ -23,63 +25,18 @@ export async function POST(req: Request) {
       );
     }
 
-    if (message.length < 10) {
-      return NextResponse.json(
-        { success: false, error: "Message too short" },
-        { status: 400 }
-      );
-    }
-
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.CONTACT_TO_EMAIL;
-    const fromEmail = process.env.CONTACT_FROM_EMAIL;
-
-    if (!resendApiKey || !toEmail || !fromEmail) {
-      console.error("Contact API not configured", {
-        hasResendKey: Boolean(resendApiKey),
-        hasTo: Boolean(toEmail),
-        hasFrom: Boolean(fromEmail),
-      });
-      return NextResponse.json(
-        { success: false, error: "Email service is not configured" },
-        { status: 500 }
-      );
-    }
-
-    const html = `
-      <div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto">
-        <h2>Mesaj nou din formularul de contact</h2>
-        <p><strong>Nume:</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        ${phone ? `<p><strong>Telefon:</strong> ${escapeHtml(phone)}</p>` : ""}
-        <p><strong>Subiect:</strong> ${escapeHtml(subject)}</p>
-        <hr />
-        <pre style="white-space:pre-wrap">${escapeHtml(message)}</pre>
-      </div>
-    `.trim();
-
-    const emailPayload = {
-      from: fromEmail,
-      to: [toEmail],
-      subject: `[Contact] ${subject}`,
-      html,
-      reply_to: email,
-    };
-
-    const resendResponse = await fetch("https://api.resend.com/emails", {
+    // Forward to backend
+    const res = await fetch(`${BACKEND}/contact/submit`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(emailPayload),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, subject, message }),
     });
 
-    if (!resendResponse.ok) {
-      const text = await resendResponse.text().catch(() => "");
-      console.error("Resend send failed", resendResponse.status, text);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("Backend contact error", res.status, text);
       return NextResponse.json(
-        { success: false, error: "Failed to send email" },
+        { success: false, error: "Failed to send message" },
         { status: 502 }
       );
     }
@@ -92,13 +49,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-}
-
-function escapeHtml(input: string) {
-  return input
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }
