@@ -6,7 +6,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  account_type: "admin" | "employer" | "candidate" | "student" | "immigration_client";
+  account_type: "admin" | "employer" | "candidate" | "student" | "immigration_client" | "agency" | "migration_client";
+  role?: string;
   created_at?: string;
   profile_completed?: boolean;
 }
