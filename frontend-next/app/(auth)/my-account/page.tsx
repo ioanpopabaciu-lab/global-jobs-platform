@@ -56,6 +56,17 @@ const serviceCards = [
     lightBg: "bg-red-50",
     accountType: "immigration_client",
   },
+  {
+    id: "agency",
+    icon: Building2,
+    title: "Cont Agenție Parteneră",
+    description: "Înregistrați agenția și încărcați candidați pentru pozițiile disponibile",
+    button: "Înregistrați Agenția",
+    color: "bg-indigo-600",
+    hoverColor: "hover:bg-indigo-700",
+    lightBg: "bg-indigo-50",
+    accountType: "agency",
+  },
 ];
 
 export default function MyAccountPage() {

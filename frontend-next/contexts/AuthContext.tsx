@@ -197,9 +197,13 @@ export function getRedirectPath(accountType: string): string {
       return "/admin";
     case "employer":
       return "/portal/employer";
+    case "agency":
+      return "/portal/agency";
     case "student":
       return "/portal/student";
     case "immigration_client":
+      return "/portal/immigration";
+    case "migration_client":
       return "/portal/immigration";
     case "candidate":
     default:

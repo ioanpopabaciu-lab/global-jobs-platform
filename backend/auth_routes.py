@@ -193,13 +193,14 @@ async def register_employer(data: EmployerRegisterRequest, response: Response):
 async def register(data: UserCreate, response: Response):
     """Register new user with email/password"""
     # Map account_type to role
-    valid_types = ["candidate", "employer", "student", "immigration_client"]
+    valid_types = ["candidate", "employer", "student", "immigration_client", "agency", "migration_client"]
     if data.account_type not in valid_types:
         raise HTTPException(status_code=400, detail=f"Invalid account type. Must be one of: {valid_types}")
-        
+
     role_mapping = {
         "candidate": "candidate", "employer": "employer",
-        "student": "student", "immigration_client": "immigration_client"
+        "student": "student", "immigration_client": "immigration_client",
+        "agency": "agency", "migration_client": "migration_client",
     }
     role = role_mapping.get(data.account_type, "candidate")
     user_id = f"user_{uuid.uuid4().hex[:12]}"
