@@ -1604,3 +1604,39 @@ def _calculate_match_score(candidate: dict, job: dict) -> int:
             score += 5
 
     return min(score, 100)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CONTACT MESSAGES — MESAJE DIN FORMULARUL DE CONTACT
+# ══════════════════════════════════════════════════════════════════════════════
+
+@admin_router.get("/contact/messages")
+async def get_contact_messages_admin(request: Request):
+    """Returnează toate mesajele din formularul de contact, ordonate descrescător."""
+    await require_admin(request)
+    try:
+        async with get_pg_connection() as conn:
+            rows = await conn.fetch("""
+                SELECT id, name, email, phone, subject, message, is_read, created_at
+                FROM contact_messages ORDER BY created_at DESC
+            """)
+        return {"messages": [dict(r) for r in rows]}
+    except Exception as e:
+        logger.error(f"Error fetching contact messages: {e}")
+        return {"messages": []}
+
+
+@admin_router.put("/contact/messages/{message_id}/read")
+async def mark_contact_message_read(message_id: str, request: Request):
+    """Marchează un mesaj ca citit."""
+    await require_admin(request)
+    try:
+        async with get_pg_connection() as conn:
+            await conn.execute(
+                "UPDATE contact_messages SET is_read = TRUE WHERE id = $1",
+                message_id
+            )
+        return {"success": True}
+    except Exception as e:
+        logger.error(f"Error marking message as read: {e}")
+        raise HTTPException(status_code=500, detail="Eroare la actualizare.")

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Loader2, ChevronDown, ChevronUp, Phone, Clock } from "lucide-react";
 
 const getAuthHeaders = (): HeadersInit => {
@@ -22,11 +22,31 @@ export default function AdminContactsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleExpand = (id: string) => {
+    const newExpanded = expanded === id ? null : id;
+    setExpanded(newExpanded);
+    // Mark as read when opened
+    if (newExpanded) {
+      const msg = messages.find(m => m.id === id);
+      if (msg && !msg.is_read) {
+        fetch(`/api/admin/contact/messages/${id}/read`, {
+          method: "PUT",
+          credentials: "include",
+          headers: getAuthHeaders(),
+        }).then(() => {
+          setMessages(prev => prev.map(m => m.id === id ? { ...m, is_read: true } : m));
+        }).catch(console.error);
+      }
+    }
+  };
+
   if (loading) return (
     <div className="flex items-center justify-center min-h-[400px]">
       <Loader2 className="h-8 w-8 animate-spin text-coral" />
     </div>
   );
+
+  const unreadCount = messages.filter(m => !m.is_read).length;
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -34,6 +54,11 @@ export default function AdminContactsPage() {
         <Mail className="h-6 w-6 text-coral" />
         <h1 className="text-2xl font-bold text-navy-900">Mesaje Contact</h1>
         <span className="text-sm text-gray-500">({messages.length} total)</span>
+        {unreadCount > 0 && (
+          <span className="text-xs px-2 py-0.5 rounded-full bg-coral text-white font-medium">
+            {unreadCount} necitite
+          </span>
+        )}
       </div>
 
       {messages.length === 0 ? (
@@ -66,7 +91,7 @@ export default function AdminContactsPage() {
                     </div>
                     <p className="text-sm font-medium text-gray-700">Subiect: {m.subject}</p>
                   </div>
-                  <button onClick={() => setExpanded(expanded === m.id ? null : m.id)}
+                  <button onClick={() => handleExpand(m.id)}
                     className="text-gray-400 hover:text-gray-600 ml-4">
                     {expanded === m.id ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                   </button>
