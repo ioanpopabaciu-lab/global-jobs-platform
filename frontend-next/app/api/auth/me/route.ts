@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://global-jobs-platform-production.up.railway.app/api";
 
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
 
@@ -20,17 +22,11 @@ export async function GET(request: NextRequest) {
       data = await response.json();
     } else {
       const rawText = await response.text();
-      console.error("!!! RAW NON-JSON RESPONSE FROM BACKEND !!!", rawText);
-      data = { detail: "RAW ERROR: " + rawText.substring(0, 300) };
-    }
-
-    if (!response.ok) {
-      console.error("!!! BACKEND ERROR !!! :", JSON.stringify(data, null, 2));
+      data = { detail: "Error: " + rawText.substring(0, 300) };
     }
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error("Me proxy error:", error);
     return NextResponse.json({ detail: "PROXY ERROR: " + String(error) }, { status: 500 });
   }
 }
