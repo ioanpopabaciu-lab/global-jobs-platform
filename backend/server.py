@@ -384,16 +384,55 @@ async def get_candidate_submissions():
 @api_router.post("/contact/submit", response_model=ContactSubmission)
 async def submit_contact_form(data: ContactSubmissionCreate, background_tasks: BackgroundTasks):
     submission = ContactSubmission(**data.model_dump())
-    doc = submission.model_dump()
-    doc['created_at'] = doc['created_at'].isoformat()
-    
-    # TODO: save to PostgreSQL
-    # Send email in background
+
+    # Save to PostgreSQL
+    try:
+        from database.db_config import get_pg_connection
+        async with get_pg_connection() as conn:
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS contact_messages (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    phone TEXT,
+                    subject TEXT NOT NULL,
+                    message TEXT NOT NULL,
+                    is_read BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                )
+            """)
+            await conn.execute("""
+                INSERT INTO contact_messages (id, name, email, phone, subject, message)
+                VALUES ($1, $2, $3, $4, $5, $6)
+            """, submission.id, data.name, data.email, data.phone or "", data.subject, data.message)
+    except Exception as e:
+        logger.warning(f"Could not save contact message to DB: {e}")
+
+    # Send email notification in background
     admin_email = os.environ.get('ADMIN_EMAIL', 'office@gjc.ro')
     html_content = generate_contact_email(data)
     background_tasks.add_task(send_email_notification, admin_email, f"Contact: {data.subject}", html_content)
 
     return submission
+
+
+@api_router.get("/contact/messages")
+async def get_contact_messages(request: Request):
+    """Admin: get all contact messages"""
+    from auth_routes import get_current_user
+    user = await get_current_user(request)
+    if user.get("role", "").lower() != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+    try:
+        from database.db_config import get_pg_connection
+        async with get_pg_connection() as conn:
+            rows = await conn.fetch("""
+                SELECT id, name, email, phone, subject, message, is_read, created_at
+                FROM contact_messages ORDER BY created_at DESC
+            """)
+        return {"messages": [dict(r) for r in rows]}
+    except Exception as e:
+        return {"messages": [], "error": str(e)}
 
 # Request Workers Lead Routes
 @api_router.post("/leads/request-workers")

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import {
   LayoutDashboard, Users, Building2, Globe, Briefcase,
   GitMerge, FileText, Plane, UserCog, Menu, X, LogOut,
-  ChevronRight, Bell,
+  ChevronRight, Bell, Mail,
 } from "lucide-react";
 
 const LOGO = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png";
@@ -23,6 +23,7 @@ const nav = [
   { href: "/admin/placements",  label: "Plasamente",        icon: GitMerge },
   { href: "/admin/documents",   label: "Documente",         icon: FileText },
   { href: "/admin/migration",   label: "Dosare Migrație",   icon: Plane },
+  { href: "/admin/contacts",    label: "Mesaje Contact",    icon: Mail },
   { href: "/admin/users",       label: "Utilizatori",       icon: UserCog },
 ];
 
