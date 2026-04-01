@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 ROOT_DIR = Path(__file__).resolve().parent
 load_dotenv(ROOT_DIR / ".env")
 
-from fastapi import FastAPI, APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
+from fastapi import FastAPI, APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks, Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
