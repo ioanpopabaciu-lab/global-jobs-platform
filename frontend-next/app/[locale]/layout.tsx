@@ -4,6 +4,8 @@ import { Locale, defaultLocale, locales } from "@/types";
 import { getDictionary } from "@/i18n/config";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import MariaChat from "@/components/layout/MariaChat";
 
 const montserrat = Montserrat({
   subsets: ["latin", "latin-ext"],
@@ -106,6 +108,8 @@ export default async function LocaleLayout({
         <Navbar locale={validLocale} dict={dict} />
         <main className="min-h-screen pt-[120px]">{children}</main>
         <Footer locale={validLocale} dict={dict} />
+        <WhatsAppButton />
+        <MariaChat locale={validLocale} />
       </body>
     </html>
   );
