@@ -6,7 +6,8 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, Eye, Loader2, Zap, Users } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Eye, Loader2, Zap, Users, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 interface Job {
   id: string;
@@ -269,6 +270,9 @@ export default function JobsPage() {
                 </div>
 
                 <div className="mt-4 text-right">
+                  <Link href={`/admin/jobs/${selected.id}`} className="inline-flex items-center gap-1 text-sm text-[#E8553E] hover:underline font-medium">
+                    <ExternalLink className="h-4 w-4" /> Detalii complete
+                  </Link>
                   <Button variant="outline" onClick={() => { setSelected(null); setMatches([]); }}>Închide</Button>
                 </div>
               </div>

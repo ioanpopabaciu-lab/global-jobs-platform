@@ -6,7 +6,8 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertTriangle, Search, ChevronLeft, ChevronRight, Eye, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { AlertTriangle, Search, ChevronLeft, ChevronRight, Eye, CheckCircle, XCircle, Loader2, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 interface Candidate {
   id: string;
@@ -284,7 +285,10 @@ export default function CandidatesPage() {
                   </div>
                 )}
 
-                <div className="mt-4 text-right">
+                <div className="mt-4 flex items-center justify-between">
+                  <Link href={`/admin/candidates/${selected.id}`} className="inline-flex items-center gap-1 text-sm text-[#E8553E] hover:underline font-medium">
+                    <ExternalLink className="h-4 w-4" /> Detalii complete
+                  </Link>
                   <Button variant="outline" onClick={() => setSelected(null)}>Închide</Button>
                 </div>
               </div>
