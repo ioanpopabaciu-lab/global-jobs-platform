@@ -112,9 +112,10 @@ export default function EmployerProfilePage() {
         setForm(f => ({
           ...f,
           company_name: c.company_name || f.company_name,
+          legal_form: c.legal_form || f.legal_form,
           address: c.address || f.address,
-          city: c.oras || f.city,
-          county: c.county || f.county,
+          city: c.city || c.oras || f.city,
+          county: c.county || c.judet || f.county,
           postal_code: c.cod_postal || f.postal_code,
           registration_number: c.numar_reg_com || f.registration_number,
           activity_domain: c.denumire_caen || f.activity_domain,

@@ -173,6 +173,22 @@ async def query_primary_api(cui_int: int, query_date: str) -> Optional[Dict[str,
         return None
 
 
+def extract_legal_form(denumire: str) -> str:
+    """Extrage forma juridică din denumirea companiei"""
+    patterns = [
+        (r'S\.R\.L\.?', 'SRL'), (r'\bSRL\b', 'SRL'),
+        (r'S\.A\.?(?!\s*\w)', 'SA'), (r'\bS\.A\b', 'SA'),
+        (r'R\.A\.?', 'RA'), (r'\bRA\b', 'RA'),
+        (r'S\.N\.C\.?', 'SNC'), (r'S\.C\.S\.?', 'SCS'),
+        (r'S\.E\.?', 'SE'), (r'P\.F\.A\.?', 'PFA'),
+        (r'Î\.I\.?', 'ÎI'), (r'Î\.F\.?', 'ÎF'),
+    ]
+    for pattern, form in patterns:
+        if re.search(pattern, denumire, re.IGNORECASE):
+            return form
+    return ""
+
+
 def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     """Parse ANAF API response - ONLY real data, NO placeholders"""
     date_general = company.get("date_generale", {})
@@ -221,13 +237,36 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
     denumire_caen = date_general.get("denumire_CAEN", "")
     is_caen_eligible = cod_caen in ELIGIBLE_CAEN_CODES
     
-    # Extract city and county from address
+    # Extract city and county from address (cu multiple fallback-uri pentru chei ANAF)
     adresa_sediu = company.get("adresa_sediu_social", {})
-    oras = adresa_sediu.get("sdenumire_Localitate", "")
-    judet = adresa_sediu.get("sdenumire_Judet", "")
-    strada = adresa_sediu.get("sdenumire_Strada", "")
+    oras = (adresa_sediu.get("sdenumire_Localitate")
+            or adresa_sediu.get("sDenumire_Localitate")
+            or adresa_sediu.get("denumire_Localitate")
+            or adresa_sediu.get("localitate")
+            or "")
+    judet = (adresa_sediu.get("sdenumire_Judet")
+             or adresa_sediu.get("sDenumire_Judet")
+             or adresa_sediu.get("denumire_Judet")
+             or adresa_sediu.get("judet")
+             or "")
+    strada = (adresa_sediu.get("sdenumire_Strada")
+              or adresa_sediu.get("sDenumire_Strada", ""))
     numar_strada = adresa_sediu.get("snumar_Strada", "")
-    cod_postal_sediu = adresa_sediu.get("scod_Postal", "")
+    cod_postal_sediu = (adresa_sediu.get("scod_Postal")
+                        or adresa_sediu.get("sCod_Postal")
+                        or adresa_sediu.get("cod_Postal")
+                        or adresa_sediu.get("codPostal")
+                        or date_general.get("codPostal")
+                        or "")
+
+    # Dacă oras e gol, încearcă extragere din adresa completă (format: "..., Oras, Judet")
+    if not oras and adresa:
+        parts = [p.strip() for p in adresa.split(",")]
+        if len(parts) >= 2:
+            oras = parts[-2] if parts[-1].upper() in ("ROMANIA", "ROMÂNIA") else parts[-1]
+
+    # Forma juridică extrasă din denumire
+    legal_form = extract_legal_form(denumire)
     
     return {
         "success": True,
@@ -238,16 +277,18 @@ def parse_anaf_response(company: Dict) -> Dict[str, Any]:
             "cui_numeric": str(cui_value),
             "denumire": denumire,
             "company_name": denumire,
+            "legal_form": legal_form,
             "adresa": adresa,
             "address": adresa,
             "oras": oras,
+            "city": oras,
             "judet": judet,
             "county": judet,
             "strada": strada,
             "numar_strada": numar_strada,
             "numar_reg_com": numar_reg_com,
             "telefon": date_general.get("telefon", ""),
-            "cod_postal": cod_postal_sediu or date_general.get("codPostal", ""),
+            "cod_postal": cod_postal_sediu,
             "stare": stare,
             "is_active": is_active,
             "data_infiintare": data_infiintare,
