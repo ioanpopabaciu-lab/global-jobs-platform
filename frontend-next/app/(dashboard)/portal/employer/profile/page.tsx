@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Save, Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+import { ArrowLeft, Save, Send, CheckCircle2, Loader2, AlertCircle, Search } from "lucide-react";
 
 const API_URL = "/api";
 
@@ -20,6 +20,8 @@ export default function EmployerProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [anafLoading, setAnafLoading] = useState(false);
+  const [anafMessage, setAnafMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const [form, setForm] = useState({
@@ -87,6 +89,47 @@ export default function EmployerProfilePage() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAnafLookup = async () => {
+    const cui = form.cui.trim().replace(/^RO/i, "");
+    if (!cui) {
+      setAnafMessage({ type: "error", text: "Introduceți CUI-ul înainte de căutare." });
+      return;
+    }
+    setAnafLoading(true);
+    setAnafMessage(null);
+    try {
+      const res = await fetch(`${API_URL}/auth/lookup-company`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cui }),
+      });
+      const data = await res.json();
+      if (data.success && data.company) {
+        const c = data.company;
+        setForm(f => ({
+          ...f,
+          company_name: c.company_name || f.company_name,
+          address: c.address || f.address,
+          city: c.oras || f.city,
+          county: c.county || f.county,
+          postal_code: c.cod_postal || f.postal_code,
+          registration_number: c.numar_reg_com || f.registration_number,
+          activity_domain: c.denumire_caen || f.activity_domain,
+          phone: c.telefon || f.phone,
+        }));
+        setAnafMessage({ type: "success", text: `Datele companiei "${c.company_name}" au fost preluate din ANAF. Verificați și completați câmpurile lipsă.` });
+      } else if (data.not_found) {
+        setAnafMessage({ type: "error", text: "CUI-ul nu a fost găsit în registrul ANAF. Verificați numărul introdus." });
+      } else {
+        setAnafMessage({ type: "error", text: "Nu s-au putut prelua datele ANAF. Completați manual." });
+      }
+    } catch {
+      setAnafMessage({ type: "error", text: "Eroare de conexiune la ANAF." });
+    } finally {
+      setAnafLoading(false);
     }
   };
 
@@ -203,8 +246,33 @@ export default function EmployerProfilePage() {
             </div>
             <div>
               <Label>CUI *</Label>
-              <Input value={form.cui} onChange={e => setForm(f => ({ ...f, cui: e.target.value }))}
-                placeholder="RO12345678" disabled={isPending || isValidated} />
+              <div className="flex gap-2">
+                <Input
+                  value={form.cui}
+                  onChange={e => { setForm(f => ({ ...f, cui: e.target.value })); setAnafMessage(null); }}
+                  placeholder="RO12345678 sau 12345678"
+                  disabled={isPending || isValidated}
+                  className="flex-1"
+                />
+                {!isPending && !isValidated && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAnafLookup}
+                    disabled={anafLoading || !form.cui.trim()}
+                    className="shrink-0 border-coral text-coral hover:bg-coral/10"
+                  >
+                    {anafLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                    <span className="ml-1 hidden sm:inline">Caută ANAF</span>
+                  </Button>
+                )}
+              </div>
+              {anafMessage && (
+                <div className={`mt-2 flex items-start gap-2 p-2 rounded text-xs ${anafMessage.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+                  {anafMessage.type === "success" ? <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0" /> : <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />}
+                  {anafMessage.text}
+                </div>
+              )}
             </div>
             <div>
               <Label>Formă Juridică</Label>
