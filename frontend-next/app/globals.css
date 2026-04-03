@@ -224,3 +224,18 @@ html {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ── Admin tables: scroll orizontal real ───────────────────────── */
+/* Tabelele din admin au overflow-x-auto pe container,
+   dar fara min-width coloanele se comprima si textul se taie.
+   Acest CSS forteaza o latime minima pe tabele, astfel incat
+   scroll-ul orizontal sa functioneze pe ecrane mici. */
+
+.overflow-x-auto > table {
+  min-width: 900px;
+}
+
+.overflow-x-auto > table th,
+.overflow-x-auto > table td {
+  white-space: nowrap;
+}
