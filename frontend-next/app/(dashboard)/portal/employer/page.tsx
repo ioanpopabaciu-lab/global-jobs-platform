@@ -209,11 +209,18 @@ export default function EmployerDashboard() {
               color: isValidated ? "bg-green-500" : "bg-gray-400",
             },
             {
-              title: "Candidați Propuși",
+              title: "Plasamente Active",
               description: `${placements.length} candidați în procesare`,
               icon: GitMerge,
-              href: "/portal/employer/jobs",
+              href: "/portal/employer/placements",
               color: "bg-purple-500",
+            },
+            {
+              title: "Documente Companie",
+              description: "Încarcă și gestionează documentele necesare",
+              icon: FileText,
+              href: "/portal/employer/documents",
+              color: "bg-orange-500",
             },
           ].map((action, index) => (
             <Card key={index} className="hover:shadow-lg transition-shadow">

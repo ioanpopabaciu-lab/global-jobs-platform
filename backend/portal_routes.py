@@ -673,6 +673,67 @@ async def update_job_request(job_id: str, request: Request):
     return {"success": True}
 
 
+# ── Employer: Plasamente ──────────────────────────────────────────────────────
+
+@portal_router.get("/employer/placements")
+async def get_employer_placements(request: Request):
+    """Toate plasamentele active ale angajatorului, cu detalii candidat și etapă."""
+    user = await _require_role(request, "employer")
+    async with get_pg_connection() as conn:
+        employer = await conn.fetchrow(
+            "SELECT id FROM employers WHERE user_id=$1", uuid.UUID(user["id"])
+        )
+        if not employer:
+            raise HTTPException(status_code=404, detail="Profil angajator negăsit.")
+
+        placements = await conn.fetch("""
+            SELECT p.id, p.placement_type, p.visibility_stage,
+                   p.current_stage_a, p.current_stage_b,
+                   p.match_score, p.contract_signed, p.payment_confirmed,
+                   p.interview_date, p.selection_date, p.flight_date,
+                   p.igi_submitted_at, p.igi_approved_at,
+                   p.visa_submitted_at, p.visa_approved_at,
+                   p.employment_start_date, p.created_at,
+                   CASE WHEN p.visibility_stage >= 2
+                        THEN c.first_name || ' ' || c.last_name
+                        ELSE '*** Confidențial ***' END AS candidate_name,
+                   c.origin_country, c.candidate_type,
+                   c.target_position_name, c.qualification_level,
+                   CASE WHEN p.visibility_stage >= 1
+                        THEN c.experience_years_origin ELSE NULL END AS experience_years,
+                   jr.position_title, jr.cor_code, jr.salary_gross, jr.salary_currency
+            FROM placements p
+            JOIN candidates c ON p.candidate_id = c.id
+            JOIN job_requests jr ON p.job_request_id = jr.id
+            WHERE p.employer_id = $1
+            ORDER BY p.created_at DESC
+        """, employer["id"])
+
+    return {"placements": _rows(placements)}
+
+
+# ── Employer: Documente ───────────────────────────────────────────────────────
+
+@portal_router.get("/employer/documents")
+async def get_employer_documents(request: Request):
+    """Documentele companiei încărcate de angajator."""
+    user = await _require_role(request, "employer")
+    async with get_pg_connection() as conn:
+        employer = await conn.fetchrow(
+            "SELECT id FROM employers WHERE user_id=$1", uuid.UUID(user["id"])
+        )
+        if not employer:
+            raise HTTPException(status_code=404, detail="Profil angajator negăsit.")
+        docs = await conn.fetch("""
+            SELECT id, document_type, display_name, original_filename,
+                   status, file_size, created_at
+            FROM documents
+            WHERE owner_type='employer' AND owner_id=$1 AND is_archived=FALSE
+            ORDER BY created_at DESC
+        """, employer["id"])
+    return {"employer_id": str(employer["id"]), "documents": _rows(docs)}
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # PORTAL AGENȚIE
 # ══════════════════════════════════════════════════════════════════════════════
