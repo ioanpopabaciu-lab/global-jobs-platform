@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useAuth, getRedirectPath } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,15 +70,14 @@ const serviceCards = [
 
 export default function MyAccountPage() {
   const { isAuthenticated, user, loading } = useAuth();
-  const router = useRouter();
 
   // If user is already authenticated, redirect to their dashboard
   useEffect(() => {
     if (!loading && isAuthenticated && user) {
       const dashboardPath = getRedirectPath(user.account_type);
-      router.push(dashboardPath);
+      window.location.href = dashboardPath;
     }
-  }, [isAuthenticated, user, loading, router]);
+  }, [isAuthenticated, user, loading]);
 
   if (loading) {
     return (
