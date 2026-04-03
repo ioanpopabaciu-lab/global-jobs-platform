@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { 
-  LayoutDashboard, Users, Building2, Briefcase, FolderKanban, 
-  FileText, Bell, Settings, LogOut, Menu, X, Home, Shield
+import {
+  LayoutDashboard, Users, Building2, Briefcase, FolderKanban,
+  FileText, Bell, Settings, LogOut, Menu, X, Home, Shield, Search
 } from 'lucide-react';
 import { toast } from 'sonner';
+import GlobalSearch from '../../components/GlobalSearch';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -188,6 +189,10 @@ export default function AdminLayout() {
 
       {/* Main content */}
       <main className="lg:pl-64 pt-14 lg:pt-0">
+        {/* Search header */}
+        <div className="sticky top-0 lg:top-0 z-20 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-3">
+          <GlobalSearch />
+        </div>
         <div className="p-6">
           <Outlet context={{ dashboardData, user }} />
         </div>

@@ -1640,3 +1640,240 @@ async def mark_contact_message_read(message_id: str, request: Request):
     except Exception as e:
         logger.error(f"Error marking message as read: {e}")
         raise HTTPException(status_code=500, detail="Eroare la actualizare.")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CĂUTARE GLOBALĂ  — „Google pentru CRM"
+# ══════════════════════════════════════════════════════════════════════════════
+
+@admin_router.get("/search")
+async def global_search(
+    request: Request,
+    q: str = Query(..., min_length=2, max_length=200),
+    limit: int = Query(default=5, ge=1, le=20),
+):
+    """
+    Căutare universală în tot CRM-ul.
+    Caută simultan în: candidați, angajatori, cereri de recrutare,
+    plasamente, clienți migrație, dosare migrație, documente.
+    Returnează rezultate grupate pe categorie.
+    """
+    await require_admin(request)
+
+    pattern = f"%{q}%"
+    results = {}
+
+    async with get_pg_connection() as conn:
+        # ── 1. Candidați ─────────────────────────────────────────────
+        candidates = await conn.fetch("""
+            SELECT c.id, c.first_name, c.last_name,
+                   c.origin_country, c.nationality,
+                   c.target_position_name, c.status,
+                   c.phone, c.email, c.candidate_type
+            FROM candidates c
+            WHERE c.first_name ILIKE $1
+               OR c.last_name  ILIKE $1
+               OR (c.first_name || ' ' || c.last_name) ILIKE $1
+               OR c.phone      ILIKE $1
+               OR c.email      ILIKE $1
+               OR c.nationality ILIKE $1
+               OR c.target_position_name ILIKE $1
+               OR c.target_cor_code ILIKE $1
+               OR c.origin_country ILIKE $1
+            ORDER BY c.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if candidates:
+            results["candidates"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": f'{r["first_name"]} {r["last_name"]}',
+                    "subtitle": " · ".join(filter(None, [
+                        r["origin_country"],
+                        r["target_position_name"],
+                        r["status"],
+                    ])),
+                    "status": r["status"],
+                    "link": f"/admin/candidates/{r['id']}",
+                }
+                for r in candidates
+            ]
+
+        # ── 2. Angajatori ────────────────────────────────────────────
+        employers = await conn.fetch("""
+            SELECT e.id, e.company_name, e.cui, e.city, e.county,
+                   e.activity_domain, e.status,
+                   e.contact_person_name, e.phone
+            FROM employers e
+            WHERE e.company_name ILIKE $1
+               OR e.cui ILIKE $1
+               OR e.city ILIKE $1
+               OR e.county ILIKE $1
+               OR e.contact_person_name ILIKE $1
+               OR e.phone ILIKE $1
+               OR e.activity_domain ILIKE $1
+            ORDER BY e.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if employers:
+            results["employers"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": r["company_name"],
+                    "subtitle": " · ".join(filter(None, [
+                        r["cui"],
+                        r["city"],
+                        r["activity_domain"],
+                        r["status"],
+                    ])),
+                    "status": r["status"],
+                    "link": f"/admin/employers/{r['id']}",
+                }
+                for r in employers
+            ]
+
+        # ── 3. Cereri de recrutare (Joburi) ──────────────────────────
+        jobs = await conn.fetch("""
+            SELECT jr.id, jr.position_title, jr.cor_code,
+                   jr.positions_count, jr.status,
+                   e.company_name
+            FROM job_requests jr
+            JOIN employers e ON jr.employer_id = e.id
+            WHERE jr.position_title ILIKE $1
+               OR jr.cor_code ILIKE $1
+               OR e.company_name ILIKE $1
+            ORDER BY jr.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if jobs:
+            results["jobs"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": r["position_title"],
+                    "subtitle": " · ".join(filter(None, [
+                        r["company_name"],
+                        f'{r["positions_count"]} locuri',
+                        r["status"],
+                    ])),
+                    "status": r["status"],
+                    "link": f"/admin/jobs/{r['id']}",
+                }
+                for r in jobs
+            ]
+
+        # ── 4. Plasamente ────────────────────────────────────────────
+        placements = await conn.fetch("""
+            SELECT p.id, p.placement_type,
+                   p.current_stage_a, p.current_stage_b,
+                   p.igi_reference, p.visa_number,
+                   c.first_name || ' ' || c.last_name AS candidate_name,
+                   e.company_name
+            FROM placements p
+            JOIN candidates c ON p.candidate_id = c.id
+            JOIN employers e ON p.employer_id = e.id
+            WHERE (c.first_name || ' ' || c.last_name) ILIKE $1
+               OR e.company_name ILIKE $1
+               OR p.igi_reference ILIKE $1
+               OR p.visa_number ILIKE $1
+            ORDER BY p.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if placements:
+            results["placements"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": f'{r["candidate_name"]} → {r["company_name"]}',
+                    "subtitle": " · ".join(filter(None, [
+                        f'Tip {r["placement_type"]}',
+                        r["current_stage_a"] or r["current_stage_b"],
+                        r["igi_reference"],
+                    ])),
+                    "link": f"/admin/projects/{r['id']}",
+                }
+                for r in placements
+            ]
+
+        # ── 5. Clienți migrație ──────────────────────────────────────
+        migration_clients = await conn.fetch("""
+            SELECT mc.id, mc.first_name, mc.last_name,
+                   mc.phone, mc.nationality
+            FROM migration_clients mc
+            WHERE mc.first_name ILIKE $1
+               OR mc.last_name ILIKE $1
+               OR (mc.first_name || ' ' || mc.last_name) ILIKE $1
+               OR mc.phone ILIKE $1
+               OR mc.nationality ILIKE $1
+            ORDER BY mc.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if migration_clients:
+            results["migration_clients"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": f'{r["first_name"]} {r["last_name"]}',
+                    "subtitle": " · ".join(filter(None, [
+                        r["nationality"],
+                        r["phone"],
+                    ])),
+                    "link": f"/admin/candidates",  # TODO: dedicated page
+                }
+                for r in migration_clients
+            ]
+
+        # ── 6. Dosare migrație ───────────────────────────────────────
+        migration_cases = await conn.fetch("""
+            SELECT mc2.id, mc2.service_type::TEXT, mc2.status::TEXT,
+                   mc2.description,
+                   cl.first_name || ' ' || cl.last_name AS client_name
+            FROM migration_cases mc2
+            JOIN migration_clients cl ON mc2.client_id = cl.id
+            WHERE mc2.service_type::TEXT ILIKE $1
+               OR mc2.description ILIKE $1
+               OR (cl.first_name || ' ' || cl.last_name) ILIKE $1
+            ORDER BY mc2.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if migration_cases:
+            results["migration_cases"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": f'{r["client_name"]} — {r["service_type"]}',
+                    "subtitle": r["status"],
+                    "link": f"/admin/candidates",
+                }
+                for r in migration_cases
+            ]
+
+        # ── 7. Documente ────────────────────────────────────────────
+        documents = await conn.fetch("""
+            SELECT d.id, d.document_type::TEXT, d.original_filename,
+                   d.display_name, d.document_number,
+                   d.owner_type, d.status::TEXT
+            FROM documents d
+            WHERE d.original_filename ILIKE $1
+               OR d.display_name ILIKE $1
+               OR d.document_number ILIKE $1
+               OR d.document_type::TEXT ILIKE $1
+            ORDER BY d.created_at DESC
+            LIMIT $2
+        """, pattern, limit)
+        if documents:
+            results["documents"] = [
+                {
+                    "id": str(r["id"]),
+                    "title": r["display_name"] or r["original_filename"],
+                    "subtitle": " · ".join(filter(None, [
+                        r["document_type"],
+                        r["document_number"],
+                        r["owner_type"],
+                        r["status"],
+                    ])),
+                    "link": f"/admin/documents",
+                }
+                for r in documents
+            ]
+
+    # Număr total de rezultate
+    total = sum(len(v) for v in results.values())
+
+    return {"query": q, "total": total, "results": results}
