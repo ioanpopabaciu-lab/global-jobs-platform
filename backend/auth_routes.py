@@ -246,7 +246,7 @@ async def register(data: UserCreate, response: Response):
         pg_user_id = await execute_pg_one("""
             INSERT INTO users (email, name, password_hash, role, account_type, is_active, is_verified)
             VALUES ($1, $2, $3, $4::user_role, $5, $6, $7) RETURNING id
-        """, data.email, data.name, hashed_pw, role.upper(), data.account_type, True, False)
+        """, data.email, data.name, hashed_pw, role, data.account_type, True, False)
 
         # Creare token verificare email
         verification_token = secrets.token_urlsafe(32)
