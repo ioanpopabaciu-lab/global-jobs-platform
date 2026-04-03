@@ -224,6 +224,14 @@ async def register(data: UserCreate, response: Response):
         ADD COLUMN IF NOT EXISTS account_type VARCHAR(50);
         """)
 
+        # Convertim coloana role la VARCHAR pentru a evita restricțiile enum din producție
+        try:
+            await execute_pg_write(
+                "ALTER TABLE users ALTER COLUMN role TYPE VARCHAR(50) USING role::TEXT"
+            )
+        except Exception:
+            pass  # Deja VARCHAR sau migrare inutilă
+
         try:
             await execute_pg_write("ALTER TABLE users ALTER COLUMN mongo_user_id DROP NOT NULL")
         except Exception:
@@ -245,7 +253,7 @@ async def register(data: UserCreate, response: Response):
 
         pg_user_id = await execute_pg_one("""
             INSERT INTO users (email, name, password_hash, role, account_type, is_active, is_verified)
-            VALUES ($1, $2, $3, $4::user_role, $5, $6, $7) RETURNING id
+            VALUES ($1, $2, $3, $4::text, $5, $6, $7) RETURNING id
         """, data.email, data.name, hashed_pw, role, data.account_type, True, False)
 
         # Creare token verificare email
