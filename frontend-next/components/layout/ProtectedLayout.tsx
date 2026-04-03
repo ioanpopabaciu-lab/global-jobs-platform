@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -24,25 +23,24 @@ interface ProtectedLayoutProps {
 
 export default function ProtectedLayout({ children, allowedRoles }: ProtectedLayoutProps) {
   const { user, loading, isAuthenticated, logout } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push("/login");
+      window.location.href = "/login";
     }
-  }, [loading, isAuthenticated, router]);
+  }, [loading, isAuthenticated]);
 
   useEffect(() => {
     if (!loading && isAuthenticated && user && allowedRoles) {
       if (!allowedRoles.includes(user.account_type)) {
-        router.push("/my-account");
+        window.location.href = "/my-account";
       }
     }
-  }, [loading, isAuthenticated, user, allowedRoles, router]);
+  }, [loading, isAuthenticated, user, allowedRoles]);
 
   const handleLogout = async () => {
     await logout();
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   if (loading) {

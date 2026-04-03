@@ -45,9 +45,8 @@ export default function middleware(request: NextRequest) {
     pathnameWithoutLocale.startsWith('/portal') || 
     pathnameWithoutLocale.startsWith('/admin');
 
-  // Check if this is an auth route
-  const isAuthRoute = 
-    pathnameWithoutLocale.startsWith('/login') || 
+  // Check if this is an auth route (login is excluded — handled client-side to avoid stale-cookie loops)
+  const isAuthRoute =
     pathnameWithoutLocale.startsWith('/register') ||
     pathnameWithoutLocale.startsWith('/my-account');
 

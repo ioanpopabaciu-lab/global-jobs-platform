@@ -70,18 +70,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           created_at: userData.created_at,
           profile_completed: userData.profile_completed,
         };
-        
+
         // CRITICAL SYNC: Ensure middleware sees the cookie on rapid subsequent route navigations
         if (token && typeof window !== "undefined") {
           document.cookie = `session_token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax${window.location.protocol === 'https:' ? '; secure' : ''}`;
         }
-        
+
         setUser(normalizedUser);
         setIsAuthenticated(true);
       } else {
+        // Token invalid sau expirat — curăță tot ca middleware să nu mai redirecționeze
         setUser(null);
         setIsAuthenticated(false);
-        if (typeof window !== "undefined") localStorage.removeItem("gjc_token");
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("gjc_token");
+          document.cookie = "session_token=; path=/; max-age=0; samesite=lax";
+        }
       }
     } catch (error) {
       console.error("Auth check failed:", error);
