@@ -1039,56 +1039,89 @@ async def create_migration_request(request: Request):
             VALUES ($1, NULL, 'received', 'Cerere nouă primită')
         """, case_id)
 
-    # Email confirmare către solicitant
+    # ── Email confirmare către solicitant + notificare office ─────────────────
     client_email = body.get("email") or (user.get("email") if user else None)
     client_name = f"{first_name} {last_name}".strip()
     service_label = service_type.replace("_", " ")
     frontend_url = os.getenv("FRONTEND_URL", "https://gjc.ro")
+    case_short = str(case_id)[:8].upper()
 
+    # HTML comun pentru email client
+    client_html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;background:#f9f9f9;">
+      <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <h2 style="color:#1a1a2e;margin:0 0 16px;">Cererea dvs. a fost primită ✅</h2>
+        <p style="color:#444;font-size:16px;line-height:1.6;">
+          Bună ziua, <strong>{client_name}</strong>!
+        </p>
+        <p style="color:#444;font-size:16px;line-height:1.6;">
+          Cererea dvs. pentru serviciul <strong>{service_label}</strong> a fost înregistrată.
+          Numărul dosarului: <strong>#{case_short}</strong>.
+        </p>
+        <div style="background:#f0f9ff;border-left:4px solid #2563eb;padding:16px;border-radius:4px;margin:24px 0;">
+          <p style="color:#1e40af;margin:0;font-size:14px;">
+            Un consultant GJC vă va contacta în cel mai scurt timp, de regulă în 24-48 ore.
+          </p>
+        </div>
+        <a href="{frontend_url}/portal/immigration" style="display:inline-block;margin:16px 0;padding:12px 28px;background:#E8553E;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;">
+          Vezi Dosarul Meu
+        </a>
+        <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
+        <p style="color:#888;font-size:13px;">
+          GJC — Global Jobs Consulting<br/>
+          📧 office@gjc.ro &nbsp;|&nbsp; 📞 +40 732 403 464<br/>
+          <a href="{frontend_url}" style="color:#2563eb;">gjc.ro</a>
+        </p>
+      </div>
+    </div>"""
+
+    # HTML notificare internă office
+    office_html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;background:#f9f9f9;">
+      <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <h2 style="color:#1a1a2e;margin:0 0 16px;">🔔 Cerere nouă de imigrare</h2>
+        <div style="background:#fff8e1;border-left:4px solid #f59e0b;padding:16px;border-radius:4px;margin:0 0 24px;">
+          <p style="margin:0;font-size:15px;color:#92400e;font-weight:bold;">Dosar #{case_short} — {service_label}</p>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;color:#444;">
+          <tr><td style="padding:6px 0;font-weight:bold;width:140px;">Client:</td><td>{client_name}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:bold;">Email:</td><td>{client_email or "—"}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:bold;">Telefon:</td><td>{body.get("phone") or "—"}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:bold;">Serviciu:</td><td>{service_label}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:bold;">Urgență:</td><td>{body.get("urgency", "normal")}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:bold;">Cetățenie:</td><td>{body.get("nationality") or "—"}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:bold;">Locație:</td><td>{body.get("current_location") or "—"}</td></tr>
+        </table>
+        {f'<p style="margin:16px 0 4px;font-weight:bold;font-size:14px;">Descriere:</p><p style="color:#555;font-size:14px;line-height:1.6;">{body.get("description","")}</p>' if body.get("description") else ""}
+        <a href="{frontend_url}/admin" style="display:inline-block;margin:24px 0 0;padding:12px 28px;background:#1a1a2e;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;">
+          Deschide Admin Panel
+        </a>
+      </div>
+    </div>"""
+
+    # Trimite emailuri via SMTP (notification_service)
+    from notification_service import send_email_async
     if client_email:
         try:
-            import resend as resend_lib
-            resend_lib.api_key = os.getenv("RESEND_API_KEY", "")
-            from notifications import send_email_safe
-            await send_email_safe({
-                "from": "noreply@gjc.ro",
-                "to": client_email,
-                "subject": f"Cererea dvs. a fost primită — GJC ({service_type})",
-                "html": f"""
-                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;background:#f9f9f9;">
-                  <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-                    <img src="https://gjc.ro/logo.png" alt="GJC" style="height:48px;margin-bottom:24px;" />
-                    <h2 style="color:#1a1a2e;margin:0 0 16px;">Cererea dvs. a fost primită ✅</h2>
-                    <p style="color:#444;font-size:16px;line-height:1.6;">
-                      Bună ziua, <strong>{client_name}</strong>!
-                    </p>
-                    <p style="color:#444;font-size:16px;line-height:1.6;">
-                      Cererea dvs. pentru serviciul <strong>{service_label}</strong> a fost înregistrată și este în curs de analiză.
-                      Dosarul dvs. are numărul <strong>#{str(case_id)[:8].upper()}</strong>.
-                    </p>
-                    <div style="background:#f0f9ff;border-left:4px solid #2563eb;padding:16px;border-radius:4px;margin:24px 0;">
-                      <p style="color:#1e40af;margin:0;font-size:14px;">
-                        Un consultant GJC vă va contacta în cel mai scurt timp, de regulă în 24-48 ore.
-                      </p>
-                    </div>
-                    <p style="color:#444;font-size:14px;">
-                      Puteți urmări statusul dosarului dvs. direct pe portal:
-                    </p>
-                    <a href="{frontend_url}/portal/immigration" style="display:inline-block;margin:16px 0;padding:12px 28px;background:#E8553E;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;">
-                      Vezi Dosarul Meu
-                    </a>
-                    <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
-                    <p style="color:#888;font-size:13px;">
-                      GJC — Global Jobs Consulting<br/>
-                      📧 office@gjc.ro &nbsp;|&nbsp; 📞 +40 732 403 464<br/>
-                      <a href="{frontend_url}" style="color:#2563eb;">gjc.ro</a>
-                    </p>
-                  </div>
-                </div>
-                """,
-            })
+            await send_email_async(
+                client_email,
+                f"Cererea dvs. a fost primită — GJC (#{case_short})",
+                client_html
+            )
+            logger.info(f"Email confirmare trimis la client: {client_email}")
         except Exception as e:
-            logger.warning(f"Email confirmare migration nu a putut fi trimis: {e}")
+            logger.warning(f"Email client migration nu a putut fi trimis: {e}")
+
+    # Notificare internă office@gjc.ro
+    try:
+        await send_email_async(
+            "office@gjc.ro",
+            f"🔔 Cerere nouă imigrare #{case_short} — {client_name} ({service_label})",
+            office_html
+        )
+        logger.info(f"Notificare office trimisă pentru dosar #{case_short}")
+    except Exception as e:
+        logger.warning(f"Email notificare office migration nu a putut fi trimis: {e}")
 
     return {
         "success": True,

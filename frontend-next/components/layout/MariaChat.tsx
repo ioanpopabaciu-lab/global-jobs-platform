@@ -114,13 +114,20 @@ export default function MariaChat({ locale = "ro" }: MariaChatProps) {
     }
   }, [isOpen, t.greeting, messages.length]);
 
-  // Auto-deschide chat după 5 secunde dacă nu a mai fost deschis (prima vizită)
+  // Auto-deschide chat după 5 secunde — max o dată la 24h per browser
   useEffect(() => {
-    const alreadyShown = sessionStorage.getItem("maria_shown");
-    if (alreadyShown) return;
+    const STORAGE_KEY = "maria_last_shown";
+    const INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 ore
+    try {
+      const lastShown = localStorage.getItem(STORAGE_KEY);
+      const shouldShow = !lastShown || Date.now() - parseInt(lastShown, 10) > INTERVAL_MS;
+      if (!shouldShow) return;
+    } catch {
+      // localStorage indisponibil — deschide oricum
+    }
     const timer = setTimeout(() => {
       setIsOpen(true);
-      sessionStorage.setItem("maria_shown", "1");
+      try { localStorage.setItem("maria_last_shown", String(Date.now())); } catch {}
     }, 5000);
     return () => clearTimeout(timer);
   }, []);
