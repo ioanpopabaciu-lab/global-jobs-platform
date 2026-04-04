@@ -65,6 +65,17 @@ export default function ImmigrationDashboard() {
     loadCases();
   }, []);
 
+  // Pre-completează formularul cu datele utilizatorului logat
+  useEffect(() => {
+    if (user) {
+      setForm(f => ({
+        ...f,
+        full_name: f.full_name || user.name || "",
+        email: f.email || user.email || "",
+      }));
+    }
+  }, [user]);
+
   const loadCases = async () => {
     try {
       const res = await fetch(`${API_URL}/portal/migration/cases`, {
@@ -87,20 +98,42 @@ export default function ImmigrationDashboard() {
       setMessage({ type: "error", text: "Selectați tipul de serviciu." });
       return;
     }
+    if (!form.full_name.trim()) {
+      setMessage({ type: "error", text: "Completați numele complet." });
+      return;
+    }
     setSubmitting(true);
     setMessage(null);
     try {
+      // Split full_name în first_name + last_name pentru backend
+      const nameParts = form.full_name.trim().split(/\s+/);
+      const first_name = nameParts[0] || "";
+      const last_name = nameParts.slice(1).join(" ") || nameParts[0] || "";
+
+      const payload = {
+        service_type: form.service_type,
+        first_name,
+        last_name,
+        email: form.email || user?.email || "",
+        phone: form.phone,
+        urgency: form.urgency,
+        description: form.notes,
+      };
+
       const res = await fetch(`${API_URL}/portal/migration/request`, {
         method: "POST",
         credentials: "include",
         headers: getAuthHeaders(),
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage({ type: "success", text: "Cererea dvs. a fost înregistrată! Vă vom contacta în 24-48 ore." });
+        setMessage({
+          type: "success",
+          text: `Cererea dvs. a fost înregistrată cu succes! Veți primi o confirmare pe email la ${payload.email}. Vă vom contacta în 24-48 ore.`,
+        });
         setShowForm(false);
-        setForm({ service_type: "", full_name: "", email: "", phone: "", urgency: "normal", notes: "" });
+        setForm(f => ({ ...f, service_type: "", phone: "", urgency: "normal", notes: "" }));
         loadCases();
       } else {
         setMessage({ type: "error", text: data.detail || "Eroare la trimitere." });

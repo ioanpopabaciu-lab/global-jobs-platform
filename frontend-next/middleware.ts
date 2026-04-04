@@ -7,6 +7,7 @@ const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
   localePrefix: 'as-needed', // No prefix for default locale (ro)
+  localeDetection: false,    // Nu detecta automat din browser — default mereu română
 });
 
 // Routes that should bypass intl middleware (auth and dashboard routes)

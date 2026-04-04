@@ -1039,6 +1039,57 @@ async def create_migration_request(request: Request):
             VALUES ($1, NULL, 'received', 'Cerere nouă primită')
         """, case_id)
 
+    # Email confirmare către solicitant
+    client_email = body.get("email") or (user.get("email") if user else None)
+    client_name = f"{first_name} {last_name}".strip()
+    service_label = service_type.replace("_", " ")
+    frontend_url = os.getenv("FRONTEND_URL", "https://gjc.ro")
+
+    if client_email:
+        try:
+            import resend as resend_lib
+            resend_lib.api_key = os.getenv("RESEND_API_KEY", "")
+            from notifications import send_email_safe
+            await send_email_safe({
+                "from": "noreply@gjc.ro",
+                "to": client_email,
+                "subject": f"Cererea dvs. a fost primită — GJC ({service_type})",
+                "html": f"""
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;background:#f9f9f9;">
+                  <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                    <img src="https://gjc.ro/logo.png" alt="GJC" style="height:48px;margin-bottom:24px;" />
+                    <h2 style="color:#1a1a2e;margin:0 0 16px;">Cererea dvs. a fost primită ✅</h2>
+                    <p style="color:#444;font-size:16px;line-height:1.6;">
+                      Bună ziua, <strong>{client_name}</strong>!
+                    </p>
+                    <p style="color:#444;font-size:16px;line-height:1.6;">
+                      Cererea dvs. pentru serviciul <strong>{service_label}</strong> a fost înregistrată și este în curs de analiză.
+                      Dosarul dvs. are numărul <strong>#{str(case_id)[:8].upper()}</strong>.
+                    </p>
+                    <div style="background:#f0f9ff;border-left:4px solid #2563eb;padding:16px;border-radius:4px;margin:24px 0;">
+                      <p style="color:#1e40af;margin:0;font-size:14px;">
+                        Un consultant GJC vă va contacta în cel mai scurt timp, de regulă în 24-48 ore.
+                      </p>
+                    </div>
+                    <p style="color:#444;font-size:14px;">
+                      Puteți urmări statusul dosarului dvs. direct pe portal:
+                    </p>
+                    <a href="{frontend_url}/portal/immigration" style="display:inline-block;margin:16px 0;padding:12px 28px;background:#E8553E;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;">
+                      Vezi Dosarul Meu
+                    </a>
+                    <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
+                    <p style="color:#888;font-size:13px;">
+                      GJC — Global Jobs Consulting<br/>
+                      📧 office@gjc.ro &nbsp;|&nbsp; 📞 +40 732 403 464<br/>
+                      <a href="{frontend_url}" style="color:#2563eb;">gjc.ro</a>
+                    </p>
+                  </div>
+                </div>
+                """,
+            })
+        except Exception as e:
+            logger.warning(f"Email confirmare migration nu a putut fi trimis: {e}")
+
     return {
         "success": True,
         "case_id": str(case_id),
