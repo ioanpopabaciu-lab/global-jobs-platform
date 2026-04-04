@@ -112,6 +112,7 @@ async def get_current_user(request: Request) -> dict:
         raise HTTPException(status_code=401, detail="Account deactivated")
     
     return {
+        "id": str(user_row["id"]),
         "user_id": str(user_row["id"]),
         "email": user_row["email"],
         "name": user_row["name"],

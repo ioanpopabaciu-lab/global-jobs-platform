@@ -1100,7 +1100,7 @@ async def create_migration_request(request: Request):
 @portal_router.get("/migration/cases")
 async def list_my_migration_cases(request: Request):
     """Dosarele de migrație ale utilizatorului autentificat."""
-    user = await _require_role(request, "migration_client", "candidate")
+    user = await get_current_user(request)
     async with get_pg_connection() as conn:
         client = await conn.fetchrow(
             "SELECT id FROM migration_clients WHERE user_id=$1", uuid.UUID(user["id"])
@@ -1120,7 +1120,7 @@ async def list_my_migration_cases(request: Request):
 @portal_router.get("/migration/cases/{case_id}")
 async def get_migration_case(case_id: str, request: Request):
     """Detaliile unui dosar de migrație (istoricul etapelor inclus)."""
-    user = await _require_role(request, "migration_client", "candidate")
+    user = await get_current_user(request)
     async with get_pg_connection() as conn:
         client = await conn.fetchrow(
             "SELECT id FROM migration_clients WHERE user_id=$1", uuid.UUID(user["id"])
