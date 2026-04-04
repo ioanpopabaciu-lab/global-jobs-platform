@@ -14,37 +14,73 @@ const translations: Record<string, {
     title: "Maria — Consultant GJC",
     subtitle: "🟢 Online acum",
     placeholder: "Scrieți un mesaj...",
-    greeting: "👋 Bună ziua! Eu sunt Maria, consultantul dvs. la Global Jobs Consulting.\n\nVă pot ajuta să găsiți rapid răspunsuri la:\n\n🏢 Cum să angajați muncitori internaționali\n📋 Documente și proceduri IGI\n💼 Sectoare disponibile (construcții, HoReCa, IT...)\n🌍 Servicii de imigrare și viză\n📞 Programarea unei consultații gratuite\n\nCe vă interesează? Scrieți-mi și răspund imediat! 😊",
-    error: "Ne pare rău, a apărut o eroare. Vă rugăm încercați din nou.",
+    greeting: "👋 Bună ziua! Sunt Maria de la GJC.\n\nCum vă pot ajuta?\n• Angajare muncitori internaționali\n• Documente IGI & viză\n• Servicii imigrare\n• Consultație gratuită\n\nScrieți-mi! 😊",
+    error: "A apărut o eroare. Încercați din nou.",
     typing: "Maria scrie...",
-    chatPrompt: "💬 Am o întrebare pentru dvs.!",
+    chatPrompt: "💬 Vă pot ajuta?",
   },
   en: {
     title: "Maria — GJC Consultant",
     subtitle: "🟢 Online now",
     placeholder: "Type a message...",
-    greeting: "👋 Hello! I'm Maria, your consultant at Global Jobs Consulting.\n\nI can help you with:\n\n🏢 How to hire international workers\n📋 IGI documents and procedures\n💼 Available sectors (construction, HoReCa, IT...)\n🌍 Immigration and visa services\n📞 Free consultation booking\n\nWhat are you interested in? Write to me and I'll reply right away! 😊",
-    error: "Sorry, an error occurred. Please try again.",
+    greeting: "👋 Hello! I'm Maria from GJC.\n\nHow can I help you?\n• Hire international workers\n• IGI documents & visa\n• Immigration services\n• Free consultation\n\nWrite to me! 😊",
+    error: "An error occurred. Please try again.",
     typing: "Maria is typing...",
-    chatPrompt: "💬 I have a question for you!",
+    chatPrompt: "💬 Can I help you?",
   },
   de: {
     title: "Maria — GJC Beraterin",
     subtitle: "🟢 Jetzt online",
     placeholder: "Nachricht schreiben...",
-    greeting: "👋 Guten Tag! Ich bin Maria, Ihre Beraterin bei Global Jobs Consulting.\n\nIch helfe Ihnen bei:\n\n🏢 Internationale Arbeitskräfte einstellen\n📋 IGI-Dokumente und Verfahren\n💼 Verfügbare Branchen (Bau, HoReCa, IT...)\n🌍 Einwanderungs- und Visaservices\n📞 Kostenlose Beratung buchen\n\nWas interessiert Sie? Schreiben Sie mir! 😊",
-    error: "Entschuldigung, ein Fehler ist aufgetreten.",
+    greeting: "👋 Hallo! Ich bin Maria von GJC.\n\nWie kann ich helfen?\n• Internationale Arbeitskräfte\n• IGI-Dokumente & Visum\n• Einwanderungsservice\n• Kostenlose Beratung\n\nSchreiben Sie mir! 😊",
+    error: "Ein Fehler ist aufgetreten. Bitte erneut versuchen.",
     typing: "Maria schreibt...",
-    chatPrompt: "💬 Ich habe eine Frage für Sie!",
+    chatPrompt: "💬 Kann ich helfen?",
   },
   sr: {
     title: "Maria — GJC Konsultant",
-    subtitle: "🟢 Dostupna sada",
+    subtitle: "🟢 Dostupna",
     placeholder: "Napišite poruku...",
-    greeting: "👋 Zdravo! Ja sam Maria, vaš konsultant u Global Jobs Consulting.\n\nMogu vam pomoći sa:\n\n🏢 Zapošljavanje međunarodnih radnika\n📋 IGI dokumenti i procedure\n💼 Dostupni sektori (građevina, HoReCa, IT...)\n🌍 Usluge imigracije i vize\n📞 Besplatne konsultacije\n\nŠta vas zanima? Napišite mi! 😊",
-    error: "Žao nam je, došlo je do greške.",
+    greeting: "👋 Zdravo! Ja sam Maria iz GJC.\n\nKako mogu pomoći?\n• Zapošljavanje radnika\n• IGI dokumenti i vize\n• Usluge imigracije\n• Besplatne konsultacije\n\nNapišite mi! 😊",
+    error: "Došlo je do greške. Pokušajte ponovo.",
     typing: "Maria piše...",
-    chatPrompt: "💬 Imam pitanje za vas!",
+    chatPrompt: "💬 Mogu li pomoći?",
+  },
+  ne: {
+    title: "Maria — GJC सल्लाहकार",
+    subtitle: "🟢 अनलाइन",
+    placeholder: "सन्देश लेख्नुहोस्...",
+    greeting: "👋 नमस्ते! म GJC बाट Maria हुँ।\n\nम कसरी मद्दत गर्न सक्छु?\n• अन्तर्राष्ट्रिय कामदार भर्ती\n• IGI कागजात र भिसा\n• आप्रवासन सेवाहरू\n• निःशुल्क परामर्श\n\nसन्देश पठाउनुहोस्! 😊",
+    error: "त्रुटि भयो। पुनः प्रयास गर्नुहोस्।",
+    typing: "Maria लेख्दैछ...",
+    chatPrompt: "💬 के म मद्दत गर्न सक्छु?",
+  },
+  bn: {
+    title: "Maria — GJC পরামর্শদাতা",
+    subtitle: "🟢 অনলাইন",
+    placeholder: "বার্তা লিখুন...",
+    greeting: "👋 হ্যালো! আমি GJC-র Maria।\n\nআমি কিভাবে সাহায্য করতে পারি?\n• আন্তর্জাতিক কর্মী নিয়োগ\n• IGI কাগজপত্র ও ভিসা\n• অভিবাসন সেবা\n• বিনামূল্যে পরামর্শ\n\nআমাকে লিখুন! 😊",
+    error: "একটি ত্রুটি হয়েছে। আবার চেষ্টা করুন।",
+    typing: "Maria লিখছে...",
+    chatPrompt: "💬 আমি কি সাহায্য করতে পারি?",
+  },
+  hi: {
+    title: "Maria — GJC सलाहकार",
+    subtitle: "🟢 ऑनलाइन",
+    placeholder: "संदेश लिखें...",
+    greeting: "👋 नमस्ते! मैं GJC से Maria हूँ।\n\nमैं कैसे मदद कर सकती हूँ?\n• अंतर्राष्ट्रीय कर्मचारी भर्ती\n• IGI दस्तावेज़ और वीज़ा\n• आव्रजन सेवाएं\n• मुफ्त परामर्श\n\nमुझे लिखें! 😊",
+    error: "एक त्रुटि हुई। कृपया पुनः प्रयास करें।",
+    typing: "Maria लिख रही है...",
+    chatPrompt: "💬 क्या मैं मदद कर सकती हूँ?",
+  },
+  si: {
+    title: "Maria — GJC උපදේශක",
+    subtitle: "🟢 සබැඳිව",
+    placeholder: "පණිවිඩය ලියන්න...",
+    greeting: "👋 හෙලෝ! මම GJC හි Maria.\n\nමට කෙසේ උදව් කළ හැකිද?\n• ජාත්‍යන්තර කම්කරුවන් බඳවා ගැනීම\n• IGI ලේඛන සහ වීසා\n• සංක්‍රමණ සේවා\n• නොමිලේ උපදේශනය\n\nමට ලියන්න! 😊",
+    error: "දෝෂයක් ඇතිවිය. නැවත උත්සාහ කරන්න.",
+    typing: "Maria ලිවිය...",
+    chatPrompt: "💬 මට උදව් කළ හැකිද?",
   },
 };
 
@@ -58,7 +94,8 @@ interface MariaChatProps {
 }
 
 export default function MariaChat({ locale = "ro" }: MariaChatProps) {
-  const t = translations[locale] || translations.ro;
+  // Folosește traducerea pentru locala curentă; fallback la en (nu ro) pt. limbi asiatice neacoperite
+  const t = translations[locale] || translations.en;
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
