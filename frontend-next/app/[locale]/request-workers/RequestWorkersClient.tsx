@@ -34,7 +34,8 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
 
   const [isVerifyingCui, setIsVerifyingCui] = useState(false);
   const [cuiStatus, setCuiStatus] = useState<string | null>(null);
-  
+  const [cuiError, setCuiError] = useState<string | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -79,6 +80,7 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
     
     setIsVerifyingCui(true);
     setCuiStatus(null);
+    setCuiError(null);
     setSubmitError(null);
     
     try {
@@ -105,19 +107,19 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
           companyStatus: c.stare || "VERIFICAT",
         }));
         setCuiStatus(`✅ Verificat (${data.source || 'ANAF'}) — ${c.stare || 'Activ'}`);
-        setSubmitError(null);
+        setCuiError(null);
       } else if (!isGatewayError && data?.allow_manual_entry) {
         // CUI nu a fost găsit în registre — permite introducere manuală
         setCuiStatus(null);
-        setSubmitError(data.error || "CUI-ul nu a fost identificat în registre. Completați manual datele companiei.");
+        setCuiError("CUI-ul nu a fost identificat în registre ANAF. Completați manual câmpurile de mai sus.");
       } else {
         // Serviciu temporar indisponibil (downtime backend/ANAF)
         setCuiStatus(null);
-        setSubmitError("Verificarea automată este temporar indisponibilă. Completați manual datele companiei — echipa GJC va verifica datele.");
+        setCuiError("Verificarea automată este temporar indisponibilă. Completați manual datele companiei.");
       }
     } catch {
       setCuiStatus(null);
-      setSubmitError("Verificarea automată este temporar indisponibilă. Completați manual datele companiei.");
+      setCuiError("Verificarea automată este temporar indisponibilă. Completați manual datele companiei.");
     } finally {
       setIsVerifyingCui(false);
     }
@@ -250,7 +252,17 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
                       {isVerifyingCui ? <Loader2 className="w-4 h-4 animate-spin" /> : dict.requestWorkers.section1.verify}
                     </button>
                   </div>
-                  {cuiStatus && <p className={`mt-2 text-sm font-medium ${cuiStatus.includes('Activ') || cuiStatus.includes('Verificat') ? 'text-green-600' : 'text-red-500'}`}>{cuiStatus}</p>}
+                  {cuiStatus && (
+                    <p className="mt-2 text-sm font-medium text-green-600 flex items-center gap-1">
+                      {cuiStatus}
+                    </p>
+                  )}
+                  {cuiError && (
+                    <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 flex items-start gap-2">
+                      <span className="text-amber-500 mt-0.5 flex-shrink-0">⚠️</span>
+                      <span>{cuiError}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div>
