@@ -87,32 +87,37 @@ export default function RequestWorkersClient({ dict }: { dict: any }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cui: formData.cui }),
       });
-      const data = await response.json();
-      
-      console.log('Calling API...')
-      console.log('Response status:', response.status)
-      console.log('Response data:', data)
-      console.log('Company name from API:', 
-        data.company?.company_name || data.company?.denumire || data.company_name || data.denumire || data.name)
-      
-      if (response.ok && data.success && data.company) {
+
+      let data: any = null;
+      try { data = await response.json(); } catch { data = null; }
+
+      // Detectează răspunsul de eroare Railway/gateway (nu vine din codul nostru)
+      const isGatewayError = !data || data.status === "error" || data.message === "Application not found";
+
+      if (!isGatewayError && data?.success && data?.company) {
+        // Succes — completează câmpurile din datele ANAF
+        const c = data.company;
         setFormData(prev => ({
           ...prev,
-          companyName: data.company.company_name || data.company.denumire || prev.companyName,
-          address: data.company.adresa || prev.address,
-          county: data.company.judet || prev.county,
-          companyStatus: data.company.stare || "VERIFICAT",
+          companyName: c.company_name || c.denumire || prev.companyName,
+          address: c.adresa || c.address || prev.address,
+          county: c.judet || c.county || prev.county,
+          companyStatus: c.stare || "VERIFICAT",
         }));
-        
-        setCuiStatus(`Verificat cu succes (${data.source || 'Sursă oficială'}) - ${data.company.stare || 'Activ'}`);
-      } else {
-        // Fallback explicit error from API
+        setCuiStatus(`✅ Verificat (${data.source || 'ANAF'}) — ${c.stare || 'Activ'}`);
+        setSubmitError(null);
+      } else if (!isGatewayError && data?.allow_manual_entry) {
+        // CUI nu a fost găsit în registre — permite introducere manuală
         setCuiStatus(null);
-        setSubmitError(data.error || "Verificare automată indisponibilă. Introduceți manual datele companiei.");
+        setSubmitError(data.error || "CUI-ul nu a fost identificat în registre. Completați manual datele companiei.");
+      } else {
+        // Serviciu temporar indisponibil (downtime backend/ANAF)
+        setCuiStatus(null);
+        setSubmitError("Verificarea automată este temporar indisponibilă. Completați manual datele companiei — echipa GJC va verifica datele.");
       }
     } catch {
       setCuiStatus(null);
-      setSubmitError("Verificare automată indisponibilă. Introduceți manual datele companiei.");
+      setSubmitError("Verificarea automată este temporar indisponibilă. Completați manual datele companiei.");
     } finally {
       setIsVerifyingCui(false);
     }

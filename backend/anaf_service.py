@@ -21,9 +21,11 @@ FAILED_LOOKUPS_LOG = "/app/logs/failed_company_lookups.log"
 
 # Primary API endpoint - Official Romanian Government ANAF v9
 PRIMARY_API_URL = "https://webservicesp.anaf.ro/api/PlatitorTvaRest/v9/tva"
+# Fallback endpoint (v8 - uneori v9 are downtime)
+FALLBACK_API_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/v8/tva"
 
-# API timeout in seconds
-API_TIMEOUT = 3
+# API timeout in seconds (mărit la 10s pentru rețele mai lente)
+API_TIMEOUT = 10
 
 # CAEN codes eligible for international workforce recruitment
 ELIGIBLE_CAEN_CODES = {
@@ -120,57 +122,47 @@ def log_failed_lookup(cui: str, reason: str, details: dict = None):
         logger.error(f"Could not write to failed lookups log: {e}")
 
 
+async def _call_anaf_url(client: httpx.AsyncClient, url: str, cui_int: int, query_date: str) -> Optional[Dict[str, Any]]:
+    """Apelează un endpoint ANAF și returnează rezultatul parsat sau None."""
+    try:
+        response = await client.post(
+            url,
+            json=[{"cui": cui_int, "data": query_date}],
+            headers={"Content-Type": "application/json", "Accept": "application/json"}
+        )
+        logger.info(f"[ANAF_RESPONSE] {url} → Status: {response.status_code}")
+        if response.status_code in [200, 404]:
+            data = response.json()
+            if data and "found" in data and len(data["found"]) > 0:
+                company = data["found"][0]
+                logger.info(f"[ANAF_SUCCESS] Companie găsită: {company.get('date_generale', {}).get('denumire', 'N/A')}")
+                return parse_anaf_response(company)
+            if data and "notFound" in data and len(data["notFound"]) > 0:
+                logger.info(f"[ANAF_NOT_FOUND] CUI {cui_int} negăsit în registru")
+                return {"not_found": True, "source": "anaf_registry"}
+    except (httpx.TimeoutException, httpx.ConnectError) as e:
+        logger.warning(f"[ANAF_CONN_ERROR] {url}: {e}")
+    except Exception as e:
+        logger.error(f"[ANAF_ERROR] {url}: {e}")
+    return None
+
+
 async def query_primary_api(cui_int: int, query_date: str) -> Optional[Dict[str, Any]]:
     """
-    Query primary government registry API (ANAF)
-    This is the ONLY trusted source for company data
+    Query ANAF Official Registry — încearcă v9 și v8 ca fallback.
     """
-    try:
-        async with httpx.AsyncClient(timeout=API_TIMEOUT) as client:
-            logger.info(f"[ANAF_QUERY] Querying for CUI: {cui_int}")
-            
-            response = await client.post(
-                PRIMARY_API_URL,
-                json=[{"cui": cui_int, "data": query_date}],
-                headers={
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            )
-            
-            logger.info(f"[ANAF_RESPONSE] Status: {response.status_code}")
-            
-            # ANAF API returns 200 for found, but may return 404 with valid JSON for not found
-            if response.status_code in [200, 404]:
-                try:
-                    data = response.json()
-                    
-                    # Company found
-                    if data and "found" in data and len(data["found"]) > 0:
-                        company = data["found"][0]
-                        logger.info(f"[ANAF_SUCCESS] Company found: {company.get('date_generale', {}).get('denumire', 'N/A')}")
-                        return parse_anaf_response(company)
-                    
-                    # Company explicitly not found in registry (ANAF uses camelCase "notFound")
-                    if data and "notFound" in data and len(data["notFound"]) > 0:
-                        logger.info(f"[ANAF_NOT_FOUND] CUI {cui_int} not in registry")
-                        return {"not_found": True, "source": "anaf_registry"}
-                except Exception as json_error:
-                    logger.error(f"[ANAF_JSON_ERROR] Could not parse response: {json_error}")
-            
-            # API returned unexpected error
-            logger.warning(f"[ANAF_ERROR] Unexpected status: {response.status_code}")
-            return None
-            
-    except asyncio.TimeoutError:
-        logger.error(f"[ANAF_TIMEOUT] Request timed out for CUI {cui_int}")
-        return None
-    except httpx.ConnectError as e:
-        logger.error(f"[ANAF_CONNECTION_ERROR] Cannot connect: {str(e)}")
-        return None
-    except Exception as e:
-        logger.error(f"[ANAF_EXCEPTION] Error: {str(e)}")
-        return None
+    async with httpx.AsyncClient(timeout=API_TIMEOUT) as client:
+        logger.info(f"[ANAF_QUERY] Căutare CUI: {cui_int}")
+
+        # Încearcă v9 mai întâi
+        result = await _call_anaf_url(client, PRIMARY_API_URL, cui_int, query_date)
+        if result is not None:
+            return result
+
+        # Fallback la v8 dacă v9 a eșuat
+        logger.info(f"[ANAF_FALLBACK] v9 inaccesibil, încerc v8 pentru CUI {cui_int}")
+        result = await _call_anaf_url(client, FALLBACK_API_URL, cui_int, query_date)
+        return result
 
 
 def extract_legal_form(denumire: str) -> str:

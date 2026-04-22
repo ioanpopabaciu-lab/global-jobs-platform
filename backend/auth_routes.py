@@ -25,22 +25,63 @@ from anaf_service import lookup_company_anaf, RECRUITMENT_INDUSTRIES
 
 async def create_auth_tables():
     from database.db_config import execute_pg_write
-    await execute_pg_write("""
-        CREATE TABLE IF NOT EXISTS email_verification_tokens (
-            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-            user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-            token VARCHAR(64) UNIQUE NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-            expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-            used_at TIMESTAMP WITH TIME ZONE
+
+    # Conversie coloana role din enum la VARCHAR (sigur pe Supabase pooler)
+    try:
+        await execute_pg_write(
+            "ALTER TABLE users ALTER COLUMN role TYPE VARCHAR(50) USING role::TEXT"
         )
-    """)
-    
-    await execute_pg_write("""
-        ALTER TABLE users 
-        ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT FALSE,
-        ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE
-    """)
+    except Exception:
+        pass
+
+    # Coloane suplimentare tabel users
+    try:
+        await execute_pg_write("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS name VARCHAR(255),
+            ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255),
+            ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT FALSE,
+            ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE,
+            ADD COLUMN IF NOT EXISTS auth_provider VARCHAR(50) DEFAULT 'email',
+            ADD COLUMN IF NOT EXISTS account_type VARCHAR(50)
+        """)
+    except Exception:
+        pass
+
+    # Elimina constrangerea NOT NULL de pe mongo_user_id daca exista
+    try:
+        await execute_pg_write("ALTER TABLE users ALTER COLUMN mongo_user_id DROP NOT NULL")
+    except Exception:
+        pass
+
+    # Tabel sesiuni utilizatori
+    try:
+        await execute_pg_write("""
+            CREATE TABLE IF NOT EXISTS user_sessions (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+                session_token VARCHAR(255) UNIQUE NOT NULL,
+                expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+            )
+        """)
+    except Exception:
+        pass
+
+    # Tabel tokeni verificare email
+    try:
+        await execute_pg_write("""
+            CREATE TABLE IF NOT EXISTS email_verification_tokens (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+                token VARCHAR(64) UNIQUE NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                used_at TIMESTAMP WITH TIME ZONE
+            )
+        """)
+    except Exception:
+        pass
 
 async def send_email_safe(payload):
     try:
@@ -215,39 +256,7 @@ async def register(data: UserCreate, response: Response):
     try:
         from database.db_config import execute_pg_write, execute_pg_one
 
-        # Setup pure postgres auth schema if missing
-        await execute_pg_write("""
-        ALTER TABLE users
-        ADD COLUMN IF NOT EXISTS name VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT false,
-        ADD COLUMN IF NOT EXISTS auth_provider VARCHAR(50) DEFAULT 'email',
-        ADD COLUMN IF NOT EXISTS account_type VARCHAR(50);
-        """)
-
-        # Convertim coloana role la VARCHAR pentru a evita restricțiile enum din producție
-        try:
-            await execute_pg_write(
-                "ALTER TABLE users ALTER COLUMN role TYPE VARCHAR(50) USING role::TEXT"
-            )
-        except Exception:
-            pass  # Deja VARCHAR sau migrare inutilă
-
-        try:
-            await execute_pg_write("ALTER TABLE users ALTER COLUMN mongo_user_id DROP NOT NULL")
-        except Exception:
-            pass  # Ignore if constraint doesn't exist or already dropped
-
-        await execute_pg_write("""
-        CREATE TABLE IF NOT EXISTS user_sessions (
-            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-            user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-            session_token VARCHAR(255) UNIQUE NOT NULL,
-            expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-        );
-        """)
-
+        # Schema este garantată de create_auth_tables() la startup — nu mai rulăm DDL aici
         existing = await execute_pg_one("SELECT id FROM users WHERE email = $1", data.email)
         if existing:
             raise HTTPException(status_code=400, detail="Email already registered")
@@ -299,9 +308,8 @@ async def register(data: UserCreate, response: Response):
     except HTTPException:
         raise
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Database fallback error: {str(e)}")
+        logger.exception("Eroare la înregistrare utilizator: %s", e)
+        raise HTTPException(status_code=500, detail=f"Eroare înregistrare: {str(e)}")
 
 # ==================== EMAIL VERIFICATION ====================
 
