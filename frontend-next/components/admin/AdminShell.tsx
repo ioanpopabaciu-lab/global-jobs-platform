@@ -11,6 +11,7 @@ import {
   GitMerge, FileText, Plane, UserCog, Menu, X, LogOut,
   ChevronRight, Bell, Mail,
 } from "lucide-react";
+import GlobalSearch from "./GlobalSearch";
 
 const LOGO = "https://customer-assets.emergentagent.com/job_b9aed6e8-8f6d-4a68-a3af-3170845dc48c/artifacts/f53cvkek_logo%20transparent.png";
 
@@ -144,6 +145,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <img src={LOGO} alt="GJC" className="h-8 w-auto" />
           <div className="w-6" />
         </header>
+
+        {/* Search bar */}
+        <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 lg:px-6 py-3 hidden lg:block">
+          <GlobalSearch />
+        </div>
 
         {/* Page content */}
         <main className="flex-1 p-4 lg:p-6 overflow-auto">
